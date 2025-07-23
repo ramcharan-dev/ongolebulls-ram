@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ongolebulls Invest - Auth</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          padding: 20px;
+          background: #f8f8f8;
+        }
+
+        .container {
+          background: white;
+          padding: 30px;
+          border-radius: 10px;
+          box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+          width: 400px;
+          text-align: center;
+        }
+
+        .logo {
+          width: 100px;
+          margin-bottom: 20px;
+        }
+
+        .form-container {
+          display: none;
+        }
+
+        .form-container.active {
+          display: block;
+        }
+
+        input {
+          width: 92%;
+          padding: 12px;
+          margin: 12px 0;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+        }
+
+        button {
+          width: 100%;
+          padding: 12px;
+          background: #ff4500;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 16px;
+        }
+
+        a {
+          color: #ff4500;
+          cursor: pointer;
+          text-decoration: underline;
+        }
+        .account-option {
+            display:flex;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .account-option input[type="radio"] {
+            margin: 0 10px;
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+
+        .account-option label {
+            margin: 0 15px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <img src="assets/Ongole bulls logo (2).png" alt="Ongolebulls Logo" class="logo">
+
+    <!-- Company Name and Tagline -->
+    <p class="tagline">Invest Smart Grow Big.</p>
+    <h2>Welcome to Ongolebulls Invest</h2>
+
+
+    <p class="account-option">
+        <input type="radio" id="login-option" name="account-option" onclick="showLoginForm()" checked>
+        <label for="login-option">Login</label>
+
+        <input type="radio" id="register-option" name="account-option" onclick="showRegisterForm()">
+        <label for="register-option">Register</label>
+    </p>
+
+    <div class="form-container active" id="login-form">
+        <input type="text" id="login-username" placeholder="Username" required>
+        <input type="password" id="login-password" placeholder="Password" required>
+        <button onclick="loginUser()">Log in</button>
+        <p><a onclick="showForgotPassword()">Forgot Password?</a></p>
+        <p>Don't have an account? <a onclick="showRegister()">Register</a></p>
+    </div>
+
+    <div class="form-container" id="register-form">
+        <h2>Register</h2>
+        <input type="text" id="username" name="username" placeholder="User Name" required>
+        <input type="text" id="fname" name="firstName" placeholder="First Name" required>
+        <input type="text" id="lname" name="lastName" placeholder="Last Name" required>
+        <input type="text" id="mobile" name="mobile" placeholder="Mobile Number" required>
+        <input type="password" id="register-password" name="password" placeholder="Password" required>
+        <button onclick="registerUser()">Register</button>
+        <p>Already have an account? <a onclick="showLogin()">Log in</a></p>
+    </div>
+
+
+    <div class="form-container" id="forgot-password-form">
+        <h2>Reset Password</h2>
+        <input type="text" id="reset-username" placeholder="Username or Mobile" required>
+        <input type="password" id="new-password" placeholder="New Password" required>
+        <button onclick="resetPassword()">Reset Password</button>
+        <p>Back to <a onclick="showLogin()">Login</a></p>
+    </div>
+</div>
+
+<script>
+    function showLogin() {
+      document.getElementById('login-form').classList.add('active');
+      document.getElementById('register-form').classList.remove('active');
+      document.getElementById('forgot-password-form').classList.remove('active');
+    }
+
+    function showRegister() {
+      document.getElementById('login-form').classList.remove('active');
+      document.getElementById('register-form').classList.add('active');
+      document.getElementById('forgot-password-form').classList.remove('active');
+    }
+
+    function showForgotPassword() {
+      document.getElementById('login-form').classList.remove('active');
+      document.getElementById('register-form').classList.remove('active');
+      document.getElementById('forgot-password-form').classList.add('active');
+    }
+
+    function loginUser() {
+    const username = document.getElementById('login-username').value;
+    const password = document.getElementById('login-password').value;
+
+    // Basic validation
+    if (!username || !password) {
+        alert("Please enter both username and password.");
+        return;
+    }
+
+    fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.text();
+    })
+    .then(data => {
+        if (data === "Login successful!") {
+            alert("Login successful!");
+            sessionStorage.setItem("username", username); // Save username
+
+            // Redirect to dashboard page
+            window.location.href = "dashboard.html";
+        } else {
+            alert(data); // Show any error messages like "Invalid credentials"
+        }
+    })
+    .catch(error => {
+        console.error('Error during login:', error);
+        alert("An error occurred. Please try again later.");
+    });
+}
+
+          function registerUser() {
+          const username = document.getElementById('username').value;
+          const fname = document.getElementById('fname').value;
+          const lname = document.getElementById('lname').value;
+          const mobile = document.getElementById('mobile').value;
+          const password = document.getElementById('register-password').value;
+
+  fetch('/api/auth/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, fname, lname, mobile, password })  // ✅ Include username here
+  })
+  .then(res => res.text())
+  .then(data => alert(data))
+  .catch(err => console.error(err));
+}
+
+function resetPassword() {
+  const resetUsername = document.getElementById('reset-username').value;
+  const newPassword = document.getElementById('new-password').value;
+
+  fetch('/api/auth/reset-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ resetUsername, newPassword })
+  })
+  .then(res => res.text())
+  .then(data => alert(data))
+  .catch(err => console.error(err));
+}
+function showLoginForm() {
+    document.getElementById('login-form').classList.add('active');
+    document.getElementById('register-form').classList.remove('active');
+}
+
+function showRegisterForm() {
+    document.getElementById('login-form').classList.remove('active');
+    document.getElementById('register-form').classList.add('active');
+}
+
+function showLogin() {
+    document.getElementById('login-option').checked = true;
+    showLoginForm();
+}
+
+function showRegister() {
+    document.getElementById('register-option').checked = true;
+    showRegisterForm();
+}
+
+</script>
+
+</body>
+</html>
+

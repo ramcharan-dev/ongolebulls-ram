@@ -1,0 +1,227 @@
+:root {
+    --primary: #981e1e; /* Updated to corporate dark red for strong brand identity */
+    --accent: #1c2029;  /* Dark navy for contrast */
+    --light: #ffffff;
+    --text: #333333;
+    --background: #f4f6f8; /* Slightly less white for softer contrast */
+    --shadow: rgba(0, 0, 0, 0.08);
+    --highlight: #e6e6e6;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--background);
+    color: var(--text);
+    line-height: 1.6;
+    scroll-behavior: smooth;
+}
+
+/* HERO SECTION */
+.hero {
+    background: linear-gradient(135deg, var(--accent), var(--primary));
+    text-align: center;
+    padding: 100px 20px 80px;
+    color: var(--light);
+    animation: fadeInDown 1s ease forwards;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.hero .subtitle {
+    font-size: 1.25rem;
+    font-weight: 400;
+    max-width: 700px;
+    margin: auto;
+}
+
+/* CTA Button */
+.cta-btn,
+.btn {
+    background-color: var(--light);
+    color: var(--primary);
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin: 10px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.cta-btn:hover,
+.btn:hover {
+    background-color: var(--highlight);
+    color: var(--accent);
+}
+
+/* SECTION STYLING */
+.section {
+    padding: 60px 20px;
+    max-width: 1200px;
+    margin: auto;
+    line-height: 1.8;
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+.section h2,
+.section-title {
+    color: var(--primary);
+    margin-bottom: 30px;
+    font-size: 2.25rem;
+    text-align: center;
+}
+
+.section p {
+    color: var(--text);
+    font-size: 1.05rem;
+    margin-bottom: 20px;
+}
+
+/* SUBHEADINGS */
+h3 {
+    color: var(--accent);
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+}
+
+/* GRID LAYOUTS */
+.grid {
+    display: grid;
+    gap: 24px;
+}
+
+.services-grid,
+.steps-grid,
+.faq-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* INFO CARDS / BOXES */
+.box {
+    background: var(--light);
+    padding: 24px;
+    border-radius: 12px;
+    border-left: 6px solid var(--primary);
+    box-shadow: 0 8px 20px var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.box:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* TYPOGRAPHY & LISTS */
+ul {
+    padding-left: 20px;
+    margin-bottom: 0;
+    line-height: 1.7;
+}
+
+li {
+    margin-bottom: 10px;
+    position: relative;
+    padding-left: 20px;
+}
+
+
+
+p strong {
+    color: var(--accent);
+}
+
+/* FAQ SECTION */
+details {
+    background: var(--light);
+    border-left: 5px solid var(--accent);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+details[open] {
+    background: var(--highlight);
+}
+
+summary {
+    font-weight: bold;
+    color: var(--accent);
+    margin-bottom: 8px;
+    outline: none;
+}
+
+/* CTA SECTION */
+.cta-section {
+    background-color: var(--primary);
+    color: var(--light);
+    text-align: center;
+    padding: 80px 20px;
+    animation: fadeInUp 1s ease forwards;
+}
+
+.cta-section h2 {
+    font-size: 2.4rem;
+    margin-bottom: 20px;
+}
+
+.cta-section p {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+/* ANIMATIONS */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* RESPONSIVE TWEAKS */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .section h2 {
+        font-size: 1.8rem;
+    }
+
+    .btn,
+    .cta-btn {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+

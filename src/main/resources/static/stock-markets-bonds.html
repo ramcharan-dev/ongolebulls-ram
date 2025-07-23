@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stocks Trading Page</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="/common.js" defer></script> <!-- Load JavaScript -->
+
+</head>
+<body>
+<div id="header-container"></div>
+
+<section class="hero">
+    <div class="hero-text">
+        <h1>Stocks</h1>
+        <p>Navigating the stock and bond markets can be complex, but with expert guidance, you can make smarter investment decisions. At Ongole Bulls Invest, our Stock & Bond Investment Advisory services help investors build a balanced portfolio, manage risks, and maximize returns.
+        </p>
+        <a href="/login">
+            <button class="cta-button">Open an account</button>
+        </a>
+
+    </div>
+    <div class="hero-image">
+        <img src="assets/laptop%20stock.jpeg" alt="Woman trading stocks on laptop">
+    </div>
+</section>
+
+<section class="learn-more">
+    <h2>Want to learn more about stocks?</h2>
+    <div class="cards">
+        <div class="card">
+            <img src="assets/stock.jpg" alt="Smiling woman with glasses">
+            <h3>Stock Market Investments</h3>
+            <p>Identifying high-potential stocks for capital appreciation.</p>
+            <span>Online trading</span>
+        </div>
+        <div class="card">
+            <img src="assets/bonds.jpg" alt="Smiling woman with yellow paint">
+            <h3>Bond Investments</h3>
+            <p> Identifying high-potential stocks for capital appreciation.</p>
+            <span>Stock marketing</span>
+        </div>
+        <div class="card">
+            <img src="assets/portfolio.jpg" alt="Older woman in library">
+            <h3> Portfolio Diversification</h3>
+            <p>Balancing stocks and bonds to reduce volatility</p>
+            <span>Stock & Bond Investment Advisory</span>
+        </div>
+    </div>
+</section>
+<div id="footer-container"></div>
+
+<script>
+    document.querySelector(".cta-button").addEventListener("click", function() {
+        window.location.href = "login.html"; // Change this URL as needed
+    });
+</script>
+
+</body>
+</html>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f5f5f5;
+    }
+    .hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 50px;
+        background-color: #fff;
+    }
+    .hero-text {
+        max-width: 50%;
+    }
+    .hero h1 {
+        font-size: 3em;
+        color: #333;
+    }
+    .hero p {
+        font-size: 1.2em;
+        color: #666;
+    }
+    .cta-button {
+        background-color: gray;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        font-size: 1em;
+        margin-top: 10px;
+    }
+    .hero-image img {
+        max-width: 100%;
+        height: auto;
+    }
+    .learn-more {
+        text-align: center;
+        padding: 50px;
+    }
+    .cards {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+    .card {
+        background: white;
+        padding: 20px;
+        width: 30%;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: left;
+    }
+    .card img {
+        width: 100%;
+        border-radius: 10px;
+    }
+    .card h3 {
+        font-size: 1.5em;
+        color: #333;
+    }
+    .card p {
+        font-size: 1em;
+        color: #666;
+    }
+    .card span {
+        display: block;
+        font-size: 0.9em;
+        color: #999;
+        margin-top: 10px;
+    }
+</style>

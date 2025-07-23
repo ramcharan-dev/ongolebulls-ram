@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>SIP | Ongole Bulls Invest</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+    <script src="/common.js" defer></script>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
+
+    <style>
+        :root {
+          --primary-color: #d62828;
+          --secondary-color: #003049;
+          --bg-light: #f8f9fa;
+          --bg-dark: #212529;
+          --text-light: #ffffff;
+          --text-dark: #343a40;
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+          background-color: var(--bg-light);
+          color: var(--text-dark);
+          line-height: 1.6;
+        }
+
+        header {
+          background: url("assets/sip.png") center center / cover no-repeat;
+          color: var(--text-light);
+          padding: 100px 20px;
+          text-align: center;
+        }
+
+        header h1 {
+          font-size: 2.8em;
+          margin-bottom: 15px;
+          text-shadow: 1px 1px 4px #000;
+        }
+
+        header p {
+          font-size: 1.2em;
+          max-width: 700px;
+          margin: 0 auto 20px;
+        }
+
+        .cta-button {
+          background-color: var(--primary-color);
+          color: #fff;
+          padding: 12px 30px;
+          text-decoration: none;
+          border-radius: 5px;
+          display: inline-block;
+          font-weight: bold;
+          transition: background 0.3s ease;
+        }
+
+        .cta-button:hover {
+          background-color: #a61e1e;
+        }
+
+        section {
+          padding: 60px 20px;
+          max-width: 1100px;
+          margin: 0 auto;
+        }
+
+        h2 {
+          color: #a83d34
+          font-size: 2em;
+          margin-bottom: 20px;
+        }
+
+        ul {
+          padding-left: 20px;
+          margin-top: 10px;
+        }
+
+        li {
+          margin-bottom: 8px;
+        }
+
+        .highlight {
+          font-weight: bold;
+          color: var(--primary-color);
+        }
+
+
+        .benefits, .why-us, .get-started {
+          background: #fff;
+          border-radius: 8px;
+          padding: 30px;
+          margin-top: 30px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .faq-item {
+          margin-bottom: 20px;
+        }
+
+        .faq-item h4 {
+          color: var(--primary-color);
+          margin-bottom: 5px;
+        }
+
+        footer {
+          background: var(--bg-dark);
+          color: var(--text-light);
+          text-align: center;
+          padding: 40px 20px;
+        }
+
+        footer p {
+          max-width: 800px;
+          margin: 0 auto;
+          font-size: 1em;
+        }
+
+        @media (max-width: 768px) {
+          header h1 {
+            font-size: 2em;
+          }
+        }
+
+.sip-benefits-section {
+  background-color: #5e131e;
+  color: white;
+  padding: 80px 20px;
+}
+
+.sip-benefits-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.sip-benefits-text {
+  flex: 1;
+  max-width: 550px;
+}
+
+.sip-benefits-text h2 {
+  font-size: 2.4em;
+  margin-bottom: 30px;
+}
+
+.highlight-green {
+  color: #087ad5;
+}
+
+.sip-benefits-list {
+  list-style: none;
+  padding: 0;
+}
+
+.sip-benefits-list li {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 25px;
+}
+
+.sip-benefits-list img {
+  width: 40px;
+  height: 40px;
+  margin-right: 15px;
+}
+
+.sip-benefits-list h4 {
+  margin: 0 0 5px;
+  font-size: 1.1em;
+  color: white;
+}
+
+.sip-benefits-list p {
+  margin: 0;
+  color: #ccc;
+  font-size: 0.95em;
+}
+
+.sip-benefits-image {
+  flex: 1;
+  max-width: 550px;
+  text-align: center;
+}
+
+.sip-benefits-image img {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+}
+
+
+ .faq {
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      display: none; /* Hide by default */
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .faq h2 {
+      color: #d9230f;
+    }
+
+    .faq-item {
+      margin-bottom: 15px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+    }
+
+    .faq-item h4 {
+      margin: 0;
+      color: #333;
+    }
+
+    .faq-item p {
+      margin: 5px 0 0 0;
+      color: #000;
+    }
+
+    #toggleFaqBtn {
+      background-color: #d9230f;
+      color: white;
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 20px 0;
+    }
+
+    #toggleFaqBtn:hover {
+      background-color: #a8170b;
+    }
+@media (max-width: 992px) {
+  .sip-benefits-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .sip-benefits-text, .sip-benefits-image {
+    max-width: 100%;
+  }
+
+  .sip-benefits-list li {
+    justify-content: center;
+    text-align: left;
+  }
+}
+
+    </style>
+</head>
+<body>
+<div id="header-container"></div>
+<header>
+    <h1>Systematic Investment Plan (SIP) – A Smart Way to Build Wealth Consistently</h1>
+    <p style="color:white;">Start your journey toward long-term financial growth with SIPs crafted by experts at Ongole Bulls Invest.</p>
+    <a href="/login" class="cta-button">GET STARTED</a>
+</header>
+
+<section>
+    <h2>Why SIP Matters</h2>
+    <p style="color: black">Investing can often feel complex and overwhelming. A Systematic Investment Plan (SIP) simplifies this process, enabling you to invest small, regular amounts in mutual funds—creating long-term wealth through discipline, consistency, and the power of compounding.</p>
+    <p style="color: black">At Ongole Bulls Invest, we specialize in crafting personalized SIP strategies tailored to your financial goals. Whether you’re just starting or are an experienced investor, our goal is to help you build a secure financial future with ease and confidence.</p>
+</section>
+
+<section>
+    <h2>What is a Systematic Investment Plan (SIP)?</h2>
+    <p style="color: black">A SIP allows you to invest a fixed amount at regular intervals—typically monthly or quarterly—into mutual funds. Unlike lump sum investing, SIPs benefit from <span class="highlight">rupee cost averaging</span>, where you buy more units when prices are low and fewer when prices are high, reducing overall market risk.</p>
+    <p style="color: black">SIPs are ideal for individuals looking to:</p>
+    <ul>
+        <li>Build wealth gradually</li>
+        <li>Stay protected from market volatility</li>
+        <li>Achieve financial goals with a structured approach</li>
+    </ul>
+</section>
+
+<section class="benefits">
+    <h2>Key Features of SIP Investing</h2>
+    <ul class="checklist">
+        <li>Start Small – Begin with just ₹500/month</li>
+        <li>Flexibility – Modify, pause, or stop anytime</li>
+        <li>Risk Diversification – Invest across different fund categories</li>
+        <li>Power of Compounding – Grow wealth exponentially over time</li>
+        <li>Discipline – Automated investments help build financial habits</li>
+        <li>Goal-Based – Perfect for future plans like retirement, education, or a new home</li>
+    </ul>
+</section>
+
+<section class="sip-benefits-section">
+    <div class="sip-benefits-container">
+        <!-- Left Content -->
+        <div class="sip-benefits-text">
+            <h2><span class="highlight-green">Benefits</span> of SIP Investment</h2>
+            <ul class="sip-benefits-list">
+                <li>
+                    <img src="assets/dp.png" alt="Disciplined Investing">
+                    <div>
+                        <h4>Disciplined & Hassle-Free Investing</h4>
+                        <p>No need to time the market<br>Builds a habit of saving regularly</p>
+                    </div>
+                </li>
+                <li>
+                    <img src="assets/volatility.png" alt="Rupee Cost Averaging">
+                    <div>
+                        <h4>Market Volatility Management</h4>
+                        <p>Reduces the risk of market timing<br>Buys more when prices are low</p>
+                    </div>
+                </li>
+                <li>
+                    <img src="assets/compound-interest.png" alt="Compounding">
+                    <div>
+                        <h4>Power of Compounding</h4>
+                        <p >Perfect for long-term goals like retirement<br>The longer you invest, the greater your returns</p>
+                    </div>
+                </li>
+                <li>
+                    <img src="assets/affordable.png" alt="Affordable Investing">
+                    <div>
+                        <h4>Affordable & Flexible Investing</h4>
+                        <p>Start from as little as ₹500/month<br>Adjust your contribution as your income grows</p>
+                    </div>
+                </li>
+                <li>
+                    <img src="assets/diversification.png" alt="Diversification">
+                    <div>
+                        <h4>Diversification for Lower Risk</h4>
+                        <p>Access to equity, debt, hybrid funds<br>Better financial stability through balanced portfolios</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Right Image -->
+        <div class="sip-benefits-image">
+            <img src="assets/sipsip.png" alt="SIP Mockup" />
+        </div>
+    </div>
+</section>
+
+
+<section class="get-started">
+    <h2>How to Start Your SIP with Ongole Bulls Invest</h2>
+    <ul class="checklist">
+        <li><strong>Set Your Financial Goals:</strong> Identify your investment objectives—retirement, education, home, or wealth accumulation.</li>
+        <li><strong>Choose the Right Fund:</strong> Our advisors recommend top-performing mutual funds tailored to your needs.</li>
+        <li><strong>Decide Investment Amount & Frequency:</strong> Start with a comfortable amount and choose monthly, quarterly, or yearly contributions.</li>
+        <li><strong>Automate Your SIP:</strong> Link your bank account to enable seamless, regular investments.</li>
+        <li><strong>Track Performance:</strong> We review your SIP portfolio periodically and optimize your investments for the best outcomes.</li>
+    </ul>
+    <p>Need help getting started? Call us now for a free consultation.</p>
+    <p>Prefer email? Reach out for a personalized SIP strategy.</p>
+    <p>Explore mutual fund options at <strong>OngoleBullsInvest.com</strong></p>
+</section>
+
+
+<button id="toggleFaqBtn">Show FAQs</button>
+
+<section class="faq" id="faqSection">
+    <h2>Frequently Asked Questions (FAQs) – SIP</h2>
+    <div class="faq-item">
+        <h4>1. What is a SIP in mutual funds?</h4>
+        <p>A SIP is a method of investing fixed amounts at regular intervals in mutual funds to accumulate wealth over time.</p>
+    </div>
+    <div class="faq-item">
+        <h4>2. How does SIP help in managing risk?</h4>
+        <p>Through rupee cost averaging, SIPs reduce the risk of market volatility by spreading investments over time.</p>
+    </div>
+    <div class="faq-item">
+        <h4>3. Can I start SIP with ₹500?</h4>
+        <p>Yes, most mutual funds allow you to begin SIPs with just ₹500/month.</p>
+    </div>
+    <div class="faq-item">
+        <h4>4. Is SIP better than lump sum investment?</h4>
+        <p>For volatile markets and long-term goals, SIPs are often better as they manage risks more effectively.</p>
+    </div>
+    <div class="faq-item">
+        <h4>5. Can I modify or stop my SIP?</h4>
+        <p>Absolutely. SIPs are flexible—you can increase, pause, or stop anytime.</p>
+    </div>
+    <div class="faq-item">
+        <h4>6. Do SIPs offer tax benefits?</h4>
+        <p>Yes, SIPs in ELSS (Equity Linked Savings Schemes) are eligible for tax deductions under Section 80C.</p>
+    </div>
+    <div class="faq-item">
+        <h4>7. How many SIPs can I have?</h4>
+        <p>You can invest in multiple SIPs across different mutual fund schemes for better diversification.</p>
+    </div>
+    <div class="faq-item">
+        <h4>8. Can SIPs create wealth in the long term?</h4>
+        <p>Yes, thanks to compounding and disciplined investing, SIPs are a powerful tool for building wealth.</p>
+    </div>
+    <div class="faq-item">
+        <h4>9. Do I need to open a Demat account for SIP?</h4>
+        <p>No, SIPs can be started without a Demat account—just a bank account and KYC compliance.</p>
+    </div>
+    <div class="faq-item">
+        <h4>10. How can I start SIP with Ongole Bulls Invest?</h4>
+        <p>Simply contact us, and our advisors will guide you through selecting the right SIP plan for your needs.</p>
+    </div>
+</section>
+
+<script>
+    const faqBtn = document.getElementById("toggleFaqBtn");
+    const faqSection = document.getElementById("faqSection");
+
+    faqBtn.addEventListener("click", () => {
+      if (faqSection.style.display === "none" || faqSection.style.display === "") {
+        faqSection.style.display = "block";
+        faqBtn.textContent = "Hide FAQs";
+      } else {
+        faqSection.style.display = "none";
+        faqBtn.textContent = "Show FAQs";
+      }
+    });
+</script>
+<div id="footer-container"></div>
+</body>
+</html>

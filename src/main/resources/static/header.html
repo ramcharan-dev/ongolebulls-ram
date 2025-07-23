@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="aa">
+<head>
+    <link rel="stylesheet" th:href="@{style.css}">
+    <title>OngoleBulls Invest - Your Partner in Wealth Creation</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+<nav style="box-shadow: 5px solid red;">
+    <div class="logo">
+        <img src="assets/Ongole bulls logo (2).png" alt="OngoleBulls Logo" style="height: 90px;">
+    </div>
+
+    <!-- Toggle Button -->
+    <button class="menu-toggle" onclick="toggleMenu()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <ul class="nav-links" id="navLinks">
+        <button class="home">
+            <li><a href="/">Home</a></li>
+        </button>
+
+
+        <!-- Dropdown Menu for Services -->
+        <li class="dropdown">
+            <button class="dropdown-toggle">Services</button>
+            <ul class="dropdown-menu">
+                <li><a href="wealth-management.html" target="_self">Wealth Management</a></li>
+                <li><a href="investment-management.html" target="_self">Investment Management</a></li>
+                <li><a href="sip.html" target="_self">Systematic Investment Plan (SIP)</a></li>
+                <li><a href="investment-banking.html" target="_self">Investment Banking</a></li>
+
+                <li><a href="hni-services.html" target="_self">HNI & Family Office Services</a></li>
+                <li><a href="stock-markets-bonds.html" target="_self">Stock Market & Bond Investments</a></li>
+                <li><a href="investment-platforms.html" target="_self">Digital Investment Platforms</a></li>
+                <li><a href="Tax-Optimization-planning.html" target="_self">Tax Optimization & Estate Planning</a></li>
+            </ul>
+        </li>
+
+
+        <!-- Dropdown Menu for About Us -->
+        <li class="dropdown">
+            <button class="dropdown-toggle">About Us</button>
+            <ul class="dropdown-menu">
+                <li><a href="company-overview.html" target="_self">Company Overview</a></li>
+            </ul>
+        </li>
+
+
+        <!-- Dropdown Menu for Resources -->
+        <li class="dropdown">
+            <button class="dropdown-toggle">Resources</button>
+            <ul class="dropdown-menu">
+                <li><a href="blogs.html" target="_self">Blog</a></li>
+            </ul>
+        </li>
+
+        <button class="contact">
+            <li><a href="contact.html" target="_self">Contact Us!</a></li>
+        </button>
+
+        <button class="careers">
+            <li><a href="careers.html" target="_self">Careers</a></li>
+        </button>
+
+        <button class="login">
+            <li><a href="/login" target="_self">login</a></li>
+        </button>
+    </ul>
+</nav>
+
+</body>
+</html>
+
+

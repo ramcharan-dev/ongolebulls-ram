@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OngoleBulls Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            height: 100vh;
+            background-color: #343a40;
+            padding: 20px;
+            color: white;
+        }
+        .sidebar h2 {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+        .sidebar a {
+            display: block;
+            color: #ccc;
+            padding: 10px 0;
+            text-decoration: none;
+        }
+        .sidebar a:hover {
+            color: white;
+        }
+        .content {
+            padding: 20px;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            border-radius: 15px;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 sidebar">
+            <h2>Admin</h2>
+            <a href="#">Dashboard</a>
+            <a href="#">Users</a>
+            <a href="#">Portfolios</a>
+            <a href="#">Financial Goals</a>
+            <a href="services.html">Services</a>
+            <a href="blogs.html">Blogs</a>
+            <a href="contact.html">Contacts</a>
+            <a href="#">Reports</a>
+            <a href="#">Settings</a>
+        </div>
+        <div class="col-md-10 content">
+            <h3>Dashboard Overview</h3>
+            <div class="row mt-4">
+                <div class="col-md-3 col-sm-6">
+                    <div class="card p-3 text-center">
+                        <h5>Total Users</h5>
+                        <p id="totalUsers">--</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card p-3 text-center">
+                        <h5>Active SIPs</h5>
+                        <p id="activeSIPs">--</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card p-3 text-center">
+                        <h5>Total AUM</h5>
+                        <p id="aum">--</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card p-3 text-center">
+                        <h5>New Leads</h5>
+                        <p id="leads">--</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-md-6">
+                    <div class="card p-3">
+                        <h5>Monthly Investments</h5>
+                        <canvas id="investmentChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card p-3">
+                        <h5>User Goals</h5>
+                        <canvas id="goalChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // Fetch dashboard metrics
+    fetch('/api/dashboard')
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('totalUsers').innerText = data.totalUsers;
+            document.getElementById('activeSIPs').innerText = data.activeSIPs;
+            document.getElementById('aum').innerText = data.aum;
+            document.getElementById('leads').innerText = data.leads;
+        });
+
+    // Fetch dynamic blogs
+    fetch('/api/blogs')
+        .then(res => res.json())
+        .then(blogs => {
+            const list = document.getElementById('blogsList');
+            blogs.forEach(blog => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item';
+                li.innerText = blog.title;
+                list.appendChild(li);
+            });
+        });
+
+    // Chart: Monthly Investments
+    new Chart(document.getElementById('investmentChart'), {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Investments (₹ Lakhs)',
+                data: [10, 15, 9, 18, 20, 25],
+                borderColor: '#007bff',
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Chart: User Financial Goals
+    new Chart(document.getElementById('goalChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Retirement', 'Home', 'Child', 'Dreams', 'Start'],
+            datasets: [{
+                data: [30, 20, 25, 10, 15],
+                backgroundColor: ['#28a745', '#ffc107', '#17a2b8', '#dc3545', '#6f42c1']
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+</script>
+</body>
+</html>

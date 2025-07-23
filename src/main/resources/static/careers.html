@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact Us - Ongole Bulls Invest</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/contact.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Scripts -->
+  <script src="script.js" defer></script>
+  <script src="/common.js" defer></script>
+</head>
+
+<body>
+<!-- Common Header -->
+<div id="header-container"></div>
+
+<main>
+  <h1>Search Jobs at Our Company</h1>
+
+  <!-- Job Search Section -->
+  <section class="search-container" aria-label="Job Search">
+    <input type="search" id="search" placeholder="Search for jobs..." aria-label="Search for jobs" />
+    <button type="button" onclick="searchJobs()">Search</button>
+  </section>
+
+  <section aria-label="Popular job searches">
+    <h3>Popular Searches</h3>
+    <div class="tags">
+      <span tabindex="0" role="button" onclick="filterJobs('Technology')" onkeypress="if(event.key==='Enter') filterJobs('Technology')">Technology</span>
+      <span tabindex="0" role="button" onclick="filterJobs('Cloud')" onkeypress="if(event.key==='Enter') filterJobs('Cloud')">Cloud</span>
+      <span tabindex="0" role="button" onclick="filterJobs('Data')" onkeypress="if(event.key==='Enter') filterJobs('Data')">Data</span>
+      <span tabindex="0" role="button" onclick="filterJobs('Analytics')" onkeypress="if(event.key==='Enter') filterJobs('Analytics')">Analytics</span>
+      <span tabindex="0" role="button" onclick="filterJobs('Finance Operations')" onkeypress="if(event.key==='Enter') filterJobs('Finance Operations')">Finance</span>
+    </div>
+  </section>
+
+  <section aria-label="Popular cities">
+    <h3>Popular Cities</h3>
+    <div class="tags">
+      <span tabindex="0" role="button" onclick="filterJobs('Bengaluru')" onkeypress="if(event.key==='Enter') filterJobs('Bengaluru')">Bengaluru</span>
+      <span tabindex="0" role="button" onclick="filterJobs('Hyderabad')" onkeypress="if(event.key==='Enter') filterJobs('Hyderabad')">Hyderabad</span>
+      <span tabindex="0" role="button" onclick="filterJobs('Delhi')" onkeypress="if(event.key==='Enter') filterJobs('Delhi')">Delhi-NCR</span>
+      <span tabindex="0" role="button" onclick="filterJobs('Pune')" onkeypress="if(event.key==='Enter') filterJobs('Pune')">Pune</span>
+      <span tabindex="0" role="button" onclick="filterJobs('Chennai')" onkeypress="if(event.key==='Enter') filterJobs('Chennai')">Chennai</span>
+    </div>
+  </section>
+
+  <!-- Job Listings -->
+  <section>
+    <h2>Latest Jobs</h2>
+    <div class="job-list" id="jobList" aria-live="polite" aria-relevant="additions"></div>
+  </section>
+
+  <!-- Job Application Form -->
+  <section class="career-form-container" id="applyForm" style="display: none;" aria-hidden="true" aria-label="Job application form">
+    <h4 class="career-form-title">Application Form</h4>
+    <form id="jobForm" class="career-form" onsubmit="submitApplication(event)" novalidate>
+      <label for="name">Full Name:</label>
+      <input type="text" id="name" name="name" required />
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required />
+
+      <label for="phone">Phone:</label>
+      <input type="tel" id="phone" name="phone" required pattern="[0-9\s\-\+\(\)]{7,15}" title="Enter a valid phone number" />
+
+      <label for="gradYear">Graduation Year:</label>
+      <select id="gradYear" name="gradYear" required></select>
+
+      <label for="skills">Skills:</label>
+      <input type="text" id="skills" name="skills" placeholder="e.g., Java, Python, SQL" required />
+
+      <label for="resume">Resume Upload:</label>
+      <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" required />
+
+      <button type="submit">Submit Application</button>
+    </form>
+  </section>
+</main>
+
+<!-- Common Footer -->
+<div id="footer-container"></div>
+
+<script>
+  // API URL (update as needed)
+  const apiUrl = 'http://localhost:8085/api/candidate/all';
+
+  // Initial sample jobs fallback
+  let jobs = [
+    { title: 'Software Engineer', department: 'Technology', experience: '2-3 Years' },
+    { title: 'Cloud Developer', department: 'Cloud', experience: '3-5 Years' },
+    { title: 'Data Analyst', department: 'Data Analytics', experience: '1-2 Years' },
+    { title: 'UI/UX Designer', department: 'Design', experience: '2-3 Years' },
+    { title: 'Java Full Stack Developer', department: 'Technology', experience: '3-4 Years' },
+    { title: 'AI/ML Engineer', department: 'Artificial Intelligence', experience: '4-5 Years' }
+  ];
+
+  // Fetch jobs from API
+  async function fetchJobsFromAPI() {
+    try {
+      const response = await fetch(apiUrl);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data = await response.json();
+      jobs = data.length ? data : jobs;
+      renderJobs(jobs);
+    } catch (error) {
+      console.error('Error fetching jobs:', error);
+      renderJobs(jobs); // Fallback to sample jobs
+    }
+  }
+
+  // Render jobs in jobList container
+  function renderJobs(jobs) {
+    const jobList = document.getElementById('jobList');
+    jobList.innerHTML = '';
+
+    if (jobs.length === 0) {
+      jobList.innerHTML = '<p>No jobs found.</p>';
+      return;
+    }
+
+    jobs.forEach((job, index) => {
+      const jobCard = document.createElement('div');
+      jobCard.className = 'job-card';
+      jobCard.setAttribute('tabindex', '0');
+      jobCard.setAttribute('role', 'button');
+      jobCard.setAttribute('aria-label', `Job: ${job.title}, Department: ${job.department}, Experience required: ${job.experience}`);
+      jobCard.addEventListener('click', showForm);
+      jobCard.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          showForm();
+        }
+      });
+
+      jobCard.innerHTML = `
+        <h3>${job.title}</h3>
+        <p>Business Area: ${job.department}</p>
+        <p>Experience: ${job.experience}</p>
+      `;
+
+      jobList.appendChild(jobCard);
+    });
+  }
+
+  // Search jobs by title
+  function searchJobs() {
+    const searchTerm = document.getElementById('search').value.trim().toLowerCase();
+    const filteredJobs = jobs.filter(job => job.title.toLowerCase().includes(searchTerm));
+    renderJobs(filteredJobs);
+  }
+
+  // Filter jobs by department/tag
+  function filterJobs(tag) {
+    const filteredJobs = jobs.filter(job => job.department.toLowerCase().includes(tag.toLowerCase()));
+    renderJobs(filteredJobs);
+  }
+
+  // Show the application form
+  function showForm() {
+    const form = document.getElementById('applyForm');
+    form.style.display = 'block';
+    form.setAttribute('aria-hidden', 'false');
+    // Scroll to form smoothly
+    form.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // Handle form submission
+  async function submitApplication(event) {
+    event.preventDefault();
+
+    // Basic client-side validation
+    const form = event.target;
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    // Create form data object
+    const formData = {
+      name: form.name.value.trim(),
+      email: form.email.value.trim(),
+      phone: form.phone.value.trim(),
+      graduationYear: form.gradYear.value,
+      skills: form.skills.value.trim(),
+      // For resume file upload, you will need to handle the file with FormData and backend support
+      resumePath: 'uploads/resume.pdf' // placeholder
+    };
+
+    try {
+      const response = await fetch('http://localhost:8085/api/candidate/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        alert('Application Submitted Successfully!');
+        form.reset();
+        document.getElementById('applyForm').style.display = 'none';
+        document.getElementById('applyForm').setAttribute('aria-hidden', 'true');
+        fetchJobsFromAPI();
+      } else {
+        alert('Something went wrong while submitting your application.');
+      }
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      alert('Failed to submit application. Please try again later.');
+    }
+  }
+
+  // Populate Graduation Year dropdown dynamically
+  document.addEventListener('DOMContentLoaded', () => {
+    const yearDropdown = document.getElementById('gradYear');
+    const currentYear = new Date().getFullYear();
+    for (let year = currentYear; year >= 1980; year--) {
+      const option = document.createElement('option');
+      option.value = year;
+      option.textContent = year;
+      yearDropdown.appendChild(option);
+    }
+
+    // Fetch initial job data
+    fetchJobsFromAPI();
+  });
+</script>
+
+<style>
+  /* Global Styles */
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+    color: #333;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-align: center;
+    color: #333;
+    margin: 1rem 0;
+  }
+
+  /* Search Section */
+  .search-container {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  #search {
+    flex-grow: 1;
+    max-width: 600px;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline-offset: 2px;
+  }
+
+  button {
+    padding: 12px 20px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    flex-shrink: 0;
+  }
+
+  button:focus {
+    background-color: black;
+    outline: none;
+  }
+
+  /* Tags */
+  .tags {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .tags span {
+    background-color: silver;
+    color: black;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+    outline-offset: 2px;
+  }
+
+  .tags span:hover,
+  .tags span:focus {
+    background-color: red;
+    color: white;
+    outline: none;
+  }
+
+  /* Job Card */
+  .job-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 0 1rem 2rem;
+  }
+
+  .job-card {
+    background-color: white;
+    width: 300px;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    outline-offset: 2px;
+  }
+
+  .job-card:hover,
+  .job-card:focus {
+    transform: translateY(-5px);
+    outline: none;
+  }
+
+  .job-card h3 {
+    color: red;
+    margin-bottom: 10px;
+  }
+
+  .job-card p {
+    color: #666;
+    font-size: 14px;
+    margin: 5px 0;
+  }
+
+  /* Application Form */
+  .career-form-container {
+    background-color: white;
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .career-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .career-form input,
+  .career-form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+  }
+
+  .career-form button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease-in-out;
+  }
+
+  .career-form button:hover,
+  .career-form button:focus {
+    background-color: black;
+    outline: none;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    #search {
+      width: 90%;
+    }
+
+    .career-form-container {
+      width: 90%;
+    }
+
+    .job-card {
+      width: 90%;
+    }
+  }
+</style>
+</body>
+
+</html>

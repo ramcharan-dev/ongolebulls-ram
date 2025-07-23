@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIPs | Ongole Bulls</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', 'Roboto', Arial, sans-serif; background: #f4f6f9; color: #222; min-height: 100vh; }
+    .sidebar { width: 220px; background: linear-gradient(135deg, #06142e 80%, #00e3e3 100%); color: #fff; padding: 2rem 1rem 1rem 1rem; height: 100vh; position: fixed; top: 0; left: 0; box-shadow: 2px 0 8px rgba(0,0,0,0.04); z-index: 10; transition: width 0.3s; }
+    .sidebar h2 { color: #00e3e3; text-align: center; margin-bottom: 2rem; letter-spacing: 2px; font-size: 1.6rem; }
+    .sidebar a { display: block; padding: 0.8rem 1rem; color: #fff; text-decoration: none; margin-bottom: 0.5rem; border-radius: 5px; font-weight: 500; transition: background 0.2s, color 0.2s, transform 0.2s; }
+    .sidebar a:hover, .sidebar .active { background: #0b2547; color: #00e3e3; transform: translateX(5px) scale(1.03); }
+    .main { margin-left: 220px; flex: 1; padding: 2.5rem 2rem 2rem 2rem; min-height: 100vh; }
+    .sips-header { font-size: 2rem; color: #06142e; font-weight: 700; margin-bottom: 1.5rem; }
+    .summary-card { background: linear-gradient(135deg, #388e3c 80%, #00e676 100%); color: #fff; border-radius: 14px; padding: 1.5rem 2rem; margin-bottom: 2rem; box-shadow: 0 2px 12px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 1.5rem; }
+    .summary-card .icon { font-size: 2.5rem; background: #fff2; border-radius: 50%; padding: 0.7rem; }
+    .summary-card .summary-info { font-size: 1.3rem; font-weight: 600; }
+    .sips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+    .sip-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); padding: 1.2rem 1rem; display: flex; flex-direction: column; align-items: center; transition: transform 0.2s, box-shadow 0.2s; }
+    .sip-card:hover { transform: translateY(-5px) scale(1.03); box-shadow: 0 6px 18px rgba(0,0,0,0.10); }
+    .sip-icon { font-size: 2.2rem; margin-bottom: 0.7rem; }
+    .sip-name { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; color: #388e3c; }
+    .sip-amount { font-size: 1.2rem; font-weight: 700; color: #222; margin-bottom: 0.5rem; }
+    .sip-progress { width: 80%; height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden; margin-top: 0.5rem; }
+    .sip-progress-bar { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #00e676 60%, #388e3c 100%); }
+    footer { width: 100%; background: #06142e; color: #fff; text-align: center; padding: 1rem 0 0.5rem 0; font-size: 1rem; position: fixed; left: 0; bottom: 0; z-index: 20; letter-spacing: 1px; }
+    @media (max-width: 768px) { .sidebar { position: relative; width: 100%; height: auto; display: flex; flex-direction: row; justify-content: space-around; padding: 1rem 0.5rem; box-shadow: none; } .sidebar h2 { display: none; } .sidebar a { margin-bottom: 0; padding: 0.7rem 0.8rem; font-size: 1rem; } .main { margin-left: 0; padding: 1.2rem 0.5rem 2.5rem 0.5rem; } footer { font-size: 0.95rem; } }
+    @media (max-width: 500px) { .sips-grid { grid-template-columns: 1fr; } .main { padding: 0.7rem 0.2rem 2.5rem 0.2rem; } .sidebar a { font-size: 0.95rem; padding: 0.6rem 0.5rem; } }
+    .sidebar { display: flex; flex-direction: column; justify-content: space-between; }
+    .sidebar .nav-links { flex: 1; }
+    .logout-btn { margin-top: 1.5rem; background: #f44336; color: #fff; border: none; border-radius: 5px; padding: 0.8rem 1rem; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.7rem; justify-content: center; transition: background 0.2s; }
+    .logout-btn:hover { background: #b71c1c; color: #fff; }
+    .logout-btn i { font-size: 1.1rem; }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+<div class="sidebar">
+  <div>
+    <h2>Ongolebulls</h2>
+    <div class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="sipp.html" class="active">SIPs</a>
+      <a href="profile.html">Profile</a>
+    </div>
+  </div>
+  <button class="logout-btn" onclick="alert('You have been logged out!')"><i class="fas fa-sign-out-alt"></i> Logout</button>
+</div>
+<div class="main">
+  <div class="sips-header">SIP Contributions</div>
+  <div class="summary-card">
+    <span class="icon"><i class="fas fa-coins"></i></span>
+    <span class="summary-info">Total Monthly SIP: <span style="font-size:1.5rem; font-weight:700">₹11,500</span></span>
+  </div>
+  <div class="sips-grid">
+    <div class="sip-card">
+      <span class="sip-icon" style="color:#1976d2"><i class="fas fa-chart-line"></i></span>
+      <div class="sip-name">Axis Bluechip</div>
+      <div class="sip-amount">₹5,000/month</div>
+      <div class="sip-progress"><div class="sip-progress-bar" style="width: 80%"></div></div>
+    </div>
+    <div class="sip-card">
+      <span class="sip-icon" style="color:#7b1fa2"><i class="fas fa-chart-pie"></i></span>
+      <div class="sip-name">SBI Small Cap</div>
+      <div class="sip-amount">₹2,000/month</div>
+      <div class="sip-progress"><div class="sip-progress-bar" style="width: 60%"></div></div>
+    </div>
+    <div class="sip-card">
+      <span class="sip-icon" style="color:#f57c00"><i class="fas fa-coins"></i></span>
+      <div class="sip-name">HDFC Flexicap</div>
+      <div class="sip-amount">₹3,000/month</div>
+      <div class="sip-progress"><div class="sip-progress-bar" style="width: 70%"></div></div>
+    </div>
+    <div class="sip-card">
+      <span class="sip-icon" style="color:#388e3c"><i class="fas fa-piggy-bank"></i></span>
+      <div class="sip-name">Parag Parikh Flexi</div>
+      <div class="sip-amount">₹1,500/month</div>
+      <div class="sip-progress"><div class="sip-progress-bar" style="width: 50%"></div></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+name: ongolebulssinvest
+
+on:
+  push:
+    branches:
+      - master  # OR 'Deploy-project' if you're using a different branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Cache Maven Packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build Spring Boot Project
+        run: mvn clean package -DskipTests
+
+      - name: Deploy to AWS Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: 'ongolebullsinvests'
+          environment_name: 'ongolebullsinvests-env'
+          version_label: ${{ github.sha }}
+          region: ap-south-1
+          deployment_package: target/ongolebulls-0.0.1-SNAPSHOT.jar/ongolebulls-0.0.1-SNAPSHOT.jar

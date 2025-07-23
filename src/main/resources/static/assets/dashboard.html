@@ -1,0 +1,223 @@
+<!-- Save this as dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard | Ongole Bulls</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', 'Roboto', Arial, sans-serif; background: #f4f6f9; color: #222; min-height: 100vh; display: flex; flex-direction: column; transition: background 0.3s, color 0.3s; }
+    body.dark { background: #181c24; color: #e0e0e0; }
+    .sidebar { width: 220px; background: linear-gradient(135deg, #06142e 80%, #00e3e3 100%); color: #fff; padding: 2rem 1rem 1rem 1rem; height: 100vh; position: fixed; top: 0; left: 0; box-shadow: 2px 0 8px rgba(0,0,0,0.04); z-index: 10; transition: width 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
+    .sidebar h2 { color: #00e3e3; text-align: center; margin-bottom: 2rem; letter-spacing: 2px; font-size: 1.6rem; }
+    .sidebar .nav-links { flex: 1; }
+    .sidebar a { display: block; padding: 0.8rem 1rem; color: #fff; text-decoration: none; margin-bottom: 0.5rem; border-radius: 5px; font-weight: 500; transition: background 0.2s, color 0.2s, transform 0.2s; }
+    .sidebar a:hover, .sidebar .active { background: #0b2547; color: #00e3e3; transform: translateX(5px) scale(1.03); }
+    .logout-btn { margin-top: 1.5rem; background: #f44336; color: #fff; border: none; border-radius: 5px; padding: 0.8rem 1rem; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.7rem; justify-content: center; transition: background 0.2s; }
+    .logout-btn:hover { background: #b71c1c; color: #fff; }
+    .logout-btn i { font-size: 1.1rem; }
+    .main { margin-left: 220px; flex: 1; padding: 2.5rem 2rem 2rem 2rem; min-height: 100vh; transition: margin-left 0.3s; }
+    header { display: flex; align-items: center; justify-content: space-between; }
+    header h1 { font-size: 2rem; color: #06142e; margin-bottom: 1.5rem; font-weight: 700; }
+    .dark header h1 { color: #e0e0e0; }
+    .notification { position: relative; margin-left: 1rem; }
+    .notification .bell { font-size: 1.5rem; cursor: pointer; color: #1976d2; }
+    .notification .notif-dot { position: absolute; top: 0; right: 0; width: 10px; height: 10px; background: #f44336; border-radius: 50%; border: 2px solid #fff; }
+    .notif-dropdown { display: none; position: absolute; right: 0; top: 2rem; background: #fff; color: #222; min-width: 220px; box-shadow: 0 2px 12px rgba(0,0,0,0.12); border-radius: 8px; z-index: 100; }
+    .notif-dropdown.active { display: block; }
+    .notif-dropdown ul { list-style: none; padding: 0.7rem 0; }
+    .notif-dropdown li { padding: 0.7rem 1.2rem; border-bottom: 1px solid #eee; font-size: 1rem; }
+    .notif-dropdown li:last-child { border-bottom: none; }
+    .notif-dropdown li.important { color: #f44336; font-weight: 600; }
+    .dark .notif-dropdown { background: #23272f; color: #e0e0e0; }
+    .quick-actions { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+    .quick-action-btn { background: #1976d2; color: #fff; border: none; border-radius: 8px; padding: 0.7rem 1.3rem; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.6rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: background 0.2s; }
+    .quick-action-btn:hover { background: #00e3e3; color: #06142e; }
+    .dark .quick-action-btn { background: #23272f; color: #e0e0e0; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; margin-top: 1rem; }
+    .card { padding: 1.2rem 1rem; border-radius: 12px; color: #fff; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; position: relative; background: #1976d2; }
+    .card.orange { background: linear-gradient(135deg, #f57c00 80%, #ffc107 100%); }
+    .card.green { background: linear-gradient(135deg, #388e3c 80%, #00e676 100%); }
+    .card.purple { background: linear-gradient(135deg, #7b1fa2 80%, #e040fb 100%); }
+    .card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 600; }
+    .card p { font-size: 1.3rem; font-weight: 700; }
+    .card .counter { font-size: 1.7rem; font-weight: 700; }
+    .goal-progress { margin: 2rem 0 1.5rem 0; background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); padding: 1.2rem 1rem; display: flex; align-items: center; gap: 1.2rem; }
+    .goal-label { font-size: 1.1rem; font-weight: 600; color: #1976d2; }
+    .goal-bar-bg { flex: 1; height: 16px; background: #e0e0e0; border-radius: 8px; overflow: hidden; }
+    .goal-bar { height: 100%; background: linear-gradient(90deg, #00e676 60%, #388e3c 100%); border-radius: 8px; transition: width 1s; }
+    .goal-value { font-size: 1.1rem; font-weight: 600; margin-left: 1rem; }
+    .charts { margin-top: 2.2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .charts canvas { background: #fff; padding: 1rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); max-width: 100%; width: 100%; height: 320px; max-height: 340px; margin: 0 auto; display: block; }
+    .performance-summary { margin-top: 2.2rem; display: flex; gap: 2rem; }
+    .perf-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); padding: 1.2rem 1.5rem; flex: 1; text-align: center; }
+    .perf-title { font-size: 1.1rem; color: #1976d2; font-weight: 600; margin-bottom: 0.5rem; }
+    .perf-asset { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .perf-value { font-size: 1.1rem; color: #388e3c; font-weight: 600; }
+    .perf-value.negative { color: #f44336; }
+    .recent-activity { margin-top: 2.2rem; background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); padding: 1.2rem 1.5rem; }
+    .recent-activity h3 { font-size: 1.1rem; color: #1976d2; font-weight: 600; margin-bottom: 1rem; }
+    .activity-list { list-style: none; padding: 0; }
+    .activity-list li { padding: 0.7rem 0; border-bottom: 1px solid #eee; font-size: 1rem; display: flex; align-items: center; gap: 0.7rem; }
+    .activity-list li:last-child { border-bottom: none; }
+    .activity-icon { font-size: 1.1rem; }
+    .dark .sidebar, .dark .card, .dark .goal-progress, .dark .perf-card, .dark .recent-activity { background: #23272f !important; color: #e0e0e0 !important; }
+    .dark .sidebar a, .dark .sidebar h2 { color: #e0e0e0 !important; }
+    .dark .sidebar a.active, .dark .sidebar a:hover { color: #00e3e3 !important; }
+    .dark .goal-label, .dark .perf-title, .dark .recent-activity h3 { color: #00e3e3 !important; }
+    .dark .goal-bar-bg { background: #333 !important; }
+    .dark .notif-dropdown { background: #23272f; color: #e0e0e0; }
+    .dark .quick-action-btn { background: #333; color: #e0e0e0; }
+    .dark .card.orange, .dark .card.green, .dark .card.purple { color: #fff; }
+    @media (max-width: 900px) { .charts { grid-template-columns: 1fr; } .performance-summary { flex-direction: column; gap: 1rem; } }
+    @media (max-width: 768px) { .sidebar { position: relative; width: 100%; height: auto; display: flex; flex-direction: row; justify-content: space-around; padding: 1rem 0.5rem; box-shadow: none; } .sidebar h2 { display: none; } .sidebar a { margin-bottom: 0; padding: 0.7rem 0.8rem; font-size: 1rem; } .main { margin-left: 0; padding: 1.2rem 0.5rem 2.5rem 0.5rem; } .charts canvas { height: 220px; max-height: 240px; } footer { font-size: 0.95rem; } }
+    @media (max-width: 500px) { .cards { grid-template-columns: 1fr; } .main { padding: 0.7rem 0.2rem 2.5rem 0.2rem; } .sidebar a { font-size: 0.95rem; padding: 0.6rem 0.5rem; } }
+    .card, .sidebar a, .main, canvas { transition: all 0.2s cubic-bezier(.4,0,.2,1); }
+    .dark .main, .dark .charts canvas { background: #181c24 !important; }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+  <div class="sidebar">
+    <div>
+      <h2>Ongole Bulls</h2>
+      <div class="nav-links">
+        <a href="dashboard.html" class="active">Dashboard</a>
+        <a href="portfolio.html">Portfolio</a>
+        <a href="sips.html">SIPs</a>
+        <a href="profile.html">Profile</a>
+      </div>
+    </div>
+    <button class="logout-btn" onclick="alert('You have been logged out!')"><i class="fas fa-sign-out-alt"></i> Logout</button>
+  </div>
+  <div class="main">
+    <header>
+      <h1>Welcome, Investor</h1>
+      <div style="display: flex; align-items: center; gap: 1.2rem;">
+        <button id="darkModeToggle" class="quick-action-btn" title="Toggle dark mode"><i class="fas fa-moon"></i></button>
+        <div class="notification">
+          <span class="bell" id="notifBell"><i class="fas fa-bell"></i></span>
+          <span class="notif-dot"></span>
+          <div class="notif-dropdown" id="notifDropdown">
+            <ul>
+              <li class="important">SIP due tomorrow</li>
+              <li>KYC expiring in 10 days</li>
+              <li>Portfolio up 2% this week</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="quick-actions">
+      <button class="quick-action-btn"><i class="fas fa-plus-circle"></i> Add Investment</button>
+      <button class="quick-action-btn"><i class="fas fa-play-circle"></i> Start SIP</button>
+      <button class="quick-action-btn"><i class="fas fa-file-download"></i> Download Report</button>
+    </div>
+    <section class="cards">
+      <div class="card blue"><h3>Total Investment</h3><p class="counter" data-target="1250000">₹0</p></div>
+      <div class="card orange"><h3>Current Value</h3><p class="counter" data-target="1380000">₹0</p></div>
+      <div class="card green"><h3>Returns (%)</h3><p class="counter" data-target="10.4">0%</p></div>
+      <div class="card purple"><h3>Active SIPs</h3><p class="counter" data-target="5">0</p></div>
+    </section>
+    <div class="goal-progress">
+      <span class="goal-label"><i class="fas fa-bullseye"></i> Goal: ₹20,00,000</span>
+      <div class="goal-bar-bg"><div class="goal-bar" id="goalBar" style="width: 62.5%"></div></div>
+      <span class="goal-value">62.5%</span>
+    </div>
+    <section class="charts">
+      <canvas id="portfolioChart"></canvas>
+      <canvas id="growthChart"></canvas>
+    </section>
+    <div class="performance-summary">
+      <div class="perf-card">
+        <div class="perf-title">Best Performer</div>
+        <div class="perf-asset"><i class="fas fa-chart-line"></i> Axis Bluechip Fund</div>
+        <div class="perf-value">+12.5%</div>
+      </div>
+      <div class="perf-card">
+        <div class="perf-title">Worst Performer</div>
+        <div class="perf-asset"><i class="fas fa-coins"></i> SBI Small Cap</div>
+        <div class="perf-value negative">-2.1%</div>
+      </div>
+    </div>
+    <div class="recent-activity">
+      <h3><i class="fas fa-history"></i> Recent Activity</h3>
+      <ul class="activity-list">
+        <li><span class="activity-icon" style="color:#1976d2"><i class="fas fa-plus-circle"></i></span> Invested ₹10,000 in HDFC Flexicap <span style="margin-left:auto; color:#888; font-size:0.95em;">Today</span></li>
+        <li><span class="activity-icon" style="color:#388e3c"><i class="fas fa-play-circle"></i></span> SIP of ₹2,000 executed <span style="margin-left:auto; color:#888; font-size:0.95em;">Yesterday</span></li>
+        <li><span class="activity-icon" style="color:#f57c00"><i class="fas fa-file-download"></i></span> Downloaded portfolio report <span style="margin-left:auto; color:#888; font-size:0.95em;">2 days ago</span></li>
+        <li><span class="activity-icon" style="color:#7b1fa2"><i class="fas fa-coins"></i></span> Dividend credited ₹1,500 <span style="margin-left:auto; color:#888; font-size:0.95em;">3 days ago</span></li>
+      </ul>
+    </div>
+  </div>
+  <footer>
+    &copy; 2024 Ongole Bulls. All rights reserved.
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Chart.js code (unchanged)
+    const portfolioCtx = document.getElementById('portfolioChart').getContext('2d');
+    const growthCtx = document.getElementById('growthChart').getContext('2d');
+    new Chart(portfolioCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Equity', 'Debt', 'Gold', 'FD'],
+        datasets: [{
+          data: [40, 25, 20, 15],
+          backgroundColor: ['#1976d2', '#f57c00', '#ffc107', '#7b1fa2']
+        }]
+      },
+      options: {
+        plugins: { title: { display: true, text: 'Portfolio Allocation' }, legend: { position: 'bottom' } }
+      }
+    });
+    new Chart(growthCtx, {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{
+          label: 'Growth (₹)',
+          data: [300000, 450000, 600000, 700000, 850000, 1000000],
+          borderColor: '#00bcd4', fill: false, tension: 0.3
+        }]
+      },
+      options: {
+        plugins: { title: { display: true, text: 'Investment Growth Over Time' } },
+        scales: { y: { ticks: { callback: value => '₹' + value / 100000 + 'L' } } }
+      }
+    });
+    // Animated number counters
+    document.querySelectorAll('.counter').forEach(counter => {
+      const target = +counter.getAttribute('data-target');
+      let isPercent = counter.textContent.includes('%');
+      let start = 0;
+      let step = target / 60;
+      function update() {
+        start += step;
+        if ((step > 0 && start < target) || (step < 0 && start > target)) {
+          counter.textContent = isPercent ? (start.toFixed(1) + '%') : ('₹' + Math.floor(start).toLocaleString());
+          requestAnimationFrame(update);
+        } else {
+          counter.textContent = isPercent ? (target + '%') : ('₹' + target.toLocaleString());
+        }
+      }
+      update();
+    });
+    // Notification dropdown
+    const notifBell = document.getElementById('notifBell');
+    const notifDropdown = document.getElementById('notifDropdown');
+    notifBell.onclick = function(e) {
+      notifDropdown.classList.toggle('active');
+      e.stopPropagation();
+    };
+    document.body.onclick = function() { notifDropdown.classList.remove('active'); };
+    notifDropdown.onclick = function(e) { e.stopPropagation(); };
+    // Dark mode toggle
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    darkModeToggle.onclick = function() {
+      document.body.classList.toggle('dark');
+    };
+  </script>
+</body>
+</html>

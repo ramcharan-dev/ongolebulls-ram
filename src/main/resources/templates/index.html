@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="aa">
+<head>
+  <link rel="stylesheet" th:href="@{style.css}">
+  <title>OngoleBulls Invest - Your Partner in Wealth Creation</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <script src="/common.js" defer></script> <!-- Load JavaScript -->
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Manrope" rel="stylesheet">
+</head>
+<body>
+<!--common headder-->
+<div id="header-container"></div>
+
+
+<header class="hero-section" style="position: relative; overflow: hidden;">
+  <!-- Background Video
+  <video autoplay muted loop playsinline style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1;">
+    <source src="assets/stock-footage-communication-network-concept-digital-transformation.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+
+  -->
+  <!-- Background Image -->
+  <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('assets/bg.jpg');
+            background-size: cover; background-position: center;
+            z-index: -1;">
+  </div>
+
+  <div class="container d-flex align-items-center justify-content-between flex-wrap" style="max-width: 100%; padding:40px;">
+    <!-- Left Text Content -->
+    <div class="text-content text-white" style="z-index: 1; position: relative;">
+      <h1>
+        <span class="hover-pop" style="color: white;">Ongolebulls Invest</span>
+      </h1>
+      <div class="welcome-message" style="text-align: center;">
+        Welcome to Ongolebulls – Your Trusted Investment Partner!
+      </div>
+
+      <div class="highlight-section">
+        <!-- Card 1 -->
+        <div class="card">
+          <div class="icon">
+            <img src="assets/time-to-market.png" alt="Economy" />
+          </div>
+          <div class="title">Customized Wealth Solutions</div>
+          <div class="text">
+            Tailored strategies for HNIs, families & professionals  <br />
+            Risk-optimized planning
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+          <div class="icon">
+            <img src="assets/solution.png" alt="FDI" />
+          </div>
+          <div class="title">Empowering Your Financial Future</div>
+          <div class="text">
+            Strategic investments designed to secure long-term wealth <br />and financial independence.
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+          <div class="icon">
+            <img src="assets/recyclable-material.png" alt="Exports" />
+          </div>
+          <div class="title">End-to-End Financial Planning</div>
+          <div class="text">
+            From SIPs to IPOs – a 360° investment journey<br /> Tax planning
+          </div>
+        </div>
+      </div>
+
+
+      <div style="text-align: center;">
+        <a href="/contact.html" class="btn btn-success" style="padding: 10px;">
+          Start Your Investment Journey <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<section id="roadmap-section" class="roadmap-section">
+  <h2>What Are Your Financial Goals?</h2>
+  <p>Everyone has various financial goals which is to be achieved for leading a beautiful and stress-free life.</p>
+
+  <div class="roadmap-container">
+    <div class="roadmap-item">
+      <div class="circle-icon"><img src="assets/background.png" alt="Started Earning"></div>
+      <div class="line"></div>
+      <h4>I HAVE JUST<br><span>STARTED EARNING</span></h4>
+    </div>
+    <div class="roadmap-item">
+      <div class="circle-icon"><img src="assets/mother_and_child-removebg-preview.png" alt="Child's Future"></div>
+      <div class="line"></div>
+      <h4>I'M THINKING OF MY<br><span>CHILD'S FUTURE</span></h4>
+    </div>
+    <div class="roadmap-item">
+      <div class="circle-icon"><img src="assets/homes-removebg-preview.png" alt="Own a Home"></div>
+      <div class="line"></div>
+      <h4>I WANT TO<br><span>OWN A HOME</span></h4>
+    </div>
+    <div class="roadmap-item">
+      <div class="circle-icon"><img src="assets/study-removebg-preview.png" alt="Dreams"></div>
+      <div class="line"></div>
+      <h4>I WANT TO FULFILL<br><span>MY DREAMS</span></h4>
+    </div>
+    <div class="roadmap-item">
+      <div class="circle-icon"><img src="assets/growing-business-profits-removebg-preview.png" alt="Early Investor"></div>
+      <div class="line"></div>
+      <h4>I’M AN<br><span>EARLY INVESTOR</span></h4>
+    </div>
+    <div class="roadmap-item">
+      <div class="circle-icon"><img src="assets/427.png" alt="Retirement"></div>
+      <div class="line"></div>
+      <h4>I'M PREPARING<br><span>TO RETIRE</span></h4>
+    </div>
+  </div>
+
+  <div class="explore-button">
+    <a href="#">Explore Financial Planning</a>
+  </div>
+</section>
+<style>
+  .hover-pop {
+      display: inline-block;
+      color: #ff4b5c; /* optional highlight color */
+      transform: scale(1.1);
+      transition: transform 0.3s ease, text-shadow 0.3s ease;
+      text-shadow: 0 0 8px rgba(255, 75, 92, 0.6);
+      font-weight: bold;
+    }
+
+    /* Optional animation pulse */
+    .hover-pop {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1.1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1.1); }
+    }
+
+    .highlight-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 80px 20px;
+    gap: 30px;
+    flex-wrap: wrap;
+  }
+
+  .card {
+    width: 320px;
+    padding: 30px 20px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.12); /* Low opacity */
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(5px);
+    color: #fff;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+
+  .card:hover {
+    border: 1.5px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    transform: translateY(-5px);
+  }
+
+  .icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 20px;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-inline: auto;
+  }
+
+  .icon img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .text {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .highlight-section {
+      flex-direction: column;
+    }
+  }
+
+    .roadmap-section {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .roadmap-section h2 {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+
+    .roadmap-section p {
+      max-width: 700px;
+      margin: 0 auto 40px;
+      color: #555;
+    }
+
+    .roadmap-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      position: relative;
+    }
+
+    .roadmap-item {
+      width: 150px;
+      text-align: center;
+      position: relative;
+      animation: slideUp 1s ease-in-out;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .circle-icon {
+      width: 120px;
+      height: 120px;
+      border: 6px double #6a2f22;
+      border-radius: 50%;
+      background-color: #fff;
+      margin: 0 auto;
+      padding: 15px;
+      position: relative;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
+
+    .circle-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .line {
+      width: 3px;
+      height: 40px;
+      background: #6a2f22;
+      margin: 10px auto;
+    }
+
+    .roadmap-item h4 {
+      font-size: 14px;
+      color: #222;
+      font-weight: 400;
+    }
+
+    .roadmap-item h4 span {
+      color: #d62828;
+      font-weight: bold;
+    }
+
+    .explore-button {
+      margin-top: 50px;
+    }
+
+    .explore-button a {
+      background-color: #34546b;
+      padding: 12px 25px;
+      border-radius: 8px;
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .explore-button a:hover {
+      background-color: #0056b3;
+    }
+
+    @media screen and (max-width: 768px) {
+      .roadmap-container {
+        flex-direction: column;
+        gap: 60px;
+      }
+
+      .line {
+        height: 30px;
+      }
+    }
+  .help-section {
+  padding: 40px 20px;
+  background-color: #f9f9f9;
+  text-align: center;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.help-section h2 {
+  font-size: 2rem;
+  color: #222;
+  margin-bottom: 40px;
+}
+
+.steps-section {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.flip-card {
+  background: transparent;
+  width: 320px;
+  height: 400px;
+  perspective: 1000px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 20px;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.3s ease;
+
+}
+
+.flip-card-front img {
+  width: 280px;
+  height: 210px;
+  margin-bottom: 20px;
+}
+
+.flip-card-front h3 {
+  font-size: 1.4rem;
+  color: #333;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+  background-color: #bfdaf2;
+  overflow-y: auto;
+  padding: 30px 20px;
+}
+
+.flip-card-back h4 {
+  font-size: 1.2rem;
+  color: #d1345b;
+  margin-bottom: 10px;
+}
+
+.flip-card-back p {
+  font-size: 0.95rem;
+  color: #444;
+  margin-bottom: 10px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.flip-card-content {
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .steps-section {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .flip-card {
+    width: 90%;
+    height: 420px;
+  }
+}
+
+</style>
+
+    <hr class="custom-line">
+<div class="help-section">
+  <h2>Here's How We Can Help You Achieve Your Goals:</h2>
+  <div class="steps-section">
+
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <img src="assets/plan.png" alt="Smart Wealth Building">
+          <h3>Smart Wealth Building</h3>
+        </div>
+        <div class="flip-card-back">
+          <div class="flip-card-content">
+            <h4>Grow Your Wealth</h4>
+            <p>We provide personalized strategies to help you build a diversified portfolio that aligns with your long-term goals.</p>
+            <p>Whether you're investing in mutual funds, stocks, or real estate, we ensure smart, consistent growth through expert guidance and risk management.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <img src="assets/manage.png" alt="Planning for the Future">
+          <h3>Planning for the Future</h3>
+        </div>
+        <div class="flip-card-back">
+          <div class="flip-card-content">
+            <h4>Future-Ready Financial Planning</h4>
+            <p>From retirement plans to education funds, our advisors help create a stable future roadmap that minimizes stress and maximizes savings.</p>
+            <p>We’ll tailor your plan based on your aspirations, life stages, and responsibilities to ensure your financial future is secure.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <img src="assets/execute.png" alt="Protecting What Matters">
+          <h3>Protecting What Matters</h3>
+        </div>
+        <div class="flip-card-back">
+          <div class="flip-card-content">
+            <h4>Safeguard Your Legacy</h4>
+            <p>We help you protect your wealth with smart estate planning, tax optimization strategies, and insurance solutions that preserve your legacy.</p>
+            <p>Let us help you ensure your assets are passed on exactly the way you want, with minimal legal and financial hurdles.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+    <div class="reflection-section">
+      <h2>Ask Yourself:</h2>
+      <ul>
+        <li>What do I want to achieve with my money in the next 5, 10, or 20 years?</li>
+        <li>Am I on track to meet my goals, or do I need expert advice?</li>
+        <li>How can I grow my wealth with minimal risk?</li>
+      </ul>
+      <a href="#roadmap-section" class="cta-button">Click to View Financial Goal Planning</a>
+
+    </div>
+
+  </div>
+</section>
+
+
+<section class="overview-section">
+  <!-- Left Image -->
+  <img src="assets/about Us.webp" alt="Financial Planning Image">
+
+  <!-- Right Content -->
+  <div class="overview-content">
+    <h2>About Us!</h2>
+    <p>At Ongolebulls Invest Pvt Ltd, we specialize in helping individuals, families, and businesses achieve financial independence through personalized wealth
+      management and investment strategies. With years of expertise in the financial industry, we offer comprehensive solutions
+      tailored to your specific goals, whether you're just starting your investment journey or are an experienced investor looking to
+      optimize your wealth.
+      We take a transparent approach to wealth management, ensuring that our clients understand every step of their financial journey.
+      Our services range from systematic investment plans (SIPs) for steady wealth creation to estate planning for high net worth families.
+      We also offer specialized solutions for high net worth individuals (HNIs), portfolio diversification, or tax optimization for investors,
+      Ongolebulls Invest is here to help you grow and protect your wealth.
+
+
+    </p>
+  </div>
+</section>
+
+
+<!-- Services Section -->
+<section id="services" class="py-5 bg-light">
+ <div class="text-center"> <h2>Our Financial Services</h2></div>
+  <div class="container">
+    <div class="services-container">
+      <!-- Service Card 1: Wealth Management -->
+      <div class="service-card" onclick="window.location.href='wealth-management.html'">
+        <img src="assets/w-m.jpg" alt="Wealth Management" class="service-img">
+        <div class="service-info">
+          <h5 class="service-title">Wealth Management</h5>
+          <p class="service-text">We provide personalized wealth management strategies focused on long-term growth, asset allocation, and risk management to ensure your wealth is protected and maximized.</p>
+        </div>
+      </div>
+      <!-- Service Card 2: Investment Management -->
+      <div class="service-card" onclick="window.location.href='investment-management.html'">
+        <img src="assets/smart investment.jpg" alt="Investment Management" class="service-img">
+        <div class="service-info">
+          <h5 class="service-title">Investment Planning</h5>
+          <p class="service-text">Our investment planning services offer both active and passive portfolio management to help you make informed decisions, maximize returns, and minimize risks.</p>
+        </div>
+      </div>
+      <!-- Service Card 3: SIP -->
+      <div class="service-card" onclick="window.location.href='sip.html'">
+        <img src="assets/sip-1704527305.webp" alt="SIP" class="service-img">
+        <div class="service-info">
+          <h5 class="service-title">Systematic Investment Plan (SIP)</h5>
+          <p class="service-text">Start building wealth with SIPs—a disciplined, affordable way to invest in mutual funds and stocks, ensuring steady growth over time.</p>
+        </div>
+      </div>
+      <!-- Service Card 4: Investment Banking -->
+      <div class="service-card" onclick="window.location.href='investment-banking.html'">
+        <img src="assets/invest backing.jpg" alt="Investment Banking" class="service-img">
+        <div class="service-info">
+          <h5 class="service-title">Investment Banking</h5>
+          <p class="service-text">From capital raising to mergers and acquisitions, our investment banking services offer strategic insights and tailored solutions for businesses and startups.</p>
+        </div>
+      </div>
+
+      <!-- Service Card 5: Investment Platforms -->
+      <div class="service-card" onclick="window.location.href='hni-services.html'">
+        <img src="assets/invest.jpg" alt="Investment Platforms" class="service-img">
+        <div class="service-info">
+          <h5 class="service-title">HNI & Family Office Services</h5>
+          <p class="service-text">We offer exclusive services for high net worth individuals (HNIs), including estate planning, tax optimization, and succession planning to protect and grow your wealth across generations.</p>
+        </div>
+      </div>
+
+      <!-- Service Card 6: Wealth Creation & Planning -->
+      <div class="service-card" onclick="window.location.href='stock-markets-bonds.html'">
+        <img src="assets/stocks.jpg" alt="Wealth Creation & Planning" class="service-img">
+        <div class="service-info">
+          <h5 class="service-title">Stock Market & Bond Investment</h5>
+          <p class="service-text">We offer expert guidance in the stock market and bond investments to help you diversify your portfolio and make informed decisions. Whether you’re interested in equity investments, IPOs, or debt instruments</p>
+        </div>
+      </div>
+
+      <!-- Service Card 7: HNI & Family Offices -->
+      <div class="service-card" onclick="window.location.href='investment-platforms.html'">
+        <img src="assets/digital-invest.jpg" alt="HNI & Family Offices" class="service-img">
+        <div class="service-info">
+          <h5 class="service-title">Digital Investment Platforms</h5>
+          <p class="service-text">Our easy-to-use digital investment platforms provide real-time access to stocks, bonds, and mutual funds, making it simple to manage your portfolio on the go.</p>
+        </div>
+      </div>
+
+      <!-- Service Card 8: Stock Markets & Bonds -->
+      <div class="service-card" onclick="window.location.href='#stock-markets-bonds.html'">
+        <img src="assets/sma.webp" alt="Stock Markets & Bonds" class="service-img">
+        <div class="service-info">
+          <h5 class="service-title">Tax Optimization & Estate Planning</h5>
+          <p class="service-text">Minimize tax liabilities and secure your legacy with our tax optimization strategies and estate planning services, ensuring your wealth is passed on efficiently.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="investment-section">
+  <h2>Our Investment Solutions</h2>
+  <div class="investment-container">
+    <div class="investment-list">
+      <div class="investment-item" onclick="openPage('cash-flow.html')">
+        <img src="assets/cash-flow.png" alt="Cash Flow Management">
+        <span>Cash Flow Management</span>
+      </div>
+      <div class="investment-item" onclick="openPage('risk-management.html')">
+        <img src="assets/alert.png" alt="Risk Management">
+        <span>Risk Management</span>
+      </div>
+      <div class="investment-item" onclick="openPage('investment-planning.html')">
+        <img src="assets/invest managements.png" alt="Investment Planning">
+        <span>Investment Planning</span>
+      </div>
+      <div class="investment-item" onclick="openPage('tax-planning.html')">
+        <img src="assets/tax planning.png" alt="Tax Planning">
+        <span>Tax Planning</span>
+      </div>
+      <div class="investment-item" onclick="openPage('retirement-planning.html')">
+        <img src="assets/retirement.png" alt="Retirement Planning">
+        <span>Retirement Planning</span>
+      </div>
+      <div class="investment-item" onclick="openPage('estate-planning.html')">
+        <img src="assets/estate planing.png" alt="Estate Planning">
+        <span>Estate Planning</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="principles">
+  <h2>Core Principles</h2>
+  <div class="principles-container">
+
+    <div class="principle" id="personalization">
+      <div class="icon">
+        <img src="assets/personalization.png" alt="Icon" />
+      </div>
+      <h3>Personalization</h3>
+      <p>Solutions tailored to individual needs.</p>
+    </div>
+
+    <div class="principle" id="innovation">
+      <div class="icon">
+        <img src="assets/innovation.png" alt="Icon" />
+      </div>
+      <h3>Innovation</h3>
+      <p>Leveraging cutting-edge technology.</p>
+    </div>
+
+    <div class="principle" id="transparency">
+      <div class="icon">
+        <img src="assets/transparency....png" alt="Icon" />
+      </div>
+      <h3>Transparency</h3>
+      <p>Clear communication without hidden fees.</p>
+    </div>
+
+
+    <div class="principle" id="sustainability">
+      <div class="icon">
+        <img src="assets/sustainability.png" alt="Icon" />
+      </div>
+      <h3>Sustainability</h3>
+      <p>Focus on responsible and long-term growth.</p>
+    </div>
+
+  </div>
+</section>
+
+
+<section class="why-ongolbulls">
+  <h2>Why Choose Ongolebulls?</h2>
+  <p>
+    At Ongolebulls, we specialize in empowering businesses and investors by providing tailored financial and investment solutions.
+    We are your go-to partner for long-term success and strategic growth.
+  </p>
+  <div class="features">
+    <div class="feature">
+      <img src="assets/brainstorming.png" alt="Icon 1">
+      <h3>Comprehensive Financial Planning</h3>
+      <p>
+        From managing liquidity to addressing tax requirements, we provide solutions to ensure financial stability and scalability for businesses.
+      </p>
+    </div>
+    <div class="feature">
+      <img src="assets/progress.png" alt="Icon 2">
+      <h3>Real-Time Portfolio Tracking</h3>
+      <p>
+        With advanced tools, monitor your investments and business performance in real time to stay ahead in a competitive market.
+      </p>
+    </div>
+    <div class="feature">
+      <img src="assets/call-center.png" alt="Icon 3">
+      <h3>Dedicated Client Support</h3>
+      <p>
+        Our team offers seamless support from onboarding to project execution, ensuring a smooth and collaborative journey.
+      </p>
+    </div>
+
+    <!-- New feature sections -->
+    <div class="feature">
+      <img src="assets/expertize.png" alt="Icon 4">
+      <h3>Expertise & Experience</h3>
+      <p>
+        With years of experience in wealth management, investment planning, and financial advisory services, we offer expert solutions tailored to your unique needs.
+      </p>
+    </div>
+    <div class="feature">
+      <img src="assets/solutions.png" alt="Icon 5">
+      <h3>Personalized Solutions</h3>
+      <p>
+        We understand that no two clients are the same. Our services are customized to match your specific financial goals, risk tolerance, and long-term objectives.
+      </p>
+    </div>
+    <div class="feature">
+      <img src="assets/technologies.png" alt="Icon 6">
+      <h3>Cutting-Edge Technology</h3>
+      <p>
+        Our digital investment platforms and tools provide real-time tracking, giving you easy access to your investments anytime, anywhere.
+      </p>
+    </div>
+    <div class="feature">
+      <img src="assets/sucess.png" alt="Icon 7">
+      <h3>Focus on Long-Term Success</h3>
+      <p>
+        We are committed to helping you build sustainable wealth, focusing on both short-term returns and long-term growth strategies.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<div class="pagination">
+  <button id="prevBtn" class="nav-btn">&#8592;</button>
+  <div class="dots" id="dotsContainer"></div>
+  <button id="nextBtn" class="nav-btn">&#8594;</button>
+</div>
+
+
+<script>
+  const features = document.querySelectorAll('.feature');
+  const itemsPerPage = 4;
+  const totalPages = Math.ceil(features.length / itemsPerPage);
+  let currentPage = 1;
+
+  const dotsContainer = document.getElementById('dotsContainer');
+
+  function showPage(page) {
+    features.forEach((feature, index) => {
+      feature.classList.remove('active');
+      feature.style.display = 'none';
+    });
+
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+
+    for (let i = start; i < end && i < features.length; i++) {
+      features[i].classList.add('active');
+      features[i].style.display = 'block';
+    }
+
+    updateDots(page);
+    currentPage = page;
+  }
+
+  function createDots() {
+    dotsContainer.innerHTML = '';
+    for (let i = 1; i <= totalPages; i++) {
+      const dot = document.createElement('span');
+      dot.classList.add('dot');
+      if (i === currentPage) dot.classList.add('active');
+      dotsContainer.appendChild(dot);
+    }
+
+    // Add click events
+    document.querySelectorAll('.dot').forEach((dot, index) => {
+      dot.addEventListener('click', () => showPage(index + 1));
+    });
+  }
+
+  function updateDots(page) {
+    document.querySelectorAll('.dot').forEach((dot, index) => {
+      dot.classList.toggle('active', index + 1 === page);
+    });
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if (currentPage > 1) showPage(currentPage - 1);
+  });
+
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    if (currentPage < totalPages) showPage(currentPage + 1);
+  });
+
+  // Initialize
+  createDots();
+  showPage(currentPage);
+</script>
+
+<!-- Common Footer -->
+<div id="footer-container"></div>
+
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+  var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+  (function () {
+      var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+      s1.async = true;
+      s1.src = 'https://embed.tawk.to/68088b05cc25131911e9639d/1ipglu3hc';
+      s1.charset = 'UTF-8';
+      s1.setAttribute('crossorigin', '*');
+      s0.parentNode.insertBefore(s1, s0);
+  })();
+</script>
+<!--End of Tawk.to Script-->
+
+</section>
+
+
+<script>
+  function toggleMenu() {
+      var nav = document.getElementById("navLinks");
+      nav.classList.toggle("active");
+  }
+</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</body>
+</html>
+ 
+

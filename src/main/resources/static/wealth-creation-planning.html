@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ongole Bulls Invest</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+    <script src="/common.js" defer></script> <!-- Load JavaScript -->
+
+
+</head>
+<body>
+<!-- Common Header -->
+<div id="header-container"></div>
+
+
+<!-- Hero Section -->
+<section class="hero">
+    <h1>Stay in Control of Your Investments</h1>
+    <p>Invest in stocks, bonds, and mutual funds with real-time tracking and insights.</p>
+    <button onclick="openSignup()">Start Investing</button>
+
+
+<!-- Features Section -->
+<section class="features">
+    <div class="feature">
+        <i class="fas fa-chart-line"></i>
+        <h2>Access to Stocks, Bonds & Mutual Funds</h2>
+        <p>Invest in a diverse range of financial assets with real-time data.</p>
+    </div>
+    <div class="feature">
+        <i class="fas fa-sync-alt"></i>
+        <h2>Real-Time Portfolio Tracking</h2>
+        <p>Monitor your investments with live updates and detailed analytics.</p>
+    </div>
+    <div class="feature">
+        <i class="fas fa-user-lock"></i>
+        <h2>Secure & User-Friendly</h2>
+        <p>Bank-grade security with an intuitive experience for all investors.</p>
+    </div>
+</section>
+
+<!-- Interactive Portfolio -->
+<section class="portfolio">
+    <h2>Live Portfolio Tracker</h2>
+    <div id="portfolio-values">
+        <p>Stock Portfolio: <span id="stock-value">$10,000</span></p>
+        <p>Bond Portfolio: <span id="bond-value">$5,000</span></p>
+        <p>Mutual Funds: <span id="mutual-value">$8,000</span></p>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="testimonials">
+    <h2>What Our Users Say</h2>
+    <div class="testimonial">
+        <p>"The real-time tracking is amazing! I always feel in control of my investments." - <b>John D.</b></p>
+    </div>
+    <div class="testimonial">
+        <p>"The user interface is clean and easy to navigate. Highly recommended!" - <b>Sarah M.</b></p>
+    </div>
+</section>
+
+<!-- Signup Popup -->
+<div id="signup-popup" class="popup">
+    <div class="popup-content">
+        <span class="close" onclick="closeSignup()">&times;</span>
+        <h2>Sign Up to Start Investing</h2>
+        <input type="text" placeholder="Enter Your Name">
+        <input type="email" placeholder="Enter Your Email">
+        <button>Get Started</button>
+    </div>
+</div>
+
+<section id="tax">
+    <h2>Tax Optimization & Estate Planning</h2>
+    <p>Ensure your wealth is efficiently managed and transferred to future generations with our tax optimization and estate planning services.</p>
+    <ul>
+        <li>Tax-efficient wealth management</li>
+        <li>Comprehensive estate planning strategies</li>
+        <li>Secure wealth transfer across generations</li>
+    </ul>
+</section>
+
+<section id="why-us">
+    <h2>Why Choose Us?</h2>
+    <ul>
+        <li><strong>Personalized Financial Solutions:</strong> Strategies tailored to your specific goals.</li>
+        <li><strong>Expert Insights and Guidance:</strong> Seasoned professionals to guide you.</li>
+        <li><strong>Transparent and Ethical Practices:</strong> Full transparency and ethical financial solutions.</li>
+        <li><strong>Comprehensive Services:</strong> From wealth management to investment banking.</li>
+    </ul>
+</section>
+
+<section id="contact">
+    <h2>Start Your Financial Journey Today!</h2>
+    <p>Are you ready to take the next step? Reach out to us today.</p>
+</section>
+</section>
+
+<!-- Common Footer -->
+<div id="footer-container"></div>
+
+</body>
+</html>
+
+<style>
+    /* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+
+.hero {
+    background: linear-gradient(90deg, #0077b6, #00a6fb);
+    color: white;
+    padding: 60px 20px;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.hero button {
+    background: #ff7b00;
+    color: white;
+    padding: 12px 20px;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.hero button:hover {
+    background: #ff9b50;
+}
+
+.features {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px;
+}
+
+.feature {
+    background: #f8f9fa;
+    padding: 20px;
+    width: 30%;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.feature i {
+    font-size: 40px;
+    color: #0077b6;
+}
+
+.portfolio {
+    background: #f1f8ff;
+    padding: 30px;
+}
+
+.testimonials {
+    padding: 40px;
+}
+
+.testimonial {
+    background: #fff3cd;
+    padding: 15px;
+    margin: 10px auto;
+    width: 50%;
+    border-radius: 5px;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+}
+
+.popup input {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+}
+
+.popup button {
+    background: #0077b6;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.popup .close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+/* Sections */
+section {
+    padding: 40px;
+    background: white;
+    margin: 20px auto;
+    max-width: 900px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+input, textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+button {
+    background-color: #004085;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #002752;
+}
+</style>
+
+<script>
+    // Open the signup popup
+ function openSignup() {
+     document.getElementById("signup-popup").style.display = "block";
+ }
+
+ // Close the signup popup
+ function closeSignup() {
+     document.getElementById("signup-popup").style.display = "none";
+ }
+
+ // Simulate real-time updates for portfolio values
+ setInterval(() => {
+     document.getElementById("stock-value").innerText = "$" + (10000 + Math.floor(Math.random() * 500));
+     document.getElementById("bond-value").innerText = "$" + (5000 + Math.floor(Math.random() * 200));
+     document.getElementById("mutual-value").innerText = "$" + (8000 + Math.floor(Math.random() * 300));
+ }, 3000);
+
+</script>

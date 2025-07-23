@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${blog.title}">Blog Detail</title>
+    <style>
+        body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background-color: #f9fafb;
+          margin: 0;
+          padding: 0;
+          color: #333;
+        }
+
+        .container {
+          max-width: 800px;
+          margin: 50px auto;
+          padding: 30px;
+          background: #ffffff;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+          border-radius: 12px;
+          animation: fadeIn 0.8s ease-in-out;
+        }
+
+        h2 {
+          font-size: 2.5rem;
+          color: #2c3e50;
+          margin-bottom: 10px;
+          font-weight: 700;
+          animation: slideDown 0.6s ease-out;
+        }
+
+        img {
+          width: 100%;
+          max-width: 650px;
+          height: auto;
+          border-radius: 12px;
+          margin: 25px 0;
+          display: block;
+          animation: zoomIn 1s ease;
+        }
+
+        i {
+          color: #555;
+          font-size: 1rem;
+          display: inline-block;
+          margin-bottom: 20px;
+        }
+
+        .blog-content {
+          line-height: 1.8;
+          font-size: 1.1rem;
+          color: #444;
+          animation: fadeInContent 1s ease;
+        }
+
+        .blog-content h3,
+        .blog-content h4 {
+          color: #1d3557;
+          font-weight: 600;
+          margin-top: 30px;
+        }
+
+        .blog-content ul, .blog-content ol {
+          margin: 15px 0;
+          padding-left: 20px;
+        }
+
+        .blog-content blockquote {
+          border-left: 4px solid #007bff;
+          padding-left: 16px;
+          margin: 20px 0;
+          color: #555;
+          font-style: italic;
+          background-color: #f0f4f8;
+        }
+
+        .actions {
+          margin-top: 35px;
+        }
+
+        .actions a {
+          display: inline-block;
+          margin-right: 15px;
+          padding: 10px 20px;
+          background-color: #007bff;
+          color: white;
+          text-decoration: none;
+          border-radius: 6px;
+          font-weight: bold;
+          transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .actions a:hover {
+          background-color: #0056b3;
+          transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+          from { opacity: 0; transform: translateY(-30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes zoomIn {
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes fadeInContent {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @media (max-width: 600px) {
+          .container {
+            margin: 20px;
+            padding: 20px;
+          }
+
+          h2 {
+            font-size: 1.8rem;
+          }
+
+          .actions a {
+            display: block;
+            margin-bottom: 10px;
+            width: 100%;
+            text-align: center;
+          }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 th:text="${blog.title}"></h2>
+    <img th:src="@{'/assets/' + ${blog.imageName}}" alt="Blog Image">
+    <p><i th:text="${blog.author}"></i></p>
+
+    <div class="blog-content" th:utext="${blog.content}">
+        <!-- Rich HTML content from blog -->
+    </div>
+
+    <div class="actions">
+        <a href="/blogs">← Back to Blogs</a>
+        <a th:href="@{'/blogs/edit/' + ${blog.id}}">Edit</a>
+        <a th:href="@{'/blogs/delete/' + ${blog.id}}">Delete</a>
+    </div>
+</div>
+</body>
+</html>
