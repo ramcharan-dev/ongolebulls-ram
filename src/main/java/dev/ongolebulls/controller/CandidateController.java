@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
-@CrossOrigin(origins = "http://localhost:8085") // Allow frontend access (optional)
+@CrossOrigin(origins = {"http://localhost:8085", "https://www.ongolebullsinvest.com"}) // Allow local and production frontend
 @RestController
 @RequestMapping("/api/candidate")
 public class CandidateController {

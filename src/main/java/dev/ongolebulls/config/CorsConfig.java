@@ -34,7 +34,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins("http://localhost:8085") // Change to your frontend URL
+                        .allowedOrigins("http://localhost:8085", "https://www.ongolebullsinvest.com") // Allow local and production frontend
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("*");
             }

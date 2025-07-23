@@ -24,6 +24,7 @@ spring:
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
+      mail.smtp.ssl.enable: false
       mail.debug: true
 
   security:

@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.*;
 //        }
 //    }
 //}
-@CrossOrigin(origins = "http://localhost:8085") // Change this to match your frontend URL
+@CrossOrigin(origins = {"http://localhost:8085", "https://www.ongolebullsinvest.com"}) // Allow local and production frontend
 @RestController
 @RequestMapping("/api/contact")
 @RequiredArgsConstructor
