@@ -3,7 +3,7 @@ name: ongolebulssinvest
 on:
   push:
     branches:
-      - master  # OR 'Deploy-project' if you're using a different branch
+      - main  # OR 'Deploy-project' if you're using a different branch
 
 jobs:
   build-and-deploy:
@@ -39,4 +39,4 @@ jobs:
           environment_name: 'ongolebullsinvests-env'
           version_label: ${{ github.sha }}
           region: ap-south-1
-          deployment_package: target/ongolebulls-0.0.1-SNAPSHOT.jar/ongolebulls-0.0.1-SNAPSHOT.jar
+          deployment_package: target/ongolebulls-0.0.1-SNAPSHOT.jar
