@@ -18,14 +18,8 @@
 
 
 <header class="hero-section" style="position: relative; overflow: hidden;">
-  <!-- Background Video
-  <video autoplay muted loop playsinline style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1;">
-    <source src="assets/stock-footage-communication-network-concept-digital-transformation.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
 
-  -->
-  <!-- Background Image -->
+
   <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url('assets/bg.jpg');
             background-size: cover; background-position: center;
@@ -133,10 +127,8 @@
 <style>
   .hover-pop {
       display: inline-block;
-      color: #ff4b5c; /* optional highlight color */
       transform: scale(1.1);
       transition: transform 0.3s ease, text-shadow 0.3s ease;
-      text-shadow: 0 0 8px rgba(255, 75, 92, 0.6);
       font-weight: bold;
     }
 
@@ -150,6 +142,7 @@
       50% { transform: scale(1.15); }
       100% { transform: scale(1.1); }
     }
+
 
     .highlight-section {
     display: flex;
@@ -214,107 +207,155 @@
       flex-direction: column;
     }
   }
+.roadmap-section {
+  text-align: center;
+  padding: 60px 20px;
+}
 
-    .roadmap-section {
-      text-align: center;
-      padding: 60px 20px;
-    }
+.roadmap-section h2 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
 
-    .roadmap-section h2 {
-      font-size: 2em;
-      margin-bottom: 10px;
-    }
+.roadmap-section p {
+  max-width: 700px;
+  margin: 0 auto 40px;
+  color: #555;
+  font-size: 1rem;
+  line-height: 1.6;
+}
 
-    .roadmap-section p {
-      max-width: 700px;
-      margin: 0 auto 40px;
-      color: #555;
-    }
+.roadmap-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  position: relative;
+}
 
-    .roadmap-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 40px;
-      position: relative;
-    }
+.roadmap-item {
+  width: 150px;
+  text-align: center;
+  position: relative;
+  animation: slideUp 1s ease-in-out;
+}
 
-    .roadmap-item {
-      width: 150px;
-      text-align: center;
-      position: relative;
-      animation: slideUp 1s ease-in-out;
-    }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(50px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(50px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+.circle-icon {
+  width: 120px;
+  height: 120px;
+  border: 6px double #6a2f22;
+  border-radius: 50%;
+  background-color: #fff;
+  margin: 0 auto;
+  padding: 15px;
+  position: relative;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
 
-    .circle-icon {
-      width: 120px;
-      height: 120px;
-      border: 6px double #6a2f22;
-      border-radius: 50%;
-      background-color: #fff;
-      margin: 0 auto;
-      padding: 15px;
-      position: relative;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-    }
+.circle-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 
-    .circle-icon img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
+.line {
+  width: 3px;
+  height: 40px;
+  background: #6a2f22;
+  margin: 10px auto;
+}
 
-    .line {
-      width: 3px;
-      height: 40px;
-      background: #6a2f22;
-      margin: 10px auto;
-    }
+.roadmap-item h4 {
+  font-size: 14px;
+  color: #222;
+  font-weight: 400;
+  padding: 5px;
+}
 
-    .roadmap-item h4 {
-      font-size: 14px;
-      color: #222;
-      font-weight: 400;
-    }
+.roadmap-item h4 span {
+  color: #d62828;
+  font-weight: bold;
+}
 
-    .roadmap-item h4 span {
-      color: #d62828;
-      font-weight: bold;
-    }
+.explore-button {
+  margin-top: 50px;
+}
 
-    .explore-button {
-      margin-top: 50px;
-    }
+.explore-button a {
+  background-color: #34546b;
+  padding: 12px 25px;
+  border-radius: 8px;
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s;
+  display: inline-block;
+}
 
-    .explore-button a {
-      background-color: #34546b;
-      padding: 12px 25px;
-      border-radius: 8px;
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
-      transition: 0.3s;
-    }
+.explore-button a:hover {
+  background-color: #0056b3;
+}
 
-    .explore-button a:hover {
-      background-color: #0056b3;
-    }
+/* Tablet Responsive */
+@media screen and (max-width: 768px) {
+  .roadmap-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+  }
 
-    @media screen and (max-width: 768px) {
-      .roadmap-container {
-        flex-direction: column;
-        gap: 60px;
-      }
+  .line {
+    height: 30px;
+  }
 
-      .line {
-        height: 30px;
-      }
-    }
+  .circle-icon {
+    width: 100px;
+    height: 100px;
+    padding: 10px;
+  }
+
+  .roadmap-item {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 480px) {
+  .roadmap-section {
+    padding: 40px 10px;
+  }
+
+  .roadmap-section h2 {
+    font-size: 1.5em;
+  }
+
+  .roadmap-section p {
+    font-size: 0.95rem;
+    padding: 0 10px;
+  }
+
+  .circle-icon {
+    width: 90px;
+    height: 90px;
+    padding: 8px;
+  }
+
+  .roadmap-item h4 {
+    font-size: 13px;
+  }
+
+  .explore-button a {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+
   .help-section {
   padding: 40px 20px;
   background-color: #f9f9f9;
