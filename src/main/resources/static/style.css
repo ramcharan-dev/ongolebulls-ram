@@ -78,7 +78,7 @@ body, h1, h2, h3, p, ul, li, a, button {
 
 .step p {
     font-size: 1rem;
-    color: #555;
+    color: black;
 }
 /* Reflection Section Styles */
 .reflection-section {
@@ -595,7 +595,7 @@ height: auto;
 
 .why-ongolbulls p {
     font-size: 1.1em;
-    color: #7f8c8d;
+    color: black;
     margin-bottom: 40px;
 }
 
@@ -630,7 +630,7 @@ height: auto;
 
 .feature p {
     font-size: 1em;
-    color: #7f8c8d;
+    color: black;
 }
 
 .feature:hover {
@@ -680,7 +680,7 @@ height: auto;
 
 .overview-content p {
     font-size: 1.2em;
-    color: #7f8c8d;
+    color: black;
     line-height: 1.8;
 }
 
@@ -779,7 +779,7 @@ height: auto;
 /* Service Text */
 .service-text {
     font-size: 14px;
-    color: #555;
+    color: black;
     margin-bottom: 15px;
     transition: color 0.3s ease-in-out;
 }
@@ -914,7 +914,7 @@ height: auto;
 
 .principle p {
     font-size: 1rem;
-    color: #7f8c8d;
+    color: black;
 }
 
 .principle:hover {
@@ -1180,7 +1180,7 @@ h2 {
 
 .principle p {
     font-size: 1rem;
-    color: #666;
+    color: black;
     line-height: 1.6;
 }
 
