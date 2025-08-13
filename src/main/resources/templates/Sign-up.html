@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>OngoleBulls Invest – Signup</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #e7e9ed; color: #e8eefc; }
+        .card { background: #a1aabe; border: 1px solid #54607c; }
+        .form-label { font-weight: 600; }
+        .step { display: none; }
+        .step.active { display: block; }
+        .progress { height: 8px; background: #17203a; }
+        .progress-bar { background: #4f8cff; }
+        .strength-bar { height: 6px; border-radius: 4px; background: #2a3456; }
+        .strength-fill { height: 100%; width: 0%; border-radius: 4px; background: #ff5f5f; transition: width .25s ease; }
+        .strength-text { font-size: 0.85rem; }
+        .required::after { content: " *"; color: #ff7b7b; }
+        .small-note { color: #080b12; font-size: .9rem; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg rounded-4">
+                <div class="card-body p-4 p-md-5">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="m-0">Create your OngoleBulls Invest account</h2>
+                        <a href="sign-in.html" class="btn btn-outline-light btn-sm">Have an account? Login</a>
+                    </div>
+
+                    <!-- Progress -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between small">
+                            <span id="progress-label">Step 1 of 7</span>
+                            <span id="progress-section">Basic Information</span>
+                        </div>
+                        <div class="progress" role="progressbar" aria-label="Signup progress">
+                            <div id="progressBar" class="progress-bar" style="width: 14%"></div>
+                        </div>
+                    </div>
+
+                    <form id="signupForm" novalidate enctype="multipart/form-data">
+                        <!-- STEP 1: Basic Info -->
+                        <div class="step active" data-step="1" data-title="Basic Information">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label required">Full Name (as per PAN)</label>
+                                    <input type="text" class="form-control" id="fullName" required />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label required">Email ID</label>
+                                    <div class="input-group">
+                                        <input type="email" class="form-control" id="email" required />
+                                        <button class="btn btn-primary" type="button" id="btnSendEmailOtp">Send OTP</button>
+                                    </div>
+                                    <div class="form-text small-note">OTP required to verify email</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label required">Mobile Number</label>
+                                    <div class="input-group">
+                                        <input type="tel" class="form-control" id="mobile" placeholder="10-digit number" required />
+                                        <button class="btn btn-primary" type="button" id="btnSendMobileOtp">Send OTP</button>
+                                    </div>
+                                    <div class="form-text small-note">OTP required to verify mobile</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label required">Password</label>
+                                    <input type="password" class="form-control" id="password" required />
+                                    <div class="strength-bar mt-2"><div id="strengthFill" class="strength-fill"></div></div>
+                                    <div id="strengthText" class="strength-text mt-1 small-note">Password strength</div>
+                                </div>
+                            </div>
+                            <div class="alert alert-info mt-3 small-note">
+                                Email & Mobile must be OTP-verified before continuing.
+                            </div>
+                        </div>
+
+                        <!-- STEP 2: Profile Type -->
+                        <div class="step" data-step="2" data-title="Profile Type">
+                            <div class="mb-3">
+                                <label class="form-label required">Who is this investment for?</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="profileFor" id="forSelf" value="SELF" checked />
+                                    <label class="form-check-label" for="forSelf">Self</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="profileFor" id="forRelative" value="RELATIVE" />
+                                    <label class="form-check-label" for="forRelative">Relative</label>
+                                </div>
+                            </div>
+
+                            <div id="relativeFields" class="row g-3 hidden">
+                                <div class="col-md-6">
+                                    <label class="form-label">Relation with Investor</label>
+                                    <select class="form-select" id="relation">
+                                        <option value="">Select</option>
+                                        <option>Spouse</option><option>Child</option><option>Parent</option>
+                                        <option>Sibling</option><option>Others</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Relative’s Full Name</label>
+                                    <input type="text" class="form-control" id="relativeName" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 3: KYC Details -->
+                        <div class="step" data-step="3" data-title="KYC Details">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label required">PAN Number</label>
+                                    <input type="text" class="form-control" id="pan" placeholder="ABCDE1234F" required />
+                                    <div class="form-text small-note">We’ll validate PAN format and (optionally) fetch name via NSDL.</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label required">Date of Birth</label>
+                                    <input type="date" class="form-control" id="dob" required />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label required">Gender</label>
+                                    <select id="gender" class="form-select" required>
+                                        <option value="">Select</option>
+                                        <option>Male</option><option>Female</option><option>Other</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label required">Residential Address</label>
+                                    <textarea id="address" class="form-control" rows="2" required></textarea>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label required">Pincode</label>
+                                    <input type="text" class="form-control" id="pincode" required />
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label required">City</label>
+                                    <input type="text" class="form-control" id="city" required />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label required">State</label>
+                                    <input type="text" class="form-control" id="state" required />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label required">Upload Proof of Address (PDF/JPG)</label>
+                                    <input type="file" class="form-control" id="addressProof" accept=".pdf,.jpg,.jpeg,.png" required />
+                                    <div class="form-text small-note">Aadhaar will be masked before storage.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 4: Bank Details -->
+                        <div class="step" data-step="4" data-title="Bank Details">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label required">Account Holder Name</label>
+                                    <input type="text" class="form-control" id="acctHolder" required />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label required">Bank Name</label>
+                                    <input class="form-control" list="bankList" id="bankName" placeholder="Start typing..." required>
+                                    <datalist id="bankList">
+                                        <option value="State Bank of India"></option>
+                                        <option value="HDFC Bank"></option>
+                                        <option value="ICICI Bank"></option>
+                                        <option value="Axis Bank"></option>
+                                        <option value="Kotak Mahindra Bank"></option>
+                                        <option value="Yes Bank"></option>
+                                        <option value="Punjab National Bank"></option>
+                                        <option value="Bank of Baroda"></option>
+                                        <option value="Union Bank of India"></option>
+                                    </datalist>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label required">Account Number</label>
+                                    <input type="text" class="form-control" id="accountNumber" required />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label required">IFSC Code</label>
+                                    <input type="text" class="form-control" id="ifsc" placeholder="e.g., HDFC0001234" required />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label required">Upload Cancelled Cheque / Passbook (PDF/JPG)</label>
+                                    <input type="file" class="form-control" id="chequeProof" accept=".pdf,.jpg,.jpeg,.png" required />
+                                </div>
+                            </div>
+                            <div class="alert alert-info mt-3 small-note">
+                                Name should match PAN. Otherwise a third-party declaration may be required.
+                            </div>
+                        </div>
+
+                        <!-- STEP 5: Risk Profile -->
+                        <div class="step" data-step="5" data-title="Risk Profile Assessment">
+                            <p class="small-note mb-3">Answer the questions below. Your score determines your risk category.</p>
+                            <div class="vstack gap-3">
+                                <!-- Q1 -->
+                                <div>
+                                    <label class="form-label">1) If your ₹1,00,000 drops to ₹90,000 in a month?</label>
+                                    <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="1" checked> <label class="form-check-label">Withdraw immediately</label></div>
+                                    <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="2"> <label class="form-check-label">Wait and watch</label></div>
+                                    <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="3"> <label class="form-check-label">Invest more to average</label></div>
+                                </div>
+                                <!-- Q2 -->
+                                <div>
+                                    <label class="form-label">2) Primary investment goal?</label>
+                                    <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="1" checked> <label class="form-check-label">Capital protection</label></div>
+                                    <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="2"> <label class="form-check-label">Moderate growth</label></div>
+                                    <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="3"> <label class="form-check-label">High returns</label></div>
+                                </div>
+                                <!-- Q3 -->
+                                <div>
+                                    <label class="form-label">3) Investment horizon?</label>
+                                    <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="1" checked> <label class="form-check-label">Less than 1 year</label></div>
+                                    <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="2"> <label class="form-check-label">1–3 years</label></div>
+                                    <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="3"> <label class="form-check-label">More than 3 years</label></div>
+                                </div>
+                                <!-- Q4 -->
+                                <div>
+                                    <label class="form-label">4) Percent of income to invest?</label>
+                                    <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="1" checked> <label class="form-check-label">&lt; 10%</label></div>
+                                    <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="2"> <label class="form-check-label">10–30%</label></div>
+                                    <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="3"> <label class="form-check-label">&gt; 30%</label></div>
+                                </div>
+                                <!-- Q5 -->
+                                <div>
+                                    <label class="form-label">5) Monthly income level (optional)</label>
+                                    <div class="form-check"><input class="form-check-input" type="radio" name="q5" value="1" checked> <label class="form-check-label">&lt; ₹25,000</label></div>
+                                    <div class="form-check"><input class="form-check-input" type="radio" name="q5" value="2"> <label class="form-check-label">₹25,000–₹75,000</label></div>
+                                    <div class="form-check"><input class="form-check-input" type="radio" name="q5" value="3"> <label class="form-check-label">&gt; ₹75,000</label></div>
+                                </div>
+                            </div>
+                            <div class="mt-3 p-3 border rounded-3">
+                                <div class="d-flex justify-content-between">
+                                    <div>Score: <strong id="riskScore">5</strong> / 15</div>
+                                    <div>Category: <strong id="riskCategory">Conservative</strong></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 6: Declarations & Consent -->
+                        <div class="step" data-step="6" data-title="Declarations & Consent">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="c1" required>
+                                <label class="form-check-label" for="c1">I declare that the above information is accurate to the best of my knowledge.</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="c2" required>
+                                <label class="form-check-label" for="c2">I authorize the platform to share my investment-related data and medical reports (if applicable) with empaneled service providers to recommend suitable options.</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="c3" required>
+                                <label class="form-check-label" for="c3">I authorize sharing of my documents with registered AMCs, RTA, BSE Star MF, or regulatory entities for compliance purposes.</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="c4" required>
+                                <label class="form-check-label" for="c4">I consent to receive WhatsApp, SMS, Email, and App notifications.</label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="c5" required>
+                                <label class="form-check-label" for="c5">I understand that mutual fund investments are subject to market risks.</label>
+                            </div>
+
+                            <div class="alert alert-secondary small-note">
+                                We store consent timestamps, your device info, and your IP (from server) for compliance.
+                            </div>
+                        </div>
+
+                        <!-- STEP 7: Final Submission -->
+                        <div class="step" data-step="7" data-title="Final Submission">
+                            <p class="small-note">Complete the CAPTCHA and submit. We’ll:</p>
+                            <ul class="small-note">
+                                <li>Store your risk profile</li>
+                                <li>Initiate/verify KYC</li>
+                                <li>Create/map your profile with BSE STAR MF</li>
+                            </ul>
+
+                            <!-- Google reCAPTCHA v2 (replace with your site key) -->
+                            <div class="my-3">
+                                <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
+                            </div>
+
+                            <button type="button" id="btnSubmit" class="btn btn-success btn-lg">Complete Signup & Proceed</button>
+                            <div id="submitStatus" class="mt-3"></div>
+                        </div>
+
+                        <!-- Nav Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" class="btn btn-outline-light" id="btnPrev" disabled>Back</button>
+                            <button type="button" class="btn btn-primary" id="btnNext">Next</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Email OTP Modal -->
+<div class="modal fade" id="emailOtpModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title">Verify Email OTP</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="emailOtp" class="form-control" placeholder="Enter OTP">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button class="btn btn-primary" id="btnVerifyEmailOtp">Verify</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mobile OTP Modal -->
+<div class="modal fade" id="mobileOtpModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title">Verify Mobile OTP</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="mobileOtp" class="form-control" placeholder="Enter OTP">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button class="btn btn-primary" id="btnVerifyMobileOtp">Verify</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script>
+    // ====== Config: Replace with your actual backend endpoints ======
+    const API = {
+      sendEmailOtp: '/api/auth/send-otp/email',
+      verifyEmailOtp: '/api/auth/verify-otp/email',
+      sendMobileOtp: '/api/auth/send-otp/mobile',
+      verifyMobileOtp: '/api/auth/verify-otp/mobile',
+      register: '/api/auth/register'
+    };
+
+
+fetch("http://localhost:8080/api/auth/send-otp/email", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+})
+.then(response => response.text())
+.then(data => console.log("Email sent:", data))
+.catch(error => console.error("Error sending email:", error));
+
+    // ====== State ======
+    const totalSteps = 7;
+    let currentStep = 1;
+    let emailVerified = false;
+    let mobileVerified = false;
+
+    // ====== Helpers ======
+    const qs = (sel) => document.querySelector(sel);
+    const qsa = (sel) => Array.from(document.querySelectorAll(sel));
+
+    function showStep(n) {
+      qsa('.step').forEach(s => s.classList.remove('active'));
+      const dom = qs(`.step[data-step="${n}"]`);
+      dom.classList.add('active');
+      qs('#btnPrev').disabled = (n === 1);
+      qs('#btnNext').classList.toggle('hidden', n === totalSteps);
+      qs('#btnSubmit').classList.toggle('hidden', n !== totalSteps);
+      const pct = Math.round((n / totalSteps) * 100);
+      qs('#progressBar').style.width = pct + '%';
+      qs('#progress-label').textContent = `Step ${n} of ${totalSteps}`;
+      qs('#progress-section').textContent = dom.getAttribute('data-title');
+    }
+
+    function validateStep(step) {
+      // basic front-end validations per step
+      if (step === 1) {
+        const name = qs('#fullName').value.trim();
+        const email = qs('#email').value.trim();
+        const mobile = qs('#mobile').value.trim();
+        const pass = qs('#password').value;
+        const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        const mobileOk = /^\d{10}$/.test(mobile);
+        if (!name || !emailOk || !mobileOk || pass.length < 8) {
+          alert('Please fill valid Name, Email, Mobile and a strong Password (min 8 chars).');
+          return false;
+        }
+        if (!emailVerified || !mobileVerified) {
+          alert('Please verify both Email OTP and Mobile OTP before proceeding.');
+          return false;
+        }
+      }
+      if (step === 2) {
+        if (qs('#forRelative').checked) {
+          if (!qs('#relation').value || !qs('#relativeName').value.trim()) {
+            alert('Please provide relation and relative name.');
+            return false;
+          }
+        }
+      }
+      if (step === 3) {
+        const pan = qs('#pan').value.trim().toUpperCase();
+        const dob = qs('#dob').value;
+        const gender = qs('#gender').value;
+        const address = qs('#address').value.trim();
+        const pincode = qs('#pincode').value.trim();
+        const city = qs('#city').value.trim();
+        const state = qs('#state').value.trim();
+        const proof = qs('#addressProof').files[0];
+        const panOk = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(pan);
+        const pinOk = /^\d{6}$/.test(pincode);
+        if (!panOk) { alert('Invalid PAN format.'); return false; }
+        if (!dob || !gender || !address || !pinOk || !city || !state || !proof) {
+          alert('Please complete all KYC fields and upload address proof.');
+          return false;
+        }
+        const ext = proof.name.toLowerCase();
+        if (!ext.endsWith('.pdf') && !ext.endsWith('.jpg') && !ext.endsWith('.jpeg') && !ext.endsWith('.png')) {
+          alert('Address proof must be PDF/JPG/PNG.');
+          return false;
+        }
+      }
+      if (step === 4) {
+        const ah = qs('#acctHolder').value.trim();
+        const bn = qs('#bankName').value.trim();
+        const an = qs('#accountNumber').value.trim();
+        const ifsc = qs('#ifsc').value.trim().toUpperCase();
+        const chq = qs('#chequeProof').files[0];
+        const ifscOk = /^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifsc);
+        if (!ah || !bn || !an || !ifscOk || !chq) {
+          alert('Please complete all bank fields with a valid IFSC and upload cheque/passbook.');
+          return false;
+        }
+      }
+      if (step === 5) {
+        // no blocking validation as defaults are set
+      }
+      if (step === 6) {
+        if (!qs('#c1').checked || !qs('#c2').checked || !qs('#c3').checked || !qs('#c4').checked || !qs('#c5').checked) {
+          alert('Please accept all declarations & consents to proceed.');
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function updateRisk() {
+      const sum = ['q1','q2','q3','q4','q5'].reduce((acc, q) => acc + parseInt((qs(`input[name="${q}"]:checked`)||{value:1}).value), 0);
+      qs('#riskScore').textContent = String(sum);
+      let cat = 'Conservative';
+      if (sum >= 11) cat = 'Aggressive';
+      else if (sum >= 8) cat = 'Moderate';
+      qs('#riskCategory').textContent = cat;
+      return { score: sum, category: cat };
+    }
+
+    // Password strength (simple heuristic)
+    function pwStrength(pw) {
+      let s = 0;
+      if (pw.length >= 8) s++;
+      if (/[A-Z]/.test(pw)) s++;
+      if (/[a-z]/.test(pw)) s++;
+      if (/\d/.test(pw)) s++;
+      if (/[^A-Za-z0-9]/.test(pw)) s++;
+      return Math.min(s, 5);
+    }
+    function renderStrength(pw) {
+      const s = pwStrength(pw);
+      const pct = (s / 5) * 100;
+      const fill = qs('#strengthFill');
+      fill.style.width = pct + '%';
+      fill.style.background = s <= 2 ? '#ff5f5f' : (s === 3 ? '#ffbd4f' : '#30d158');
+      qs('#strengthText').textContent = s <= 2 ? 'Weak' : (s === 3 ? 'Medium' : 'Strong');
+    }
+
+    // ====== Event Listeners ======
+    qs('#password').addEventListener('input', (e) => renderStrength(e.target.value));
+    qsa('input[name="profileFor"]').forEach(r => r.addEventListener('change', () => {
+      const rel = qs('#forRelative').checked;
+      qs('#relativeFields').classList.toggle('hidden', !rel);
+    }));
+    qsa('input[name^="q"]').forEach(r => r.addEventListener('change', updateRisk));
+
+    qs('#btnNext').addEventListener('click', () => {
+      if (!validateStep(currentStep)) return;
+      if (currentStep < totalSteps) currentStep++;
+      showStep(currentStep);
+    });
+    qs('#btnPrev').addEventListener('click', () => {
+      if (currentStep > 1) currentStep--;
+      showStep(currentStep);
+    });
+
+    // ====== OTP Flow (Email) ======
+    const emailOtpModal = new bootstrap.Modal('#emailOtpModal');
+    qs('#btnSendEmailOtp').addEventListener('click', async () => {
+      const email = qs('#email').value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Enter a valid email.'); return; }
+      await fetch(API.sendEmailOtp, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email }) });
+      emailOtpModal.show();
+    });
+    qs('#btnVerifyEmailOtp').addEventListener('click', async () => {
+      const email = qs('#email').value.trim();
+      const otp = qs('#emailOtp').value.trim();
+      const res = await fetch(API.verifyEmailOtp, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email, otp }) });
+      emailVerified = res.ok;
+      alert(emailVerified ? 'Email verified!' : 'Invalid email OTP');
+      if (emailVerified) emailOtpModal.hide();
+    });
+
+    // ====== OTP Flow (Mobile) ======
+    const mobileOtpModal = new bootstrap.Modal('#mobileOtpModal');
+    qs('#btnSendMobileOtp').addEventListener('click', async () => {
+      const mobile = qs('#mobile').value.trim();
+      if (!/^\d{10}$/.test(mobile)) { alert('Enter a valid 10-digit mobile.'); return; }
+      await fetch(API.sendMobileOtp, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ mobile }) });
+      mobileOtpModal.show();
+    });
+    qs('#btnVerifyMobileOtp').addEventListener('click', async () => {
+      const mobile = qs('#mobile').value.trim();
+      const otp = qs('#mobileOtp').value.trim();
+      const res = await fetch(API.verifyMobileOtp, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ mobile, otp }) });
+      mobileVerified = res.ok;
+      alert(mobileVerified ? 'Mobile verified!' : 'Invalid mobile OTP');
+      if (mobileVerified) mobileOtpModal.hide();
+    });
+
+    // ====== Submit ======
+    qs('#btnSubmit').addEventListener('click', async () => {
+      if (!validateStep(6)) { showStep(6); return; } // recheck consents
+      // reCAPTCHA
+      const recaptcha = (window.grecaptcha && grecaptcha.getResponse()) || '';
+      if (!recaptcha) { alert('Please complete the CAPTCHA.'); return; }
+
+      const risk = updateRisk();
+      const payload = {
+        basic: {
+          fullName: qs('#fullName').value.trim(),
+          email: qs('#email').value.trim(),
+          mobile: qs('#mobile').value.trim(),
+          password: qs('#password').value
+        },
+        profileType: {
+          for: qs('#forRelative').checked ? 'RELATIVE' : 'SELF',
+          relation: qs('#relation').value || null,
+          relativeName: qs('#relativeName').value.trim() || null
+        },
+        kyc: {
+          pan: qs('#pan').value.trim().toUpperCase(),
+          dob: qs('#dob').value,
+          gender: qs('#gender').value,
+          address: qs('#address').value.trim(),
+          pincode: qs('#pincode').value.trim(),
+          city: qs('#city').value.trim(),
+          state: qs('#state').value.trim()
+        },
+        bank: {
+          accountHolder: qs('#acctHolder').value.trim(),
+          bankName: qs('#bankName').value.trim(),
+          accountNumber: qs('#accountNumber').value.trim(),
+          ifsc: qs('#ifsc').value.trim().toUpperCase()
+        },
+        riskProfile: {
+          score: risk.score,
+          category: risk.category
+        },
+        consents: {
+          c1: qs('#c1').checked,
+          c2: qs('#c2').checked,
+          c3: qs('#c3').checked,
+          c4: qs('#c4').checked,
+          c5: qs('#c5').checked,
+          consentTimestamp: new Date().toISOString(),
+          userAgent: navigator.userAgent
+        },
+        recaptcha
+      };
+
+      // Use FormData to include files + JSON
+      const fd = new FormData();
+      fd.append('payload', new Blob([JSON.stringify(payload)], { type: 'application/json'}));
+      if (qs('#addressProof').files[0]) fd.append('addressProof', qs('#addressProof').files[0]);
+      if (qs('#chequeProof').files[0]) fd.append('chequeProof', qs('#chequeProof').files[0]);
+
+      qs('#btnSubmit').disabled = true;
+      qs('#submitStatus').innerHTML = '<div class="text-info">Submitting…</div>';
+
+      try {
+        const res = await fetch(API.register, { method: 'POST', body: fd });
+        if (!res.ok) throw new Error('Registration failed');
+        qs('#submitStatus').innerHTML = '<div class="text-success">Signup complete! Redirecting to dashboard…</div>';
+        // Redirect (adjust as needed)
+        setTimeout(() => window.location.href = '/dashboard', 1200);
+      } catch (e) {
+        console.error(e);
+        qs('#submitStatus').innerHTML = '<div class="text-danger">Error submitting form. Please try again.</div>';
+        qs('#btnSubmit').disabled = false;
+      }
+    });
+
+    // Initialize defaults
+    showStep(currentStep);
+    renderStrength('');
+    updateRisk();
+</script>
+</body>
+</html>

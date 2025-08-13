@@ -41,3 +41,7 @@ thymeleaf:
   prefix: classpath:/templates/
   suffix: .html
   enabled: true
+
+recaptcha:
+    secret: your-secret-key-here
+    site-key: your-site-key-here

@@ -1,172 +1,286 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>OngoleBulls Admin Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap + Font Awesome + Chart.js -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom Styling -->
+
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
+            background-color: #f4f7fa;
         }
         .sidebar {
             height: 100vh;
-            background-color: #343a40;
-            padding: 20px;
+            background: linear-gradient(180deg, #2c3e50, #34495e);
+            padding: 20px 15px;
             color: white;
+            position: fixed;
+            width: 240px;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+        }
+        .sidebar img {
+            max-width: 80px;
+            margin-bottom: 10px;
         }
         .sidebar h2 {
             font-size: 1.5rem;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-weight: bold;
         }
         .sidebar a {
-            display: block;
-            color: #ccc;
-            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            color: #ecf0f1;
+            padding: 12px 15px;
+            margin: 6px 0;
+            border-radius: 8px;
+            font-size: 15px;
             text-decoration: none;
+            transition: background 0.3s, color 0.3s;
+        }
+        .sidebar a i {
+            margin-right: 12px;
         }
         .sidebar a:hover {
+            background-color: #1abc9c;
             color: white;
         }
+        .topbar {
+            margin-left: 240px;
+            background-color: white;
+            padding: 12px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .topbar .status {
+            font-size: 14px;
+            color: #27ae60;
+        }
         .content {
-            padding: 20px;
+            margin-left: 260px;
+            padding: 30px 40px;
         }
         .card {
             border: none;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
             border-radius: 15px;
+            background-color: white;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .card h5 {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .card p {
+            font-size: 1.4rem;
+            color: #27ae60;
+            margin-bottom: 0;
+        }
+        h3 {
+            font-weight: 600;
+            color: #2c3e50;
         }
         @media (max-width: 768px) {
             .sidebar {
+                position: relative;
+                width: 100%;
                 height: auto;
+            }
+            .topbar, .content {
+                margin-left: 0;
             }
         }
     </style>
 </head>
 <body>
+
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2 sidebar">
+        <!-- Sidebar -->
+        <div class="col-md-2 sidebar text-center py-3">
+            <img src="assets/logo%203.png" alt="Ongolebulls Logo" class="img-fluid mb-2">
+            <h2>Ongolebulls</h2>
             <h2>Admin</h2>
-            <a href="#">Dashboard</a>
-            <a href="#">Users</a>
-            <a href="#">Portfolios</a>
-            <a href="#">Financial Goals</a>
-            <a href="services.html">Services</a>
-            <a href="blogs.html">Blogs</a>
-            <a href="contact.html">Contacts</a>
-            <a href="#">Reports</a>
-            <a href="#">Settings</a>
+            <a href="#"><i class="fas fa-chart-line"></i>Dashboard</a>
+            <a href="#"><i class="fas fa-users"></i>Users</a>
+            <a href="#"><i class="fas fa-briefcase"></i>Portfolios</a>
+            <a href="#"><i class="fas fa-bullseye"></i>Financial Goals</a>
+            <a href="services.html"><i class="fas fa-concierge-bell"></i>Services</a>
+            <a href="admin-blogs.html"><i class="fas fa-blog"></i>Blogs</a>
+            <a href="contact.html"><i class="fas fa-envelope"></i>Contacts</a>
+            <a href="#"><i class="fas fa-file-alt"></i>Reports</a>
+            <a href="#"><i class="fas fa-cog"></i>Settings</a>
         </div>
-        <div class="col-md-10 content">
-            <h3>Dashboard Overview</h3>
-            <div class="row mt-4">
+
+        <!-- Topbar -->
+        <div class="col-md-10 offset-md-2 topbar">
+            <div class="status">Live Dashboard</div>
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-outline-danger btn-sm">Logout</button>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="col-md-10 offset-md-2 content">
+            <h3 class="mb-4">Dashboard Overview</h3>
+            <div class="row g-4">
                 <div class="col-md-3 col-sm-6">
-                    <div class="card p-3 text-center">
+                    <div class="card p-4 text-center">
                         <h5>Total Users</h5>
                         <p id="totalUsers">--</p>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6">
-                    <div class="card p-3 text-center">
+                    <div class="card p-4 text-center">
                         <h5>Active SIPs</h5>
                         <p id="activeSIPs">--</p>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6">
-                    <div class="card p-3 text-center">
+                    <div class="card p-4 text-center">
                         <h5>Total AUM</h5>
                         <p id="aum">--</p>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6">
-                    <div class="card p-3 text-center">
+                    <div class="card p-4 text-center">
                         <h5>New Leads</h5>
                         <p id="leads">--</p>
                     </div>
                 </div>
             </div>
 
-            <div class="row mt-5">
+            <div class="row mt-5 g-4">
                 <div class="col-md-6">
-                    <div class="card p-3">
-                        <h5>Monthly Investments</h5>
+                    <div class="card p-4">
+                        <h5 class="mb-3">Monthly Investments</h5>
                         <canvas id="investmentChart"></canvas>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="card p-3">
-                        <h5>User Goals</h5>
+                    <div class="card p-4">
+                        <h5 class="mb-3">User Goals</h5>
                         <canvas id="goalChart"></canvas>
                     </div>
                 </div>
             </div>
 
+            <!-- Transaction Table -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="card p-4">
+                        <h5 class="mb-4">Latest Transaction Summary</h5>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                Show
+                                <select class="form-select d-inline w-auto mx-2">
+                                    <option>10</option>
+                                    <option>25</option>
+                                    <option>50</option>
+                                    <option>100</option>
+                                </select>
+                                entries
+                            </div>
+                            <input type="text" class="form-control w-25" placeholder="Search transaction">
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover text-center align-middle">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Purpose</th>
+                                    <th>Transaction ID</th>
+                                    <th>Payment Method</th>
+                                    <th>Date and Time</th>
+                                    <th>Amount</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td colspan="6">No data available in table</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-3">
+                            <div>Showing 0 to 0 of 0 entries</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Transaction Table -->
+
         </div>
     </div>
 </div>
 
+<!-- Scripts -->
 <script>
-    // Fetch dashboard metrics
-    fetch('/api/dashboard')
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById('totalUsers').innerText = data.totalUsers;
-            document.getElementById('activeSIPs').innerText = data.activeSIPs;
-            document.getElementById('aum').innerText = data.aum;
-            document.getElementById('leads').innerText = data.leads;
-        });
+    document.addEventListener('DOMContentLoaded', () => {
+        const dashboardData = {
+            totalUsers: 1287,
+            activeSIPs: 348,
+            aum: "₹45.8 Cr",
+            leads: 54
+        };
 
-    // Fetch dynamic blogs
-    fetch('/api/blogs')
-        .then(res => res.json())
-        .then(blogs => {
-            const list = document.getElementById('blogsList');
-            blogs.forEach(blog => {
-                const li = document.createElement('li');
-                li.className = 'list-group-item';
-                li.innerText = blog.title;
-                list.appendChild(li);
-            });
-        });
+        document.getElementById('totalUsers').innerText = dashboardData.totalUsers;
+        document.getElementById('activeSIPs').innerText = dashboardData.activeSIPs;
+        document.getElementById('aum').innerText = dashboardData.aum;
+        document.getElementById('leads').innerText = dashboardData.leads;
 
-    // Chart: Monthly Investments
-    new Chart(document.getElementById('investmentChart'), {
-        type: 'line',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-            datasets: [{
-                label: 'Investments (₹ Lakhs)',
-                data: [10, 15, 9, 18, 20, 25],
-                borderColor: '#007bff',
-                fill: false
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
+        new Chart(document.getElementById('investmentChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Investments (₹ Lakhs)',
+                    data: [10, 15, 9, 18, 20, 25, 30, 28, 22, 19, 24, 27],
+                    backgroundColor: '#5dade2',
+                    borderRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
+        });
 
-    // Chart: User Financial Goals
-    new Chart(document.getElementById('goalChart'), {
-        type: 'doughnut',
-        data: {
-            labels: ['Retirement', 'Home', 'Child', 'Dreams', 'Start'],
-            datasets: [{
-                data: [30, 20, 25, 10, 15],
-                backgroundColor: ['#28a745', '#ffc107', '#17a2b8', '#dc3545', '#6f42c1']
-            }]
-        },
-        options: {
-            responsive: true
-        }
+        new Chart(document.getElementById('goalChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Retirement', 'Home', 'Child', 'Dreams', 'Start'],
+                datasets: [{
+                    data: [30, 20, 25, 10, 15],
+                    backgroundColor: ['#58d68d', '#f4d03f', '#5dade2', '#ec7063', '#af7ac5']
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '65%'
+            }
+        });
     });
 </script>
 </body>

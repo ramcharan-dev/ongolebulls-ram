@@ -63,20 +63,9 @@ public class HomeController {
         return "workflow"; // Loads workflow.html
     }
 
-
-   /* @GetMapping("/contact")
-    public String showContactPage() {
-        return "contact"; // Resolves to "templates/contact.html"
-    }*/
-//   /* @GetMapping("/blogs")
-//    public String blogPage() {
-//        return "blog"; // Loads resources/blog.html from templates/
-//    }
-//*/
-
-    @GetMapping("/login")
+    @GetMapping("/sign-up")
     public String loginPage() {
-        return "login"; // Loads login.html from templates/
+        return "sign-up"; // Loads login.html from src/main/resources/templates/
     }
 
 }
