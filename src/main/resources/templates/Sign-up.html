@@ -1,10 +1,11 @@
+<!--
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <title>OngoleBulls Invest – Signup</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Bootstrap 5 -->
+    &lt;!&ndash; Bootstrap 5 &ndash;&gt;
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background: #e7e9ed; color: #e8eefc; }
@@ -33,7 +34,7 @@
                         <a href="sign-in.html" class="btn btn-outline-light btn-sm">Have an account? Login</a>
                     </div>
 
-                    <!-- Progress -->
+                    &lt;!&ndash; Progress &ndash;&gt;
                     <div class="mb-4">
                         <div class="d-flex justify-content-between small">
                             <span id="progress-label">Step 1 of 7</span>
@@ -45,7 +46,7 @@
                     </div>
 
                     <form id="signupForm" novalidate enctype="multipart/form-data">
-                        <!-- STEP 1: Basic Info -->
+                        &lt;!&ndash; STEP 1: Basic Info &ndash;&gt;
                         <div class="step active" data-step="1" data-title="Basic Information">
                             <div class="row g-3">
                                 <div class="col-md-6">
@@ -62,12 +63,20 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label required">Mobile Number</label>
-                                    <div class="input-group">
-                                        <input type="tel" class="form-control" id="mobile" placeholder="10-digit number" required />
-                                        <button class="btn btn-primary" type="button" id="btnSendMobileOtp">Send OTP</button>
-                                    </div>
-                                    <div class="form-text small-note">OTP required to verify mobile</div>
+                                    <input type="tel" class="form-control" id="mobile" placeholder="10-digit number" required />
+                                    <div class="form-text small-note">Please enter your mobile number</div>
                                 </div>
+
+                                &lt;!&ndash;
+                                                                <div class="col-md-6">
+                                                                    <label class="form-label required">Mobile Number</label>
+                                                                    &lt;!&ndash;<div class="input-group">
+                                                                        <input type="tel" class="form-control" id="mobile" placeholder="10-digit number" required />
+                                                                        <button class="btn btn-primary" type="button" id="btnSendMobileOtp">Send OTP</button>
+                                                                    </div>
+                                                                    <div class="form-text small-note">OTP required to verify mobile</div>&ndash;&gt;
+                                                                </div>
+                                &ndash;&gt;
                                 <div class="col-md-6">
                                     <label class="form-label required">Password</label>
                                     <input type="password" class="form-control" id="password" required />
@@ -80,7 +89,7 @@
                             </div>
                         </div>
 
-                        <!-- STEP 2: Profile Type -->
+                        &lt;!&ndash; STEP 2: Profile Type &ndash;&gt;
                         <div class="step" data-step="2" data-title="Profile Type">
                             <div class="mb-3">
                                 <label class="form-label required">Who is this investment for?</label>
@@ -110,7 +119,7 @@
                             </div>
                         </div>
 
-                        <!-- STEP 3: KYC Details -->
+                        &lt;!&ndash; STEP 3: KYC Details &ndash;&gt;
                         <div class="step" data-step="3" data-title="KYC Details">
                             <div class="row g-3">
                                 <div class="col-md-4">
@@ -153,7 +162,7 @@
                             </div>
                         </div>
 
-                        <!-- STEP 4: Bank Details -->
+                        &lt;!&ndash; STEP 4: Bank Details &ndash;&gt;
                         <div class="step" data-step="4" data-title="Bank Details">
                             <div class="row g-3">
                                 <div class="col-md-6">
@@ -193,39 +202,39 @@
                             </div>
                         </div>
 
-                        <!-- STEP 5: Risk Profile -->
+                        &lt;!&ndash; STEP 5: Risk Profile &ndash;&gt;
                         <div class="step" data-step="5" data-title="Risk Profile Assessment">
                             <p class="small-note mb-3">Answer the questions below. Your score determines your risk category.</p>
                             <div class="vstack gap-3">
-                                <!-- Q1 -->
+                                &lt;!&ndash; Q1 &ndash;&gt;
                                 <div>
                                     <label class="form-label">1) If your ₹1,00,000 drops to ₹90,000 in a month?</label>
                                     <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="1" checked> <label class="form-check-label">Withdraw immediately</label></div>
                                     <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="2"> <label class="form-check-label">Wait and watch</label></div>
                                     <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="3"> <label class="form-check-label">Invest more to average</label></div>
                                 </div>
-                                <!-- Q2 -->
+                                &lt;!&ndash; Q2 &ndash;&gt;
                                 <div>
                                     <label class="form-label">2) Primary investment goal?</label>
                                     <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="1" checked> <label class="form-check-label">Capital protection</label></div>
                                     <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="2"> <label class="form-check-label">Moderate growth</label></div>
                                     <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="3"> <label class="form-check-label">High returns</label></div>
                                 </div>
-                                <!-- Q3 -->
+                                &lt;!&ndash; Q3 &ndash;&gt;
                                 <div>
                                     <label class="form-label">3) Investment horizon?</label>
                                     <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="1" checked> <label class="form-check-label">Less than 1 year</label></div>
                                     <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="2"> <label class="form-check-label">1–3 years</label></div>
                                     <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="3"> <label class="form-check-label">More than 3 years</label></div>
                                 </div>
-                                <!-- Q4 -->
+                                &lt;!&ndash; Q4 &ndash;&gt;
                                 <div>
                                     <label class="form-label">4) Percent of income to invest?</label>
                                     <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="1" checked> <label class="form-check-label">&lt; 10%</label></div>
                                     <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="2"> <label class="form-check-label">10–30%</label></div>
                                     <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="3"> <label class="form-check-label">&gt; 30%</label></div>
                                 </div>
-                                <!-- Q5 -->
+                                &lt;!&ndash; Q5 &ndash;&gt;
                                 <div>
                                     <label class="form-label">5) Monthly income level (optional)</label>
                                     <div class="form-check"><input class="form-check-input" type="radio" name="q5" value="1" checked> <label class="form-check-label">&lt; ₹25,000</label></div>
@@ -241,7 +250,7 @@
                             </div>
                         </div>
 
-                        <!-- STEP 6: Declarations & Consent -->
+                        &lt;!&ndash; STEP 6: Declarations & Consent &ndash;&gt;
                         <div class="step" data-step="6" data-title="Declarations & Consent">
                             <div class="form-check mb-2">
                                 <input class="form-check-input" type="checkbox" id="c1" required>
@@ -269,7 +278,7 @@
                             </div>
                         </div>
 
-                        <!-- STEP 7: Final Submission -->
+                        &lt;!&ndash; STEP 7: Final Submission &ndash;&gt;
                         <div class="step" data-step="7" data-title="Final Submission">
                             <p class="small-note">Complete the CAPTCHA and submit. We’ll:</p>
                             <ul class="small-note">
@@ -278,7 +287,7 @@
                                 <li>Create/map your profile with BSE STAR MF</li>
                             </ul>
 
-                            <!-- Google reCAPTCHA v2 (replace with your site key) -->
+                            &lt;!&ndash; Google reCAPTCHA v2 (replace with your site key) &ndash;&gt;
                             <div class="my-3">
                                 <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
                             </div>
@@ -287,7 +296,7 @@
                             <div id="submitStatus" class="mt-3"></div>
                         </div>
 
-                        <!-- Nav Buttons -->
+                        &lt;!&ndash; Nav Buttons &ndash;&gt;
                         <div class="d-flex justify-content-between mt-4">
                             <button type="button" class="btn btn-outline-light" id="btnPrev" disabled>Back</button>
                             <button type="button" class="btn btn-primary" id="btnNext">Next</button>
@@ -300,7 +309,7 @@
     </div>
 </div>
 
-<!-- Email OTP Modal -->
+&lt;!&ndash; Email OTP Modal &ndash;&gt;
 <div class="modal fade" id="emailOtpModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-dark text-light">
@@ -309,17 +318,20 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <input type="text" id="emailOtp" class="form-control" placeholder="Enter OTP">
+                <input id="emailInput" class="form-control mb-2" placeholder="Enter email">
+                <button class="btn btn-warning mb-2 w-100" onclick="sendEmailOtp(document.getElementById('emailInput').value)">Send Email OTP</button>
+
+                <input id="emailOtpInput" class="form-control mb-2" placeholder="Enter OTP">
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button class="btn btn-primary" id="btnVerifyEmailOtp">Verify</button>
+                <button class="btn btn-primary w-100" onclick="verifyEmailOtp(document.getElementById('emailInput').value, document.getElementById('emailOtpInput').value)">Verify Email OTP</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Mobile OTP Modal -->
+&lt;!&ndash;&lt;!&ndash; Mobile OTP Modal &ndash;&gt;
 <div class="modal fade" id="mobileOtpModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-dark text-light">
@@ -328,17 +340,20 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <input type="text" id="mobileOtp" class="form-control" placeholder="Enter OTP">
+                <input id="mobileInput" class="form-control mb-2" placeholder="Enter mobile number">
+                <button class="btn btn-warning mb-2 w-100" onclick="sendMobileOtp(document.getElementById('mobileInput').value)">Send Mobile OTP</button>
+
+                <input id="mobileOtpInput" class="form-control mb-2" placeholder="Enter OTP">
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button class="btn btn-primary" id="btnVerifyMobileOtp">Verify</button>
+                <button class="btn btn-primary w-100" onclick="verifyMobileOtp(document.getElementById('mobileInput').value, document.getElementById('mobileOtpInput').value)">Verify Mobile OTP</button>
             </div>
         </div>
     </div>
-</div>
+</div>&ndash;&gt;
 
-<!-- Scripts -->
+&lt;!&ndash; Scripts &ndash;&gt;
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>
@@ -351,22 +366,71 @@
       register: '/api/auth/register'
     };
 
-
-fetch("http://localhost:8080/api/auth/send-otp/email", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-})
-.then(response => response.text())
-.then(data => console.log("Email sent:", data))
-.catch(error => console.error("Error sending email:", error));
-
     // ====== State ======
     const totalSteps = 7;
     let currentStep = 1;
     let emailVerified = false;
     let mobileVerified = false;
+
+
+
+// Base API URL
+const API_BASE = "http://localhost:8080/api/otp";
+
+// Helper to make POST requests
+async function postData(url = "", data = {}) {
+    const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+    return res.json();
+}
+
+// Send Email OTP
+async function sendEmailOtp(email) {
+    if (!email) {
+        alert("Please enter a valid email");
+        return;
+    }
+    const result = await postData(`${API_BASE}/send/email`, { email });
+    console.log(result);
+    alert(result.message);
+}
+
+// Verify Email OTP
+async function verifyEmailOtp(email, otp) {
+    if (!email || !otp) {
+        alert("Please enter email and OTP");
+        return;
+    }
+    const result = await postData(`${API_BASE}/verify/email`, { email, otp });
+    console.log(result);
+    alert(result.message);
+}
+
+// Send Mobile OTP
+async function sendMobileOtp(mobile) {
+    if (!mobile) {
+        alert("Please enter a valid mobile number");
+        return;
+    }
+    const result = await postData(`${API_BASE}/send/mobile`, { mobile });
+    console.log(result);
+    alert(result.message);
+}
+
+// Verify Mobile OTP
+async function verifyMobileOtp(mobile, otp) {
+    if (!mobile || !otp) {
+        alert("Please enter mobile and OTP");
+        return;
+    }
+    const result = await postData(`${API_BASE}/verify/mobile`, { mobile, otp });
+    console.log(result);
+    alert(result.message);
+}
+
 
     // ====== Helpers ======
     const qs = (sel) => document.querySelector(sel);
@@ -500,7 +564,7 @@ fetch("http://localhost:8080/api/auth/send-otp/email", {
       showStep(currentStep);
     });
     qs('#btnPrev').addEventListener('click', () => {
-      if (currentStep > 1) currentStep--;
+      if (currentStep > 1) currentStep&#45;&#45;;
       showStep(currentStep);
     });
 
@@ -618,3 +682,4 @@ fetch("http://localhost:8080/api/auth/send-otp/email", {
 </script>
 </body>
 </html>
+-->

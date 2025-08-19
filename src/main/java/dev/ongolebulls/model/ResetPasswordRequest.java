@@ -1,4 +1,3 @@
-/*
 package dev.ongolebulls.model;
 
 public class ResetPasswordRequest {
@@ -6,28 +5,6 @@ public class ResetPasswordRequest {
     private String newPassword;
 
     // Getters and Setters
-    public String getResetUsername() {
-        return resetUsername;
-    }
-
-    public void setResetUsername(String resetUsername) {
-        this.resetUsername = resetUsername;
-    }
-
-    public String getNewPassword() {
-        return newPassword;
-    }
-
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
-    }
-}*/
-package dev.ongolebulls.model;
-
-public class ResetPasswordRequest {
-    private String resetUsername;
-    private String newPassword;
-
     public String getResetUsername() {
         return resetUsername;
     }

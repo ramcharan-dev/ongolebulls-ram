@@ -63,9 +63,9 @@ public class HomeController {
         return "workflow"; // Loads workflow.html
     }
 
-    @GetMapping("/sign-up")
+    @GetMapping("/login")
     public String loginPage() {
-        return "sign-up"; // Loads login.html from src/main/resources/templates/
+        return "login"; // Loads login.html from src/main/resources/templates/
     }
 
 }

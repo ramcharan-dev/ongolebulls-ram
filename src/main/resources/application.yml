@@ -43,5 +43,17 @@ thymeleaf:
   enabled: true
 
 recaptcha:
-    secret: your-secret-key-here
-    site-key: your-site-key-here
+    secret: 6Lej8KkrAAAAAIhp2phDRQ5tjMzsiZcXP7JWdO7e
+    site-key: 6Lej8KkrAAAAAEPktuTNfLFuwhIcBIKtL3Tz8axa
+
+
+
+twilio:
+  account:
+    sid: AC937499ce4f0c55d618bd9792f6ee5d16
+  auth:
+    token: 148d3ef632b2970344e01d17f1d0be5e
+  phone:
+    number: +1 316 800 5591
+
+
