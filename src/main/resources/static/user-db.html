@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" />
+    <title>OngoleBulls Invest – Investor Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- FontAwesome 6 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Your body and navbar HTML here -->
+
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <style>
+        body {
+          background: #f5f7fa;
+          font-family: 'Segoe UI', sans-serif;
+        }
+        /* Sidebar styles */
+        .offcanvas {
+          width: 220px !important;
+        }
+        .offcanvas .nav-link {
+          font-weight: 500;
+          color: #555;
+          transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .offcanvas .nav-link:hover {
+          background-color: #f0f4ff;
+          color: #0d6efd !important;
+          text-decoration: none;
+          border-radius: 8px;
+        }
+        /* Maintain sidebar visible on large screens */
+        @media (min-width: 992px) {
+          body {
+            padding-left: 220px !important;
+          }
+          .offcanvas-backdrop {
+            display: none !important;
+          }
+          #sidebarOffcanvas {
+            visibility: visible !important;
+            transform: none !important;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            border-right: 1px solid #dee2e6;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+          }
+        }
+        /* Card styling & animation */
+        .card {
+          border: none;
+          border-radius: 12px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+          transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+        .fade-in {
+          animation: fadeIn 0.8s ease-in;
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        .badge {
+          font-size: 1rem;
+          padding: 0.6rem;
+        }
+        .nav-tabs .nav-link.active {
+          background-color: #0d6efd;
+          color: #fff;
+          border-radius: 6px 6px 0 0;
+        }
+        .bottom-nav a {
+          flex: 1;
+          text-align: center;
+          color: #555;
+          padding: 8px 0;
+          font-size: 14px;
+        }
+        .bottom-nav a:hover {
+          color: #0d6efd;
+        }
+        border-bottom {
+        border-bottom: none !important;
+      }
+
+    </style>
+</head>
+<body>
+<!-- Sidebar (Bootstrap 5 Offcanvas) -->
+<div
+        class="offcanvas offcanvas-start bg-white"
+        tabindex="-1"
+        id="sidebarOffcanvas"
+        aria-labelledby="sidebarLabel"
+>
+    <div class="offcanvas-header border-bottom">
+
+        <!-- Brand Logo -->
+        <a class="navbar-brand fw-bold text-primary" th:href="@{/}">
+            <img src="assets/logo 3.png" alt="Logo"  height="100px" width="100px" class="me-2">
+        </a>
+        <button
+                type="button"
+                class="btn-close text-reset d-lg-none"
+                data-bs-dismiss="offcanvas"
+                aria-label="Close"
+        ></button>
+    </div>
+    <div class="offcanvas-body p-0">
+        <nav class="nav flex-column">
+            <a href="#" class="nav-link px-3 py-2 d-flex align-items-center text-primary fw-semibold"
+            ><i class="fas fa-home me-2"></i>Dashboard</a
+            >
+            <a href="invest-user-db.html" class="nav-link px-3 py-2 d-flex align-items-center"
+            ><i class="fas fa-hand-holding-usd me-2"></i>Invest</a
+            >
+            <a href="sip-planner.html" class="nav-link px-3 py-2 d-flex align-items-center"
+            ><i class="fas fa-sync-alt me-2"></i>SIP Tracker</a
+            >
+            <a href="report-user.html" class="nav-link px-3 py-2 d-flex align-items-center"
+            ><i class="fas fa-file-alt me-2"></i>Reports</a
+            >
+            <a href="aleart.html" class="nav-link px-3 py-2 d-flex align-items-center"
+            ><i class="fas fa-bell me-2"></i>Alerts</a
+            >
+            <a href="profile-details.html" class="nav-link px-3 py-2 d-flex align-items-center"
+            ><i class="fas fa-user me-2"></i>Profile</a
+            >
+            <a href="#" class="nav-link px-3 py-2 d-flex align-items-center"
+            ><i class="fas fa-sign-out-alt me-2"></i>Logout</a
+            >
+        </nav>
+    </div>
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top py-2">
+    <div class="container-fluid">
+
+        <!-- Sidebar Toggle (Mobile) -->
+        <button
+                class="btn btn-light d-lg-none me-3 fs-5"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#sidebarOffcanvas"
+                aria-controls="sidebarOffcanvas"
+                aria-label="Toggle sidebar"
+        >
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Optional Brand or Logo -->
+        <a class="navbar-brand fw-bold fs-4" href="#">OngoleBullsInvest</a>
+
+        <!-- Expand toggler for mobile -->
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarContent"
+                aria-controls="navbarContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Center: Search Bar -->
+        <form class="d-flex mx-auto" role="search" style="max-width: 400px; width: 100%;">
+            <input
+                    class="form-control"
+                    type="search"
+                    placeholder="Search funds, transactions..."
+                    aria-label="Search"
+            />
+            <button class="btn btn-outline-primary ms-2" type="submit">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+
+        <!-- Right Side -->
+        <div class="d-flex align-items-center ms-auto gap-3">
+
+            <!-- Notifications Dropdown -->
+            <div class="dropdown">
+                <button
+                        class="btn position-relative fs-5"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        aria-label="Notifications"
+                >
+                    <i class="fas fa-bell"></i>
+                    <span
+                            th:if="${notificationCount > 0}"
+                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                            style="font-size: 0.7rem;"
+                            th:text="${notificationCount}"
+                    ></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="min-width: 250px;">
+                    <li th:each="note : ${notifications}">
+                        <a class="dropdown-item small" th:text="${note.message}" href="#"></a>
+                    </li>
+                    <li th:if="${notifications.isEmpty()}">
+                        <span class="dropdown-item text-muted small">No notifications</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Profile Dropdown -->
+            <div class="dropdown">
+                <button
+                        class="btn d-flex align-items-center gap-2"
+                        id="profileMenu"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        aria-label="Profile menu"
+                >
+                    <i class="fas fa-user-circle fs-4"></i>
+                    <span class="d-none d-md-inline fw-semibold" th:text="${username}">User</span>
+                    <i class="fas fa-caret-down ms-1"></i>
+                </button>
+                <ul
+                        class="dropdown-menu dropdown-menu-end shadow-sm"
+                        aria-labelledby="profileMenu"
+                >
+                    <li><a class="dropdown-item" href="profile-details.html">View Profile</a></li>
+                    <li>
+                        <form th:action="@{/logout}" method="post">
+                            <button type="submit" class="dropdown-item">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    </div>
+</nav>
+
+
+<div class="container my-4 fade-in" style="max-width: calc(100% - 220px);">
+    <!-- Portfolio Stats -->
+    <div class="row g-3 text-center">
+        <div class="col-6 col-md-3">
+            <div class="card p-3">
+                <h6 class="d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-currency-rupee fs-3 text-primary"></i> Net Worth
+                    <i class="fas fa-info-circle ms-2" title="Current value of your mutual fund holdings"></i>
+                </h6>
+                <h4 id="netWorth" class="text-primary fs-3">₹12,45,000</h4>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card p-3">
+                <h6 class="d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-wallet2 fs-3 text-success"></i> Invested Amount
+                    <i class="fas fa-info-circle ms-2" title="Total amount you have invested so far"></i>
+                </h6>
+                <h4 id="investedAmount" class="text-success fs-3">₹10,80,000</h4>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card p-3">
+                <h6 class="d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-bar-chart-line fs-3 text-info"></i> Current Value
+                    <i class="fas fa-info-circle ms-2" title="Market value based on latest NAVs"></i>
+                </h6>
+                <h4 id="currentValue" class="text-info fs-3">₹12,30,500</h4>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card p-3">
+                <h6 class="d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-arrow-up-right-circle fs-3 text-warning"></i> Returns (XIRR)
+                    <i class="fas fa-info-circle ms-2" title="Annualized return considering cash flows"></i>
+                </h6>
+                <h4 id="returnsXirr" class="text-warning fs-3">8.7%</h4>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Asset Allocation Chart Card -->
+    <div class="card my-4">
+        <div class="card-header fw-bold d-flex justify-content-between align-items-center">
+            <span>Asset Allocation</span>
+            <select id="monthSelector" class="form-select form-select-sm" style="width: auto;">
+                <option value="2025-01">Jan 2025</option>
+                <option value="2025-02">Feb 2025</option>
+                <option value="2025-03">Mar 2025</option>
+                <option value="2025-04">Apr 2025</option>
+                <option value="2025-05">May 2025</option>
+                <option value="2025-06">Jun 2025</option>
+                <option value="2025-07">Jul 2025</option>
+                <option value="2025-08" selected>Aug 2025</option>
+                <option value="2025-09">Sep 2025</option>
+                <option value="2025-10">Oct 2025</option>
+                <option value="2025-11">Nov 2025</option>
+                <option value="2025-12">Dec 2025</option>
+            </select>
+        </div>
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <!-- Legend -->
+                <div id="assetLegend" style="flex:1;"></div>
+
+                <!-- Donut Chart -->
+                <div style="flex-shrink:0; width: 250px; height: 200px;">
+                    <canvas id="assetChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Line Chart for monthly trends -->
+            <div style="height: 300px;">
+                <canvas id="lineChart"></canvas>
+            </div>
+        </div>
+
+        <small class="text-muted px-3 pb-2">
+            Diversified portfolios help balance growth and stability.
+            Revisit your goals every 6 months.
+        </small>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const monthlyAllocation = {
+          "2025-01": { labels: ["Equity", "Debt", "Gold", "Real Estate"], data: [50, 30, 10, 10] },
+          "2025-02": { labels: ["Equity", "Debt", "Gold", "Real Estate"], data: [52, 28, 12, 8] },
+          "2025-03": { labels: ["Equity", "Debt", "Gold", "Real Estate"], data: [48, 32, 10, 10] },
+          "2025-04": { labels: ["Equity", "Debt", "Gold", "Real Estate"], data: [46, 34, 10, 10] },
+          "2025-05": { labels: ["Equity", "Debt", "Gold", "Real Estate"], data: [49, 31, 11, 9] },
+          "2025-06": { labels: ["Equity", "Debt", "Gold", "Real Estate"], data: [51, 29, 10, 10] },
+          "2025-07": { labels: ["Equity", "Debt", "Gold", "Real Estate"], data: [53, 27, 10, 10] },
+          "2025-08": { labels: ["Equity", "Debt", "Gold", "Real Estate"], data: [55, 25, 10, 10] },
+          "2025-09": { labels: ["Equity", "Debt", "Gold", "Real Estate"], data: [54, 26, 10, 10] },
+          "2025-10": { labels: ["Equity", "Debt", "Gold", "Real Estate"], data: [56, 24, 10, 10] },
+          "2025-11": { labels: ["Equity", "Debt", "Gold", "Real Estate"], data: [57, 23, 10, 10] },
+          "2025-12": { labels: ["Equity", "Debt", "Gold", "Real Estate"], data: [58, 22, 10, 10] }
+        };
+
+        // Donut chart colors
+        const colors = ["#0d6efd", "#28a745", "#ffc107", "#6f42c1"];
+
+        // Donut Chart Setup
+        const pieCtx = document.getElementById("assetChart").getContext("2d");
+        let assetChart = new Chart(pieCtx, {
+          type: "doughnut", // <-- changed to doughnut
+          data: {
+            labels: monthlyAllocation["2025-08"].labels,
+            datasets: [{
+              data: monthlyAllocation["2025-08"].data,
+              backgroundColor: colors,
+              borderWidth: 2,
+              borderColor: "#fff"
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '60%', // <-- hole size for donut
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: ctx => `${ctx.label}: ${ctx.parsed}%`
+                }
+              }
+            }
+          }
+        });
+
+        // Custom legend update for donut chart
+        function updateLegend(monthKey) {
+          const legendContainer = document.getElementById("assetLegend");
+          const { labels, data } = monthlyAllocation[monthKey];
+          legendContainer.innerHTML = labels.map((label, i) => `
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span>
+                <span style="display:inline-block;width:14px;height:14px;background:${colors[i]};margin-right:8px;border-radius:50%;"></span>
+                ${label}
+              </span>
+              <strong>${data[i]}%</strong>
+            </div>
+          `).join("");
+        }
+
+        updateLegend("2025-08");
+
+        // Line Chart Setup for monthly trends
+        const lineCtx = document.getElementById("lineChart").getContext("2d");
+        const months = Object.keys(monthlyAllocation);
+        const assetLabels = monthlyAllocation["2025-01"].labels;
+
+        // Prepare datasets: each asset has array of monthly values
+        const lineDatasets = assetLabels.map((label, idx) => ({
+          label,
+          data: months.map(month => monthlyAllocation[month].data[idx]),
+          borderColor: colors[idx],
+          backgroundColor: colors[idx],
+          fill: false,
+          tension: 0.3,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+        }));
+
+        let lineChart = new Chart(lineCtx, {
+          type: "line",
+          data: {
+            labels: months.map(m => m.replace("2025-", "")),
+            datasets: lineDatasets
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 100,
+                ticks: {
+                  stepSize: 10,
+                  callback: val => val + "%"
+                },
+                title: { display: true, text: "Allocation %" }
+              },
+              x: {
+                title: { display: true, text: "Month (2025)" }
+              }
+            },
+            plugins: {
+              legend: { position: "bottom" },
+              tooltip: {
+                callbacks: {
+                  label: ctx => ctx.parsed.y + "%"
+                }
+              }
+            }
+          }
+        });
+
+        // Update donut chart & legend on month select
+        document.getElementById("monthSelector").addEventListener("change", function () {
+          const selectedMonth = this.value;
+          assetChart.data.labels = monthlyAllocation[selectedMonth].labels;
+          assetChart.data.datasets[0].data = monthlyAllocation[selectedMonth].data;
+          assetChart.update();
+          updateLegend(selectedMonth);
+        });
+    </script>
+
+
+    <!-- SIP Tracker & Risk -->
+    <div class="row g-3">
+        <!-- SIP Tracker -->
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h6 class="fw-bold mb-2">SIP Tracker</h6>
+
+                <div id="sipHistory" class="mb-2"></div>
+                <div id="sipNext" class="fw-bold text-primary"></div>
+                <div id="sipMissed" class="text-danger fw-bold"></div>
+
+                <button class="btn btn-sm btn-primary mt-2">Start New SIP</button>
+            </div>
+        </div>
+
+        <!-- Risk Profile Card -->
+        <div class="col-md-6">
+            <div class="card text-center p-3">
+                <span class="badge bg-warning text-dark" id="riskProfile">Moderate Risk</span>
+                <div id="riskDesc" class="mt-2 small text-muted">Balanced growth & stability</div>
+                <button class="btn btn-link btn-sm mt-1" data-bs-toggle="modal" data-bs-target="#riskQuizModal">Retake Risk Quiz</button>
+            </div>
+        </div>
+
+        <!-- Risk Quiz Modal -->
+        <div class="modal fade" id="riskQuizModal" tabindex="-1" aria-labelledby="riskQuizModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="riskQuizForm">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="riskQuizModalLabel">Risk Profile Quiz</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Question 1 -->
+                            <div class="mb-3">
+                                <label>1. What is your investment goal horizon?</label>
+                                <div>
+                                    <input type="radio" name="q1" value="1" id="q1a1" required>
+                                    <label for="q1a1">Less than 1 year</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="q1" value="2" id="q1a2">
+                                    <label for="q1a2">1 to 3 years</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="q1" value="3" id="q1a3">
+                                    <label for="q1a3">More than 3 years</label>
+                                </div>
+                            </div>
+
+                            <!-- Question 2 -->
+                            <div class="mb-3">
+                                <label>2. How do you react to market fluctuations?</label>
+                                <div>
+                                    <input type="radio" name="q2" value="1" id="q2a1" required>
+                                    <label for="q2a1">I prefer no risk, want stable returns</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="q2" value="2" id="q2a2">
+                                    <label for="q2a2">Moderate risk is okay</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="q2" value="3" id="q2a3">
+                                    <label for="q2a3">I can take high risk for higher returns</label>
+                                </div>
+                            </div>
+
+                            <!-- Question 3 -->
+                            <div class="mb-3">
+                                <label>3. What percentage of your income can you invest?</label>
+                                <div>
+                                    <input type="radio" name="q3" value="1" id="q3a1" required>
+                                    <label for="q3a1">Less than 10%</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="q3" value="2" id="q3a2">
+                                    <label for="q3a2">10% to 20%</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="q3" value="3" id="q3a3">
+                                    <label for="q3a3">More than 20%</label>
+                                </div>
+                            </div>
+
+                            <!-- Question 4 -->
+                            <div class="mb-3">
+                                <label>4. How comfortable are you with short-term losses?</label>
+                                <div>
+                                    <input type="radio" name="q4" value="1" id="q4a1" required>
+                                    <label for="q4a1">Not comfortable at all</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="q4" value="2" id="q4a2">
+                                    <label for="q4a2">Somewhat comfortable</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="q4" value="3" id="q4a3">
+                                    <label for="q4a3">Very comfortable</label>
+                                </div>
+                            </div>
+
+                            <!-- Question 5 -->
+                            <div class="mb-3">
+                                <label>5. What is your knowledge of investment products?</label>
+                                <div>
+                                    <input type="radio" name="q5" value="1" id="q5a1" required>
+                                    <label for="q5a1">Limited knowledge</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="q5" value="2" id="q5a2">
+                                    <label for="q5a2">Basic understanding</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="q5" value="3" id="q5a3">
+                                    <label for="q5a3">Good knowledge and experience</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById("riskQuizForm").addEventListener("submit", function(e) {
+              e.preventDefault();
+
+              // Sum all question values
+              let totalScore = 0;
+              for(let i = 1; i <= 5; i++) {
+                const val = parseInt(document.querySelector(`input[name="q${i}"]:checked`).value);
+                totalScore += val;
+              }
+
+              // Determine risk profile based on score thresholds
+              let profile = "";
+              let desc = "";
+              let badgeClass = "";
+
+              if (totalScore <= 7) {
+                profile = "Low Risk";
+                desc = "Conservative & stable";
+                badgeClass = "bg-success text-white";
+              } else if (totalScore <= 11) {
+                profile = "Moderate Risk";
+                desc = "Balanced growth & stability";
+                badgeClass = "bg-warning text-dark";
+              } else {
+                profile = "High Risk";
+                desc = "Aggressive growth focus";
+                badgeClass = "bg-danger text-white";
+              }
+
+              // Update badge and description
+              const badge = document.getElementById("riskProfile");
+              badge.textContent = profile;
+              badge.className = "badge " + badgeClass;
+
+              document.getElementById("riskDesc").textContent = desc;
+
+              // Hide modal (Bootstrap 5)
+              const modalEl = document.getElementById('riskQuizModal');
+              const modal = bootstrap.Modal.getInstance(modalEl);
+              modal.hide();
+            });
+        </script>
+
+
+    </div>
+
+    <script>
+        // Dummy SIP history data
+        const sipData = [
+          { date: "01 Aug 2025", status: "Done", amount: "₹5,000" },
+          { date: "01 Jul 2025", status: "Done", amount: "₹5,000" },
+          { date: "01 Jun 2025", status: "Missed", amount: "₹5,000" },
+          { date: "01 May 2025", status: "Done", amount: "₹5,000" },
+          { date: "01 Apr 2025", status: "Done", amount: "₹5,000" }
+        ];
+
+        function renderSIPHistory() {
+          const historyDiv = document.getElementById("sipHistory");
+          historyDiv.innerHTML = sipData.map(item => `
+            <div class="d-flex justify-content-between">
+              <span>${item.date}</span>
+              <span class="${item.status === 'Missed' ? 'text-danger' : 'text-success'}">
+                ${item.status} (${item.amount})
+              </span>
+            </div>
+          `).join("");
+        }
+
+        function updateSIPNextAndMissed() {
+          const today = new Date();
+          const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+          const missedCount = sipData.filter(sip => sip.status === "Missed").length;
+
+          document.getElementById("sipNext").textContent =
+            `Next SIP: ${nextMonth.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}`;
+          document.getElementById("sipMissed").textContent =
+            missedCount > 0 ? `Missed SIPs: ${missedCount}` : "";
+        }
+
+        function cycleRiskProfile() {
+          const profiles = [
+            { type: "Conservative", badge: "bg-info text-dark", desc: "Focus on safety & stability" },
+            { type: "Moderate", badge: "bg-warning text-dark", desc: "Balanced growth & stability" },
+            { type: "Aggressive", badge: "bg-danger", desc: "High growth potential with risk" }
+          ];
+          let index = 0;
+          setInterval(() => {
+            const p = profiles[index];
+            const badge = document.getElementById("riskProfile");
+            badge.className = `badge ${p.badge}`;
+            badge.textContent = p.type;
+            document.getElementById("riskDesc").textContent = p.desc;
+            index = (index + 1) % profiles.length;
+          }, 5000);
+        }
+
+        // Initial load
+        renderSIPHistory();
+        updateSIPNextAndMissed();
+        cycleRiskProfile();
+    </script>
+    <!-- Quick Actions -->
+    <div class="card my-4 shadow-sm border-0">
+        <div class="card-body d-flex flex-wrap justify-content-around" style="gap: 0.6rem;">
+            <button class="btn btn-outline-success m-1 action-btn" onclick="openInvestModal()">
+                <i class="fas fa-chart-line me-1"></i> Invest More
+            </button>
+            <button class="btn btn-outline-danger m-1 action-btn" onclick="openRedeemModal()">
+                <i class="fas fa-money-bill-wave me-1"></i> Redeem
+            </button>
+            <button class="btn btn-outline-primary m-1 action-btn" onclick="startSIP()">
+                <i class="fas fa-sync-alt me-1"></i> Start SIP
+            </button>
+            <button class="btn btn-outline-secondary m-1 action-btn" onclick="viewStatements()">
+                <i class="fas fa-file-alt me-1"></i> View Statements
+            </button>
+            <button class="btn btn-outline-info m-1 action-btn" onclick="openNomineeModal()">
+                <i class="fas fa-users me-1"></i> Nominee Settings
+            </button>
+        </div>
+    </div>
+
+    <!-- Invest Modal -->
+    <div class="modal fade" id="investModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Invest More</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Enter the amount you want to invest:</p>
+                    <input type="number" id="investAmount" class="form-control" placeholder="Amount in ₹">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-success" onclick="confirmInvestment()">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nominee Modal -->
+    <div class="modal fade" id="nomineeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title">Nominee Settings</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Enter nominee details:</p>
+                    <input type="text" class="form-control mb-2" placeholder="Nominee Name">
+                    <input type="text" class="form-control" placeholder="Relationship">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-info text-white">Save Nominee</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function openInvestModal() {
+          new bootstrap.Modal(document.getElementById('investModal')).show();
+        }
+        function openRedeemModal() {
+          alert('Redeem process started! (Static simulation)');
+        }
+        function startSIP() {
+          alert('Redirecting to SIP Planner... (Static simulation)');
+        }
+        function viewStatements() {
+          alert('Fetching your statements... (Static simulation)');
+        }
+        function openNomineeModal() {
+          new bootstrap.Modal(document.getElementById('nomineeModal')).show();
+        }
+        function confirmInvestment() {
+          const amount = document.getElementById('investAmount').value;
+          if(amount && amount > 0) {
+            alert(`Investment of ₹${amount} confirmed! (Static simulation)`);
+            bootstrap.Modal.getInstance(document.getElementById('investModal')).hide();
+          } else {
+            alert('Please enter a valid amount!');
+          }
+        }
+    </script>
+    <!-- Toast Notification -->
+    <div id="toast" style="
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  min-width: 200px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background: #333;
+  color: #fff;
+  display: none;
+  z-index: 1000;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.3);
+"></div>
+
+    <script>
+        function showToast(message, bgColor = "#333") {
+          const toast = document.getElementById("toast");
+          toast.textContent = message;
+          toast.style.background = bgColor;
+          toast.style.display = "block";
+          setTimeout(() => {
+            toast.style.display = "none";
+          }, 3000);
+        }
+
+        function simulateAction(button, actionName, successMsg, color) {
+          const originalHTML = button.innerHTML;
+          button.disabled = true;
+          button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing...`;
+
+          setTimeout(() => {
+            button.innerHTML = originalHTML;
+            button.disabled = false;
+            showToast(successMsg, color);
+          }, 1500);
+        }
+
+        document.querySelectorAll(".action-btn").forEach(button => {
+          button.addEventListener("click", () => {
+            const action = button.getAttribute("data-action");
+            if (action === "invest") {
+              simulateAction(button, action, "₹5,000 invested successfully!", "#28a745");
+            }
+            else if (action === "redeem") {
+              simulateAction(button, action, "₹2,000 redeemed successfully!", "#dc3545");
+            }
+            else if (action === "sip") {
+              simulateAction(button, action, "SIP started successfully!", "#0d6efd");
+            }
+            else if (action === "statements") {
+              simulateAction(button, action, "Fetching statements...", "#6c757d");
+            }
+            else if (action === "nominee") {
+              simulateAction(button, action, "Nominee settings updated!", "#17a2b8");
+            }
+          });
+        });
+    </script>
+
+    <style>
+        .action-btn {
+          transition: all 0.2s ease-in-out;
+        }
+        .action-btn:hover {
+          transform: scale(1.05);
+          box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+    </style>
+
+    <!-- Add Bootstrap Icons CSS in your head if not present -->
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+            rel="stylesheet"
+    />
+
+    <style>
+        /* Tab improvements */
+        #dashboardTabs .nav-link {
+          color: #495057;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          transition: all 0.3s ease;
+          border: none;
+          border-bottom: 3px solid transparent;
+        }
+
+
+        /* Icon size */
+        #dashboardTabs .nav-link i {
+          font-size: 1.2rem;
+        }
+
+        /* Tab content fade animation */
+        .tab-pane {
+          opacity: 0;
+          transition: opacity 0.5s ease;
+          height: 0;
+          overflow: hidden;
+        }
+        .tab-pane.show.active {
+          opacity: 1;
+          height: auto;
+        }
+
+        /* Alert message style */
+        #tabAlert {
+          position: fixed;
+          top: 1rem;
+          right: 1rem;
+          z-index: 1050;
+          background-color: #0d6efd;
+          color: white;
+          padding: 0.6rem 1rem;
+          border-radius: 0.3rem;
+          box-shadow: 0 4px 12px rgb(13 110 253 / 0.5);
+          font-weight: 600;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.5s ease;
+        }
+        #tabAlert.show {
+          opacity: 1;
+          pointer-events: auto;
+        }
+    </style>
+    <!-- Tabs -->
+    <ul class="nav nav-tabs border-0 mb-3" id="dashboardTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="transactions-tab" data-bs-toggle="tab" href="#transactions" role="tab" aria-controls="transactions" aria-selected="true">
+                <i class="bi bi-clock-history me-1"></i> Recent Transactions
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="funds-tab" data-bs-toggle="tab" href="#funds" role="tab" aria-controls="funds" aria-selected="false">
+                <i class="bi bi-bar-chart-line-fill me-1"></i> Top Performing Funds
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="alerts-tab" data-bs-toggle="tab" href="#alerts" role="tab" aria-controls="alerts" aria-selected="false">
+                <i class="bi bi-bell-fill me-1"></i> Smart Alerts
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="learn-tab" data-bs-toggle="tab" href="#learn" role="tab" aria-controls="learn" aria-selected="false">
+                <i class="bi bi-book-half me-1"></i> Learn & Grow
+            </a>
+        </li>
+    </ul>
+
+    <!-- Alert message -->
+    <div id="tabAlert" class="alert alert-info shadow-sm fade" role="alert" style="position:sticky; top:0; z-index:1000;"></div>
+
+    <!-- Tab Content -->
+    <div class="tab-content bg-white p-3 rounded shadow-sm">
+
+        <!-- Recent Transactions -->
+        <div class="tab-pane fade show active" id="transactions" role="tabpanel" aria-labelledby="transactions-tab">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th>Date</th>
+                    <th>Action</th>
+                    <th>Fund</th>
+                    <th>Amount</th>
+                </tr>
+                </thead>
+                <tbody id="transactionsBody">
+                <tr>
+                    <td>2025-08-10</td>
+                    <td><span class="badge bg-success">Purchase</span></td>
+                    <td>Axis Bluechip Fund - Direct Growth</td>
+                    <td>₹5,000</td>
+                </tr>
+                <tr>
+                    <td>2025-08-05</td>
+                    <td><span class="badge bg-danger">Redemption</span></td>
+                    <td>SBI Small Cap Fund - Regular Growth</td>
+                    <td>₹2,500</td>
+                </tr>
+                <tr>
+                    <td>2025-08-01</td>
+                    <td><span class="badge bg-primary">SIP Installment</span></td>
+                    <td>HDFC Balanced Advantage Fund - Direct Plan</td>
+                    <td>₹3,000</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <!-- Funds -->
+        <div class="tab-pane fade" id="funds" role="tabpanel" aria-labelledby="funds-tab">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="card p-3 fund-card shadow-sm border-0">
+                        <h6>Parag Parikh Flexi</h6>
+                        <p>1Y Return: <b class="text-success">21.5%</b><br>
+                            <small>Suitable for moderate investors</small></p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card p-3 fund-card shadow-sm border-0">
+                        <h6>Mirae Tax Saver</h6>
+                        <p>1Y Return: <b class="text-success">17.3%</b><br>
+                            <small>Save tax & grow wealth</small></p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card p-3 fund-card shadow-sm border-0">
+                        <h6>ICICI Equity & Debt</h6>
+                        <p>1Y Return: <b class="text-success">16.1%</b><br>
+                            <small>Balanced exposure to both</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Smart Alerts -->
+        <div class="tab-pane fade" id="alerts" role="tabpanel" aria-labelledby="alerts-tab">
+            <div class="alert alert-primary shadow-sm">🎯 Your SIP in SBI Small Cap has hit ₹1 lakh – Time to rebalance?</div>
+            <div class="alert alert-info shadow-sm">🔔 New NFO – UTI Healthcare Fund opens Aug 10</div>
+            <div class="alert alert-warning shadow-sm">📅 Axis ELSS fund matures in 2 months – review options</div>
+        </div>
+
+
+
+        <!-- Learn & Grow -->
+        <div class="tab-pane fade" id="learn" role="tabpanel" aria-labelledby="learn-tab">
+            <h4 class="mb-3">Learn & Grow</h4>
+
+            <div>
+                <div class="question fw-bold text-primary" onclick="toggleAnswer(this)">
+                    What is SIP?
+                </div>
+                <div class="answer text-muted" style="display: none;">
+                    SIP (Systematic Investment Plan) allows you to invest a fixed amount at regular intervals in mutual funds, helping with disciplined investing.
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <div class="question fw-bold text-primary" onclick="toggleAnswer(this)">
+                    What is NAV?
+                </div>
+                <div class="answer text-muted" style="display: none;">
+                    NAV (Net Asset Value) is the per-unit price of a mutual fund scheme. It reflects the fund’s market value.
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <div class="question fw-bold text-primary" onclick="toggleAnswer(this)">
+                    What is Asset Allocation?
+                </div>
+                <div class="answer text-muted" style="display: none;">
+                    Asset allocation is the strategy of dividing your investment portfolio across asset classes like equity, debt, and gold to balance risk and return.
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function toggleAnswer(element) {
+              const ans = element.nextElementSibling;
+              ans.style.display = ans.style.display === "block" ? "none" : "block";
+            }
+        </script>
+
+    </div>
+
+    <!-- Styles -->
+    <style>
+        .nav-tabs .nav-link {
+          transition: all 0.3s ease;
+        }
+        .nav-tabs .nav-link:hover {
+          background-color: #f8f9fa;
+          border-radius: 6px;
+        }
+        .fund-card, .learn-card {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .fund-card:hover, .learn-card:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+    </style>
+
+    <!-- Script -->
+    <script>
+        const tabAlert = document.getElementById('tabAlert');
+        const dashboardTabs = document.getElementById('dashboardTabs');
+
+        dashboardTabs.addEventListener('shown.bs.tab', function (event) {
+          const tabName = event.target.textContent.trim();
+          tabAlert.textContent = `Switched to "${tabName}" tab`;
+          tabAlert.classList.add('show');
+          setTimeout(() => tabAlert.classList.remove('show'), 1500);
+        });
+    </script>
+
+    <!-- Bottom Navigation -->
+    <div class="d-md-none fixed-bottom bg-white border-top bottom-nav d-flex">
+        <a href="#">
+            <i class="fas fa-home d-block"></i>Home
+        </a>
+        <a href="#">
+            <i class="fas fa-hand-holding-usd d-block"></i>Invest
+        </a>
+        <a href="#">
+            <i class="fas fa-sync-alt d-block"></i>SIPs
+        </a>
+        <a href="#">
+            <i class="fas fa-lightbulb d-block"></i>Insights
+        </a>
+        <a href="#">
+            <i class="fas fa-user d-block"></i>Profile
+        </a>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Fetch Portfolio
+        fetch('/api/portfolio/1')
+          .then((res) => res.json())
+          .then((data) => {
+            document.getElementById('netWorth').innerText =
+              '₹' + data.netWorth.toLocaleString();
+            document.getElementById('investedAmount').innerText =
+              '₹' + data.investedAmount.toLocaleString();
+            document.getElementById('currentValue').innerText =
+              '₹' + data.currentValue.toLocaleString();
+            document.getElementById('returnsXirr').innerText =
+              data.returnsXirr.toFixed(2) + '%';
+
+            // Example SIP Tracker & Risk Profile (assumed data structure)
+            if (data.sip) {
+              document.getElementById('sipActive').innerText =
+                'Active SIPs: ' +
+                data.sip.activeCount +
+                ' – ₹' +
+                data.sip.totalAmount +
+                '/month';
+              document.getElementById('sipNext').innerText =
+                'Next SIP: ₹' + data.sip.nextAmount + ' on ' + data.sip.nextDate;
+              if (data.sip.missedCount > 0) {
+                document.getElementById('sipMissed').innerText =
+                  data.sip.missedCount +
+                  ' SIP missed – ' +
+                  (data.sip.missedDetails || '');
+              } else {
+                document.getElementById('sipMissed').innerText = '';
+              }
+            }
+
+            if (data.riskProfile) {
+              document.getElementById('riskProfile').textContent = data.riskProfile.name;
+            }
+          });
+
+        // Fetch Asset Allocation
+        fetch('/api/asset-allocation')
+          .then((res) => res.json())
+          .then((allocation) => {
+            const labels = Object.keys(allocation);
+            const values = Object.values(allocation);
+            drawPieChart(labels, values);
+          });
+
+        // Fetch Transactions
+        fetch('/api/transactions')
+          .then((res) => res.json())
+          .then((list) => {
+            const tbody = document.getElementById('transactionsBody');
+            tbody.innerHTML = '';
+            list.forEach((tx) => {
+              tbody.innerHTML += `
+              <tr>
+                <td>${tx.date}</td>
+                <td>${tx.action}</td>
+                <td>${tx.fundName}</td>
+                <td>${tx.amount}</td>
+              </tr>
+            `;
+            });
+          });
+
+        // Draw Chart.js Pie with Gradients
+        function drawPieChart(labels, data) {
+          const ctx = document.getElementById('assetChart').getContext('2d');
+          const gradients = [
+            createGradient(ctx, '#007bff', '#66b2ff'),
+            createGradient(ctx, '#28a745', '#7cd68a'),
+            createGradient(ctx, '#ffc107', '#ffe082'),
+            createGradient(ctx, '#6c757d', '#adb5bd'),
+          ];
+          new Chart(ctx, {
+            type: 'pie',
+            data: {
+              labels,
+              datasets: [
+                {
+                  data,
+                  backgroundColor: gradients,
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              animation: { animateRotate: true, animateScale: true },
+              plugins: { legend: { position: 'bottom' } },
+            },
+          });
+        }
+        function createGradient(ctx, color1, color2) {
+          const g = ctx.createLinearGradient(0, 0, 0, 200);
+          g.addColorStop(0, color1);
+          g.addColorStop(1, color2);
+          return g;
+        }
+    </script>
+
+    <!-- Profile Details Section -->
+    <div id="profileDetails" class="card my-4" style="display: none; max-width: 500px;">
+        <div class="card-header fw-bold">My Profile</div>
+        <div class="card-body">
+            <p><strong>Name:</strong> John Doe</p>
+            <p><strong>Email:</strong> john.doe@example.com</p>
+            <p><strong>Phone:</strong> +91-9876543210</p>
+            <p><strong>Risk Profile:</strong> Moderate</p>
+            <p><strong>Member Since:</strong> Jan 2020</p>
+            <button id="closeProfile" class="btn btn-sm btn-outline-secondary">Close</button>
+        </div>
+    </div>
+
+    <script>
+        const profileLink = document.getElementById("profileLink");
+        const profileDetails = document.getElementById("profileDetails");
+        const closeProfile = document.getElementById("closeProfile");
+
+        profileLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          profileDetails.style.display = "block";
+          profileDetails.scrollIntoView({ behavior: "smooth" });
+        });
+
+        closeProfile.addEventListener("click", () => {
+          profileDetails.style.display = "none";
+        });
+    </script>
+
+</body>
+</html>

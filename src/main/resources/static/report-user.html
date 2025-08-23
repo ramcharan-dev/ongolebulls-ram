@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Investment Reports</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+          background: #f5f7fa;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          color: #333;
+        }
+        .container {
+          max-width: 900px;
+        }
+        h2, h3 {
+          font-weight: 700;
+          color: #1a73e8;
+          margin-bottom: 1rem;
+        }
+        section {
+          background: #fff;
+          border-radius: 8px;
+          padding: 1.5rem 2rem;
+          margin-bottom: 2rem;
+          box-shadow: 0 8px 16px rgb(0 0 0 / 0.08);
+          opacity: 0;
+          animation: fadeInUp 0.6s ease forwards;
+        }
+        section:nth-child(1) {
+          animation-delay: 0.1s;
+        }
+        section:nth-child(2) {
+          animation-delay: 0.3s;
+        }
+        section:nth-child(3) {
+          animation-delay: 0.5s;
+        }
+        section:nth-child(4) {
+          animation-delay: 0.7s;
+        }
+
+        ul.list-group li {
+          font-size: 1.05rem;
+          padding: 12px 20px;
+        }
+
+        table.table {
+          border-radius: 8px;
+          overflow: hidden;
+          box-shadow: 0 8px 16px rgb(0 0 0 / 0.05);
+          transition: box-shadow 0.3s ease;
+        }
+        table.table:hover {
+          box-shadow: 0 12px 28px rgb(0 0 0 / 0.12);
+        }
+        table.table thead {
+          background: linear-gradient(90deg, #1a73e8, #4285f4);
+          color: white;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+        table.table tbody tr {
+          transition: background-color 0.3s ease;
+          cursor: default;
+        }
+        table.table tbody tr:hover {
+          background-color: #e8f0fe;
+        }
+
+        #growthChart {
+          max-height: 300px;
+          width: 100% !important;
+        }
+
+        /* Fade in animation for sections */
+        @keyframes fadeInUp {
+          0% {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+    </style>
+</head>
+<body>
+<div id="common-nav-placeholder"></div>
+
+<div class="container my-5">
+    <h2 class="text-center mb-5">Investment & SIP Reports</h2>
+
+    <section class="summary-overview">
+        <h3>Summary Overview</h3>
+        <ul class="list-group">
+            <li class="list-group-item">Total Invested Amount: <strong>₹<span id="totalInvested">0</span></strong></li>
+            <li class="list-group-item">Current Portfolio Value: <strong>₹<span id="portfolioValue">0</span></strong></li>
+            <li class="list-group-item">Total Returns Earned: <strong>₹<span id="totalReturns">0</span></strong></li>
+            <li class="list-group-item">Number of Active SIPs: <strong><span id="activeSipsCount">0</span></strong></li>
+            <li class="list-group-item">Last SIP Contribution: <strong><span id="lastSipDate">-</span></strong></li>
+        </ul>
+    </section>
+
+    <section class="sip-history">
+        <h3>SIP History</h3>
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Amount Invested (₹)</th>
+                <th>Current Value (₹)</th>
+                <th>Returns (₹)</th>
+            </tr>
+            </thead>
+            <tbody id="sipHistoryTableBody"></tbody>
+        </table>
+    </section>
+
+    <section class="charts">
+        <h3>Investment Growth</h3>
+        <canvas id="growthChart"></canvas>
+    </section>
+
+    <section class="tax-savings">
+        <h3>Tax Savings Summary</h3>
+        <p>ELSS Investment: <strong>₹<span id="elssInvestment">0</span></strong></p>
+        <p>Tax Saved under 80C: <strong>₹<span id="taxSaved">0</span></strong></p>
+    </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Mock data simulating user SIP investments and ELSS info
+    const sipData = [
+      { date: '2024-01-01', amount: 5000, currentValue: 5300 },
+      { date: '2024-02-01', amount: 5000, currentValue: 5350 },
+      { date: '2024-03-01', amount: 5000, currentValue: 5400 },
+      { date: '2024-04-01', amount: 5000, currentValue: 5450 },
+      { date: '2024-05-01', amount: 5000, currentValue: 5500 },
+      { date: '2024-06-01', amount: 5000, currentValue: 5550 },
+    ];
+
+    const elssInvestment = 150000;
+    const taxSaved = 45000; // example
+
+    // Calculate summary values
+    const totalInvested = sipData.reduce((sum, sip) => sum + sip.amount, 0);
+    const totalCurrentValue = sipData.reduce((sum, sip) => sum + sip.currentValue, 0);
+    const totalReturns = totalCurrentValue - totalInvested;
+    const activeSipsCount = sipData.length;
+    const lastSipDate = sipData.length > 0 ? new Date(sipData[sipData.length -1].date).toLocaleDateString() : '-';
+
+    // Update summary section
+    document.getElementById('totalInvested').textContent = totalInvested.toLocaleString('en-IN');
+    document.getElementById('portfolioValue').textContent = totalCurrentValue.toLocaleString('en-IN');
+    document.getElementById('totalReturns').textContent = totalReturns.toLocaleString('en-IN');
+    document.getElementById('activeSipsCount').textContent = activeSipsCount;
+    document.getElementById('lastSipDate').textContent = lastSipDate;
+    document.getElementById('elssInvestment').textContent = elssInvestment.toLocaleString('en-IN');
+    document.getElementById('taxSaved').textContent = taxSaved.toLocaleString('en-IN');
+
+    // Populate SIP history table
+    const tableBody = document.getElementById('sipHistoryTableBody');
+    sipData.forEach((entry, i) => {
+      const returns = entry.currentValue - entry.amount;
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${i + 1}</td>
+        <td>${new Date(entry.date).toLocaleDateString()}</td>
+        <td>₹${entry.amount.toLocaleString('en-IN')}</td>
+        <td>₹${entry.currentValue.toLocaleString('en-IN')}</td>
+        <td>₹${returns.toLocaleString('en-IN')}</td>
+      `;
+      row.style.opacity = 0;
+      tableBody.appendChild(row);
+      setTimeout(() => {
+        row.style.transition = "opacity 0.5s ease";
+        row.style.opacity = 1;
+      }, i * 150);
+    });
+
+    // Setup Investment Growth Chart using Chart.js with gradient fill & animation
+    const ctx = document.getElementById('growthChart').getContext('2d');
+
+    const gradient1 = ctx.createLinearGradient(0, 0, 0, 300);
+    gradient1.addColorStop(0, 'rgba(26, 115, 232, 0.6)');
+    gradient1.addColorStop(1, 'rgba(26, 115, 232, 0.1)');
+
+    const gradient2 = ctx.createLinearGradient(0, 0, 0, 300);
+    gradient2.addColorStop(0, 'rgba(0, 128, 0, 0.6)');
+    gradient2.addColorStop(1, 'rgba(0, 128, 0, 0.1)');
+
+    const labels = sipData.map(e => new Date(e.date).toLocaleDateString());
+    const investedAmounts = sipData.map((_, i) => sipData.slice(0, i+1).reduce((sum, s) => sum + s.amount, 0));
+    const currentValues = sipData.map((_, i) => sipData.slice(0, i+1).reduce((sum, s) => sum + s.currentValue, 0));
+
+    const growthChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Total Invested Amount',
+            data: investedAmounts,
+            borderColor: '#1a73e8',
+            backgroundColor: gradient1,
+            fill: true,
+            tension: 0.4,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            borderWidth: 3,
+            hoverBorderWidth: 4,
+          },
+          {
+            label: 'Current Portfolio Value',
+            data: currentValues,
+            borderColor: '#008000',
+            backgroundColor: gradient2,
+            fill: true,
+            tension: 0.4,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            borderWidth: 3,
+            hoverBorderWidth: 4,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: {
+          duration: 1500,
+          easing: 'easeOutQuart'
+        },
+        interaction: {
+          mode: 'nearest',
+          intersect: false
+        },
+        plugins: {
+          legend: {
+            labels: {
+              font: {
+                size: 14,
+                weight: '600'
+              }
+            },
+            position: 'top'
+          },
+          tooltip: {
+            enabled: true,
+            mode: 'nearest',
+            intersect: false,
+            callbacks: {
+              label: ctx => `₹${ctx.parsed.y.toLocaleString('en-IN')}`
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              font: { size: 13 },
+              callback: value => `₹${value.toLocaleString('en-IN')}`
+            },
+            grid: {
+              color: '#e9ecef'
+            }
+          },
+          x: {
+            ticks: {
+              font: { size: 13 }
+            },
+            grid: {
+              color: '#f1f3f5'
+            }
+          }
+        }
+      }
+    });
+</script>
+</body>
+</html>
