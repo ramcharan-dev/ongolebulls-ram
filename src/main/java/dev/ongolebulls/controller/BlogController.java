@@ -2,11 +2,20 @@ package dev.ongolebulls.controller;
 
 import dev.ongolebulls.model.Blog;
 import dev.ongolebulls.service.BlogService;
+import org.antlr.v4.runtime.misc.LogManager;
+import org.apache.catalina.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 @RestController
@@ -59,5 +68,30 @@ public class BlogController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @PostMapping("/admin/blog/save")
+    public String saveBlog(@ModelAttribute Blog blog,
+                           @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
+
+        if (!imageFile.isEmpty()) {
+            String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
+            String uploadDir = "src/main/resources/static/assets/";
+
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            Path filePath = uploadPath.resolve(fileName);
+            Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            blog.setImageName(fileName);
+        }
+
+        LogManager blogRepository = new LogManager();
+        blogRepository.save(String.valueOf(blog));
+        return "redirect:/admin/blog/list";
+    }
+
 
 }

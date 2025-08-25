@@ -1,3 +1,4 @@
+<!--
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -88,7 +89,7 @@
 <div class="container">
     <img src="assets/logo 3.png" alt="Ongolebulls Logo" class="logo">
 
-    <!-- Company Name and Tagline -->
+    &lt;!&ndash; Company Name and Tagline &ndash;&gt;
     <p class="tagline">Invest Smart Grow Big.</p>
     <h2>Welcome to Ongolebulls Invest</h2>
 
@@ -240,5 +241,773 @@ function showRegister() {
 </script>
 
 </body>
-</html>
+</html>-->
 
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ongolebulls Invest - Auth</title>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          padding: 20px;
+          background: #f8f8f8;
+        }
+
+        .container {
+          background: white;
+          padding: 30px;
+          border-radius: 10px;
+          box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+          width: 420px;
+          text-align: center;
+          overflow: hidden;
+        }
+
+        .logo {
+          width: 100px;
+          margin-bottom: 20px;
+        }
+
+        .form-container {
+          display: none;
+        }
+        .form-container.active {
+          display: block;
+        }
+
+        input, select {
+          width: 92%;
+          padding: 12px;
+          margin: 12px 0;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+        }
+
+        button {
+          width: 100%;
+          padding: 12px;
+          background: #ff4500;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 16px;
+        }
+
+        a {
+          color: #ff4500;
+          cursor: pointer;
+          text-decoration: underline;
+        }
+
+        .step {
+          display: none;
+        }
+        .step.active {
+          display: block;
+          animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+          from {opacity: 0; transform: translateX(40px);}
+          to {opacity: 1; transform: translateX(0);}
+        }
+
+        .progress {
+          margin: 15px 0;
+          font-size: 14px;
+          color: #333;
+        }
+
+        .nav-buttons {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 10px;
+        }
+        .nav-buttons button {
+          width: 48%;
+        }
+
+        .checkbox-group {
+          text-align: left;
+          margin: 10px 0;
+        }
+        .checkbox-group label {
+          display: block;
+          font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <img src="assets/logo 3.png" alt="Ongolebulls Logo" class="logo">
+    <p class="tagline">Invest Smart Grow Big.</p>
+    <h2>Welcome to Ongolebulls Invest</h2>
+
+    &lt;!&ndash; Toggle &ndash;&gt;
+    <p class="account-option" style="display: flex">
+        <input type="radio" id="login-option" name="account-option" onclick="showLoginForm()" checked>
+        <label for="login-option">Login</label>
+
+        <input type="radio" id="register-option" name="account-option" onclick="showRegisterForm()">
+        <label for="register-option">Register</label>
+    </p>
+
+    &lt;!&ndash; Login Form &ndash;&gt;
+    <div class="form-container active" id="login-form">
+        <input type="text" id="login-username" placeholder="Username" required>
+        <input type="password" id="login-password" placeholder="Password" required>
+        <button onclick="loginUser()">Log in</button>
+        <p><a onclick="showForgotPassword()">Forgot Password?</a></p>
+    </div>
+
+    &lt;!&ndash; Register Wizard &ndash;&gt;
+    <div class="form-container" id="register-form">
+        <div class="progress" id="step-indicator">Step 1 of 6</div>
+
+        &lt;!&ndash; Step 1: Basic Info &ndash;&gt;
+        <div class="step active" id="step-1">
+            <h3>Basic Information</h3>
+            <input type="text" id="reg-username" placeholder="Username" required>
+            <input type="text" id="reg-fname" placeholder="First Name" required>
+            <input type="text" id="reg-lname" placeholder="Last Name" required>
+            <input type="email" id="reg-email" placeholder="Email ID" required>
+            <input type="text" id="reg-mobile" placeholder="Mobile Number" required>
+            <input type="password" id="reg-password" placeholder="Password" required>
+            <div class="nav-buttons">
+                <button onclick="nextStep(1)">Next</button>
+            </div>
+        </div>
+
+        &lt;!&ndash; Step 2: Profile Type &ndash;&gt;
+        <div class="step" id="step-2">
+            <h3>Profile Type</h3>
+            <select id="profile-type" onchange="toggleRelativeFields()">
+                <option value="SELF">Self</option>
+                <option value="RELATIVE">Relative</option>
+            </select>
+            <div id="relative-fields" style="display:none;">
+                <select id="relation">
+                    <option value="Spouse">Spouse</option>
+                    <option value="Child">Child</option>
+                    <option value="Parent">Parent</option>
+                    <option value="Sibling">Sibling</option>
+                    <option value="Other">Other</option>
+                </select>
+                <input type="text" id="relative-name" placeholder="Relative Full Name">
+            </div>
+            <div class="nav-buttons">
+                <button onclick="prevStep(2)">Back</button>
+                <button onclick="nextStep(2)">Next</button>
+            </div>
+        </div>
+
+        &lt;!&ndash; Step 3: KYC &ndash;&gt;
+        <div class="step" id="step-3">
+            <h3>KYC Details</h3>
+            <input type="text" id="pan" placeholder="PAN Number">
+            <input type="date" id="dob" placeholder="Date of Birth">
+            <select id="gender">
+                <option value="">Select Gender</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+                <option value="O">Other</option>
+            </select>
+            <input type="text" id="address" placeholder="Residential Address">
+            <input type="text" id="pincode" placeholder="Pincode">
+            <input type="text" id="city" placeholder="City">
+            <input type="text" id="state" placeholder="State">
+            <input type="file" id="proof" accept=".pdf,.jpg,.jpeg,.png">
+            <div class="nav-buttons">
+                <button onclick="prevStep(3)">Back</button>
+                <button onclick="nextStep(3)">Next</button>
+            </div>
+        </div>
+
+        &lt;!&ndash; Step 4: Bank &ndash;&gt;
+        <div class="step" id="step-4">
+            <h3>Bank Details</h3>
+            <input type="text" id="account-holder" placeholder="Account Holder Name">
+            <input type="text" id="bank-name" placeholder="Bank Name">
+            <input type="text" id="account-number" placeholder="Account Number">
+            <input type="text" id="ifsc" placeholder="IFSC Code">
+            <div class="nav-buttons">
+                <button onclick="prevStep(4)">Back</button>
+                <button onclick="nextStep(4)">Next</button>
+            </div>
+        </div>
+
+        &lt;!&ndash; Step 5: Risk Profile &ndash;&gt;
+        <div class="step" id="step-5">
+            <h3>Risk Profile</h3>
+            <p>How would you react if your ₹1,00,000 investment drops to ₹90,000 in a month?</p>
+            <select id="q1">
+                <option value="1">Withdraw immediately</option>
+                <option value="2">Wait & Watch</option>
+                <option value="3">Invest more</option>
+            </select>
+            <p>What is your primary investment goal?</p>
+            <select id="q2">
+                <option value="1">Capital Protection</option>
+                <option value="2">Moderate Growth</option>
+                <option value="3">High Returns</option>
+            </select>
+            <p>How long can you stay invested?</p>
+            <select id="q3">
+                <option value="1">Less than 1 year</option>
+                <option value="2">1–3 years</option>
+                <option value="3">More than 3 years</option>
+            </select>
+            <div class="nav-buttons">
+                <button onclick="prevStep(5)">Back</button>
+                <button onclick="nextStep(5)">Next</button>
+            </div>
+        </div>
+
+        &lt;!&ndash; Step 6: Declarations &ndash;&gt;
+        <div class="step" id="step-6">
+            <h3>Declarations & Consent</h3>
+            <div class="checkbox-group">
+                <label><input type="checkbox" id="consent-1"> I declare information is accurate</label>
+                <label><input type="checkbox" id="consent-2"> I authorize sharing investment data</label>
+                <label><input type="checkbox" id="consent-3"> I authorize sharing with AMCs / regulators</label>
+                <label><input type="checkbox" id="consent-4"> I consent to receive notifications</label>
+                <label><input type="checkbox" id="consent-5"> I understand market risks</label>
+            </div>
+            <div class="nav-buttons">
+                <button onclick="prevStep(6)">Back</button>
+                <button onclick="registerUser()">Register</button>
+            </div>
+        </div>
+    </div>
+
+    &lt;!&ndash; Forgot Password &ndash;&gt;
+    <div class="form-container" id="forgot-password-form">
+        <h2>Reset Password</h2>
+        <input type="text" id="reset-username" placeholder="Username or Mobile" required>
+        <input type="password" id="new-password" placeholder="New Password" required>
+        <button onclick="resetPassword()">Reset Password</button>
+    </div>
+</div>
+
+<script>
+    let currentStep = 1;
+    function showStep(step) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step-' + step).classList.add('active');
+      document.getElementById('step-indicator').innerText = "Step " + step + " of 6";
+      currentStep = step;
+    }
+    function nextStep(step) { showStep(step + 1); }
+    function prevStep(step) { showStep(step - 1); }
+
+    function toggleRelativeFields() {
+      document.getElementById('relative-fields').style.display =
+        document.getElementById('profile-type').value === 'RELATIVE' ? 'block' : 'none';
+    }
+
+    // Auth toggles
+    function showLoginForm() {
+      document.getElementById('login-form').classList.add('active');
+      document.getElementById('register-form').classList.remove('active');
+      document.getElementById('forgot-password-form').classList.remove('active');
+    }
+    function showRegisterForm() {
+      document.getElementById('login-form').classList.remove('active');
+      document.getElementById('register-form').classList.add('active');
+      document.getElementById('forgot-password-form').classList.remove('active');
+      showStep(1);
+    }
+    function showForgotPassword() {
+      document.getElementById('login-form').classList.remove('active');
+      document.getElementById('register-form').classList.remove('active');
+      document.getElementById('forgot-password-form').classList.add('active');
+    }
+
+    // API calls
+    function loginUser() {
+      const username = document.getElementById('login-username').value;
+      const password = document.getElementById('login-password').value;
+      fetch('/api/auth/login', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({username, password})
+      }).then(r => r.text()).then(data => {
+        if(data.includes("successful")) { window.location.href="dashboard.html"; }
+        else alert(data);
+      });
+    }
+
+    function registerUser() {
+      // Collect answers & calculate risk score
+      const score = Number(document.getElementById('q1').value) +
+                    Number(document.getElementById('q2').value) +
+                    Number(document.getElementById('q3').value);
+      let riskCategory = score <= 5 ? "Conservative" : score <= 7 ? "Moderate" : "Aggressive";
+
+      const payload = {
+        username: document.getElementById('reg-username').value,
+        fname: document.getElementById('reg-fname').value,
+        lname: document.getElementById('reg-lname').value,
+        email: document.getElementById('reg-email').value,
+        mobile: document.getElementById('reg-mobile').value,
+        password: document.getElementById('reg-password').value,
+        profileType: document.getElementById('profile-type').value,
+        relation: document.getElementById('relation').value,
+        relativeName: document.getElementById('relative-name').value,
+        pan: document.getElementById('pan').value,
+        dob: document.getElementById('dob').value,
+        gender: document.getElementById('gender').value,
+        address: document.getElementById('address').value,
+        pincode: document.getElementById('pincode').value,
+        city: document.getElementById('city').value,
+        state: document.getElementById('state').value,
+        accountHolderName: document.getElementById('account-holder').value,
+        bankName: document.getElementById('bank-name').value,
+        accountNumber: document.getElementById('account-number').value,
+        ifsc: document.getElementById('ifsc').value,
+        riskScore: score,
+        riskCategory: riskCategory,
+        consentInfoAccuracy: document.getElementById('consent-1').checked,
+        consentDataSharing: document.getElementById('consent-2').checked,
+        consentRegulatory: document.getElementById('consent-3').checked,
+        consentNotifications: document.getElementById('consent-4').checked,
+        consentRiskDisclaimer: document.getElementById('consent-5').checked
+      };
+
+      fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      }).then(r=>r.text()).then(alert).catch(err=>alert("Error: "+err));
+    }
+
+    function resetPassword() {
+      const resetUsername = document.getElementById('reset-username').value;
+      const newPassword = document.getElementById('new-password').value;
+      fetch('/api/auth/reset-password', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({resetUsername,newPassword})
+      }).then(r=>r.text()).then(alert);
+    }
+</script>
+
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Ongolebulls Invest - Auth</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <!-- Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+    <style>
+        body {
+          font-family: "Segoe UI", Arial, sans-serif;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          padding: 20px;
+        }
+
+        .container {
+          background: #fff;
+          padding: 30px;
+          border-radius: 15px;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+          width: 420px;
+          text-align: center;
+          overflow: hidden;
+          animation: fadeInUp 0.7s ease;
+        }
+
+        @keyframes fadeInUp {
+          from {opacity: 0; transform: translateY(50px);}
+          to {opacity: 1; transform: translateY(0);}
+        }
+
+        .logo {
+          width: 90px;
+          margin-bottom: 15px;
+          animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+          0% { transform: scale(1);}
+          50% { transform: scale(1.05);}
+          100% { transform: scale(1);}
+        }
+
+        .tagline {
+          font-size: 14px;
+          color: #666;
+          margin-bottom: 10px;
+        }
+
+        input, select {
+          width: 100%;
+          padding: 12px 40px 12px 12px;
+          margin: 10px 0;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+          border-color: #ff4500;
+          box-shadow: 0 0 8px rgba(255,69,0,0.5);
+          outline: none;
+        }
+
+        .form-container {
+          display: none;
+        }
+        .form-container.active {
+          display: block;
+        }
+
+        button {
+          width: 100%;
+          padding: 12px;
+          background: #ff4500;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 16px;
+          transition: all 0.3s ease;
+        }
+
+        button:hover {
+          background: #e13e00;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 10px rgba(255,69,0,0.3);
+        }
+
+        a {
+          color: #ff4500;
+          cursor: pointer;
+          text-decoration: none;
+        }
+        a:hover { text-decoration: underline; }
+
+        .step {
+          display: none;
+        }
+        .step.active {
+          display: block;
+          animation: fadeIn 0.6s;
+        }
+        @keyframes fadeIn {
+          from {opacity: 0; transform: translateX(40px);}
+          to {opacity: 1; transform: translateX(0);}
+        }
+
+        .progress {
+          margin: 15px 0;
+          font-size: 14px;
+          color: #444;
+          height: 20px;
+        }
+
+        .nav-buttons {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 10px;
+          gap: 10px;
+        }
+        .checkbox-group {
+          text-align: left;
+          margin: 10px 0;
+        }
+        .checkbox-group label {
+          display: block;
+          font-size: 14px;
+          margin-bottom: 6px;
+        }
+
+        .input-group-text {
+          background: transparent;
+          border: none;
+        }
+        .form-check-input[type="radio"]:checked {
+          background-color: #ff4500;   /* your theme color */
+          border-color: #ff4500;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <img src="assets/logo 3.png" alt="Ongolebulls Logo" class="logo"/>
+    <p class="tagline">Invest Smart Grow Big.</p>
+    <h2 class="mb-3 fw-bold">Welcome to Ongolebulls Invest</h2>
+
+    <!-- Toggle -->
+    <p class="account-option d-flex justify-content-center gap-3">
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="login-option" name="account-option" onclick="showLoginForm()" checked>
+        <label class="form-check-label" for="login-option">Login</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="register-option" name="account-option" onclick="showRegisterForm()">
+        <label class="form-check-label" for="register-option">Register</label>
+    </div>
+    </p>
+
+    <!-- Login Form -->
+    <div class="form-container active" id="login-form">
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-person"></i></span>
+            <input type="text" id="login-username" class="form-control" placeholder="Username" required>
+        </div>
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+            <input type="password" id="login-password" class="form-control" placeholder="Password" required>
+        </div>
+        <button onclick="loginUser()"><i class="bi bi-box-arrow-in-right"></i> Log in</button>
+        <p class="mt-2"><a onclick="showForgotPassword()"><i class="bi bi-key"></i> Forgot Password?</a></p>
+    </div>
+
+    <!-- Register Wizard -->
+    <div class="form-container" id="register-form">
+        <div class="progress fw-semibold" id="step-indicator">Step 1 of 6</div>
+
+        <!-- Step 1 -->
+        <div class="step active" id="step-1">
+            <h4><i class="bi bi-person-circle"></i> Basic Information</h4>
+            <input type="text" id="reg-username" placeholder="Username" required>
+            <input type="text" id="reg-fname" placeholder="First Name" required>
+            <input type="text" id="reg-lname" placeholder="Last Name" required>
+            <input type="email" id="reg-email" placeholder="Email ID" required>
+            <input type="text" id="reg-mobile" placeholder="Mobile Number" required>
+            <input type="password" id="reg-password" placeholder="Password" required>
+            <div class="nav-buttons">
+                <button onclick="nextStep(1)">Next <i class="bi bi-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step" id="step-2">
+            <h4><i class="bi bi-person-badge"></i> Profile Type</h4>
+            <select id="profile-type" class="form-select" onchange="toggleRelativeFields()">
+                <option value="SELF">Self</option>
+                <option value="RELATIVE">Relative</option>
+            </select>
+            <div id="relative-fields" style="display:none;">
+                <select id="relation" class="form-select mt-2">
+                    <option value="Spouse">Spouse</option>
+                    <option value="Child">Child</option>
+                    <option value="Parent">Parent</option>
+                    <option value="Sibling">Sibling</option>
+                    <option value="Other">Other</option>
+                </select>
+                <input type="text" id="relative-name" placeholder="Relative Full Name" class="mt-2">
+            </div>
+            <div class="nav-buttons">
+                <button onclick="prevStep(2)"><i class="bi bi-arrow-left"></i> Back</button>
+                <button onclick="nextStep(2)">Next <i class="bi bi-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step" id="step-3">
+            <h4><i class="bi bi-file-earmark-text"></i> KYC Details</h4>
+            <input type="text" id="pan" placeholder="PAN Number">
+            <input type="date" id="dob" placeholder="Date of Birth">
+            <select id="gender" class="form-select">
+                <option value="">Select Gender</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+                <option value="O">Other</option>
+            </select>
+            <input type="text" id="address" placeholder="Residential Address">
+            <input type="text" id="pincode" placeholder="Pincode">
+            <input type="text" id="city" placeholder="City">
+            <input type="text" id="state" placeholder="State">
+            <input type="file" id="proof" accept=".pdf,.jpg,.jpeg,.png">
+            <div class="nav-buttons">
+                <button onclick="prevStep(3)"><i class="bi bi-arrow-left"></i> Back</button>
+                <button onclick="nextStep(3)">Next <i class="bi bi-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step" id="step-4">
+            <h4><i class="bi bi-bank"></i> Bank Details</h4>
+            <input type="text" id="account-holder" placeholder="Account Holder Name">
+            <input type="text" id="bank-name" placeholder="Bank Name">
+            <input type="text" id="account-number" placeholder="Account Number">
+            <input type="text" id="ifsc" placeholder="IFSC Code">
+            <div class="nav-buttons">
+                <button onclick="prevStep(4)"><i class="bi bi-arrow-left"></i> Back</button>
+                <button onclick="nextStep(4)">Next <i class="bi bi-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step" id="step-5">
+            <h4><i class="bi bi-graph-up"></i> Risk Profile</h4>
+            <p>How would you react if your ₹1,00,000 investment drops to ₹90,000 in a month?</p>
+            <select id="q1" class="form-select">
+                <option value="1">Withdraw immediately</option>
+                <option value="2">Wait & Watch</option>
+                <option value="3">Invest more</option>
+            </select>
+            <p>What is your primary investment goal?</p>
+            <select id="q2" class="form-select">
+                <option value="1">Capital Protection</option>
+                <option value="2">Moderate Growth</option>
+                <option value="3">High Returns</option>
+            </select>
+            <p>How long can you stay invested?</p>
+            <select id="q3" class="form-select">
+                <option value="1">Less than 1 year</option>
+                <option value="2">1–3 years</option>
+                <option value="3">More than 3 years</option>
+            </select>
+            <div class="nav-buttons">
+                <button onclick="prevStep(5)"><i class="bi bi-arrow-left"></i> Back</button>
+                <button onclick="nextStep(5)">Next <i class="bi bi-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="step" id="step-6">
+            <h4><i class="bi bi-check2-circle"></i> Declarations & Consent</h4>
+            <div class="checkbox-group">
+                <label><input type="checkbox" id="consent-1"> I declare information is accurate</label>
+                <label><input type="checkbox" id="consent-2"> I authorize sharing investment data</label>
+                <label><input type="checkbox" id="consent-3"> I authorize sharing with AMCs / regulators</label>
+                <label><input type="checkbox" id="consent-4"> I consent to receive notifications</label>
+                <label><input type="checkbox" id="consent-5"> I understand market risks</label>
+            </div>
+            <div class="nav-buttons">
+                <button onclick="prevStep(6)"><i class="bi bi-arrow-left"></i> Back</button>
+                <button onclick="registerUser()"><i class="bi bi-person-plus"></i> Register</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password -->
+    <div class="form-container" id="forgot-password-form">
+        <h4><i class="bi bi-key"></i> Reset Password</h4>
+        <input type="text" id="reset-username" placeholder="Username or Mobile" required>
+        <input type="password" id="new-password" placeholder="New Password" required>
+        <button onclick="resetPassword()"><i class="bi bi-arrow-repeat"></i> Reset Password</button>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Existing JS (unchanged) -->
+<script>
+    let currentStep = 1;
+    function showStep(step) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step-' + step).classList.add('active');
+      document.getElementById('step-indicator').innerText = "Step " + step + " of 6";
+      currentStep = step;
+    }
+    function nextStep(step) { showStep(step + 1); }
+    function prevStep(step) { showStep(step - 1); }
+
+    function toggleRelativeFields() {
+      document.getElementById('relative-fields').style.display =
+        document.getElementById('profile-type').value === 'RELATIVE' ? 'block' : 'none';
+    }
+
+    function showLoginForm() {
+      document.getElementById('login-form').classList.add('active');
+      document.getElementById('register-form').classList.remove('active');
+      document.getElementById('forgot-password-form').classList.remove('active');
+    }
+    function showRegisterForm() {
+      document.getElementById('login-form').classList.remove('active');
+      document.getElementById('register-form').classList.add('active');
+      document.getElementById('forgot-password-form').classList.remove('active');
+      showStep(1);
+    }
+    function showForgotPassword() {
+      document.getElementById('login-form').classList.remove('active');
+      document.getElementById('register-form').classList.remove('active');
+      document.getElementById('forgot-password-form').classList.add('active');
+    }
+
+    function loginUser() {
+      const username = document.getElementById('login-username').value;
+      const password = document.getElementById('login-password').value;
+      fetch('/api/auth/login', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({username, password})
+      }).then(r => r.text()).then(data => {
+        if(data.includes("successful")) { window.location.href="user-db.html"; }
+        else alert(data);
+      });
+    }
+
+    function registerUser() {
+      const score = Number(document.getElementById('q1').value) +
+                    Number(document.getElementById('q2').value) +
+                    Number(document.getElementById('q3').value);
+      let riskCategory = score <= 5 ? "Conservative" : score <= 7 ? "Moderate" : "Aggressive";
+
+      const payload = {
+        username: document.getElementById('reg-username').value,
+        fname: document.getElementById('reg-fname').value,
+        lname: document.getElementById('reg-lname').value,
+        email: document.getElementById('reg-email').value,
+        mobile: document.getElementById('reg-mobile').value,
+        password: document.getElementById('reg-password').value,
+        profileType: document.getElementById('profile-type').value,
+        relation: document.getElementById('relation').value,
+        relativeName: document.getElementById('relative-name').value,
+        pan: document.getElementById('pan').value,
+        dob: document.getElementById('dob').value,
+        gender: document.getElementById('gender').value,
+        address: document.getElementById('address').value,
+        pincode: document.getElementById('pincode').value,
+        city: document.getElementById('city').value,
+        state: document.getElementById('state').value,
+        accountHolderName: document.getElementById('account-holder').value,
+        bankName: document.getElementById('bank-name').value,
+        accountNumber: document.getElementById('account-number').value,
+        ifsc: document.getElementById('ifsc').value,
+        riskScore: score,
+        riskCategory: riskCategory,
+        consentInfoAccuracy: document.getElementById('consent-1').checked,
+        consentDataSharing: document.getElementById('consent-2').checked,
+        consentRegulatory: document.getElementById('consent-3').checked,
+        consentNotifications: document.getElementById('consent-4').checked,
+        consentRiskDisclaimer: document.getElementById('consent-5').checked
+      };
+
+      fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      }).then(r=>r.text()).then(alert).catch(err=>alert("Error: "+err));
+    }
+
+    function resetPassword() {
+      const resetUsername = document.getElementById('reset-username').value;
+      const newPassword = document.getElementById('new-password').value;
+      fetch('/api/auth/reset-password', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({resetUsername,newPassword})
+      }).then(r=>r.text()).then(alert);
+    }
+</script>

@@ -77,4 +77,7 @@ public class Blog {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    public void setImageName(String fileName) {
+    }
 }

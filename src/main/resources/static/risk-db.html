@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Risk Profiling Dashboard - Tailwind CSS</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* Custom styles for smaller badges like Bootstrap pills */
+        .badge-pill {
+          @apply rounded-full px-3 py-1 text-sm font-semibold;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-6 font-sans">
+
+<h2 class="text-2xl font-semibold mb-6">Interactive Risk Profiling Dashboard</h2>
+
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+    <!-- Risk Profile Distribution (Donut Chart) -->
+    <div class="bg-white rounded-lg shadow p-5 flex flex-col">
+        <div class="flex justify-between items-center mb-4">
+            <div>
+                <h5 class="text-lg font-semibold">Risk Profile Distribution</h5>
+                <p class="text-gray-500 text-sm">Clients by risk category (Live data)</p>
+            </div>
+            <button
+                    id="btnExportRisk"
+                    class="border border-gray-300 rounded px-3 py-1 hover:bg-gray-200 transition"
+                    title="Export Data"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12v8m0 0l-4-4m4 4l4-4M12 4v8" />
+                </svg>
+            </button>
+        </div>
+        <canvas id="chartRisk" height="130" class="mx-auto"></canvas>
+        <div id="riskLegend" class="flex justify-around mt-4 space-x-4 text-sm font-semibold"></div>
+    </div>
+
+    <!-- Risk Profile Trends (Histogram) -->
+    <div class="bg-white rounded-lg shadow p-5 flex flex-col">
+        <div class="flex justify-between items-center mb-4">
+            <div>
+                <h5 class="text-lg font-semibold">Risk Profile Trends (Histogram)</h5>
+                <p class="text-gray-500 text-sm">Monthly changes in client risk categories</p>
+            </div>
+            <button
+                    id="btnExportTrend"
+                    class="border border-gray-300 rounded px-3 py-1 hover:bg-gray-200 transition"
+                    title="Export Data"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12v8m0 0l-4-4m4 4l4-4M12 4v8" />
+                </svg>
+            </button>
+        </div>
+        <canvas id="chartRiskTrend" height="180" class="mx-auto"></canvas>
+    </div>
+
+    <!-- Questionnaire & Result -->
+    <div class="bg-white rounded-lg shadow p-5 flex flex-col">
+        <h5 class="text-lg font-semibold mb-3">Risk Profile Questionnaire</h5>
+        <p class="text-gray-500 mb-4">Select one answer per question</p>
+
+        <form id="riskForm" novalidate class="flex flex-col space-y-6">
+            <div id="questionsContainer"></div>
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white rounded py-2 font-semibold transition">
+                Calculate Risk Profile
+            </button>
+        </form>
+
+        <hr class="my-6" />
+
+        <h6 class="text-base font-semibold mb-1">Calculated Risk Profile</h6>
+        <label class="mb-1 block" id="riskScoreLabel">Risk Score: -- / 20</label>
+        <div class="relative w-full bg-gray-300 rounded-full h-6 overflow-hidden mb-3">
+            <div
+                    id="riskScoreBar"
+                    class="h-6 text-center text-xs font-semibold text-gray-900"
+                    style="width: 0%; background-color: #6c757d;"
+                    role="progressbar"
+                    aria-valuemin="0"
+                    aria-valuemax="20"
+            >0%</div>
+        </div>
+        <div id="riskProfileResult" class="text-lg font-semibold">Select answers and calculate</div>
+    </div>
+
+    <!-- Suggested Fund Categories -->
+    <div class="bg-white rounded-lg shadow p-5 flex flex-col">
+        <h5 class="text-lg font-semibold mb-3">Suggested Fund Categories</h5>
+        <p class="text-gray-500 mb-3">Based on risk profile</p>
+        <ul id="fundCategoriesList" class="divide-y divide-gray-200"></ul>
+    </div>
+
+</section>
+
+<script>
+    const riskDistribution = {
+      labels: ["Conservative", "Moderate", "Aggressive"],
+      data: [42, 33, 25],
+      colors: ["#6bc48a", "#ffdb6e", "#f77f7f"], // soft greens/yellows/reds
+    };
+
+    const riskTrends = {
+      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+      conservative: [12, 14, 13, 15, 14, 16, 17],
+      moderate: [18, 17, 19, 16, 20, 18, 16],
+      aggressive: [15, 18, 16, 20, 19, 21, 18],
+    };
+
+    const fundCategories = {
+      Conservative: ["Debt Funds", "Liquid Funds", "Short-duration Funds"],
+      Moderate: ["Hybrid Funds", "Balanced Advantage Funds"],
+      Aggressive: ["Equity Diversified Funds", "Small-cap Funds", "Sectoral Funds"],
+    };
+
+    const questions = [
+      {
+        q: "What is your investment experience level?",
+        options: [
+          { text: "Beginner", score: 1 },
+          { text: "Intermediate", score: 2 },
+          { text: "Experienced", score: 3 },
+          { text: "Expert", score: 4 },
+        ],
+      },
+      {
+        q: "What is your investment horizon?",
+        options: [
+          { text: "Less than 1 year", score: 1 },
+          { text: "1-3 years", score: 2 },
+          { text: "3-5 years", score: 3 },
+          { text: "More than 5 years", score: 4 },
+        ],
+      },
+      {
+        q: "How do you react to market volatility?",
+        options: [
+          { text: "Very anxious, sell quickly", score: 1 },
+          { text: "Somewhat anxious, cautious", score: 2 },
+          { text: "Stay calm and hold", score: 3 },
+          { text: "See it as an opportunity, buy more", score: 4 },
+        ],
+      },
+      {
+        q: "What percentage of your income do you invest?",
+        options: [
+          { text: "Less than 5%", score: 1 },
+          { text: "5-10%", score: 2 },
+          { text: "10-15%", score: 3 },
+          { text: "More than 15%", score: 4 },
+        ],
+      },
+      {
+        q: "Are you comfortable with high-risk investments?",
+        options: [
+          { text: "Not comfortable", score: 1 },
+          { text: "Somewhat comfortable", score: 2 },
+          { text: "Comfortable", score: 3 },
+          { text: "Very comfortable", score: 4 },
+        ],
+      },
+    ];
+
+    function getRiskProfile(score) {
+      if (score <= 8) return "Conservative";
+      if (score <= 14) return "Moderate";
+      return "Aggressive";
+    }
+
+    const categoryColors = {
+      Conservative: "bg-green-400",
+      Moderate: "bg-yellow-300 text-gray-800",
+      Aggressive: "bg-red-400",
+    };
+
+    // Render Risk Profile Distribution Donut Chart
+    const ctxRisk = document.getElementById("chartRisk").getContext("2d");
+    const chartRisk = new Chart(ctxRisk, {
+      type: "doughnut",
+      data: {
+        labels: riskDistribution.labels,
+        datasets: [{
+          data: riskDistribution.data,
+          backgroundColor: riskDistribution.colors,
+          borderWidth: 1,
+          borderColor: "#fff",
+        }],
+      },
+      options: {
+        responsive: true,
+        cutout: "70%",
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => `${ctx.label}: ${ctx.parsed}%`,
+            },
+          },
+        },
+      },
+    });
+
+    // Render Risk Distribution Legend
+    const riskLegendDiv = document.getElementById("riskLegend");
+    riskLegendDiv.innerHTML = "";
+    riskDistribution.labels.forEach((label, i) => {
+      const percent = riskDistribution.data[i];
+      const span = document.createElement("span");
+      span.className = `badge-pill ${categoryColors[label]}`;
+      span.textContent = "";
+      span.style.display = "inline-block";
+      span.style.width = "18px";
+      span.style.height = "18px";
+      span.style.marginRight = "8px";
+      const div = document.createElement("div");
+      div.className = "flex items-center";
+      div.appendChild(span);
+      div.appendChild(document.createTextNode(`${label} (${percent}%)`));
+      riskLegendDiv.appendChild(div);
+    });
+
+    // Render Risk Profile Trends Histogram (Bar Chart)
+    const ctxTrend = document.getElementById("chartRiskTrend").getContext("2d");
+    const chartTrend = new Chart(ctxTrend, {
+      type: "bar",
+      data: {
+        labels: riskTrends.labels,
+        datasets: [
+          {
+            label: "Conservative",
+            data: riskTrends.conservative,
+            backgroundColor: riskDistribution.colors[0],
+          },
+          {
+            label: "Moderate",
+            data: riskTrends.moderate,
+            backgroundColor: riskDistribution.colors[1],
+          },
+          {
+            label: "Aggressive",
+            data: riskTrends.aggressive,
+            backgroundColor: riskDistribution.colors[2],
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: { stacked: true },
+          y: { stacked: true, beginAtZero: true, max: 60 },
+        },
+        plugins: {
+          tooltip: {
+            mode: "index",
+            intersect: false,
+          },
+          legend: {
+            position: "top",
+          },
+        },
+      },
+    });
+
+    // Render Questions Dynamically
+    const questionsContainer = document.getElementById("questionsContainer");
+    questions.forEach((q, i) => {
+      const div = document.createElement("div");
+      div.className = "space-y-2";
+
+      let optionsHtml = q.options
+        .map(
+          (opt, idx) => `
+            <label class="flex items-center space-x-3 cursor-pointer">
+              <input
+                type="radio"
+                name="question${i}"
+                value="${opt.score}"
+                required
+                class="form-radio text-blue-600"
+              />
+              <span>${opt.text}</span>
+            </label>
+          `
+        )
+        .join("");
+
+      div.innerHTML = `
+        <p class="font-semibold">${i + 1}. ${q.q}</p>
+        ${optionsHtml}
+      `;
+
+      questionsContainer.appendChild(div);
+    });
+
+    const riskForm = document.getElementById("riskForm");
+    const riskScoreLabel = document.getElementById("riskScoreLabel");
+    const riskScoreBar = document.getElementById("riskScoreBar");
+    const riskProfileResult = document.getElementById("riskProfileResult");
+    const fundCategoriesList = document.getElementById("fundCategoriesList");
+
+    riskForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(riskForm);
+      let totalScore = 0;
+      let answeredCount = 0;
+      for (let i = 0; i < questions.length; i++) {
+        const val = formData.get(`question${i}`);
+        if (val) {
+          totalScore += parseInt(val, 10);
+          answeredCount++;
+        }
+      }
+
+      if (answeredCount < questions.length) {
+        alert("Please answer all questions.");
+        return;
+      }
+
+      const maxScore = questions.length * 4;
+      const profile = getRiskProfile(totalScore);
+      const percentage = Math.round((totalScore / maxScore) * 100);
+
+      // Update UI
+      riskScoreLabel.innerHTML = `Risk Score: <strong>${totalScore} / ${maxScore}</strong> (${profile})`;
+      riskScoreBar.style.width = percentage + "%";
+      riskScoreBar.textContent = percentage + "%";
+
+      // Color map for progress bar background
+      const colorMap = {
+        Conservative: "#6bc48a",
+        Moderate: "#ffdb6e",
+        Aggressive: "#f77f7f",
+      };
+      riskScoreBar.style.backgroundColor = colorMap[profile] || "#6c757d";
+
+      riskProfileResult.textContent = `Suggested Profile: ${profile}`;
+
+      // Update suggested funds
+      fundCategoriesList.innerHTML = "";
+      fundCategories[profile].forEach((fund) => {
+        const li = document.createElement("li");
+        li.className = "flex justify-between items-center py-2 border-b last:border-b-0";
+        li.textContent = fund;
+        const badge = document.createElement("span");
+        badge.className = `badge-pill ${categoryColors[profile]}`;
+        badge.textContent = profile;
+        li.appendChild(badge);
+        fundCategoriesList.appendChild(li);
+      });
+    });
+
+    // Export buttons with alerts
+    document.getElementById("btnExportRisk").addEventListener("click", () => {
+      alert("Export Risk Profile Distribution data (to be implemented).");
+    });
+    document.getElementById("btnExportTrend").addEventListener("click", () => {
+      alert("Export Risk Profile Trends data (to be implemented).");
+    });
+</script>
+</body>
+</html>

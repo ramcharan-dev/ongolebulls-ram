@@ -1,3 +1,4 @@
+/*
 //package dev.ongolebulls.util;
 //
 //import com.auth0.jwt.JWT;
@@ -31,3 +32,39 @@
 //        }
 //    }
 //}
+package dev.ongolebulls.util;
+
+import dev.ongolebulls.config.AppProperties;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.security.Key;
+import java.time.Instant;
+import java.util.Date;
+import java.util.Map;
+
+@Service
+@RequiredArgsConstructor
+public class JwtService {
+    private final AppProperties props;
+
+    private Key key() {
+        return Keys.hmacShaKeyFor(props.getJwtSecret().getBytes());
+    }
+
+    public String createToken(String subject, Map<String, Object> claims) {
+        Instant now = Instant.now();
+        Instant exp = now.plusSeconds(props.getJwtExpiryMinutes() * 60L);
+        return Jwts.builder()
+                .setIssuer(props.getJwtIssuer())
+                .setSubject(subject)
+                .addClaims(claims)
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(exp))
+                .signWith(key())
+                .compact();
+    }
+}
+*/
