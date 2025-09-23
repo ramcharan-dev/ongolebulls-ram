@@ -683,3 +683,398 @@ async function verifyMobileOtp(mobile, otp) {
 </body>
 </html>
 -->
+
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Signup - OngoleBulls</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        .step { display:none; }
+        .step.active { display:block; }
+        .required::after { content:" *"; color: red; }
+    </style>
+</head>
+<body class="bg-light">
+<div class="container py-5">
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="mb-3 d-flex justify-content-center">
+                <img src="assets/logo 3.png" alt="Logo" style="height:100px;">
+            </div>
+
+            <h4 class="card-title" style="align-item:center;">Signup</h4>
+            <div id="stepsProgress" class="mb-3">
+                <div class="progress">
+                    <div id="prog" class="progress-bar" style="width:20%">Step 1</div>
+                </div>
+            </div>
+
+            <!-- Step 1: Basic Info -->
+            <div id="step1" class="step active">
+                <h5>Basic Information</h5>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label class="form-label required">Full Name (as per PAN)</label>
+                        <input id="fullName" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label required">Email (OTP required)</label>
+                        <div class="input-group">
+                            <input id="email" class="form-control" type="email" required>
+                            <button id="sendOtpBtn" class="btn btn-outline-primary">Send OTP</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Email OTP</label>
+                        <input id="emailOtp" class="form-control">
+                        <button id="verifyOtpBtn" class="btn btn-sm btn-success mt-2">Verify OTP</button>
+                        <div id="otpStatus" class="small text-muted mt-2"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Mobile Number</label>
+                        <input id="mobileNumber" class="form-control">
+                        <div class="form-text">We only collect mobile number (no OTP).</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label required">Password</label>
+                        <input id="password" class="form-control" type="password" required>
+                        <div id="pwStrength" class="form-text"></div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button class="btn btn-primary" id="toStep2">Next</button>
+                </div>
+                <!-- Already signed up? -->
+                <div class="mt-3 text-center">
+                    <p class="mb-0">
+                        Already signed up?
+                        <a th:href="@{/sign-in}" class="text-primary fw-bold">Sign in</a>
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Step 2: Profile Type -->
+            <div id="step2" class="step">
+                <h5>Profile Type</h5>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="profileFor" id="forSelf" checked>
+                    <label class="form-check-label" for="forSelf">Self</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="profileFor" id="forRelative">
+                    <label class="form-check-label" for="forRelative">Relative</label>
+                </div>
+                <div id="relativeFields" style="display:none" class="mt-2">
+                    <label class="form-label">Relation</label>
+                    <select id="relation" class="form-select">
+                        <option>Spouse</option><option>Child</option><option>Parent</option><option>Sibling</option><option>Others</option>
+                    </select>
+                    <label class="form-label mt-2">Relative's Full Name</label>
+                    <input id="relativeName" class="form-control">
+                </div>
+                <div class="mt-3">
+                    <button class="btn btn-secondary" id="backTo1">Back</button>
+                    <button class="btn btn-primary" id="toStep3">Next</button>
+                </div>
+            </div>
+
+            <!-- Step 3: KYC -->
+            <div id="step3" class="step">
+                <h5>KYC Details</h5>
+                <div class="row g-2">
+                    <div class="col-md-4"><label class="form-label required">PAN Number</label><input id="panNumber" class="form-control"></div>
+                    <div class="col-md-4"><label class="form-label">DOB</label><input id="dob" type="date" class="form-control"></div>
+                    <div class="col-md-4"><label class="form-label">Gender</label>
+                        <select id="gender" class="form-select"><option>Male</option><option>Female</option><option>Other</option></select>
+                    </div>
+                    <div class="col-12"><label class="form-label">Address</label><textarea id="address" class="form-control"></textarea></div>
+                    <div class="col-md-3"><label class="form-label">Pincode</label><input id="pincode" class="form-control"></div>
+                    <div class="col-md-4"><label class="form-label">City</label><input id="city" class="form-control"></div>
+                    <div class="col-md-5"><label class="form-label">State</label><input id="state" class="form-control"></div>
+                    <div class="col-12 mt-2">
+                        <label class="form-label">Upload Proof of Address (Aadhaar/Passport/Utility)</label>
+                        <input id="kycFile" type="file" class="form-control">
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button class="btn btn-secondary" id="backTo2">Back</button>
+                    <button class="btn btn-primary" id="toStep4">Next</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Bank Details -->
+            <div id="step4" class="step">
+                <h5>Bank Details</h5>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label class="form-label required">Account Holder Name</label>
+                        <input id="accountHolder" name="accountHolderName" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label required">Bank Name</label>
+                        <input id="bankName" name="bankName" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label required">Account Number</label>
+                        <input id="accountNumber" name="accountNumber" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label required">IFSC Code</label>
+                        <input id="ifsc" name="ifsc" class="form-control">
+                    </div>
+                    <div class="col-12 mt-2">
+                        <label class="form-label">Upload Cancelled Cheque / Passbook</label>
+                        <input id="chequeFile" name="chequeFile" type="file" class="form-control">
+                        <div class="form-text">Ensure name matches PAN or provide declaration.</div>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <button class="btn btn-secondary" id="backTo3">Back</button>
+                    <button class="btn btn-primary" id="toStep5">Next</button>
+                </div>
+            </div>
+
+            <!-- Step 5: Risk Profile -->
+            <div id="step5" class="step">
+                <h5>Risk Profile (Quick Quiz)</h5>
+                <form id="riskForm">
+                    <!-- 5 questions as requested -->
+                    <div class="mb-2">
+                        <label>1. How would you react if ₹1,00,000 drops to ₹90,000 in a month?</label><br>
+                        <div><input type="radio" name="q1" value="1"> Withdraw everything</div>
+                        <div><input type="radio" name="q1" value="2" checked> Wait and watch</div>
+                        <div><input type="radio" name="q1" value="3"> Invest more</div>
+                    </div>
+                    <div class="mb-2">
+                        <label>2. Primary goal?</label><br>
+                        <div><input type="radio" name="q2" value="1"> Capital protection</div>
+                        <div><input type="radio" name="q2" value="2" checked> Moderate growth</div>
+                        <div><input type="radio" name="q2" value="3"> High returns</div>
+                    </div>
+                    <div class="mb-2">
+                        <label>3. Investment horizon?</label><br>
+                        <div><input type="radio" name="q3" value="1"> &lt;1 year</div>
+                        <div><input type="radio" name="q3" value="2" checked> 1–3 years</div>
+                        <div><input type="radio" name="q3" value="3"> &gt;3 years</div>
+                    </div>
+                    <div class="mb-2">
+                        <label>4. % of income to invest?</label><br>
+                        <div><input type="radio" name="q4" value="1"> &lt;10%</div>
+                        <div><input type="radio" name="q4" value="2" checked> 10–30%</div>
+                        <div><input type="radio" name="q4" value="3"> &gt;30%</div>
+                    </div>
+                    <div class="mb-2">
+                        <label>5. Monthly income (optional)</label><br>
+                        <div><input type="radio" name="q5" value="1"> &lt; ₹25,000</div>
+                        <div><input type="radio" name="q5" value="2" checked> ₹25,000–₹75,000</div>
+                        <div><input type="radio" name="q5" value="3"> &gt; ₹75,000</div>
+                    </div>
+                </form>
+                <div class="mt-3">
+                    <button class="btn btn-secondary" id="backTo4">Back</button>
+                    <button class="btn btn-primary" id="toStep6">Next</button>
+                </div>
+            </div>
+
+            <!-- Step 6: Declarations & Submit -->
+            <div id="step6" class="step">
+                <h5>Declarations & Consent</h5>
+                <div class="form-check">
+                    <input id="consentDeclared" class="form-check-input" type="checkbox">
+                    <label class="form-check-label">I declare information is accurate.</label>
+                </div>
+                <div class="form-check">
+                    <input id="consentShareWithProviders" class="form-check-input" type="checkbox">
+                    <label class="form-check-label">Authorize platform to share data with providers.</label>
+                </div>
+                <div class="form-check">
+                    <input id="consentShareDocs" class="form-check-input" type="checkbox">
+                    <label class="form-check-label">Share documents with AMCs/RTA/BSE STAR MF.</label>
+                </div>
+                <div class="form-check">
+                    <input id="consentComm" class="form-check-input" type="checkbox">
+                    <label class="form-check-label">Consent to WhatsApp/SMS/Email notifications.</label>
+                </div>
+                <div class="form-check">
+                    <input id="understoodMarketRisk" class="form-check-input" type="checkbox">
+                    <label class="form-check-label">I understand that mutual funds are subject to market risks.</label>
+                </div>
+
+                <div class="mt-3">
+                    <button class="btn btn-secondary" id="backTo5">Back</button>
+                    <button class="btn btn-success" id="completeSignup">Complete Signup & Proceed</button>
+
+                    <a th:href="@{/sign-in}" class="text-primary fw-bold">Sign in</a>
+
+                </div>
+                <div id="finalMsg" class="mt-3"></div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // Simple step navigation
+    let currentStep = 1;
+    function showStep(n){
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step'+n).classList.add('active');
+      let width = (n/6)*100;
+      document.getElementById('prog').style.width = width + '%';
+    }
+
+    document.getElementById('toStep2').addEventListener('click', ()=>{
+      // validate step1: email verified?
+      if (!window.emailVerified) { alert('Please verify email OTP first.'); return; }
+      currentStep=2; showStep(2);
+    });
+    document.getElementById('backTo1').addEventListener('click', ()=>{ currentStep=1; showStep(1);});
+    document.getElementById('toStep3').addEventListener('click', ()=>{ currentStep=3; showStep(3);});
+    document.getElementById('backTo2').addEventListener('click', ()=>{ currentStep=2; showStep(2);});
+    document.getElementById('toStep4').addEventListener('click', ()=>{ currentStep=4; showStep(4);});
+    document.getElementById('backTo3').addEventListener('click', ()=>{ currentStep=3; showStep(3);});
+    document.getElementById('toStep5').addEventListener('click', ()=>{ currentStep=5; showStep(5);});
+    document.getElementById('backTo4').addEventListener('click', ()=>{ currentStep=4; showStep(4);});
+    document.getElementById('toStep6').addEventListener('click', ()=>{ currentStep=6; showStep(6);});
+    document.getElementById('backTo5').addEventListener('click', ()=>{ currentStep=5; showStep(5);});
+
+    // relative toggles
+    document.getElementById('forRelative').addEventListener('change', ()=> document.getElementById('relativeFields').style.display = 'block');
+    document.getElementById('forSelf').addEventListener('change', ()=> document.getElementById('relativeFields').style.display = 'none');
+
+    // Password strength snippet
+    document.getElementById('password').addEventListener('input', (e)=>{
+      const v = e.target.value;
+      let score = 0;
+      if (v.length >= 8) score++;
+      if (/[A-Z]/.test(v)) score++;
+      if (/[0-9]/.test(v)) score++;
+      if (/[^A-Za-z0-9]/.test(v)) score++;
+      const texts = ['Very weak','Weak','Medium','Strong','Very strong'];
+      document.getElementById('pwStrength').innerText = texts[score];
+    });
+
+    // Email OTP AJAX
+    document.getElementById('sendOtpBtn').addEventListener('click', async ()=>{
+      const email = document.getElementById('email').value;
+      if (!email) return alert('Enter email');
+      const res = await fetch('/api/auth/send-email-otp', {
+        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email})
+      });
+      if (res.ok) {
+        document.getElementById('otpStatus').innerText = 'OTP sent. Check your email.';
+        window.sentEmail = email;
+      } else {
+        alert('Failed to send OTP');
+      }
+    });
+
+    document.getElementById('verifyOtpBtn').addEventListener('click', async ()=>{
+      const email = document.getElementById('email').value;
+      const otp = document.getElementById('emailOtp').value;
+      if (!email || !otp) return alert('Enter email and otp');
+      const res = await fetch('/api/auth/verify-email-otp', {
+        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, otp})
+      });
+      const j = await res.json();
+      if (res.ok && j.status === 'verified') {
+        document.getElementById('otpStatus').innerText = 'Email verified.';
+        window.emailVerified = true;
+      } else {
+        document.getElementById('otpStatus').innerText = 'Invalid OTP.';
+        window.emailVerified = false;
+      }
+    });
+
+    // final submit
+    document.getElementById('completeSignup').addEventListener('click', async ()=>{
+      // Collect all fields
+      const data = {
+        fullName: document.getElementById('fullName').value,
+        email: document.getElementById('email').value,
+        mobileNumber: document.getElementById('mobileNumber').value,
+        password: document.getElementById('password').value,
+        isForSelf: document.getElementById('forSelf').checked,
+        relativeRelation: document.getElementById('relation').value,
+        relativeFullName: document.getElementById('relativeName').value,
+        panNumber: document.getElementById('panNumber').value,
+        dob: document.getElementById('dob').value,
+        gender: document.getElementById('gender').value,
+        address: document.getElementById('address').value,
+        pincode: document.getElementById('pincode').value,
+        city: document.getElementById('city').value,
+        state: document.getElementById('state').value,
+        accountHolderName: document.getElementById('accountHolder').value,
+        bankName: document.getElementById('bankName').value,
+        accountNumber: document.getElementById('accountNumber').value,
+        ifsc: document.getElementById('ifsc').value,
+        // risk:
+        riskScore: computeRiskScore(),
+        riskCategory: computeRiskCategory(),
+        riskAnswersJson: JSON.stringify(collectRiskAnswers()),
+        // consents:
+        consentDeclared: document.getElementById('consentDeclared').checked,
+        consentShareWithProviders: document.getElementById('consentShareWithProviders').checked,
+        consentShareDocs: document.getElementById('consentShareDocs').checked,
+        consentComm: document.getElementById('consentComm').checked,
+        understoodMarketRisk: document.getElementById('understoodMarketRisk').checked
+      };
+
+      // Build FormData for multipart
+      const fd = new FormData();
+      fd.append('data', new Blob([JSON.stringify(data)], {type: "application/json"}));
+      const kycFile = document.getElementById('kycFile').files[0];
+      const chequeFile = document.getElementById('chequeFile').files[0];
+      if (kycFile) fd.append('kycFile', kycFile);
+      if (chequeFile) fd.append('chequeFile', chequeFile);
+
+      // Add device id header
+      const headers = {};
+      const resp = await fetch('/api/auth/register-client', {
+        method: 'POST',
+        body: fd,
+        headers: { /* browser will set boundary */ 'X-Device-Id': 'web-'+(navigator.userAgent||'unknown') }
+      });
+
+      if (resp.ok) {
+        const j = await resp.json();
+        document.getElementById('finalMsg').innerHTML = '<div class="alert alert-success">Signup complete. User ID: '+j.id+'</div>';
+        // Optionally redirect to dashboard or eMandate setup
+      } else {
+        const err = await resp.text();
+        document.getElementById('finalMsg').innerHTML = '<div class="alert alert-danger">Error: '+err+'</div>';
+      }
+    });
+
+    function computeRiskScore(){
+      let s = 0;
+      for (let i=1;i<=5;i++){
+        const v = document.querySelector('input[name="q'+i+'"]:checked');
+        if (v) s += parseInt(v.value);
+      }
+      return s;
+    }
+    function computeRiskCategory(){
+      const s = computeRiskScore();
+      if (s <= 7) return 'Conservative';
+      if (s <= 10) return 'Moderate';
+      return 'Aggressive';
+    }
+    function collectRiskAnswers(){
+      const out = {};
+      for (let i=1;i<=5;i++){
+        const v = document.querySelector('input[name="q'+i+'"]:checked');
+        out['q'+i] = v ? v.value : null;
+      }
+      return out;
+    }
+</script>
+</body>
+</html>

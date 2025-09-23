@@ -1,3 +1,4 @@
+/*
 package dev.ongolebulls.controller;
 
 import dev.ongolebulls.model.Blog;
@@ -41,5 +42,242 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+
+}*/
+package dev.ongolebulls.controller;
+
+import dev.ongolebulls.model.PasswordResetToken;
+import dev.ongolebulls.model.User;
+import dev.ongolebulls.model.RiskProfile;
+import dev.ongolebulls.repository.PasswordResetTokenRepository;
+import dev.ongolebulls.repository.UserRepository;
+import dev.ongolebulls.service.OtpService;
+import dev.ongolebulls.service.UserService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.ui.Model;                // ✅ correct one
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.HttpServletRequest;
+
+import java.security.Principal;
+import java.time.LocalDateTime;
+import java.util.*;
+
+
+@RestController
+@RequestMapping("/api/auth")
+@RequiredArgsConstructor
+@Slf4j
+public class AuthController {
+
+    private final OtpService otpService;
+    private final UserService userService;
+    private final UserRepository userRepository;
+    private final PasswordResetTokenRepository tokenRepository;
+    private final JavaMailSender mailSender;
+
+
+    // ==================== OTP ====================
+
+    @PostMapping("/send-email-otp")
+    public ResponseEntity<?> sendEmailOtp(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        if (email == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Missing email"));
+        }
+
+        try {
+            otpService.generateAndSend(email);
+            return ResponseEntity.ok(Map.of("status", "otp-sent"));
+        } catch (Exception e) {
+            log.error("❌ Failed to send OTP to {}: {}", email, e.getMessage(), e);
+            return ResponseEntity.status(500).body(Map.of("error", "Failed to send OTP"));
+        }
+    }
+
+    @PostMapping("/verify-email-otp")
+    public ResponseEntity<?> verifyEmailOtp(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        String otp = body.get("otp");
+        if (email == null || otp == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Missing email or OTP"));
+        }
+
+        boolean ok = otpService.verify(email, otp);
+        return ok
+                ? ResponseEntity.ok(Map.of("status", "verified"))
+                : ResponseEntity.status(400).body(Map.of("status", "invalid-otp"));
+    }
+
+    // ==================== REGISTRATION ====================
+
+    @PostMapping(value = "/register-client", consumes = {"multipart/form-data"})
+    public ResponseEntity<?> registerClient(
+            @RequestPart("data") Map<String, Object> data,
+            @RequestPart(value = "kycFile", required = false) MultipartFile kycFile,
+            @RequestPart(value = "chequeFile", required = false) MultipartFile chequeFile,
+            HttpServletRequest req
+    ) {
+        try {
+            if (data == null) return ResponseEntity.badRequest().body("Missing registration data");
+
+            String ip = req.getRemoteAddr();
+            String deviceId = req.getHeader("X-Device-Id");
+
+            // Handle RiskProfile safely
+            if (data.get("riskProfile") instanceof Map<?, ?> riskMapRaw) {
+                Map<String, Object> riskMap = (Map<String, Object>) riskMapRaw;
+                String riskCatStr = ((String) riskMap.getOrDefault("riskCategory", "CONSERVATIVE")).toUpperCase();
+                RiskProfile.RiskCategory category;
+                try {
+                    category = RiskProfile.RiskCategory.valueOf(riskCatStr);
+                } catch (IllegalArgumentException e) {
+                    category = RiskProfile.RiskCategory.CONSERVATIVE;
+                }
+                int score = (int) riskMap.getOrDefault("riskScore", 0);
+                String answersJson = (String) riskMap.getOrDefault("riskAnswersJson", "");
+
+                RiskProfile riskProfile = RiskProfile.builder()
+                        .score(score)
+                        .category(category)
+                        .answersJson(answersJson)
+                        .build();
+                data.put("riskProfileObj", riskProfile);
+            }
+
+            User saved = (User) userService.register(data, kycFile, chequeFile, ip, deviceId);
+
+            return ResponseEntity.ok(Map.of(
+                    "id", saved.getId(),
+                    "email", saved.getEmail(),
+                    "createdAt", saved.getCreatedAt()
+            ));
+
+        } catch (Exception ex) {
+            log.error("❌ Registration failed: {}", ex.getMessage(), ex);
+            return ResponseEntity.status(500).body(Map.of("error", ex.getMessage()));
+        }
+    }
+
+    // ==================== LOGIN ====================
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        String password = body.get("password");
+
+        if (email == null || password == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Missing email or password"));
+        }
+
+        return userService.login(email, password)
+                .map(user -> ResponseEntity.ok(Map.of(
+                        "id", user.getId(),
+                        "email", user.getEmail(),
+                        "fullName", user.getFullName()
+                )))
+                .orElseGet(() -> ResponseEntity.status(401).body(Map.of("error", "Invalid credentials")));
+    }
+
+    // ==================== FORGOT PASSWORD ====================
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        Optional<User> userOpt = userRepository.findByEmail(email);
+
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "User not found"));
+        }
+
+        String token = UUID.randomUUID().toString();
+        PasswordResetToken resetToken = new PasswordResetToken();
+        resetToken.setToken(token);
+        resetToken.setEmail(email);
+        resetToken.setExpiryDate(LocalDateTime.now().plusMinutes(30));
+        tokenRepository.save(resetToken);
+
+        // Send HTML reset mail
+        try {
+            String resetLink = "http://localhost:8080/reset-password?token=" + token;
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            String html = """
+                <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                    <h2 style="color:#006400;">Password Reset Request</h2>
+                    <p>Dear Investor,</p>
+                    <p>We received a request to reset your password.</p>
+                    <p>
+                        <a href="%s" style="background-color:#006400; color:#fff; padding:10px 20px; 
+                        text-decoration:none; border-radius:5px;">Click here to reset your password</a>
+                    </p>
+                    <p>This link will expire in <b>30 minutes</b>.</p>
+                    <br>
+                    <p>Warm Regards,<br>OngoleBulls Invest Team</p>
+                    <p style="font-size: 12px; color: #888;">
+                        <a href="https://www.ongolebullsinvest.com">www.ongolebullsinvest.com</a>
+                    </p>
+                </div>
+                """.formatted(resetLink);
+
+            helper.setFrom("info@ongolebullsinvest.com"); // ✅ Fix sender
+            helper.setTo(email);
+            helper.setSubject("Password Reset Request");
+            helper.setText(html, true);
+
+            mailSender.send(message);
+
+        } catch (Exception e) {
+            log.error("❌ Failed to send reset link: {}", e.getMessage(), e);
+            return ResponseEntity.status(500).body(Map.of("error", "Error sending reset link"));
+        }
+
+        return ResponseEntity.ok(Map.of("status", "reset-link-sent"));
+    }
+
+
+    // Profile page
+    @GetMapping("/profile")
+    public String profile(Model model, Principal principal) {
+        User user = userRepository.findByEmail(principal.getName()).orElse(null);
+        model.addAttribute("user", user);
+        return "profile"; // profile.html
+    }
+
+    // Settings page
+    @GetMapping("/settings")
+    public String settings(Model model, Principal principal) {
+        User user = userRepository.findByEmail(principal.getName()).orElse(null);
+        model.addAttribute("user", user);
+        return "settings"; // settings.html
+    }
+
+    // Update settings
+    @PostMapping("/update")
+    public String updateSettings(@ModelAttribute User user, Principal principal) {
+        User existingUser = userRepository.findByEmail(principal.getName()).orElse(null);
+        if (existingUser != null) {
+            existingUser.setFullName(user.getFullName());
+            existingUser.setAddress(user.getAddress());
+            userRepository.save(existingUser);
+        }
+        return "redirect:/user/profile";
+    }
+
+    // Logout
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) {
+        request.getSession().invalidate();
+        return "redirect:/login"; // back to login page
+    }
 
 }

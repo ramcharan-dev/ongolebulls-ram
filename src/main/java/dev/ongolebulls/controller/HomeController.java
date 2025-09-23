@@ -56,16 +56,19 @@ public class HomeController {
         return "wealth-management"; // Loads wealth-management.html
     }
 
-
-
     @GetMapping("/workflow")
     public String workflow() {
         return "workflow"; // Loads workflow.html
     }
 
-    @GetMapping("/login")
-    public String loginPage() {
-        return "login"; // Loads login.html from src/main/resources/templates/
+    @GetMapping("/Sign-up")
+    public String SignupPage() {
+        return "Sign-up"; // Loads login.html from src/main/resources/templates/
+    }
+
+    @GetMapping("/sign-in")
+    public String signinPage() {
+        return "sign-in"; // Loads login.html from src/main/resources/templates/
     }
 
 }

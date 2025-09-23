@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Mutual Funds</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body class="p-4">
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar Filters -->
+    <div class="col-md-3">
+      <h5>Filters</h5>
+      <form id="filterForm">
+        <h6>Risk</h6>
+        <div><input type="checkbox" name="risk" value="Low"> Low</div>
+        <div><input type="checkbox" name="risk" value="Low To Moderate"> Low To Moderate</div>
+        <div><input type="checkbox" name="risk" value="Moderate"> Moderate</div>
+        <div><input type="checkbox" name="risk" value="Moderately High"> Moderately High</div>
+        <div><input type="checkbox" name="risk" value="High"> High</div>
+        <div><input type="checkbox" name="risk" value="Very High"> Very High</div>
+
+        <h6 class="mt-3">Investment Horizon</h6>
+        <div><input type="checkbox" name="horizon" value="Short Term (1 year)"> Short Term (1 year)</div>
+        <div><input type="checkbox" name="horizon" value="Medium Term (1-3 year)"> Medium Term (1-3 year)</div>
+        <div><input type="checkbox" name="horizon" value="Long Term (3 years +)"> Long Term (3 years +)</div>
+
+        <h6 class="mt-3">Goals</h6>
+        <div><input type="checkbox" name="goal" value="Retirement"> Retirement</div>
+        <div><input type="checkbox" name="goal" value="Child Education"> Child Education</div>
+        <div><input type="checkbox" name="goal" value="Long-Term Capital Appreciation"> Long-Term Capital Appreciation</div>
+        <div><input type="checkbox" name="goal" value="Tax Planning"> Tax Planning</div>
+        <div><input type="checkbox" name="goal" value="Surplus Liquidity Parking"> Surplus Liquidity Parking</div>
+        <div><input type="checkbox" name="goal" value="Short-Term Parking"> Short-Term Parking</div>
+        <div><input type="checkbox" name="goal" value="Medium-Term Capital Appreciation"> Medium-Term Capital Appreciation</div>
+        <div><input type="checkbox" name="goal" value="Medium to Long Term Capital Appreciation"> Medium to Long Term Capital Appreciation</div>
+        <div><input type="checkbox" name="goal" value="Income over target maturity period"> Income over target maturity period</div>
+        <div><input type="checkbox" name="goal" value="Capital growth"> Capital growth</div>
+        <div><input type="checkbox" name="goal" value="Income Generation"> Income Generation</div>
+
+        <h6 class="mt-3">Asset Type</h6>
+        <div><input type="checkbox" name="asset" value="Mutual Funds"> Mutual Funds</div>
+        <div><input type="checkbox" name="asset" value="Stocks"> Stocks</div>
+        <div><input type="checkbox" name="asset" value="Bonds"> Bonds</div>
+        <div><input type="checkbox" name="asset" value="Real Estate"> Real Estate</div>
+        <div><input type="checkbox" name="asset" value="Gold"> Gold</div>
+        <div><input type="checkbox" name="asset" value="ETF"> ETF</div>
+
+        <button type="button" class="btn btn-primary mt-3" id="applyFilters">Apply Filters</button>
+      </form>
+    </div>
+
+    <!-- Fund Listings -->
+    <div class="col-md-9">
+      <h3>Mutual Fund Schemes</h3>
+      <div id="fundList">
+        <div th:each="fund : ${funds}" class="card mt-3 p-3 shadow-sm">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h5 th:text="${fund.name}"></h5>
+              <div th:each="fund : ${funds}" class="card p-3 mt-2">
+                <p>Returns: <span th:text="${fund.returns}"></span></p>
+                <p>NAV: ₹<span th:text="${fund.nav}"></span></p>
+                <p>Fund Age: <span th:text="${fund.age}"></span></p>
+                <p>Suitable for: <span th:text="${fund.suitableFor}"></span></p>
+                <button class="btn btn-primary btn-sm">View Details</button>
+                <button class="btn btn-outline-success btn-sm">Invest</button>
+              </div>
+            </div>
+            <div>
+                            <span th:classappend="'badge ' + (${fund.risk}=='Low'?'bg-success':(${fund.risk}=='Moderate'?'bg-warning':'bg-danger'))"
+                                  th:text="${fund.risk}"></span>
+              <br><br>
+              <button class="btn btn-primary btn-sm">View Details</button>
+              <button class="btn btn-outline-success btn-sm">Invest</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $("#applyFilters").click(function () {
+      let risks = [];
+      let horizons = [];
+      let goals = [];
+      let assets = [];
+
+      $("input[name='risk']:checked").each(function () { risks.push($(this).val()); });
+      $("input[name='horizon']:checked").each(function () { horizons.push($(this).val()); });
+      $("input[name='goal']:checked").each(function () { goals.push($(this).val()); });
+      $("input[name='asset']:checked").each(function () { assets.push($(this).val()); });
+
+      $.ajax({
+          url: "/funds/filter",
+          type: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({ risks, horizons, goals, assets }),
+          success: function (funds) {
+              $("#fundList").empty();
+              funds.forEach(fund => {
+                  $("#fundList").append(`
+                      <div class="card mt-3 p-3 shadow-sm">
+                          <div class="d-flex justify-content-between align-items-center">
+                              <div>
+                                  <h5>${fund.name}</h5>
+                                  <span class="badge bg-secondary">${fund.type}</span>
+                                  <p class="mb-1">
+                                      Returns: ${fund.returnsRegular}% Regular-Growth | ${fund.returnsDirect}% Direct-Growth<br>
+                                      NAV: ₹${fund.nav} <span class="${fund.navChange > 0 ? 'text-success':'text-danger'}">${fund.navChange}%</span><br>
+                                      Fund Age: ${fund.fundAge} Years<br>
+                                      Suitable for: ${fund.goal}
+                                  </p>
+                              </div>
+                              <div>
+                                  <span class="badge ${fund.risk=='Low'?'bg-success':(fund.risk=='Moderate'?'bg-warning':'bg-danger')}">${fund.risk}</span>
+                                  <br><br>
+                                  <button class="btn btn-primary btn-sm">View Details</button>
+                                  <button class="btn btn-outline-success btn-sm">Invest</button>
+                              </div>
+                          </div>
+                      </div>
+                  `);
+              });
+          }
+      });
+  });
+</script>
+</body>
+</html>

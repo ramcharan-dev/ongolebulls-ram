@@ -67,7 +67,8 @@ public class AuthService {
 
         return "User not found.";
     }
-}*/
+}*//*
+
 package dev.ongolebulls.service;
 
 import dev.ongolebulls.model.*;
@@ -142,5 +143,120 @@ public class AuthService {
         }
 
         return "User not found.";
+    }
+}
+*/
+package dev.ongolebulls.service;
+
+import dev.ongolebulls.model.*;
+import dev.ongolebulls.repository.PasswordResetTokenRepository;
+import dev.ongolebulls.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class AuthService {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordResetTokenRepository tokenRepository;    // ✅ final
+
+    // 🔹 Login with email OR mobileNumber
+    public String loginUser(LoginRequest request) {
+        Optional<User> userOptional = userRepository.findByEmailOrMobileNumber(
+                request.getLoginId(), request.getLoginId()
+        );
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
+                return "Login successful!";
+            }
+        }
+        return "Invalid email/mobile or password.";
+    }
+
+    // 🔹 Registration
+    public String registerUser(RegisterRequest request) {
+        // Check if email or mobileNumber already exists
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            return "Email already exists.";
+        }
+        if (userRepository.findByMobileNumber(request.getMobile()).isPresent()) {
+            return "Mobile number already exists.";
+        }
+
+        User user = new User();
+
+        // ✅ Full name instead of firstName + lastName
+        user.setFullName(request.getFname() + " " + request.getLname());
+
+        // ✅ Use correct field names
+        user.setMobileNumber(request.getMobile());
+        user.setEmail(request.getEmail());
+        user.setPasswordHash(passwordEncoder.encode(request.getPassword())); // Encrypt password
+
+        // ✅ Handle optional KYC & Bank details via embedded entities
+        KycDetails kyc = new KycDetails();
+        kyc.setPanNumber(request.getPanNumber());
+        kyc.setAadhaarNumber(request.getAadhaarNumber());
+        kyc.setOccupation(request.getOccupation());
+        kyc.setEmployerName(request.getEmployerName());
+        kyc.setIncomeRange(request.getIncomeRange());
+        user.setKycDetails(kyc);
+
+        BankDetails bank = new BankDetails();
+        bank.setAccountHolderName(request.getAccountHolderName());
+        bank.setBankName(request.getBankName());
+        bank.setIfscCode(request.getIfscCode());
+        bank.setAccountNumberEncrypted(request.getAccountNumberEncrypted());
+        user.setBankDetails(bank);
+
+        // ✅ Terms/declaration
+        user.setDeclarationAccepted(request.isDeclarationAccepted());
+        user.setTermsAccepted(true);
+
+        userRepository.save(user);
+        return "Registration successful!";
+    }
+
+    public boolean resetPassword(String token, String newPassword) {
+
+        Optional<PasswordResetToken> optionalToken = tokenRepository.findByToken(token);
+        if (optionalToken.isEmpty()) return false;
+
+        PasswordResetToken resetToken = optionalToken.get();
+
+        // check expiry
+        if (resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            return false;
+        }
+
+        // fetch user by email
+        Optional<User> optionalUser = userRepository.findByEmail(resetToken.getEmail());
+        if (optionalUser.isEmpty()) return false;
+
+//        User user = optionalUser.get();
+//
+//        // encode new password
+//        user.setPassword(passwordEncoder.encode(newPassword));
+//        userRepository.save(user); // update user
+        User user = optionalUser.get();
+
+// encode password and save in the correct column
+        user.setPasswordHash(passwordEncoder.encode(newPassword)); // <-- use the correct field
+        userRepository.save(user);
+
+
+        // optionally delete token
+        tokenRepository.delete(resetToken);
+
+        return true;
     }
 }

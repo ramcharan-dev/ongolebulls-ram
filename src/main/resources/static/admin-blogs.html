@@ -4,24 +4,23 @@
   <meta charset="UTF-8">
   <title>Blog Admin Panel</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-  <style>
-    body { padding: 2rem; }
-    textarea { resize: vertical; }
-  </style>
+  <style>body{padding:2rem;}textarea{resize:vertical;}</style>
   <script>
     tinymce.init({
-      selector: '#shortDescription, #fullContent',
-      plugins: 'lists link image table code',
-      toolbar: 'undo redo | styles | bold italic underline | alignleft aligncenter alignright | bullist numlist outdent indent | code',
-      menubar: false,
-      height: 250
-    });
+   selector:'#shortDescription,#fullContent',
+   plugins:'lists link image table code',
+   toolbar:'undo redo | styles | bold italic underline | alignleft aligncenter alignright | bullist numlist outdent indent | code',
+   menubar:false,
+   height:250
+ });
+
   </script>
 </head>
 <body>
 <div class="container">
   <h2>Blog Admin Panel</h2>
+
+  <!-- Blog Form -->
   <form id="blogForm" class="mb-4" enctype="multipart/form-data">
     <input type="hidden" id="blogId" />
     <div class="mb-3">
@@ -34,7 +33,7 @@
     </div>
     <div class="mb-3">
       <label class="form-label">Full Content</label>
-      <textarea id="fullContent" rows="5" class="form-control" required></textarea>
+      <textarea id="fullContent" class="form-control" required></textarea>
     </div>
     <div class="mb-3">
       <label class="form-label">Upload Image</label>
@@ -62,78 +61,65 @@
     <tbody></tbody>
   </table>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/tinymce@6.8.1/tinymce.min.js"></script>
 
 <script>
-  async function fetchBlogs() {
-    const res = await fetch('/api/blogs');
-    const blogs = await res.json();
-    const tbody = document.querySelector('#blogsTable tbody');
-    tbody.innerHTML = '';
-
-    blogs.forEach(blog => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${blog.id}</td>
-        <td>${blog.title}</td>
-        <td>${blog.shortDescription}</td>
-        <td>${blog.author || ''}</td>
-        <td>
-          <button class="btn btn-sm btn-warning" onclick='editBlog(${JSON.stringify(blog)})'>Edit</button>
-          <button class="btn btn-sm btn-danger" onclick='deleteBlog(${blog.id})'>Delete</button>
-        </td>
-      `;
-      tbody.appendChild(tr);
-    });
+  async function fetchBlogs(){
+      const res = await fetch('/api/blogs');
+      const blogs = await res.json();
+      const tbody = document.querySelector('#blogsTable tbody');
+      tbody.innerHTML='';
+      blogs.forEach(blog=>{
+          const tr=document.createElement('tr');
+          tr.innerHTML=`
+              <td>${blog.id}</td>
+              <td>${blog.title}</td>
+              <td>${blog.shortDescription}</td>
+              <td>${blog.author||''}</td>
+              <td>
+                  <button class="btn btn-sm btn-warning" onclick='editBlog(${JSON.stringify(blog)})'>Edit</button>
+                  <button class="btn btn-sm btn-danger" onclick='deleteBlog(${blog.id})'>Delete</button>
+              </td>`;
+          tbody.appendChild(tr);
+      });
   }
 
-  function editBlog(blog) {
-    document.getElementById('blogId').value = blog.id;
-    document.getElementById('title').value = blog.title;
-    tinymce.get('shortDescription').setContent(blog.shortDescription || '');
-    tinymce.get('fullContent').setContent(blog.fullContent || '');
-    document.getElementById('author').value = blog.author || '';
-    // Image won't be editable in input file, so ignore for editing
+  function editBlog(blog){
+      document.getElementById('blogId').value=blog.id;
+      document.getElementById('title').value=blog.title;
+      tinymce.get('shortDescription').setContent(blog.shortDescription||'');
+      tinymce.get('fullContent').setContent(blog.fullContent||'');
+      document.getElementById('author').value=blog.author||'';
   }
 
-  async function deleteBlog(id) {
-    if (!confirm("Are you sure you want to delete this blog?")) return;
-    await fetch(`/api/blogs/${id}`, { method: 'DELETE' });
-    fetchBlogs();
+  async function deleteBlog(id){
+      if(!confirm("Are you sure?")) return;
+      await fetch(`/api/blogs/${id}`,{method:'DELETE'});
+      fetchBlogs();
   }
 
-  function clearForm() {
-    document.getElementById('blogForm').reset();
-    tinymce.get('shortDescription').setContent('');
-    tinymce.get('fullContent').setContent('');
-    document.getElementById('blogId').value = '';
+  function clearForm(){
+      document.getElementById('blogForm').reset();
+      tinymce.get('shortDescription').setContent('');
+      tinymce.get('fullContent').setContent('');
+      document.getElementById('blogId').value='';
   }
 
-  document.getElementById('blogForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    const blogId = document.getElementById('blogId').value;
-    const formData = new FormData();
-
-    formData.append('title', document.getElementById('title').value);
-    formData.append('shortDescription', tinymce.get('shortDescription').getContent());
-    formData.append('fullContent', tinymce.get('fullContent').getContent());
-    formData.append('author', document.getElementById('author').value);
-
-    const imageFile = document.getElementById('imageFile').files[0];
-    if (imageFile) {
-      formData.append('imageFile', imageFile);
-    }
-
-    const url = blogId ? `/api/blogs/${blogId}` : '/api/blogs';
-    const method = blogId ? 'PUT' : 'POST';
-
-    await fetch(url, {
-      method: method,
-      body: formData
-    });
-
-    clearForm();
-    fetchBlogs();
+  document.getElementById('blogForm').addEventListener('submit', async function(e){
+      e.preventDefault();
+      const blogId=document.getElementById('blogId').value;
+      const formData=new FormData();
+      formData.append('title',document.getElementById('title').value);
+      formData.append('shortDescription',tinymce.get('shortDescription').getContent());
+      formData.append('fullContent',tinymce.get('fullContent').getContent());
+      formData.append('author',document.getElementById('author').value);
+      const imageFile=document.getElementById('imageFile').files[0];
+      if(imageFile) formData.append('imageFile',imageFile);
+      const url=blogId?`/api/blogs/${blogId}`:'/api/blogs';
+      const method=blogId?'PUT':'POST';
+      await fetch(url,{method:method,body:formData});
+      clearForm();
+      fetchBlogs();
   });
 
   fetchBlogs();

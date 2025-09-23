@@ -12,7 +12,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: ${HIBERNATE_DDL_AUTO:update}
+    ddl-auto: ${HIBERNATE_DDL_AUTO:update}
     show-sql: true
     open-in-view: true
 
@@ -41,6 +41,9 @@ thymeleaf:
   prefix: classpath:/templates/
   suffix: .html
   enabled: true
+
+encryption:
+  key: lTB/6CsfDkNm46qjwXf/NuFx09ddhVU0z6rO7VJcyeA=
 
 
 
