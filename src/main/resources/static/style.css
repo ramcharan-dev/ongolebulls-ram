@@ -21,11 +21,11 @@ body, h1, h2, h3, p, ul, li, a, button {
     text-align: center;
     /*font-weight: bold;*/
 }
-.welcome-message {
+/*.welcome-message {
     font-size: 24px;
     margin-bottom:40px;
     text-align: center;
-}
+}*/
 
 
 .container .section-title {
@@ -40,11 +40,11 @@ body, h1, h2, h3, p, ul, li, a, button {
 }
 
 
-.section-intro {
+/*.section-intro {
     font-size: 1.2rem;
     color: #555;
     margin-bottom: 2rem;
-}
+}*/
 
 
 .help-section h2 {
@@ -58,7 +58,7 @@ body, h1, h2, h3, p, ul, li, a, button {
     justify-content: center;
 }
 
-.step {
+/*.step {
     flex: 1;
     max-width: 300px;
     text-align: center;
@@ -80,7 +80,7 @@ body, h1, h2, h3, p, ul, li, a, button {
     font-size: 1rem;
     color: black;
 }
-/* Reflection Section Styles */
+*//* Reflection Section Styles *//*
 .reflection-section {
     background: linear-gradient(135deg, #2c3e50, #4ca1af);
     color: #ffffff;
@@ -95,7 +95,7 @@ body, h1, h2, h3, p, ul, li, a, button {
     animation: fadeIn 1.5s ease-in-out;
 }
 
-/* Heading Style */
+*//* Heading Style *//*
 .reflection-section h2 {
     font-size: 2rem;
     margin-bottom: 20px;
@@ -103,7 +103,7 @@ body, h1, h2, h3, p, ul, li, a, button {
     font-weight: 600;
 }
 
-/* List Styling */
+*//* List Styling *//*
 .reflection-section ul {
     list-style: none;
     padding: 0;
@@ -129,7 +129,7 @@ body, h1, h2, h3, p, ul, li, a, button {
     animation-delay: 0.4s;
 }
 
-/* Button Styling */
+*//* Button Styling *//*
 .reflection-section .cta-button {
     display: inline-block;
     margin-top: 20px;
@@ -152,7 +152,7 @@ body, h1, h2, h3, p, ul, li, a, button {
     transform: scale(1.05);
 }
 
-/* Keyframe Animations */
+*//* Keyframe Animations *//*
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -203,7 +203,7 @@ body, h1, h2, h3, p, ul, li, a, button {
         flex-direction: row;
         align-items: center;
     }
-}
+}*/
 
 /* Navigation Bar */
 nav {
@@ -365,7 +365,128 @@ display: flex;
     }
 }
 
-/* Extra small devices (phones, <480px) */
+
+/* === Navigation Bar Responsive Fix === */
+
+/* Tablets and small desktops (max-width: 991px) */
+@media (max-width: 991px) {
+  nav {
+    padding: 5px 15px;
+  }
+
+  .logo img {
+    height: 70px;
+    width: 90px;
+  }
+
+  .nav-links {
+    font-size: 1rem !important;
+    gap: 15px;
+  }
+
+  .dropdown-menu {
+    min-width: 160px;
+  }
+}
+
+/* Medium devices (max-width: 768px) */
+@media (max-width: 768px) {
+  nav {
+    flex-wrap: wrap;
+    padding: 5px 10px;
+  }
+
+  .logo img {
+    height: 60px;
+    width: 80px;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    background: linear-gradient(90deg, #3B82F6, #EF4444);
+    position: absolute;
+    top: 70px;
+    left: 0;
+    padding: 10px 0;
+    gap: 0;
+  }
+
+  .nav-links.show {
+    display: flex;
+  }
+
+  .nav-links li {
+    text-align: center;
+    width: 100%;
+  }
+
+  .nav-links a,
+  .nav-links button,
+  .dropdown .dropdown-toggle {
+    padding: 12px 0;
+    font-size: 1rem !important;
+  }
+
+  .dropdown-menu {
+    position: static;
+    box-shadow: none;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 0;
+  }
+}
+
+/* Small devices / phones (max-width: 576px) */
+@media (max-width: 576px) {
+  nav {
+    padding: 5px 5px;
+  }
+
+  .logo img {
+    height: 50px;
+    width: 70px;
+  }
+
+  .nav-links a,
+  .nav-links button,
+  .dropdown .dropdown-toggle {
+    font-size: 0.95rem !important;
+    padding: 10px 0;
+  }
+
+  .dropdown-menu li a {
+    padding: 8px 0;
+    font-size: 0.9rem;
+  }
+}
+
+/* Extra small devices (max-width: 400px) */
+@media (max-width: 400px) {
+  .logo img {
+    height: 45px;
+    width: 60px;
+  }
+
+  .nav-links a,
+  .nav-links button,
+  .dropdown .dropdown-toggle {
+    font-size: 0.85rem !important;
+    padding: 8px 0;
+  }
+
+  .dropdown-menu li a {
+    font-size: 0.8rem;
+    padding: 6px 0;
+  }
+}
+
+
+/* Extra small devices (phones, <480px) *//*
 @media screen and (max-width: 479px) {
   .hero-section .container {
     padding: 20px !important;
@@ -406,7 +527,7 @@ display: flex;
   }
 }
 
-/* Small devices (480px to 767px) */
+*//* Small devices (480px to 767px) *//*
 @media screen and (min-width: 480px) and (max-width: 767px) {
   .hero-section .container {
     padding: 30px !important;
@@ -447,7 +568,7 @@ display: flex;
   }
 }
 
-/* Medium devices (768px to 991px) */
+*//* Medium devices (768px to 991px) *//*
 @media screen and (min-width: 768px) and (max-width: 991px) {
   .hero-section .container {
     padding: 40px !important;
@@ -468,7 +589,7 @@ display: flex;
   }
 }
 
-/* Large devices (992px and up) */
+*//* Large devices (992px and up) *//*
 @media screen and (min-width: 992px) {
   .hero-section .container {
     padding: 40px !important;
@@ -481,7 +602,7 @@ display: flex;
     flex-wrap: nowrap !important;
     gap: 30px !important;
   }
-}
+}*/
 
 /* Header */
 header {
@@ -490,7 +611,7 @@ header {
     animation: gradientAnimation 6s ease infinite;
 }
 
-header h1 {
+/*header h1 {
     font-size: 50px;
     font-family: "Manrope", sans-serif;
     text-align: center;
@@ -519,7 +640,7 @@ header a:hover {
     transform: scale(1.05);
 }
 
-/* Scroll-to-Top Button */
+*//* Scroll-to-Top Button *//*
 #scrollTopBtn {
     position: fixed;
     bottom: 1.5em;
@@ -536,7 +657,7 @@ header a:hover {
 
 #scrollTopBtn:hover {
     background: #22c55e;
-}
+}*/
 
 /* Responsive Flexbox */
 .container {
@@ -546,13 +667,13 @@ header a:hover {
     flex-wrap: wrap; /* Ensures responsiveness */
 }
 
-.text-content {
-    flex: 1 1 50%; /* Adjusted width */
+/*.text-content {
+    flex: 1 1 50%; *//* Adjusted width *//*
 }
 
 .image-content {
-    flex: 1 1 50%; /* Adjusted width */
-}
+    flex: 1 1 50%; *//* Adjusted width *//*
+}*/
 
 .img-fluid{
 width: 100%;
@@ -624,7 +745,6 @@ height: auto;
 
 .feature h3 {
     font-size: 1.5em;
-    color: #500f04;
     margin-bottom: 10px;
 }
 
@@ -633,12 +753,12 @@ height: auto;
     color: black;
 }
 
-.feature:hover {
+/*.feature:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Responsive Design */
+*//* Responsive Design *//*
 @media (max-width: 768px) {
     .features {
         flex-direction: column;
@@ -708,7 +828,7 @@ height: auto;
     .overview-section img {
         margin-bottom: 20px;
     }
-}
+}*/
 
 .services-container {
     display: flex;
