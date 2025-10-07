@@ -1,89 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terms & Conditions - Ongole Bulls Invest Pvt Ltd</title>
-    <script src="/common.js" defer></script> <!-- Load JavaScript -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ongole Bulls Invest - Terms & Conditions</title>
+    <meta name="description" content="Terms & Conditions for Ongole Bulls Invest Pvt Ltd - Service usage, responsibilities, and policies" />
+    <!-- Bootstrap CSS (keep a single version) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Google Fonts (Inter, same as Privacy) -->
+    <link href="https://fonts.googleapis.com/css?family=Inter:400,700&display=swap" rel="stylesheet">
+    <!-- App CSS (order after Bootstrap so it can override) -->
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{style.css}">
     <link rel="stylesheet" href="style.css">
+    <!-- Optional Font Awesome if used elsewhere -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
+    <script src="/common.js" defer></script>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-            rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-            rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Manrope" rel="stylesheet">
+    <!-- Inline tokens reused from Privacy page (only include if not already in style.css) -->
+    <style>
+        body { font-family: 'Inter', sans-serif; color: #0a253a; line-height: 1.6; }
+        .bg-primary-custom { background: #0a253a; color: #fbf1df; }
+        .card-shadow { box-shadow: 0 2px 16px 0 rgba(186, 48, 47, 0.09); }
+        .card-title { color: #0a253a; font-weight: 700; }
+        .badge-custom { background: #bc8f3e; color: #fbf1df; border-radius: 50%; }
+        .text-accent { color: #bc8f3e; }
+        .text-destructive { color: #bc291f; text-align: left; }
+        .border-accent { border-color: #bc8f3e !important; }
+        .border-destructive { border-color: #bc291f !important; }
+        .footer-custom { background: #0a253a; color: #fbf1df; }
+        .privacy-section { scroll-margin-top: 100px; }
+        .privacy-list { text-align: left; }
+        .privacy-heading { color: #0a253a; font-weight: 700; text-align: left; }
+        .privacy-content { color: #0a253a; text-align: left; }
+        .privacy-highlight { background: rgba(188, 143, 62, 0.1); border-left: 4px solid #bc8f3e; padding: 1rem; }
+    </style>
 </head>
 <body>
 <div id="header-container"></div>
 
-<style>
-    body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    font-family: 'Manrope', sans-serif;
-  }
-  p {
-    color: black;
-    font-family: 'Manrope', sans-serif;
-    width: 100%;
-  }
-  main {
-    width: 80%;
-    padding: 20px;
-</style>
+<header class="bg-primary-custom py-4 shadow">
+    <div class="container">
+        <div class="d-flex align-items-center mb-4 gap-3">
+            <span class="fs-2 text-accent"><i class="bi bi-file-text"></i></span>
+            <h1 class="display-5 fw-bold">Terms & Conditions</h1>
+        </div>
+        <p class="lead text-accent mb-0">
+            Please read these terms carefully. Using our services implies acceptance of the following terms and policies.
+        </p>
+    </div>
+</header>
 
-<main>
-    <section>
-        <h1>Terms and Conditions</h1>
-        <h5>Welcome to Ongole Bulls Invest Pvt Ltd</h5>
-        <p>You accept and agree to be in compliance with the following terms and conditions by using our services...</p>
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-9">
 
-        <h5>1. General Terms</h5>
-        <p>These terms govern your use of the services provided by Ongole Bulls Invest Pvt Ltd...</p>
+            <!-- Intro -->
+            <div class="card card-shadow mb-4">
+                <div class="card-body privacy-section">
+                    <h2 class="privacy-heading fs-3 mb-3">Introduction</h2>
+                    <p class="privacy-content fs-5">
+                        By accessing or using the services of <span class="text-accent fw-bold">Ongole Bulls Invest Pvt Ltd</span>, users agree to be bound by these Terms & Conditions along with applicable policies including the Privacy Policy and regulatory requirements.
+                    </p>
+                </div>
+            </div>
 
-        <h5>2. Eligibility</h5>
-        <p>You must be 18 years or older to use our services...</p>
+            <!-- General Terms -->
+            <div class="card card-shadow mb-4">
+                <div class="card-body privacy-section">
+                    <h2 class="privacy-heading fs-4 mb-3">General Terms</h2>
+                    <p class="privacy-content mb-3">
+                        These terms govern access to and use of the platform, including account registration, portfolio tools, and related financial information services.
+                    </p>
+                    <div class="privacy-highlight">
+                        <ul class="privacy-list mb-0">
+                            <li>Maintain accurate account information and safeguard credentials.</li>
+                            <li>Use services only for lawful, personal, or authorized business purposes.</li>
+                            <li>Comply with applicable laws, exchange/regulatory guidelines, and platform policies.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
-        <h5>3. Investment Risks</h5>
-        <p>Investments in financial instruments are subject to market risks...</p>
+            <!-- Eligibility -->
+            <div class="card card-shadow mb-4">
+                <div class="card-body privacy-section">
+                    <h2 class="privacy-heading fs-4 mb-3">Eligibility</h2>
+                    <p class="privacy-content">
+                        Services are intended for users who are 18 years or older and legally competent to enter into binding contracts as per applicable jurisdictional laws.
+                    </p>
+                </div>
+            </div>
 
-        <h5>4. Client Responsibilities</h5>
-        <p>Clients must provide accurate information for KYC (Know Your Customer) and other regulatory requirements...</p>
+            <!-- Investment Risks -->
+            <div class="card card-destructive card-shadow mb-4">
+                <div class="card-body privacy-section">
+                    <h2 class="privacy-heading fs-4 mb-3 text-destructive">Investment Risks</h2>
+                    <p class="privacy-content mb-2">
+                        Investments are subject to market risks including price volatility, liquidity constraints, and regulatory changes. Past performance is not indicative of future returns, and capital losses are possible.
+                    </p>
+                    <div class="privacy-highlight border-destructive">
+                        <p class="mb-0">Users are responsible for independent evaluation of instruments and risk tolerance before making investment decisions.</p>
+                    </div>
+                </div>
+            </div>
 
-        <h5>5. Fees and Charges</h5>
-        <p>All fees for our services will be communicated transparently...</p>
+            <!-- Client Responsibilities -->
+            <div class="card card-shadow mb-4">
+                <div class="card-body privacy-section">
+                    <h2 class="privacy-heading fs-4 mb-3">Client Responsibilities</h2>
+                    <ul class="privacy-list">
+                        <li>Provide complete and accurate information for KYC/AML and onboarding.</li>
+                        <li>Keep contact and financial details updated and promptly report unauthorized activity.</li>
+                        <li>Ensure device/browser security and follow platform usage guidelines.</li>
+                    </ul>
+                </div>
+            </div>
 
-        <h5>6. Privacy Policy</h5>
-        <p>All personal and financial data provided by clients will be handled as per our Privacy Policy...</p>
+            <!-- Fees and Charges -->
+            <div class="card card-shadow mb-4">
+                <div class="card-body privacy-section">
+                    <h2 class="privacy-heading fs-4 mb-3">Fees & Charges</h2>
+                    <p class="privacy-content">
+                        Applicable charges for services, transactions, or value-added features will be communicated via the platform or official communications and may be updated periodically.
+                    </p>
+                </div>
+            </div>
 
-        <h5>7. Limitation of Liability</h5>
-        <p>Ongole Bulls Invest Pvt Ltd is not liable for any losses resulting from market volatility...</p>
+            <!-- Privacy Policy reference -->
+            <div class="card card-shadow mb-4">
+                <div class="card-body privacy-section">
+                    <h2 class="privacy-heading fs-4 mb-3">Privacy & Data</h2>
+                    <p class="privacy-content">
+                        Personal and financial data handling is governed by the Privacy Policy. Users should review it to understand collection, use, sharing, retention, and rights.
+                    </p>
+                </div>
+            </div>
 
-        <h5>8. Termination of Services</h5>
-        <p>Clients may terminate their engagement with us at any time...</p>
+            <!-- Limitation of Liability -->
+            <div class="card card-shadow mb-4">
+                <div class="card-body privacy-section">
+                    <h2 class="privacy-heading fs-4 mb-3">Limitation of Liability</h2>
+                    <p class="privacy-content">
+                        Ongole Bulls Invest Pvt Ltd is not liable for indirect, incidental, or consequential losses arising from market movements, third‑party failures, or force majeure events to the extent permitted by law.
+                    </p>
+                </div>
+            </div>
 
-        <h5>9. Intellectual Property</h5>
-        <p>All content on our website is protected under intellectual property laws...</p>
+            <!-- Termination -->
+            <div class="card card-shadow mb-4">
+                <div class="card-body privacy-section">
+                    <h2 class="privacy-heading fs-4 mb-3">Termination</h2>
+                    <p class="privacy-content">
+                        Either party may terminate access subject to settlement of dues and compliance with legal obligations. Post-termination data handling follows the Privacy Policy and statutory retention.
+                    </p>
+                </div>
+            </div>
 
-        <h5>10. Dispute Resolution</h5>
-        <p>For any disputes, clients can reach our grievance redressal team...</p>
+            <!-- IP -->
+            <div class="card card-shadow mb-4">
+                <div class="card-body privacy-section">
+                    <h2 class="privacy-heading fs-4 mb-3">Intellectual Property</h2>
+                    <p class="privacy-content">
+                        All content, trademarks, and materials on the platform are owned by Ongole Bulls Invest Pvt Ltd or licensors and protected by applicable IP laws. No license is granted unless explicitly stated.
+                    </p>
+                </div>
+            </div>
 
-        <h5>11. Amendments to Terms</h5>
-        <p>Ongole Bulls Invest Pvt Ltd reserves the right to amend these terms...</p>
+            <!-- Dispute Resolution -->
+            <div class="card card-shadow mb-4">
+                <div class="card-body privacy-section">
+                    <h2 class="privacy-heading fs-4 mb-3">Dispute Resolution</h2>
+                    <p class="privacy-content">
+                        Users may contact the grievance team for concerns. Disputes may be resolved through escalation, mediation, or arbitration as per applicable rules and jurisdictional clauses.
+                    </p>
+                </div>
+            </div>
 
-        <h5>12. Contact Information</h5>
-        <p> Email: <a href="mailto:info@ongolebullsinvest.com">info@ongolebullsinvest.com</a></p>
-        <p> Phone: 9281111730</p>
-    </section>
+            <!-- Amendments -->
+            <div class="card card-shadow mb-4">
+                <div class="card-body privacy-section">
+                    <h2 class="privacy-heading fs-4 mb-3">Amendments</h2>
+                    <p class="privacy-content">
+                        Terms may be updated periodically. Continued use after changes constitutes acceptance. Material updates will be communicated via official channels.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Contact -->
+            <div class="card card-shadow mb-4" style="background: linear-gradient(90deg,#0a253a,#bc8f3e); padding:30px;">
+                <div class="card-body text-white">
+                    <h2 class="fs-4 fw-bold mb-3">Contact Us</h2>
+                    <p class="mb-3">For term-related queries, reach out:</p>
+                    <div class="row g-4">
+                        <div class="col-md-6 d-flex align-items-center gap-3">
+                            <i class="bi bi-envelope-fill text-accent fs-5"></i>
+                            <div>
+                                <div class="fw-semibold" style="text-align: left;">Email</div>
+                                <div>info@ongolebullsinvest.com</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center gap-3">
+                            <i class="bi bi-telephone-fill text-accent fs-5"></i>
+                            <div>
+                                <div class="fw-semibold" style="text-align: left;">Phone</div>
+                                <div>9281111730</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Info -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between flex-wrap gap-2 fs-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-calendar"></i>
+                            <span>Effective Date: January 2025</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-calendar"></i>
+                            <span>Last Updated: January 2025</span>
+                        </div>
+                    </div>
+                    <hr>
+                    <p class="text-center text-accent fw-semibold mb-0">
+                        Ongole Bulls Invest Pvt Ltd – enabling informed financial decisions with clarity and responsibility.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </main>
 
-<script src="script.js"></script> <!-- Link to JavaScript file -->
-<!-- Common Footer -->
 <div id="footer-container"></div>
+
+<!-- Bootstrap JS bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
