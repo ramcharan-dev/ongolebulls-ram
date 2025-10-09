@@ -274,11 +274,11 @@
                         <li><a class="dropdown-item" href="profile.html">My Profile</a></li>
                         <li><a class="dropdown-item" href="profile.html">Settings</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="profile.html">Logout</a></li>
+                        <button id="logoutBtn">Logout</button>
                     </ul>
                 </div>
 
-                <h5>Welcome, <span id="welcomeName"></span> 👋</h5>
+                <h5>Welcome, <span id="welcomeName"></span></h5>
             </div>
 
 
@@ -606,6 +606,22 @@ submitForm("investForm","/api/investments/request");
 submitForm("redeemForm","/api/redeem/request");
 submitForm("sipForm","/api/sip/request");
 submitForm("nomineeForm","/api/nominee");
+
+document.getElementById('logoutBtn').addEventListener('click', function() {
+    fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include' // send cookies if session is used
+    })
+    .then(response => {
+        if (response.ok) {
+            // Redirect to login page
+            window.location.href = '/sign-in';
+        } else {
+            alert('Logout failed');
+        }
+    });
+});
+
 
 </script>
 

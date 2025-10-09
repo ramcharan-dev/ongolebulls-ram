@@ -1,5 +1,6 @@
 package dev.ongolebulls.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -66,9 +67,11 @@ public class HomeController {
         return "Sign-up"; // Loads login.html from src/main/resources/templates/
     }
 
-    @GetMapping("/sign-in")
-    public String signinPage() {
-        return "sign-in"; // Loads login.html from src/main/resources/templates/
-    }
 
+    @GetMapping("/sign-in")
+    public String showLoginPage() {
+        return "sign-in"; // Thymeleaf will look in src/main/resources/templates/sign-in.html
+    }
 }
+
+
