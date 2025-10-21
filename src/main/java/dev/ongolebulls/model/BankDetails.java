@@ -41,4 +41,5 @@ public class BankDetails {
     public void setIfscCode(String ifscCode) {
         this.ifsc = ifscCode;
     }
+
 }

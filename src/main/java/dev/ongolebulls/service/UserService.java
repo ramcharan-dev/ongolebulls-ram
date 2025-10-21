@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import dev.ongolebulls.dto.UserProfileResponse; // <-- ✅ import DTO here
 
 import java.nio.file.*;
 import java.time.Instant;
@@ -142,5 +143,57 @@ public class UserService {
     public Optional<User> login(String email, String rawPassword) {
         return userRepo.findByEmail(email)
                 .filter(user -> passwordEncoder.matches(rawPassword, user.getPasswordHash()));
+    }
+
+
+    public UserProfileResponse getUserProfile(Long userId) {
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        UserProfileResponse res = new UserProfileResponse();
+        res.setFullName(user.getFullName());
+        res.setEmail(user.getEmail());
+        res.setMobileNumber(user.getMobileNumber());
+        res.setGender(user.getGender());
+        res.setDob(user.getDob());
+        res.setAddress(user.getAddress());
+        res.setCity(user.getCity());
+        res.setState(user.getState());
+        res.setPincode(user.getPincode());
+        res.setCreatedAt(user.getCreatedAt());
+
+        // --- Bank ---
+        if (user.getBankDetails() != null) {
+            res.setBankName(user.getBankDetails().getBankName());
+            res.setIfsc(user.getBankDetails().getIfsc());
+            res.setAccountHolderName(user.getBankDetails().getAccountHolderName());
+            res.setAccountNumber(
+                    encService.decrypt(user.getBankDetails().getAccountNumberEncrypted())
+            );
+        }
+
+        // --- KYC ---
+        if (user.getKycDetails() != null) {
+            res.setPanNumber(encService.decrypt(user.getKycDetails().getPanNumber()));
+            res.setAadhaarNumber(user.getKycDetails().getAadhaarNumber());
+            res.setOccupation(user.getKycDetails().getOccupation());
+            res.setAnnualIncomeRange(user.getKycDetails().getAnnualIncomeRange());
+            res.setRiskTolerance(user.getKycDetails().getRiskTolerance());
+            res.setKycVerified(user.getKycDetails().isVerified());
+        }
+
+        // --- Risk Profile ---
+        if (user.getRiskProfile() != null) {
+            res.setRiskCategory(user.getRiskProfile().getCategory().name());
+            res.setRiskScore(user.getRiskProfile().getScore());
+        }
+
+        return res;
+    }
+    public Optional<User> getUserById(Long id) {
+        return userRepo.findById(id);
+    }
+
+    public void saveUser(User user) {
     }
 }

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login | Ongole Bulls Invest</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0d1b2a, #1b263b);
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 10px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.2);
+            width: 350px;
+        }
+        h2 { text-align:center; color:#0d1b2a; margin-bottom:25px; }
+        input { width:100%; padding:10px; margin-bottom:15px; border:1px solid #ccc; border-radius:6px; font-size:14px; }
+        button { width:100%; padding:10px; border:none; border-radius:6px; background:#e63946; color:#fff; font-size:16px; cursor:pointer; }
+        button:hover { background:#d62828; }
+        .error { color:red; text-align:center; margin-top:10px; font-size:14px; }
+        .success { color:green; text-align:center; margin-top:10px; font-size:14px; }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <h2>Admin Login</h2>
+    <form id="adminLoginForm">
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+        <p class="error" id="errorMsg"></p>
+        <p class="success" id="successMsg"></p>
+    </form>
+</div>
+
+<script>
+    document.getElementById('adminLoginForm').addEventListener('submit', async e => {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const errorMsg = document.getElementById('errorMsg');
+        const successMsg = document.getElementById('successMsg');
+
+        errorMsg.textContent = "";
+        successMsg.textContent = "";
+
+        try {
+            const response = await fetch('http://localhost:8080/api/admin/login', {
+                method:'POST',
+                headers: { 'Content-Type':'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            const result = await response.json();
+            console.log(result);
+
+            if(result.success){
+                successMsg.textContent = "Login successful! Redirecting...";
+
+                // Store token and roles for dashboard auth
+                localStorage.setItem('jwt', result.token || 'dummy-token');
+                localStorage.setItem('roles', JSON.stringify(result.roles || ['ROLE_ADMIN']));
+
+                setTimeout(() => { window.location.href = 'admin-db.html'; }, 1000);
+            } else {
+                errorMsg.textContent = result.message || "Invalid email or password";
+            }
+
+        } catch(err) {
+            console.error(err);
+            errorMsg.textContent = "Server error. Please try again later.";
+        }
+    });
+</script>
+</body>
+</html>

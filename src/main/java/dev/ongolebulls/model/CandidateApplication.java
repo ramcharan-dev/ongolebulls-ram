@@ -19,8 +19,20 @@ public class CandidateApplication {
     private String phone;
     private int graduationYear;
     private String skills;
+    private String experience;
     private String resumePath;
+    private String appliedFor;
 
-    // Getters and Setters
 
+    // Correct getter for appliedFor
+    public String getAppliedFor() {
+        return appliedFor;
+    }
+
+    // Correct setter for appliedFor
+    public void setAppliedFor(String appliedFor) {
+        this.appliedFor = appliedFor;
+    }
+
+    // No need to manually add other getters/setters if using Lombok (@Getter/@Setter)
 }

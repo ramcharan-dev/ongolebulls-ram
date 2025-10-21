@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!-- Core Styles -->
+    <link rel="stylesheet" href="assets/css/admindashboard-styles.css"/>
+
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+</head>
+<body>
+
+<script>
+    // === Auth Guard: Check JWT and roles safely ===
+    let admindashboardRoles = [];
+    try {
+        admindashboardRoles = JSON.parse(localStorage.getItem('admindashboard_roles') || localStorage.getItem('roles') || '[]');
+    } catch (e) {
+        console.error('Invalid roles in localStorage', e);
+    }
+    const admindashboardJwt = localStorage.getItem('admindashboard_jwt') || localStorage.getItem('jwt');
+    const admindashboardIsAdmin = admindashboardRoles.some(r => r === 'ROLE_ADMIN' || r === 'ROLE_SUPER_ADMIN');
+    if (!admindashboardJwt || !admindashboardIsAdmin) {
+        window.location.href = 'admin-login.html';
+    }
+</script>
+
+<div class="admindashboard-layout" role="application" aria-label="Admin Dashboard">
+
+    <!-- Sidebar -->
+    <aside class="admindashboard-sidebar" aria-label="Primary">
+        <div class="admindashboard-brand">
+            <i class="bi bi-shield-lock-fill"></i>
+            <span>Admin Dashboard</span>
+        </div>
+
+        <nav class="admindashboard-navlist" id="admindashboardNav">
+            <a href="#/dashboard" class="admindashboard-nav" data-route="#/dashboard"><i class="bi bi-speedometer2"></i> <span>Dashboard</span></a>
+            <a href="#/clients" class="admindashboard-nav" data-route="#/clients"><i class="bi bi-people-fill"></i> <span>Clients</span></a>
+            <a href="#/plans" class="admindashboard-nav" data-route="#/plans"><i class="bi bi-ui-checks-grid"></i> <span>Plans</span></a>
+            <a href="#/investments" class="admindashboard-nav" data-route="#/investments"><i class="bi bi-graph-up-arrow"></i> <span>Investments</span></a>
+            <a href="#/blogs" class="admindashboard-nav" data-route="#/blogs"><i class="bi bi-journal-text"></i> <span>Blogs</span></a>
+            <a href="#/seo" class="admindashboard-nav" data-route="#/seo"><i class="bi bi-search"></i> <span>SEO</span></a>
+            <a href="#/settings" class="admindashboard-nav" data-route="#/settings"><i class="bi bi-gear-fill"></i> <span>Settings</span></a>
+            <a href="#/documents" class="admindashboard-nav" data-route="#/documents"><i class="bi bi-file-earmark-fill"></i> <span>Documents</span></a>
+
+        </nav>
+
+        <div class="admindashboard-sidebar-footer">
+            <button id="admindashboardBtnLogout" class="admindashboard-btn danger" title="Logout">
+                <i class="bi bi-box-arrow-right"></i> <span>Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admindashboard-main">
+        <header class="admindashboard-topbar" aria-label="Top bar">
+            <div class="admindashboard-top-wrap">
+                <button class="admindashboard-burger" id="admindashboardBurger" aria-label="Toggle menu">
+                    <i class="bi bi-list"></i>
+                </button>
+                <div class="admindashboard-search-wrap">
+                    <i class="bi bi-search admindashboard-search-icon"></i>
+                    <input class="admindashboard-search" id="admindashboardTopSearch" placeholder="Search clients, email" aria-label="Global search"/>
+                </div>
+            </div>
+            <div class="admindashboard-actions">
+                <button class="admindashboard-icon-btn" title="Notifications">
+                    <i class="bi bi-bell"></i>
+                </button>
+                <button class="admindashboard-icon-btn" title="Profile">
+                    <i class="bi bi-person-circle"></i>
+                </button>
+            </div>
+        </header>
+
+        <section id="admindashboardView"></section>
+    </main>
+</div>
+
+<!-- Chart.js -->
+<script src="assets/js/vendor/chart.umd.min.js"></script>
+
+<script>
+    // === Chart.js register for v4+ ===
+    if (Chart.register) Chart.register(...Chart.registerables);
+
+    // === Backend API base URL ===
+    const ADMINDASHBOARD_API = 'http://localhost:8080/api/admin/dashboard';
+    const admindashboardToken = localStorage.getItem('admindashboard_jwt') || localStorage.getItem('jwt');
+    const admindashboardAuthHeaders = () => admindashboardToken ? { 'Authorization': 'Bearer ' + admindashboardToken } : {};
+
+    async function admindashboardGet(path, fallback) {
+        try {
+            const res = await fetch(ADMINDASHBOARD_API + path, { headers: admindashboardAuthHeaders() });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return await res.json();
+        } catch (e) {
+            console.error('GET failed', path, e);
+            return fallback;
+        }
+    }
+
+    function admindashboardHighlight(route) {
+        document.querySelectorAll('#admindashboardNav .admindashboard-nav').forEach(a => {
+            if (a.getAttribute('data-route') === route) a.setAttribute('aria-current', 'page');
+            else a.removeAttribute('aria-current');
+        });
+    }
+
+    // Logout
+    document.getElementById('admindashboardBtnLogout').addEventListener('click', () => {
+        localStorage.removeItem('admindashboard_jwt');
+        localStorage.removeItem('admindashboard_roles');
+        localStorage.removeItem('jwt');
+        localStorage.removeItem('roles');
+        location.href = 'admin-login.html';
+    });
+
+    // Sidebar toggle
+    document.getElementById('admindashboardBurger')?.addEventListener('click', () => {
+        document.querySelector('.admindashboard-sidebar').classList.toggle('open');
+    });
+
+    function admindashboardLoadingCard(title) {
+        return `<div class="admindashboard-card">
+            <div class="admindashboard-card-head">
+                <h3>${title}</h3>
+                <span class="admindashboard-badge"><i class="bi bi-arrow-repeat admindashboard-spin"></i> Loading</span>
+            </div>
+            <div class="admindashboard-skeleton"></div>
+        </div>`;
+    }
+
+    function admindashboardErrorCard(title, msg) {
+        return `<div class="admindashboard-card">
+            <div class="admindashboard-card-head">
+                <h3>${title}</h3>
+                <span class="admindashboard-badge danger"><i class="bi bi-exclamation-triangle"></i> Error</span>
+            </div>
+            <div class="admindashboard-error">${msg}</div>
+        </div>`;
+    }
+
+    // === Dashboard Renderer ===
+    function admindashboardRender(kpi, sip, risk, goals, leaderboard, alerts) {
+        const view = document.getElementById('admindashboardView');
+        view.innerHTML = `
+            <div class="admindashboard-kpi">
+                <div class="admindashboard-kpi-card"><div><i class="bi bi-people-fill"></i> Total Clients</div><div class="admindashboard-kpi-value">${kpi.totalClients}</div></div>
+                <div class="admindashboard-kpi-card"><div><i class="bi bi-graph-up"></i> Active Investments</div><div class="admindashboard-kpi-value">${kpi.activeInvestments}</div></div>
+                <div class="admindashboard-kpi-card"><div><i class="bi bi-cash-coin"></i> Monthly SIPs</div><div class="admindashboard-kpi-value">${kpi.monthlySips}</div></div>
+                <div class="admindashboard-kpi-card"><div><i class="bi bi-shield-fill-check"></i> Risk Profiles</div><div class="admindashboard-kpi-value">${kpi.riskProfilesCompleted}</div></div>
+                <div class="admindashboard-kpi-card"><div><i class="bi bi-trophy-fill"></i> RM Conversion</div><div class="admindashboard-kpi-value">${kpi.rmConversionRate ?? '—'}%</div></div>
+            </div>
+
+            <div class="admindashboard-grid">
+                <div class="admindashboard-card">
+                    <div class="admindashboard-card-head"><h3><i class="bi bi-bar-chart-fill"></i> SIP Planned vs Executed</h3></div>
+                    <canvas id="admindashboard-chart-sip" height="140" aria-label="SIP chart"></canvas>
+                </div>
+                <div class="admindashboard-card">
+                    <div class="admindashboard-card-head"><h3><i class="bi bi-pie-chart-fill"></i> Risk Distribution</h3></div>
+                    <canvas id="admindashboard-chart-risk" height="140" aria-label="Risk chart"></canvas>
+                </div>
+                <div class="admindashboard-card">
+                    <div class="admindashboard-card-head"><h3><i class="bi bi-pie-chart"></i> Goal Categories</h3></div>
+                    <canvas id="admindashboard-chart-goals" height="140" aria-label="Goal chart"></canvas>
+                </div>
+                <div class="admindashboard-card">
+                    <div class="admindashboard-card-head"><h3><i class="bi bi-award-fill"></i> RM Leaderboard</h3></div>
+                    <div id="admindashboard-leaderboard" class="admindashboard-list"></div>
+                </div>
+            </div>
+
+            <div class="admindashboard-card">
+                <div class="admindashboard-card-head">
+                    <h3><i class="bi bi-bell-fill"></i> Alerts</h3>
+                    <div class="admindashboard-card-actions">
+                        <button class="admindashboard-btn primary" id="admindashboardAddClient"><i class="bi bi-person-plus-fill"></i> Add New Client</button>
+                        <button class="admindashboard-btn secondary" id="admindashboardRmReport"><i class="bi bi-file-earmark-bar-graph"></i> Generate RM Report</button>
+                        <button class="admindashboard-btn" id="admindashboardBroadcast"><i class="bi bi-megaphone-fill"></i> Broadcast Email/SMS</button>
+                        <button class="admindashboard-btn" id="admindashboardCompliance"><i class="bi bi-cloud-arrow-down-fill"></i> Download Compliance Summary</button>
+                    </div>
+                </div>
+                <ul id="admindashboard-alerts" class="admindashboard-alerts"></ul>
+            </div>
+        `;
+
+        // Charts
+        new Chart(document.getElementById('admindashboard-chart-sip'), {
+            type: 'bar',
+            data: { labels: sip.labels, datasets: [
+                { label: 'Planned', data: sip.planned, backgroundColor: '#93c5fd', borderRadius: 6 },
+                { label: 'Executed', data: sip.executed, backgroundColor: '#60a5fa', borderRadius: 6 }
+            ] },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true } } }
+        });
+
+        new Chart(document.getElementById('admindashboard-chart-risk'), {
+            type: 'pie',
+            data: { labels: risk.labels, datasets: [{ data: risk.values, backgroundColor: ['#86efac','#93c5fd','#fca5a5'] }] },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+
+        new Chart(document.getElementById('admindashboard-chart-goals'), {
+            type: 'pie',
+            data: { labels: goals.labels, datasets: [{ data: goals.values, backgroundColor: ['#fde68a','#a7f3d0','#c7d2fe','#f5d0fe','#fca5a5'] }] },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+
+        // Leaderboard
+        document.getElementById('admindashboard-leaderboard').innerHTML =
+            leaderboard.map((it, i) => `
+                <div class="admindashboard-list-row">
+                    <div class="admindashboard-rank">${i+1}</div>
+                    <div class="admindashboard-list-name"><i class="bi bi-person-badge-fill"></i> ${it.name}</div>
+                    <div class="admindashboard-list-value">${(it.aum || 0).toLocaleString()}</div>
+                </div>
+            `).join('');
+
+        // Alerts
+        document.getElementById('admindashboard-alerts').innerHTML =
+            alerts.map(a => `
+                <li>
+                    <div class="admindashboard-alert-title"><i class="bi bi-info-circle-fill"></i> ${a.title}</div>
+                    <div class="admindashboard-alert-sub">${a.detail}</div>
+                </li>
+            `).join('');
+
+        // Quick actions placeholders
+        document.getElementById('admindashboardAddClient').onclick = () => location.hash = '#/clients';
+        document.getElementById('admindashboardRmReport').onclick = () => window.open(ADMINDASHBOARD_API + '/reports/rm?format=pdf','_blank');
+        document.getElementById('admindashboardBroadcast').onclick = () => alert('Open broadcast dialog here');
+        document.getElementById('admindashboardCompliance').onclick = () => window.open(ADMINDASHBOARD_API + '/reports/compliance?period=month','_blank');
+    }
+
+    // === Dashboard Loader ===
+    async function admindashboardLoad() {
+        const container = document.getElementById('admindashboardView');
+        container.innerHTML = admindashboardLoadingCard('Loading Dashboard...');
+
+        try {
+            const [kpi, sip, risk, goals, leaderboard, alerts] = await Promise.all([
+                admindashboardGet('/kpi', { totalClients:0, activeInvestments:0, monthlySips:0, riskProfilesCompleted:0, rmConversionRate:0 }),
+                admindashboardGet('/charts/sip', { labels:['Jan','Feb','Mar'], planned:[40,45,50], executed:[38,43,49] }),
+                admindashboardGet('/charts/risk', { labels:['Conservative','Moderate','Aggressive'], values:[35,50,15] }),
+                admindashboardGet('/charts/goals', { labels:['Child Education','Retirement','House'], values:[28,34,22] }),
+                admindashboardGet('/leaderboard', [{ name:'RM Ananya', aum:12500000 },{ name:'RM Karthik', aum:11400000 },{ name:'RM Neha', aum:9800000 }]),
+                admindashboardGet('/alerts', [{ title:'Incomplete KYC', detail:'11 customers pending Aadhaar verification' }])
+            ]);
+
+            admindashboardRender(kpi, sip, risk, goals, leaderboard, alerts);
+        } catch (e) {
+            container.innerHTML = admindashboardErrorCard('Dashboard', 'Failed to load data.');
+        }
+    }
+
+    // === SPA Router ===
+    function admindashboardRouter() {
+        const h = location.hash || '#/dashboard';
+        admindashboardHighlight(h);
+
+        const container = document.getElementById('admindashboardView');
+
+        switch(h) {
+            case '#/dashboard':
+                admindashboardLoad();
+                break;
+            case '#/clients':
+                container.innerHTML = '<h2>Clients Page (to implement)</h2>';
+                break;
+            case '#/plans':
+                container.innerHTML = '<h2>Plans Page (to implement)</h2>';
+                break;
+            case '#/investments':
+                container.innerHTML = '<h2>Investments Page (to implement)</h2>';
+                break;
+            case '#/blogs':
+                container.innerHTML = '<h2>Blogs Page (to implement)</h2>';
+                break;
+            case '#/seo':
+                container.innerHTML = '<h2>SEO Page (to implement)</h2>';
+                break;
+            case '#/settings':
+                container.innerHTML = '<h2>Settings Page (to implement)</h2>';
+                break;
+            default:
+                container.innerHTML = '<h2>Page Not Found</h2>';
+        }
+    }
+
+    window.addEventListener('hashchange', admindashboardRouter);
+    document.addEventListener('DOMContentLoaded', admindashboardRouter);
+
+</script>
+
+</body>
+</html>
+<style>
+    /* Root palette (brand: red/gold/dark blue) */
+:root{
+  --bg:#0b2a37;
+  --bg-alt:#0f3443;
+  --card:#122d3a;
+  --muted:#7aa0b2;
+  --text:#e6f2f7;
+  --accent:#ce4c28;   /* brand red-orange */
+  --accent-2:#bc291f; /* deep red */
+  --gold:#fbf1df;
+  --ok:#22c55e;
+  --warn:#f59e0b;
+  --danger:#ef4444;
+  --ring: rgba(255,255,255,.2);
+  --shadow: rgba(0,0,0,.35);
+}
+
+/* Global */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+  color:var(--text);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* Layout */
+.admindashboard-layout{
+  display:grid;
+  grid-template-columns:280px 1fr;
+  min-height:100dvh;
+}
+
+/* Sidebar */
+.admindashboard-sidebar{
+  position:relative;
+  z-index:30;
+  background:rgba(11,42,55,.85);
+  backdrop-filter:saturate(140%) blur(8px);
+  border-right:1px solid rgba(255,255,255,.08);
+  padding:20px 16px;
+}
+.admindashboard-brand{
+  display:flex;align-items:center;gap:10px;
+  font-weight:700;font-size:18px;letter-spacing:.2px;
+  color:var(--gold);
+  margin-bottom:16px;
+}
+.admindashboard-brand .bi{font-size:22px;color:var(--accent)}
+.admindashboard-navlist{
+  display:flex;flex-direction:column;gap:6px;margin-top:10px
+}
+.admindashboard-nav{
+  display:flex;align-items:center;gap:10px;
+  color:var(--text);text-decoration:none;
+  padding:10px 12px;border-radius:10px;
+  transition:background .2s,color .2s,transform .1s;
+  outline:0;
+}
+.admindashboard-nav .bi{opacity:.9}
+.admindashboard-nav:hover{background:rgba(255,255,255,.06)}
+.admindashboard-nav[aria-current="page"]{
+  background:linear-gradient(90deg, rgba(206,76,40,.18), rgba(206,76,40,.05));
+  border:1px solid rgba(206,76,40,.35);
+  color:var(--gold);
+}
+.admindashboard-sidebar-footer{
+  margin-top:auto;padding-top:12px;border-top:1px solid rgba(255,255,255,.08)
+}
+
+/* Backdrop for mobile */
+.admindashboard-backdrop{
+  position:fixed;inset:0;background:rgba(0,0,0,.4);
+  z-index:25;opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.admindashboard-backdrop.show{opacity:1;pointer-events:auto}
+
+/* Topbar */
+.admindashboard-main{display:flex;flex-direction:column;min-width:0}
+.admindashboard-topbar{
+  position:sticky;top:0;z-index:20;
+  background:rgba(18,45,58,.8);
+  backdrop-filter:saturate(140%) blur(8px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  padding:10px 16px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.admindashboard-top-wrap{display:flex;align-items:center;gap:12px}
+.admindashboard-burger{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:38px;height:38px;border-radius:10px;
+  border:1px solid rgba(255,255,255,.12);
+  background:transparent;color:var(--text);
+  cursor:pointer;transition:background .2s,transform .05s;
+}
+.admindashboard-burger:hover{background:rgba(255,255,255,.06)}
+.admindashboard-burger:active{transform:scale(.98)}
+
+.admindashboard-search-wrap{
+  position:relative;flex:1;max-width:520px
+}
+.admindashboard-search-icon{
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:.7
+}
+.admindashboard-search{
+  width:100%;padding:10px 12px 10px 38px;border-radius:10px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.06);color:var(--text);
+  outline:0;transition:box-shadow .2s,border-color .2s;
+}
+.admindashboard-search:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(206,76,40,.25);
+}
+
+.admindashboard-actions{display:flex;align-items:center;gap:8px}
+.admindashboard-icon-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:38px;height:38px;border-radius:10px;background:transparent;
+  color:var(--text);border:1px solid rgba(255,255,255,.12);
+  cursor:pointer;transition:background .2s,transform .05s
+}
+.admindashboard-icon-btn:hover{background:rgba(255,255,255,.06)}
+.admindashboard-icon-btn:active{transform:scale(.98)}
+
+/* View container */
+#admindashboardView{padding:16px}
+
+/* KPI Strip */
+.admindashboard-kpi{
+  display:grid;grid-template-columns:repeat(5,minmax(140px,1fr));
+  gap:12px;margin-bottom:16px
+}
+.admindashboard-kpi-card{
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;padding:12px;
+  box-shadow:0 6px 20px -8px var(--shadow);
+  display:flex;flex-direction:column;gap:6px;
+  min-height:84px;
+}
+.admindashboard-kpi-card > div:first-child{
+  display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px
+}
+.admindashboard-kpi-card .bi{color:var(--accent)}
+.admindashboard-kpi-value{font-size:22px;font-weight:700;color:var(--gold)}
+
+/* Grid */
+.admindashboard-grid{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:12px;margin-bottom:16px
+}
+.admindashboard-grid .admindashboard-card:nth-child(1){grid-column:span 6}
+.admindashboard-grid .admindashboard-card:nth-child(2){grid-column:span 6}
+.admindashboard-grid .admindashboard-card:nth-child(3){grid-column:span 6}
+.admindashboard-grid .admindashboard-card:nth-child(4){grid-column:span 6}
+
+/* Cards */
+.admindashboard-card{
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;padding:12px;
+  box-shadow:0 8px 24px -10px var(--shadow);
+}
+.admindashboard-card-head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px
+}
+.admindashboard-card-head h3{
+  margin:0;font-size:15px;letter-spacing:.2px;color:var(--text);display:flex;align-items:center;gap:8px
+}
+.admindashboard-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:12px;color:var(--gold);
+  background:rgba(251,241,223,.08);
+  border:1px solid rgba(251,241,223,.25);
+  border-radius:999px;padding:6px 10px
+}
+.admindashboard-badge.danger{
+  color:#ffd9d6;background:rgba(236,72,72,.08);border-color:rgba(236,72,72,.35)
+}
+.admindashboard-spin{display:inline-block;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Canvas wrapper ensures height */
+.admindashboard-canvas-wrap{position:relative;height:240px}
+
+/* Buttons */
+.admindashboard-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 12px;border-radius:10px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.04);color:var(--text);
+  cursor:pointer;transition:transform .05s,background .2s,border-color .2s
+}
+.admindashboard-btn:hover{background:rgba(255,255,255,.08)}
+.admindashboard-btn:active{transform:translateY(1px)}
+.admindashboard-btn.primary{
+  background:linear-gradient(180deg, rgba(206,76,40,.85), rgba(188,41,31,.9));
+  border-color:rgba(206,76,40,.9)
+}
+.admindashboard-btn.secondary{
+  background:linear-gradient(180deg, rgba(251,241,223,.15), rgba(251,241,223,.06));
+  border-color:rgba(251,241,223,.35);color:var(--gold)
+}
+.admindashboard-btn.danger{
+  background:linear-gradient(180deg, rgba(239,68,68,.18), rgba(239,68,68,.1));
+  border-color:rgba(239,68,68,.35)
+}
+.admindashboard-card-actions{display:flex;flex-wrap:wrap;gap:8px}
+
+/* Lists */
+.admindashboard-list{display:flex;flex-direction:column;gap:8px}
+.admindashboard-list-row{
+  display:grid;grid-template-columns:36px 1fr auto;gap:10px;
+  align-items:center;padding:10px;border-radius:10px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)
+}
+.admindashboard-rank{
+  width:28px;height:28px;border-radius:8px;
+  background:linear-gradient(180deg, rgba(251,241,223,.2), rgba(251,241,223,.06));
+  border:1px solid rgba(251,241,223,.25);
+  color:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700
+}
+.admindashboard-list-name{color:var(--text);display:flex;align-items:center;gap:8px}
+.admindashboard-list-value{color:var(--gold);font-weight:600}
+
+/* Alerts */
+.admindashboard-alerts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.admindashboard-alerts li{
+  padding:10px;border-radius:10px;
+  background:rgba(255,255,255,.04);
+  border-left:3px solid var(--warn);
+  border-right:1px solid rgba(255,255,255,.08);
+  border-top:1px solid rgba(255,255,255,.08);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.admindashboard-alert-title{font-weight:600;color:var(--gold);display:flex;align-items:center;gap:8px}
+.admindashboard-alert-sub{font-size:13px;color:var(--muted)}
+
+/* Skeleton + error + empty */
+.admindashboard-skeleton{
+  height:180px;border-radius:10px;
+  background:linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.08), rgba(255,255,255,.04));
+  background-size:200% 100%;animation:shine 1.2s linear infinite
+}
+@keyframes shine{to{background-position:-200% 0}}
+.admindashboard-error{
+  color:#ffd9d6;background:rgba(239,68,68,.08);
+  border:1px solid rgba(239,68,68,.28);
+  padding:12px;border-radius:10px
+}
+.admindashboard-empty{
+  color:var(--muted);padding:16px;border:1px dashed rgba(255,255,255,.15);
+  border-radius:10px;background:rgba(255,255,255,.03)
+}
+
+/* Accessibility focus ring */
+:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:2px
+}
+
+/* Responsive */
+@media (max-width: 1024px){
+  .admindashboard-kpi{grid-template-columns:repeat(3,1fr)}
+  .admindashboard-grid .admindashboard-card{grid-column:span 12}
+}
+@media (max-width: 768px){
+  .admindashboard-layout{grid-template-columns:1fr}
+  .admindashboard-sidebar{
+    position:fixed;left:0;top:0;bottom:0;width:280px;transform:translateX(-100%);
+    transition:transform .2s ease;box-shadow:10px 0 30px -12px var(--shadow)
+  }
+  .admindashboard-sidebar.open{transform:translateX(0)}
+  .admindashboard-kpi{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width: 420px){
+  .admindashboard-kpi{grid-template-columns:1fr}
+}
+</style>

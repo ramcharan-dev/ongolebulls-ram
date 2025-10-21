@@ -89,7 +89,7 @@
 
 <script>
   // API URL (update as needed)
-  const apiUrl = 'http://localhost:8085/api/candidate/all';
+  const apiUrl = 'http://localhost:8080/api/candidate/all';
 
   // Initial sample jobs fallback
   let jobs = [
@@ -194,7 +194,7 @@
     };
 
     try {
-      const response = await fetch('http://localhost:8085/api/candidate/add', {
+      const response = await fetch('http://localhost:8080/api/candidate/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

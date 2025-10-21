@@ -50,6 +50,7 @@ public class JobApplicationController {
             application.setResumePath(resumePath);
             application.setJob(job);
 
+
             jobApplicationRepository.save(application);
 
             return ResponseEntity.ok("Application submitted successfully.");

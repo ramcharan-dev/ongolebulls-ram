@@ -103,11 +103,13 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Service
 @RequiredArgsConstructor
@@ -184,7 +186,7 @@ public class EmailService {
                 </div>
                 """.formatted(otp);
 
-            helper.setFrom(fromAddress);
+            helper.setFrom("ongolebullsinvest@gmail.com");
             helper.setTo(to);
             helper.setSubject("Your OngoleBulls Signup OTP");
             helper.setText(htmlContent, true);
@@ -207,4 +209,38 @@ public class EmailService {
             }
         }
     }
+    public void sendApplicationConfirmation(String toEmail, String candidateName, String jobTitle) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            String subject = "Application Received - Ongole Bulls Invest";
+            String htmlContent = """
+                <div style="font-family: 'Segoe UI', Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: auto; border: 1px solid #e5e5e5; border-radius: 10px; padding: 20px;">
+                    <div style="text-align: center; border-bottom: 2px solid #006400; padding-bottom: 10px;">
+                        <img src="cid:logoImage" alt="Ongole Bulls Invest" style="max-height: 60px; margin-bottom: 10px;">
+                        <h2 style="color: #006400; margin: 0;">Application Confirmation</h2>
+                    </div>
+                    <p>Dear <b>%s</b>,</p>
+                    <p>Thank you for applying for the position of <b>%s</b> at <b>Ongole Bulls Invest</b>.</p>
+                    <p>We’ll review your application and reach out if it matches our openings.</p>
+                    <br>
+                    <p>Best Regards,<br><b>HR Team</b></p>
+                </div>
+                """.formatted(candidateName, jobTitle);
+
+            helper.setFrom("hr@ongolebullsinvest.com");
+            helper.setTo(toEmail);
+            helper.setSubject(subject);
+            helper.setText(htmlContent, true);
+            helper.addInline("logoImage", new ClassPathResource("assets/logo 3.png"));
+
+            mailSender.send(message);
+            log.info("✅ Application confirmation email sent to {}", toEmail);
+        } catch (MessagingException e) {
+            log.error("❌ Failed to send email: {}", e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
 }
