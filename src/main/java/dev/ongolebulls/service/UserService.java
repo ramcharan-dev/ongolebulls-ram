@@ -151,5 +151,11 @@ public class UserService {
     }
 
 
+    public Optional<User> getUserById(Long id) {
+        return Optional.empty();
+    }
+
+    public void saveUser(User user) {
+    }
 }
 
