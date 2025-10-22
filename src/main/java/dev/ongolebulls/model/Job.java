@@ -20,6 +20,7 @@ public class Job {
     @Column(columnDefinition = "TEXT")
     private String description;
     private String qualification;
+    private String department; // <-- Hibernate is querying this
     private String location;
     private String salaryRange;
     private String employmentType;
@@ -31,7 +32,6 @@ public class Job {
     @Lob
     @Column(columnDefinition = "TEXT")
     private String keyResponsibility;
-    private String department;
     private String rolesAndResponsibilities;
 
 
