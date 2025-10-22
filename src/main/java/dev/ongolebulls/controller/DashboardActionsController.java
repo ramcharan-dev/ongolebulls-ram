@@ -1,22 +1,11 @@
 package dev.ongolebulls.controller;
 
 
-import dev.ongolebulls.model.InvestmentRequest;
-import dev.ongolebulls.model.Nominee;
-import dev.ongolebulls.model.RedemptionRequest;
-import dev.ongolebulls.model.SIPRequest;
-import dev.ongolebulls.repository.InvestmentRequestRepo;
-import dev.ongolebulls.repository.NomineeRepo;
-import dev.ongolebulls.repository.RedemptionRequestRepo;
-import dev.ongolebulls.repository.SIPRequestRepo;
+import dev.ongolebulls.model.*;
+import dev.ongolebulls.repository.*;
+import dev.ongolebulls.service.DashboardService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-
+import org.springframework.web.bind.annotation.*;
 
 
 import java.util.HashMap;
@@ -31,6 +20,8 @@ public class DashboardActionsController {
         private final RedemptionRequestRepo redeemRepo;
         private final SIPRequestRepo sipRepo;
         private final NomineeRepo nomineeRepo;
+        private final DashboardService dashboardService;
+        private final UserRepository userRepository;
         private Long userId; // <-- important, must match exactly
 
 
@@ -69,6 +60,16 @@ public class DashboardActionsController {
             map.put("nominees", nomineeRepo.findByUserId(userId));
             return map;
         }
+        @GetMapping("/user/{userId}")
+        @ResponseBody
+        public User getUser(@PathVariable Long userId) {
+            return userRepository.findById(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        }
+
+
+
+
 }
 
 

@@ -19,4 +19,26 @@ public class JobService {
     public Job createJob(Job job) {
         return jobRepository.save(job);
     }
+
+
+
+    public List<Job> filterJobs(String department, String location, String experience, String remoteType) {
+        return jobRepository.findByFilters(department, location, experience, remoteType);
+    }
+
+    // For dropdown filters
+    public List<String> getDistinctDepartments() {
+        return jobRepository.findDistinctDepartments();
+    }
+    public List<String> getDistinctLocations() {
+        return jobRepository.findDistinctLocations();
+    }
+    public List<String> getDistinctExperiences() {
+        return jobRepository.findDistinctExperiences();
+    }
+    public List<String> getDistinctWorkTypes() {
+        return jobRepository.findDistinctWorkTypes();
+    }
+
+
 }

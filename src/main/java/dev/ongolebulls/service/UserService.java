@@ -4,12 +4,17 @@ import dev.ongolebulls.model.*;
 import dev.ongolebulls.repository.InvestorAccountRepo;
 import dev.ongolebulls.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.*;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -17,11 +22,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepo;
-    private final EncryptionService encService;
-    private final InvestorAccountRepo investorAccountRepo;
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    private final Path uploadRoot = Paths.get("uploads");
+        private final UserRepository userRepo;
+        private final EncryptionService encService;
+        private final InvestorAccountRepo investorAccountRepo;
+
+        private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        private final Path uploadRoot = Paths.get("uploads");
 
     public User register(Map<String, Object> dto,
                          MultipartFile kycFile,
@@ -143,4 +149,7 @@ public class UserService {
         return userRepo.findByEmail(email)
                 .filter(user -> passwordEncoder.matches(rawPassword, user.getPasswordHash()));
     }
+
+
 }
+

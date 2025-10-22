@@ -1,10 +1,24 @@
 package dev.ongolebulls.controller;
 
+//import ch.qos.logback.core.model.Model;
+import org.springframework.ui.Model;
+
+import dev.ongolebulls.model.User;
+import dev.ongolebulls.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.security.Principal;
+
+
 @Controller
 public class HomeController {
+
+    private final UserService userService;
+
+    public HomeController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/")
     public String home() {
@@ -70,5 +84,7 @@ public class HomeController {
     public String signinPage() {
         return "sign-in"; // Loads login.html from src/main/resources/templates/
     }
+
+
 
 }
