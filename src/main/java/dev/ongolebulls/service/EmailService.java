@@ -165,26 +165,26 @@ public class EmailService {
 
             // HTML content with embedded logo reference
             String htmlContent = """
-                <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
-                    <h2 style="color: #006400;">OngoleBulls Invest</h2>
-                    <p>Dear Investor,</p>
-                    <p><b>Your One-Time Password (OTP) is:</b></p>
-                    <h3 style="color: #d9534f;">%s</h3>
-                    <p>This OTP is valid for <b>10 minutes</b>.</p>
-                    <p>If you did not request this OTP, please ignore this message or 
-                    <a href="mailto:support@ongolebullsinvest.com">contact support</a>.</p>
-                    <br>
-                    <p>
-                        Warm Regards,<br>
-                        OngoleBulls Invest Team
-                    </p>
-                    <img src="cid:logoImage" alt="OngoleBulls Logo" style="margin-top:10px; max-height:60px;">
-                    <br>
-                    <p style="font-size: 12px; color: #888;">
-                        <a href="https://www.ongolebullsinvest.com">www.ongolebullsinvest.com</a>
-                    </p>
-                </div>
-                """.formatted(otp);
+                    <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
+                        <h2 style="color: #006400;">OngoleBulls Invest</h2>
+                        <p>Dear Investor,</p>
+                        <p><b>Your One-Time Password (OTP) is:</b></p>
+                        <h3 style="color: #d9534f;">%s</h3>
+                        <p>This OTP is valid for <b>10 minutes</b>.</p>
+                        <p>If you did not request this OTP, please ignore this message or 
+                        <a href="mailto:support@ongolebullsinvest.com">contact support</a>.</p>
+                        <br>
+                        <p>
+                            Warm Regards,<br>
+                            OngoleBulls Invest Team
+                        </p>
+                        <img src="cid:logoImage" alt="OngoleBulls Logo" style="margin-top:10px; max-height:60px;">
+                        <br>
+                        <p style="font-size: 12px; color: #888;">
+                            <a href="https://www.ongolebullsinvest.com">www.ongolebullsinvest.com</a>
+                        </p>
+                    </div>
+                    """.formatted(otp);
 
             helper.setFrom("ongolebullsinvest@gmail.com");
             helper.setTo(to);
@@ -207,39 +207,6 @@ public class EmailService {
                 log.error("❌ Fallback plain OTP email also failed for {}: {}", to, ex.getMessage(), ex);
                 throw new RuntimeException("Failed to send OTP email: " + ex.getMessage(), ex);
             }
-        }
-    }
-    public void sendApplicationConfirmation(String toEmail, String candidateName, String jobTitle) {
-        try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-            String subject = "Application Received - Ongole Bulls Invest";
-            String htmlContent = """
-                <div style="font-family: 'Segoe UI', Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: auto; border: 1px solid #e5e5e5; border-radius: 10px; padding: 20px;">
-                    <div style="text-align: center; border-bottom: 2px solid #006400; padding-bottom: 10px;">
-                        <img src="cid:logoImage" alt="Ongole Bulls Invest" style="max-height: 60px; margin-bottom: 10px;">
-                        <h2 style="color: #006400; margin: 0;">Application Confirmation</h2>
-                    </div>
-                    <p>Dear <b>%s</b>,</p>
-                    <p>Thank you for applying for the position of <b>%s</b> at <b>Ongole Bulls Invest</b>.</p>
-                    <p>We’ll review your application and reach out if it matches our openings.</p>
-                    <br>
-                    <p>Best Regards,<br><b>HR Team</b></p>
-                </div>
-                """.formatted(candidateName, jobTitle);
-
-            helper.setFrom("hr@ongolebullsinvest.com");
-            helper.setTo(toEmail);
-            helper.setSubject(subject);
-            helper.setText(htmlContent, true);
-            helper.addInline("logoImage", new ClassPathResource("assets/logo 3.png"));
-
-            mailSender.send(message);
-            log.info("✅ Application confirmation email sent to {}", toEmail);
-        } catch (MessagingException e) {
-            log.error("❌ Failed to send email: {}", e.getMessage(), e);
-            throw new RuntimeException(e);
         }
     }
 
