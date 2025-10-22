@@ -16,6 +16,8 @@ public class Job {
     private Long id;
 
     private String title;
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
     private String qualification;
     private String location;
@@ -25,6 +27,13 @@ public class Job {
     private String applyDeadline;
     private String remoteType;
     private String skillsRequired;
+    private String experience; // New
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String keyResponsibility;
+    private String department;
+    private String rolesAndResponsibilities;
+
 
     @OneToMany(mappedBy = "job")
     private List<JobApplication> applications;
@@ -118,5 +127,38 @@ public class Job {
     public void setSkillsRequired(String skillsRequired) {
         this.skillsRequired = skillsRequired;
     }
+
+    public String getExperience() {
+        return experience;
+    }
+
+    public void setExperience(String experience) {
+        this.experience = experience;
+    }
+
+    public String getKeyResponsibility() {
+        return keyResponsibility;
+    }
+
+    public void setKeyResponsibility(String keyResponsibility) {
+        this.keyResponsibility = keyResponsibility;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getRolesAndResponsibilities() {
+        return rolesAndResponsibilities;
+    }
+
+    public void setRolesAndResponsibilities(String rolesAndResponsibilities) {
+        this.rolesAndResponsibilities = rolesAndResponsibilities;
+    }
+
 
 }

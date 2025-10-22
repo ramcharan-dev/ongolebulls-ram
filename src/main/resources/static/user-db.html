@@ -6,7 +6,11 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
     <style>
         body { background:#f7f7fb; }
         .stats-card{border-radius:14px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06);padding:14px}
@@ -250,7 +254,11 @@
                 <li class="nav-item"><a class="nav-link" href="#">SIPs</a></li>
                 <li class="nav-item"><a class="nav-link" href="funds.html">Funds</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Reports</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
+              <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
+
+
+
+
 
             </ul>
 
@@ -271,16 +279,17 @@
                        id="userMenu" data-bs-toggle="dropdown" aria-expanded="false"
                        style="cursor: pointer;"></i>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <button class="btn btn-primary" onclick="window.location.href='/profile.html'">
-                            View Profile
-                        </button>
+                        <a href="/profile">My Profile</a>
+
+
                         <li><a class="dropdown-item" href="profile.html">Settings</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <button id="logoutBtn">Logout</button>
+<!--                        <li><a class="dropdown-item text-danger" href="profile.html">Logout</a></li>-->
+                        <li><a class="dropdown-item text-danger" href="sign-in">Logout</a></li>
                     </ul>
                 </div>
 
-                <h5>Welcome, <span id="welcomeName"></span></h5>
+                <h5>Welcome, <span id="welcomeName"></span> 👋</h5>
             </div>
 
 
@@ -326,6 +335,7 @@
             </div>
         </div>
     </div>
+
 
 
     <!-- SIP Tracker -->
@@ -609,24 +619,14 @@ submitForm("redeemForm","/api/redeem/request");
 submitForm("sipForm","/api/sip/request");
 submitForm("nomineeForm","/api/nominee");
 
-document.getElementById('logoutBtn').addEventListener('click', function() {
-    fetch('/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include' // send cookies if session is used
-    })
-    .then(response => {
-        if (response.ok) {
-            // Redirect to login page
-            window.location.href = '/sign-in';
-        } else {
-            alert('Logout failed');
-        }
-    });
-});
 
 
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+
 </body>
 </html>

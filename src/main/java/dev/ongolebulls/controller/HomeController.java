@@ -1,25 +1,24 @@
 package dev.ongolebulls.controller;
 
-import dev.ongolebulls.dto.UserProfileResponse;
+//import ch.qos.logback.core.model.Model;
+import org.springframework.ui.Model;
+
 import dev.ongolebulls.model.User;
 import dev.ongolebulls.service.UserService;
-
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+
+import java.security.Principal;
+
 
 @Controller
 public class HomeController {
 
-    private final UserService userService; // <-- inject it here
+    private final UserService userService;
 
     public HomeController(UserService userService) {
         this.userService = userService;
     }
-
 
     @GetMapping("/")
     public String home() {
@@ -81,22 +80,11 @@ public class HomeController {
         return "Sign-up"; // Loads login.html from src/main/resources/templates/
     }
 
-
     @GetMapping("/sign-in")
-    public String showLoginPage() {
-        return "sign-in"; // Thymeleaf will look in src/main/resources/templates/sign-in.html
+    public String signinPage() {
+        return "sign-in"; // Loads login.html from src/main/resources/templates/
     }
 
-    @GetMapping("/profile")
-    public String profilePage() {
-        return "profile"; // refers to profile.html in templates
-    }
 
-    @GetMapping("/admin-dashboard")
-    public String showAdminDashboard() {
-        return "admin-db"; // Thymeleaf looks in /templates/
-    }
 
 }
-
-

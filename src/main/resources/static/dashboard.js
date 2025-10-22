@@ -23,3 +23,7 @@ function logoutUser() {
     sessionStorage.clear(); // clear user session
     window.location.href = "login.html"; // redirect back to login
 }
+
+
+
+
