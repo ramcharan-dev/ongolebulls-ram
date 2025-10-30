@@ -1,6 +1,7 @@
 package dev.ongolebulls.controller;
 
 import dev.ongolebulls.dto.AdminDashboardDTO;
+import dev.ongolebulls.model.Client;
 import dev.ongolebulls.model.RMPerformance;
 import dev.ongolebulls.service.AdminDashboardService;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/admin/dashboard") // Matches frontend URL
+@RequestMapping("/api") // Instead of /api/admin/dashboard
+
 @CrossOrigin(origins = "*") // Allow cross-origin requests
 public class AdminDashboardController {
 
@@ -61,4 +63,10 @@ public class AdminDashboardController {
     public ResponseEntity<String> getComplianceSummary(@RequestParam(defaultValue = "month") String period) {
         return ResponseEntity.ok("Compliance summary for period: " + period);
     }
+
+    @GetMapping("/clients")
+    public ResponseEntity<List<Client>> getClients() {
+        return ResponseEntity.ok(service.getAllClients());
+    }
+
 }

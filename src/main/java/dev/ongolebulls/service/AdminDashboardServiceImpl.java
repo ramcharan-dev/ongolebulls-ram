@@ -2,7 +2,10 @@ package dev.ongolebulls.service;
 
 
 import dev.ongolebulls.dto.AdminDashboardDTO;
+import dev.ongolebulls.model.Client;
 import dev.ongolebulls.model.RMPerformance;
+import dev.ongolebulls.repository.ClientRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -17,7 +20,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
         kpi.put("activeInvestments", 1120);
         kpi.put("monthlySips", 875);
         kpi.put("riskProfilesCompleted", 1050);
-        kpi.put("rmConversionRate", 78.4);
+        kpi.put("rmConversionRate", 20.4);
         return kpi;
     }
 
@@ -66,4 +69,17 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
                 Map.of("title", "Dormant Clients", "detail", "13 inactive for 90+ days")
         );
     }
+
+    private final ClientRepo clientRepo;
+
+    @Autowired
+    public AdminDashboardServiceImpl(ClientRepo clientRepo) {
+        this.clientRepo = clientRepo;
+    }
+
+    @Override
+    public List<Client> getAllClients() {
+        return clientRepo.findAll();
+    }
+
 }

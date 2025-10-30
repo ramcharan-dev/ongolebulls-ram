@@ -26,12 +26,16 @@ public class Job {
     private String postedDate;
     private String applyDeadline;
     private String remoteType;
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String skillsRequired;
     private String experience; // New
     @Lob
     @Column(columnDefinition = "TEXT")
     private String keyResponsibility;
     private String department;
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String rolesAndResponsibilities;
 
 
