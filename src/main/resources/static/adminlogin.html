@@ -29,6 +29,16 @@
     </style>
 </head>
 <body>
+<!--<div class="admindashboard-actions">-->
+<!--    <span id="adminNameDisplay" style="margin-right:8px;font-weight:600;color:var(&#45;&#45;gold);"></span>-->
+<!--    <button class="admindashboard-icon-btn" title="Notifications">-->
+<!--        <i class="bi bi-bell"></i>-->
+<!--    </button>-->
+<!--    <button class="admindashboard-icon-btn" title="Profile">-->
+<!--        <i class="bi bi-person-circle"></i>-->
+<!--    </button>-->
+<!--</div>-->
+
 <div class="login-container">
     <h2>Admin Login</h2>
     <form id="adminLoginForm">
@@ -41,6 +51,13 @@
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const name = localStorage.getItem('adminName') || 'Admin';
+        const el = document.getElementById('adminNameDisplay');
+        if (el) el.textContent = name;
+    });
+
+
     document.getElementById('adminLoginForm').addEventListener('submit', async e => {
         e.preventDefault();
 
@@ -65,12 +82,13 @@
             if(result.success){
                 successMsg.textContent = "Login successful! Redirecting...";
 
-                // Store token and roles for dashboard auth
+                // Store token, roles, and admin name for dashboard auth
                 localStorage.setItem('jwt', result.token || 'dummy-token');
                 localStorage.setItem('roles', JSON.stringify(result.roles || ['ROLE_ADMIN']));
+                localStorage.setItem('adminName', result.name || 'Admin'); // Store admin name
 
                 setTimeout(() => { window.location.href = 'admin-db.html'; }, 1000);
-            } else {
+        } else {
                 errorMsg.textContent = result.message || "Invalid email or password";
             }
 
