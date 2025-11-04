@@ -897,7 +897,7 @@ function admindashboardRouter() {
             showPlaceholderPage('Documents Page (to implement)');
             break;
         case '#/careers':
-         //   admindashboardLoadCareers();
+            admindashboardLoadCareers();
             break;
         case '#/admin-details':   //<--- ✅ NEW
             admindashboardLoadAdminDetails();
