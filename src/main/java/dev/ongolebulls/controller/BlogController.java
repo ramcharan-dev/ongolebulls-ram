@@ -1,13 +1,18 @@
 package dev.ongolebulls.controller;
 
 import dev.ongolebulls.model.Blog;
+import dev.ongolebulls.repository.BlogRepository;
 import dev.ongolebulls.service.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -78,13 +83,62 @@ public class BlogController {
     }
 
     // Helper method to save image
+//    private void handleImageUpload(Blog blog, MultipartFile imageFile) throws IOException {
+//        if (imageFile != null && !imageFile.isEmpty()) {
+//            String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
+//            Path uploadPath = Paths.get("src/main/resources/static/assets");
+//            if (!Files.exists(uploadPath)) Files.createDirectories(uploadPath);
+//            Files.copy(imageFile.getInputStream(), uploadPath.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
+//            blog.setImage(fileName);
+//        }
+//    }
+
     private void handleImageUpload(Blog blog, MultipartFile imageFile) throws IOException {
         if (imageFile != null && !imageFile.isEmpty()) {
-            String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
-            Path uploadPath = Paths.get("src/main/resources/static/assets/");
-            if (!Files.exists(uploadPath)) Files.createDirectories(uploadPath);
+            // Clean the filename and replace spaces with dashes
+            String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename()).replace(" ", "-");
+
+            Path uploadPath = Paths.get("src/main/resources/static/assets");
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            // Copy the file to the target location, replacing existing
             Files.copy(imageFile.getInputStream(), uploadPath.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
+
+            // Set the cleaned filename in the blog entity
             blog.setImage(fileName);
         }
     }
+
+
+
+
+
+    @Configuration
+    public static class WebConfig implements WebMvcConfigurer {
+
+        @Override
+        public void addResourceHandlers(ResourceHandlerRegistry registry) {
+            // Serve images from uploads directory
+            registry.addResourceHandler("/uploads/blog-images/**")
+                    .addResourceLocations("file:uploads/blog-images/");
+
+            // Also serve from assets directory for backward compatibility
+            registry.addResourceHandler("/assets/**")
+                    .addResourceLocations("file:src/main/resources/static/assets/");
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
 }
+

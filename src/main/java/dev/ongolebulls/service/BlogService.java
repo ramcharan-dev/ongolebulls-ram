@@ -11,3 +11,4 @@ public interface BlogService {
     Blog updateBlog(Long id, Blog updatedBlog);
 }
 
+
