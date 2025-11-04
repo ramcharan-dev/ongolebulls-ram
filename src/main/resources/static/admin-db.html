@@ -15,6 +15,8 @@
 
 <div class="admindashboard-layout" role="application" aria-label="Admin Dashboard">
 
+
+
     <!-- Sidebar -->
     <aside class="admindashboard-sidebar" aria-label="Primary">
         <div class="admindashboard-brand">
@@ -59,9 +61,9 @@
                 </button>
                 <div id="adminProfileMenu" class="admindashboard-profile-menu" style="display:none;">
                     <div class="admindashboard-profile-welcome">Welcome !</div>
-                    <a href="admin-profile.html" class="admindashboard-profile-link">
-                        <i class="bi bi-person"></i> Edit Profile
-                    </a>
+                    <a href="#/admin-details" class="admindashboard-nav"><i class="bi bi-person-check"></i> <span>Edit Profile</span></a>
+
+
                     <a href="#" id="dashboardLogoutLink" class="admindashboard-profile-link">
                         <i class="bi bi-box-arrow-right"></i> Logout
                     </a>
@@ -72,6 +74,10 @@
         <section id="admindashboardView"></section>
     </main>
 </div>
+
+
+<!-- Backdrop for mobile sidebar -->
+<div class="admindashboard-backdrop" id="admindashboardBackdrop"></div>
 
 <!-- ========== TEMPLATES ========== -->
 
@@ -229,6 +235,83 @@
     </div>
 </template>
 
+<!-- Blog Form Template (Add/Edit) -->
+<template id="blogFormTemplate">
+    <div class="admindashboard-card">
+        <div class="admindashboard-card-head">
+            <h3><i class="bi bi-journal-text"></i> <span data-form-title>Add New Blog</span></h3>
+            <button class="admindashboard-btn" id="backToBlogsBtn">
+                <i class="bi bi-arrow-left"></i> Back to Blogs
+            </button>
+        </div>
+        <form id="blogForm" class="admindashboard-blog-form" enctype="multipart/form-data">
+            <div class="form-row">
+                <label>Title: <span class="required">*</span><br/>
+                    <input type="text" name="title" required class="admindashboard-input"/>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Short Description: <span class="required">*</span><br/>
+                    <textarea name="shortDescription" rows="3" required class="admindashboard-textarea"></textarea>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Full Content: <span class="required">*</span><br/>
+                    <textarea name="fullContent" rows="8" required class="admindashboard-textarea"></textarea>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Author: <span class="required">*</span><br/>
+                    <input type="text" name="author" required class="admindashboard-input"/>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Blog Image:<br/>
+                    <input type="file" name="imageFile" accept="image/*" class="admindashboard-input-file"/>
+                </label>
+                <div class="image-preview" id="imagePreview" style="display:none;">
+                    <img id="previewImg" src="" alt="Preview" style="max-width:300px;max-height:200px;border-radius:8px;margin-top:10px;"/>
+                    <div class="current-image-label">Current Image</div>
+                </div>
+            </div>
+
+            <!-- SEO Information Section -->
+            <div class="form-row">
+                <label>Meta Title:<br/>
+                    <input type="text" name="metaTitle" class="admindashboard-input"/>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Meta Keywords:<br/>
+                    <input type="text" name="metaKeywords" class="admindashboard-input"/>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Meta Description:<br/>
+                    <textarea name="metaDescription" rows="3" class="admindashboard-textarea"></textarea>
+                </label>
+            </div>
+
+            <div class="form-actions">
+                <button class="admindashboard-btn primary" type="submit">
+                    <i class="bi bi-save"></i> Save Blog
+                </button>
+                <button class="admindashboard-btn" type="button" id="cancelBlogBtn">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </button>
+            </div>
+        </form>
+        <div id="blogFormMessage" class="admindashboard-form-message"></div>
+    </div>
+</template>
+
+
 <!-- Careers Container Template -->
 <template id="careersContainerTemplate">
     <h2>Career Opportunities</h2>
@@ -267,6 +350,36 @@
     <div id="jobFormMessage" class="admindashboard-form-message"></div>
 </template>
 
+
+
+
+<template id="editAdminTemplate">
+    <div class="edit-admin-container">
+        <h2>Edit Admin User Details</h2>
+        <form id="editAdminForm">
+            <label>Email:</label>
+            <input type="email" id="adminEmail" required />
+
+            <label>Password:</label>
+            <input type="password" id="adminPassword" required />
+
+            <label>Name:</label>
+            <input type="text" id="adminName" required />
+
+            <button type="submit" id="adminSaveBtn">Save Changes</button>
+        </form>
+
+        <div id="responseMessage"></div>
+    </div>
+</template>
+
+
+
+
+
+
+
+
 <!-- Career Row Template -->
 <template id="careerRowTemplate">
     <tr>
@@ -282,6 +395,52 @@
     </tr>
 </template>
 
+
+
+<section id="seoPage">
+    <h2>SEO Settings</h2>
+    <div id="seoListContainer">
+        <!-- SEO entries will be dynamically inserted here -->
+    </div>
+    <button id="addSeoBtn" class="admindashboard-btn primary">Add New SEO Setting</button>
+
+    <!-- Edit form modal/dialog -->
+    <div id="seoEditModal" class="modal" style="display:none;">
+        <form id="seoEditForm" class="admindashboard-form">
+            <input type="hidden" name="id" id="seoId" />
+            <label>Slug (URL Path)</label>
+            <input type="text" name="slug" id="seoSlug" required />
+
+            <label>Meta Title</label>
+            <input type="text" name="metaTitle" id="seoMetaTitle" />
+
+            <label>Meta Description</label>
+            <textarea name="metaDescription" id="seoMetaDescription"></textarea>
+
+            <label>Meta Keywords</label>
+            <input type="text" name="metaKeywords" id="seoMetaKeywords" />
+
+            <label>Robots Tag</label>
+            <select name="robotsTag" id="seoRobotsTag">
+                <option value="index,follow">index, follow</option>
+                <option value="noindex,nofollow">noindex, nofollow</option>
+            </select>
+
+            <label>Schema JSON</label>
+            <textarea name="schemaJson" id="seoSchemaJson" rows="6"></textarea>
+
+            <div class="form-actions">
+                <button type="submit" class="admindashboard-btn primary">Save</button>
+                <button type="button" class="admindashboard-btn" id="seoCancelBtn">Cancel</button>
+            </div>
+            <div id="seoFormMessage"></div>
+        </form>
+    </div>
+</section>
+
+
+
+
 <!-- Placeholder Page Template -->
 <template id="placeholderPageTemplate">
     <h2 data-page-title></h2>
@@ -292,6 +451,11 @@
 
 <!-- Custom JavaScript -->
 <script src="admin-dashboard.js"></script>
+
+
+
+
+
 
 </body>
 </html>

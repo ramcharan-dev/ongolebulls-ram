@@ -20,6 +20,13 @@ public class Blog {
     private String author;
     private LocalDateTime createdAt;
 
+    // SEO Information
+    private String metaTitle;
+    private String metaKeywords;
+
+    @Column(columnDefinition = "TEXT")
+    private String metaDescription;
+
     // Getters and Setters
 
     public Long getId() {
@@ -80,4 +87,19 @@ public class Blog {
 
     public void setImageName(String fileName) {
     }
+
+
+
+    // SEO Getters and Setters
+
+    public String getMetaTitle() { return metaTitle; }
+    public void setMetaTitle(String metaTitle) { this.metaTitle = metaTitle; }
+
+    public String getMetaKeywords() { return metaKeywords; }
+    public void setMetaKeywords(String metaKeywords) { this.metaKeywords = metaKeywords; }
+
+    public String getMetaDescription() { return metaDescription; }
+    public void setMetaDescription(String metaDescription) { this.metaDescription = metaDescription; }
+
+
 }
