@@ -34,7 +34,6 @@ public class Job {
     @Lob
     @Column(columnDefinition = "TEXT")
     private String keyResponsibility;
-    private String department;
     @Lob
     @Column(columnDefinition = "TEXT")
     private String rolesAndResponsibilities;
@@ -198,6 +197,5 @@ public class Job {
     public void setRolesAndResponsibilities(String rolesAndResponsibilities) {
         this.rolesAndResponsibilities = rolesAndResponsibilities;
     }
-
 
 }
