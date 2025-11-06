@@ -10,7 +10,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${DB_HOST:localhost}:3306/${DB_NAME:ongolebulls}
     username: root
-    password: 2233
+    password: root1234
 
   jpa:
     hibernate:

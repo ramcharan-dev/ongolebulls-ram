@@ -1125,7 +1125,16 @@ if (!admindashboardJwt || !admindashboardIsAdmin) {
 }
 
 
+// API Configuration
+const API_BASE_URL = 'http://localhost:8080/api';
 
+// Documents Page Handler - DYNAMIC
+function loadDocumentsPage() {
+    const view = document.getElementById('admindashboardView');
+    const template = document.getElementById('documentsContainerTemplate');
+    const clone = template.content.cloneNode(true);
+    view.innerHTML = '';
+    view.appendChild(clone);
 
 
 
@@ -1135,132 +1144,389 @@ async function loadSeoSettings() {
     const container = document.getElementById('admindashboardView');
     container.innerHTML = '';
 
-    const seoSection = document.getElementById('seoPage');
-    const seoClone = seoSection.cloneNode(true);
-    seoClone.style.display = 'block';
-    container.appendChild(seoClone);
+    // Copy link button
+    document.getElementById('copyLinkBtn').addEventListener('click', copyUploadLink);
 
-    const seoListContainer = seoClone.querySelector('#seoListContainer');
-    const addBtn = seoClone.querySelector('#addSeoBtn');
-    const editModal = seoClone.querySelector('#seoEditModal');
-    const form = seoClone.querySelector('#seoEditForm');
-    const cancelBtn = seoClone.querySelector('#seoCancelBtn');
-    const formMessage = seoClone.querySelector('#seoFormMessage');
+    // Filters
+    document.getElementById('statusFilter').addEventListener('change', filterDocuments);
+    document.getElementById('searchDocuments').addEventListener('input', filterDocuments);
+}
 
-    seoListContainer.textContent = 'Loading SEO settings...';
+function copyUploadLink() {
+    const link = window.location.origin + '/customer-document-upload.html';
+    navigator.clipboard.writeText(link).then(() => {
+        alert('Upload link copied to clipboard!\n\n' + link);
+    }).catch(() => {
+        prompt('Copy this link:', link);
+    });
+}
+
+// DYNAMIC: Load stats from backend
+async function loadDocumentStats() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/admin/documents/stats`);
+        if (!response.ok) throw new Error('Failed to load stats');
+
+        const stats = await response.json();
+
+        document.getElementById('pendingCount').textContent = stats.pending || 0;
+        document.getElementById('approvedCount').textContent = stats.approved || 0;
+        document.getElementById('underReviewCount').textContent = stats.underReview || 0;
+        document.getElementById('totalSubmissions').textContent = stats.total || 0;
+    } catch (error) {
+        console.error('Error loading stats:', error);
+        // Show default values
+        document.getElementById('pendingCount').textContent = '0';
+        document.getElementById('approvedCount').textContent = '0';
+        document.getElementById('underReviewCount').textContent = '0';
+        document.getElementById('totalSubmissions').textContent = '0';
+    }
+}
+
+// DYNAMIC: Load document submissions from backend
+async function loadDocumentSubmissions(status = '', search = '') {
+    try {
+        let url = `${API_BASE_URL}/admin/documents?`;
+        if (status) url += `status=${status}&`;
+        if (search) url += `search=${search}&`;
+
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Failed to load documents');
+
+        const documents = await response.json();
+        renderDocumentsTable(documents);
+    } catch (error) {
+        console.error('Error loading documents:', error);
+        document.getElementById('documentsTableBody').innerHTML = `
+            <tr>
+                <td colspan="10" style="text-align: center; padding: 40px; color: var(--color-text-secondary);">
+                    <i class="bi bi-exclamation-circle" style="font-size: 48px; display: block; margin-bottom: 12px;"></i>
+                    Failed to load documents. Please check your connection and try again.
+                </td>
+            </tr>
+        `;
+    }
+}
+
+function renderDocumentsTable(documents) {
+    const tbody = document.getElementById('documentsTableBody');
+
+    if (documents.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="10" style="text-align: center; padding: 40px; color: var(--color-text-secondary);">
+                    <i class="bi bi-inbox" style="font-size: 48px; display: block; margin-bottom: 12px;"></i>
+                    No document submissions found
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = '';
+
+    documents.forEach(doc => {
+        let statusClass = 'warning';
+        if (doc.status === 'Approved') statusClass = 'success';
+        if (doc.status === 'Rejected') statusClass = 'danger';
+        if (doc.status === 'Under Review') statusClass = 'secondary';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><strong>#${doc.id}</strong></td>
+            <td><strong>${doc.investorName}</strong></td>
+            <td>${doc.panNumber}</td>
+            <td>${doc.investorEmail}</td>
+            <td>${doc.investorPhone}</td>
+            <td>${doc.bankAccountNumber ? doc.bankAccountNumber.substring(0, 4) + 'XXXXX' + doc.bankAccountNumber.slice(-4) : 'N/A'}</td>
+            <td>
+                <span class="admindashboard-badge secondary">
+                    ${doc.nomineesCount || 0} Nominee${doc.nomineesCount > 1 ? 's' : ''}
+                </span>
+            </td>
+            <td>${formatDate(doc.submittedDate)}</td>
+            <td>
+                <span class="admindashboard-badge ${statusClass}">
+                    ${doc.status}
+                </span>
+            </td>
+            <td class="actions-cell">
+                <button class="admindashboard-btn secondary" style="font-size: 11px; padding: 4px 8px;" onclick="viewDocumentDetails(${doc.id})">
+                    <i class="bi bi-eye-fill"></i> View
+                </button>
+                ${doc.status === 'Pending' || doc.status === 'Under Review' ? `
+                    <button class="admindashboard-btn primary" style="font-size: 11px; padding: 4px 8px;" onclick="approveDocument(${doc.id})">
+                        <i class="bi bi-check-circle-fill"></i> Approve
+                    </button>
+                    <button class="admindashboard-btn danger" style="font-size: 11px; padding: 4px 8px;" onclick="rejectDocument(${doc.id})">
+                        <i class="bi bi-x-circle-fill"></i> Reject
+                    </button>
+                ` : ''}
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function filterDocuments() {
+    const statusFilter = document.getElementById('statusFilter').value;
+    const searchTerm = document.getElementById('searchDocuments').value;
+    loadDocumentSubmissions(statusFilter, searchTerm);
+}
+
+// DYNAMIC: View document details
+async function viewDocumentDetails(id) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/admin/documents/${id}`);
+        if (!response.ok) throw new Error('Failed to load document details');
+
+        const doc = await response.json();
+
+        const modal = document.getElementById('documentDetailModal');
+        const body = document.getElementById('documentDetailBody');
+
+        body.innerHTML = `
+            <h4 style="margin-bottom: 20px;">Investor Information</h4>
+            <div class="document-detail-grid">
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Full Name</div>
+                    <div class="document-detail-value">${doc.investorName}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Email</div>
+                    <div class="document-detail-value">${doc.investorEmail}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Phone</div>
+                    <div class="document-detail-value">${doc.investorPhone}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Date of Birth</div>
+                    <div class="document-detail-value">${formatDate(doc.investorDob)}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">PAN Number</div>
+                    <div class="document-detail-value">${doc.panNumber}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Aadhaar Number</div>
+                    <div class="document-detail-value">${doc.aadhaarNumber}</div>
+                </div>
+                <div class="document-detail-item" style="grid-column: 1 / -1;">
+                    <div class="document-detail-label">Address</div>
+                    <div class="document-detail-value">${doc.investorAddress}</div>
+                </div>
+            </div>
+
+            <h4 style="margin: 30px 0 20px 0;">Bank Details</h4>
+            <div class="document-detail-grid">
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Account Name</div>
+                    <div class="document-detail-value">${doc.bankAccountName}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Bank Name</div>
+                    <div class="document-detail-value">${doc.bankName}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Account Number</div>
+                    <div class="document-detail-value">${doc.bankAccountNumber}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">IFSC Code</div>
+                    <div class="document-detail-value">${doc.bankIfsc}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Branch</div>
+                    <div class="document-detail-value">${doc.bankBranch}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Account Type</div>
+                    <div class="document-detail-value">${doc.bankAccountType}</div>
+                </div>
+            </div>
+
+            ${doc.nominees && doc.nominees.length > 0 ? `
+                <h4 style="margin: 30px 0 20px 0;">Nominees</h4>
+                ${doc.nominees.map((nominee, index) => `
+                    <div class="document-detail-grid" style="background: var(--color-secondary); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+                        <div class="document-detail-item">
+                            <div class="document-detail-label">Nominee ${index + 1}</div>
+                            <div class="document-detail-value">${nominee.nomineeName}</div>
+                        </div>
+                        <div class="document-detail-item">
+                            <div class="document-detail-label">Relationship</div>
+                            <div class="document-detail-value">${nominee.relationship}</div>
+                        </div>
+                        <div class="document-detail-item">
+                            <div class="document-detail-label">Date of Birth</div>
+                            <div class="document-detail-value">${formatDate(nominee.dateOfBirth)}</div>
+                        </div>
+                        <div class="document-detail-item">
+                            <div class="document-detail-label">Allocation</div>
+                            <div class="document-detail-value">${nominee.allocationPercentage}%</div>
+                        </div>
+                        ${nominee.isMinor ? `
+                            <div class="document-detail-item" style="grid-column: 1 / -1;">
+                                <div class="document-detail-label">Guardian</div>
+                                <div class="document-detail-value">${nominee.guardianName} (${nominee.guardianRelationship}) - PAN: ${nominee.guardianPan}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('')}
+            ` : ''}
+
+            <h4 style="margin: 30px 0 20px 0;">Uploaded Documents</h4>
+            <div class="document-files-grid">
+                ${doc.panCardFileUrl ? `
+                    <div class="document-file-card" onclick="window.open('${doc.panCardFileUrl}', '_blank')">
+                        <i class="bi bi-file-pdf-fill"></i>
+                        <div class="document-file-name">PAN Card</div>
+                    </div>
+                ` : ''}
+                ${doc.aadhaarCardFileUrl ? `
+                    <div class="document-file-card" onclick="window.open('${doc.aadhaarCardFileUrl}', '_blank')">
+                        <i class="bi bi-file-pdf-fill"></i>
+                        <div class="document-file-name">Aadhaar Card</div>
+                    </div>
+                ` : ''}
+                ${doc.photographFileUrl ? `
+                    <div class="document-file-card" onclick="window.open('${doc.photographFileUrl}', '_blank')">
+                        <i class="bi bi-file-image-fill"></i>
+                        <div class="document-file-name">Photograph</div>
+                    </div>
+                ` : ''}
+                ${doc.bankProofFileUrl ? `
+                    <div class="document-file-card" onclick="window.open('${doc.bankProofFileUrl}', '_blank')">
+                        <i class="bi bi-file-pdf-fill"></i>
+                        <div class="document-file-name">Bank Proof</div>
+                    </div>
+                ` : ''}
+                ${doc.signatureFileUrl ? `
+                    <div class="document-file-card" onclick="window.open('${doc.signatureFileUrl}', '_blank')">
+                        <i class="bi bi-file-image-fill"></i>
+                        <div class="document-file-name">Signature</div>
+                    </div>
+                ` : ''}
+            </div>
+
+            <h4 style="margin: 30px 0 20px 0;">Declarations</h4>
+            <div class="document-detail-grid">
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Tax Residency</div>
+                    <div class="document-detail-value">${doc.taxResidencyCountry}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Risk Profile</div>
+                    <div class="document-detail-value">${doc.riskProfile}</div>
+                </div>
+            </div>
+        `;
+
+        modal.classList.add('active');
+    } catch (error) {
+        console.error('Error loading document details:', error);
+        alert('Failed to load document details: ' + error.message);
+    }
+}
+
+function closeDocumentModal() {
+    document.getElementById('documentDetailModal').classList.remove('active');
+}
+
+// DYNAMIC: Approve document
+async function approveDocument(id) {
+    if (!confirm('Are you sure you want to approve this document submission?')) {
+        return;
+    }
 
     try {
-        const response = await fetch(API_BASE_SEO);
-        if (!response.ok) throw new Error('Failed to fetch SEO settings');
-        const seoList = await response.json();
-
-        seoListContainer.innerHTML = '';
-
-        if (seoList.length === 0) {
-            seoListContainer.textContent = 'No SEO settings found.';
-            return;
-        }
-
-        seoList.forEach(seo => {
-            const div = document.createElement('div');
-            div.classList.add('seo-entry');
-            div.innerHTML = `
-        <strong>${seo.slug}</strong> - ${seo.metaTitle || 'No Title'}<br/>
-        <small>${seo.metaDescription || ''}</small><br/>
-        <button class="editBtn" data-id="${seo.id}">Edit</button>
-      `;
-            seoListContainer.appendChild(div);
+        const response = await fetch(`${API_BASE_URL}/admin/documents/${id}/approve`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
 
-        // Edit buttons
-        seoListContainer.querySelectorAll('.editBtn').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const id = btn.dataset.id;
-                try {
-                    const res = await fetch(`${API_BASE_SEO}/${id}`);
-                    if (!res.ok) throw new Error('Failed to fetch SEO entry');
-                    const seo = await res.json();
-
-                    form.id.value = seo.id || '';
-                    form.slug.value = seo.slug || '';
-                    form.metaTitle.value = seo.metaTitle || '';
-                    form.metaDescription.value = seo.metaDescription || '';
-                    form.metaKeywords.value = seo.metaKeywords || '';
-                    form.robotsTag.value = seo.robotsTag || 'index,follow';
-                    form.schemaJson.value = seo.schemaJson || '';
-
-                    editModal.style.display = 'block';
-                    formMessage.textContent = '';
-                } catch (err) {
-                    alert(err.message);
-                }
-            });
-        });
-    } catch (err) {
-        seoListContainer.textContent = err.message;
-    }
-
-    addBtn.addEventListener('click', () => {
-        form.reset();
-        form.id.value = '';
-        formMessage.textContent = '';
-        editModal.style.display = 'block';
-    });
-
-    cancelBtn.addEventListener('click', () => {
-        editModal.style.display = 'none';
-    });
-
-    form.addEventListener('submit', async e => {
-        e.preventDefault();
-        formMessage.textContent = '';
-
-        const payload = {
-            id: form.id.value || null,
-            slug: form.slug.value,
-            metaTitle: form.metaTitle.value,
-            metaDescription: form.metaDescription.value,
-            metaKeywords: form.metaKeywords.value,
-            robotsTag: form.robotsTag.value,
-            schemaJson: form.schemaJson.value
-        };
-
-        try {
-            const res = await fetch(`${API_BASE_SEO}/save`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            if (!res.ok) throw new Error('Failed to save SEO entry');
-
-            formMessage.style.color = 'green';
-            formMessage.textContent = 'Saved successfully!';
-            editModal.style.display = 'none';
-
-            loadSeoSettings();
-        } catch (err) {
-            formMessage.style.color = 'red';
-            formMessage.textContent = err.message;
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Failed to approve');
         }
-    });
-}
 
-// Router integration example:
-function router() {
-    const hash = location.hash.slice(2);
-    const container = document.getElementById('admindashboardView');
-    switch (hash) {
-        case 'dashboard':
-            // loadDashboard(); (your other pages)
-            break;
-        case 'seo':
-            loadSeoSettings();
-            break;
-        // other routes
-        default:
-            container.innerHTML = '<h2>Page Not Found</h2>';
+        alert('Document approved successfully! Investor will receive confirmation email.');
+        loadDocumentSubmissions();
+        loadDocumentStats();
+    } catch (error) {
+        console.error('Error approving document:', error);
+        alert('Error approving document: ' + error.message);
     }
 }
 
-window.addEventListener('hashchange', router);
-window.addEventListener('DOMContentLoaded', router);
+// DYNAMIC: Reject document
+async function rejectDocument(id) {
+    const reason = prompt('Please enter rejection reason:');
+    if (!reason || reason.trim() === '') {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/admin/documents/${id}/reject`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ reason: reason.trim() })
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Failed to reject');
+        }
+
+        alert('Document rejected! Investor will receive an email with the reason.');
+        loadDocumentSubmissions();
+        loadDocumentStats();
+    } catch (error) {
+        console.error('Error rejecting document:', error);
+        alert('Error rejecting document: ' + error.message);
+    }
+}
+
+// Utility function to format dates
+function formatDate(dateString) {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-IN', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+    const modal = document.getElementById('documentDetailModal');
+    if (e.target === modal) {
+        closeDocumentModal();
+    }
+});
+
+
+const response = await fetch(`${API_BASE_URL}/customer-documents/submit`, {
+    method: 'POST',
+    body: formData
+});
+
+if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Submission failed');
+}
+
+const result = await response.json();
+
+if (result.success) {
+    showAlert(`✅ ${result.message} Reference ID: ${result.id}`, 'success');
+    this.reset();
+} else {
+    showAlert(result.message, 'error');
+}
