@@ -6,9 +6,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="style.css">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
 <nav style="box-shadow: 5px solid red;">
     <div class="logo">
@@ -31,11 +32,21 @@
             <ul class="dropdown-menu">
                 <li><a href="wealth-management.html" target="_self">Wealth Management</a></li>
                 <li><a href="investment-management.html" target="_self">Investment Management</a></li>
+<!--
                 <li><a href="sip.html" target="_self">Systematic Investment Plan (SIP)</a></li>
-                <li><a href="investment-banking.html" target="_self">Investment Banking</a></li>
+-->
+
+                <li><a href="mutual-fund.html" target="_self">Mutual Fund</a></li>
+                <li><a href="pms.html" target="_self">PMS</a></li>
+
+                <!--
+                                <li><a href="investment-banking.html" target="_self">Investment Banking</a></li>
+                -->
                 <li><a href="hni-services.html" target="_self">HNI & Family Office Services</a></li>
                 <li><a href="stock-markets-bonds.html" target="_self">Stock Market & Bond Investments</a></li>
+<!--
                 <li><a href="investment-platforms.html" target="_self">Digital Investment Platforms</a></li>
+-->
                 <li><a href="Tax-Optimization-planning.html" target="_self">Tax Optimization & Estate Planning</a></li>
             </ul>
         </li>
@@ -70,6 +81,18 @@
         <button class="login">
             <li><a href="/Sign-up" target="_self">login</a></li>
         </button>
+
+        <!-- Dropdown Menu for Tools -->
+        <li class="dropdown">
+            <button class="dropdown-toggle">Tools</button>
+            <ul class="dropdown-menu">
+                <li><a href="MF_calculator.html" target="_self">MF Calculator</a></li>
+<!--
+                <li><a href="customer-document-upload.html" target="_self">Document Checklist</a></li>
+-->
+            </ul>
+        </li>
+
     </ul>
 </nav>
 

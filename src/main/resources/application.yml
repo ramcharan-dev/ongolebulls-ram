@@ -1,22 +1,25 @@
+
 server:
   port: ${SERVER_PORT:8080}
   error:
     include-message: always
 
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${DB_HOST:localhost}:3306/${DB_NAME:ongolebulls}
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:root1234}
+    username: root
+    password: root1234
 
   jpa:
     hibernate:
-    ddl-auto: ${HIBERNATE_DDL_AUTO:update}
+      ddl-auto: ${HIBERNATE_DDL_AUTO:update}
     show-sql: true
     open-in-view: true
 
   mail:
+
     host: ${EMAIL_HOST:mail.ongolebullsinvest.com}
     port: ${EMAIL_PORT:587}
     username: ${EMAIL_USERNAME:info@ongolebullsinvest.com}
@@ -32,12 +35,18 @@ spring:
       name: ${ADMIN_USERNAME:admin}
       password: ${ADMIN_PASSWORD:admin123}
 
-mvc:
-  view:
-    prefix: /WEB-INF/views/
-    suffix: .jsp
+  main:
+    allow-circular-references: true # Fixed key syntax
 
-thymeleaf:
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+
+
+  web:
+    resources:
+      static-locations=file:uploads/assets/thymeleaf:
   prefix: classpath:/templates/
   suffix: .html
   enabled: true
@@ -45,6 +54,68 @@ thymeleaf:
 encryption:
   key: lTB/6CsfDkNm46qjwXf/NuFx09ddhVU0z6rO7VJcyeA=
 
+
+#server:
+#  port: ${SERVER_PORT:8080}
+#  error:
+#    include-message: always
+#  max-http-request-header-size: 20000000  # prevent header too large
+#
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://${DB_HOST:localhost}:3306/${DB_NAME:ongolebulls}
+#    username: root
+#    password: 2233
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: ${HIBERNATE_DDL_AUTO:update}
+#    show-sql: true
+#    open-in-view: true
+#
+#  servlet:
+#    multipart:
+#      max-file-size: 100MB
+#      max-request-size: 100MB
+#
+#  mail:
+#    host: ${EMAIL_HOST:mail.ongolebullsinvest.com}
+#    port: ${EMAIL_PORT:587}
+#    username: ${EMAIL_USERNAME:info@ongolebullsinvest.com}
+#    password: ${EMAIL_PASSWORD:Ongole@bulls@2024}
+#    properties:
+#      mail.smtp.auth: true
+#      mail.smtp.starttls.enable: true
+#      mail.smtp.ssl.enable: false
+#      mail.debug: true
+#
+#  security:
+#    user:
+#      name: ${ADMIN_USERNAME:admin}
+#      password: ${ADMIN_PASSWORD:admin123}
+#
+#  main:
+#    allow-circular-references: true
+#
+#  mvc:
+#    view:
+#      prefix: /WEB-INF/views/
+#      suffix: .jsp
+#
+#  web:
+#    resources:
+#      static-locations: file:uploads/, classpath:/static/, classpath:/public/
+#
+## Thymeleaf templates
+#spring.thymeleaf:
+#  prefix: classpath:/templates/
+#  suffix: .html
+#  enabled: true
+#  cache: false
+#
+#encryption:
+#  key: lTB/6CsfDkNm46qjwXf/NuFx09ddhVU0z6rO7VJcyeA=
 
 
 

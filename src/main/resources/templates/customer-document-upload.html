@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Document Upload</title>
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+
+    <style>
+        :root {
+            --color-primary: #21808d;
+            --color-primary-hover: #1d7480;
+            --color-success: #21808d;
+            --color-error: #c0152f;
+            --color-warning: #a84b2f;
+            --color-bg: #fcfcf9;
+            --color-surface: #fffffd;
+            --color-text: #13343b;
+            --color-text-secondary: #626c71;
+            --color-border: rgba(94, 82, 64, 0.2);
+            --color-secondary: rgba(94, 82, 64, 0.12);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-bg: #1f2121;
+                --color-surface: #262828;
+                --color-text: #f5f5f5;
+                --color-text-secondary: rgba(167, 169, 169, 0.7);
+                --color-border: rgba(119, 124, 124, 0.3);
+                --color-secondary: rgba(119, 124, 124, 0.15);
+                --color-primary: #32b8c6;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 20px;
+            background: var(--color-surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .header h1 {
+            color: var(--color-primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 28px;
+        }
+
+        .header p {
+            color: var(--color-text-secondary);
+            font-size: 14px;
+        }
+
+        .form-card {
+            background: var(--color-surface);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid var(--color-border);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--color-text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--color-text);
+        }
+
+        label .required {
+            color: var(--color-error);
+        }
+
+        input, select, textarea {
+            padding: 12px;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            font-size: 14px;
+            background: var(--color-surface);
+            color: var(--color-text);
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(33, 128, 141, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        .helper-text {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-top: 4px;
+        }
+
+        input[type="file"] {
+            cursor: pointer;
+        }
+
+        .nominee-card {
+            background: var(--color-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .nominee-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .nominee-header h4 {
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .remove-nominee-btn {
+            background: none;
+            border: none;
+            color: var(--color-error);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .remove-nominee-btn:hover {
+            opacity: 0.7;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-hover);
+        }
+
+        .btn-secondary {
+            background: var(--color-secondary);
+            color: var(--color-text);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(94, 82, 64, 0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 30px;
+        }
+
+        .add-nominee-btn-wrapper {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            margin-top: 4px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .alert {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert.success {
+            background: rgba(33, 128, 141, 0.1);
+            color: var(--color-success);
+            border: 1px solid rgba(33, 128, 141, 0.3);
+            display: flex;
+        }
+
+        .alert.error {
+            background: rgba(192, 21, 47, 0.1);
+            color: var(--color-error);
+            border: 1px solid rgba(192, 21, 47, 0.3);
+            display: flex;
+        }
+
+        .guardian-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px dashed var(--color-border);
+            display: none;
+        }
+
+        .guardian-section.active {
+            display: block;
+        }
+
+        .info-banner {
+            background: rgba(33, 128, 141, 0.1);
+            border: 1px solid rgba(33, 128, 141, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: var(--color-primary);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--color-secondary);
+            border-radius: 2px;
+            margin-top: 20px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-bar.active {
+            display: block;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--color-primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>
+            <i class="bi bi-file-earmark-text-fill"></i>
+            Investment Document Upload
+        </h1>
+        <p>Please fill in all required information and upload necessary documents for mutual fund investment</p>
+    </div>
+
+    <div id="alertMessage" class="alert"></div>
+
+    <form id="documentUploadForm" enctype="multipart/form-data">
+        <!-- Section 1: Basic Investor Details -->
+        <div class="form-card">
+            <h3 class="section-title">
+                <i class="bi bi-person-fill"></i>
+                Basic Investor Details
+            </h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Full Name (as per PAN) <span class="required">*</span></label>
+                    <input type="text" name="investorName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email <span class="required">*</span></label>
+                    <input type="email" name="investorEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Mobile Number <span class="required">*</span></label>
+                    <input type="tel" name="investorPhone" pattern="[0-9]{10}" placeholder="10-digit mobile number" required>
+                </div>
+                <div class="form-group">
+                    <label>Date of Birth <span class="required">*</span></label>
+                    <input type="date" name="investorDOB" required>
+                </div>
+                <div class="form-group">
+                    <label>PAN Number <span class="required">*</span></label>
+                    <input type="text" name="panNumber" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" placeholder="ABCDE1234F" style="text-transform: uppercase;" required>
+                    <small class="helper-text">Format: ABCDE1234F</small>
+                </div>
+                <div class="form-group">
+                    <label>Aadhaar Number <span class="required">*</span></label>
+                    <input type="text" name="aadhaarNumber" pattern="[0-9]{12}" placeholder="12-digit Aadhaar" required>
+                </div>
+                <div class="form-group full-width">
+                    <label>Residential Address <span class="required">*</span></label>
+                    <textarea name="investorAddress" required></textarea>
+                </div>
+            </div>
+
+            <h4 style="margin-top: 30px; margin-bottom: 16px; font-size: 16px; display: flex; align-items: center; gap: 8px;">
+                <i class="bi bi-cloud-upload-fill"></i>
+                Identity Documents
+            </h4>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>PAN Card <span class="required">*</span></label>
+                    <input type="file" name="panCardFile" accept=".pdf,.jpg,.jpeg,.png" required>
+                    <small class="helper-text">PDF, JPG, PNG (Max 5MB)</small>
+                </div>
+                <div class="form-group">
+                    <label>Aadhaar Card <span class="required">*</span></label>
+                    <input type="file" name="aadhaarCardFile" accept=".pdf,.jpg,.jpeg,.png" required>
+                    <small class="helper-text">PDF, JPG, PNG (Max 5MB)</small>
+                </div>
+                <div class="form-group">
+                    <label>Passport-size Photo <span class="required">*</span></label>
+                    <input type="file" name="photographFile" accept=".jpg,.jpeg,.png" required>
+                    <small class="helper-text">JPG, PNG (Max 2MB)</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Bank Details -->
+        <div class="form-card">
+            <h3 class="section-title">
+                <i class="bi bi-bank"></i>
+                Bank Account Details
+            </h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Account Holder Name <span class="required">*</span></label>
+                    <input type="text" name="bankAccountName" required>
+                </div>
+                <div class="form-group">
+                    <label>Bank Name <span class="required">*</span></label>
+                    <input type="text" name="bankName" required>
+                </div>
+                <div class="form-group">
+                    <label>Account Number <span class="required">*</span></label>
+                    <input type="text" name="bankAccountNumber" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirm Account Number <span class="required">*</span></label>
+                    <input type="text" name="bankAccountNumberConfirm" required>
+                </div>
+                <div class="form-group">
+                    <label>IFSC Code <span class="required">*</span></label>
+                    <input type="text" name="bankIFSC" pattern="^[A-Z]{4}0[A-Z0-9]{6}$" placeholder="SBIN0001234" style="text-transform: uppercase;" required>
+                </div>
+                <div class="form-group">
+                    <label>Branch Name <span class="required">*</span></label>
+                    <input type="text" name="bankBranch" required>
+                </div>
+                <div class="form-group">
+                    <label>Account Type <span class="required">*</span></label>
+                    <select name="bankAccountType" required>
+                        <option value="">Select Type</option>
+                        <option value="savings">Savings</option>
+                        <option value="current">Current</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Bank Proof Type <span class="required">*</span></label>
+                    <select name="bankProofType" required>
+                        <option value="">Select Proof</option>
+                        <option value="cancelledCheque">Cancelled Cheque</option>
+                        <option value="passbook">Passbook</option>
+                        <option value="statement">Bank Statement</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Upload Bank Proof <span class="required">*</span></label>
+                    <input type="file" name="bankProofFile" accept=".pdf,.jpg,.jpeg,.png" required>
+                    <small class="helper-text">PDF, JPG, PNG (Max 5MB)</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Nominee Details -->
+        <div class="form-card">
+            <h3 class="section-title">
+                <i class="bi bi-people-fill"></i>
+                Nominee Details (Optional)
+            </h3>
+            <div class="add-nominee-btn-wrapper">
+                <button type="button" id="addNomineeBtn" class="btn btn-secondary">
+                    <i class="bi bi-plus-circle-fill"></i>
+                    Add Nominee
+                </button>
+            </div>
+            <div id="nomineesContainer"></div>
+        </div>
+
+        <!-- Section 4: Declarations -->
+        <div class="form-card">
+            <h3 class="section-title">
+                <i class="bi bi-file-text-fill"></i>
+                Declarations & Consents
+            </h3>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Tax Residency Country <span class="required">*</span></label>
+                    <select name="taxResidencyCountry" required>
+                        <option value="">Select Country</option>
+                        <option value="India">India</option>
+                        <option value="USA">United States</option>
+                        <option value="UK">United Kingdom</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Investment Risk Profile <span class="required">*</span></label>
+                    <select name="riskProfile" required>
+                        <option value="">Select Profile</option>
+                        <option value="conservative">Conservative - Low Risk</option>
+                        <option value="moderate">Moderate - Medium Risk</option>
+                        <option value="aggressive">Aggressive - High Risk</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Upload Signature <span class="required">*</span></label>
+                    <input type="file" name="signatureFile" accept=".jpg,.jpeg,.png" required>
+                    <small class="helper-text">JPG, PNG (Max 2MB)</small>
+                </div>
+            </div>
+
+            <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 16px;">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="fatcaDeclaration" required>
+                    <span>I confirm that I am not a tax resident of any country other than India <span class="required">*</span></span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="kycConsent" required>
+                    <span>I consent to the collection and processing of my KYC information <span class="required">*</span></span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="riskAcknowledgment" required>
+                    <span>I understand that mutual fund investments are subject to market risks <span class="required">*</span></span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="finalConsent" required>
+                    <span><strong>I declare that all information provided is true and accurate <span class="required">*</span></strong></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="submitBtn">
+                <i class="bi bi-check-circle-fill"></i>
+                Submit Documents
+            </button>
+            <button type="reset" class="btn btn-secondary">
+                <i class="bi bi-x-circle-fill"></i>
+                Reset Form
+            </button>
+        </div>
+
+        <div class="progress-bar" id="progressBar">
+            <div class="progress-bar-fill" id="progressBarFill"></div>
+        </div>
+    </form>
+</div>
+
+<!--
+
+&lt;!&ndash; Documents Container Template &ndash;&gt;
+<template id="documentsContainerTemplate">
+    <div class="admindashboard-documents-container">
+        <div class="admindashboard-documents-header">
+            <h2><i class="bi bi-file-earmark-text-fill"></i> Customer Document Submissions</h2>
+            <button class="admindashboard-btn primary" id="copyLinkBtn">
+                <i class="bi bi-link-45deg"></i> Copy Upload Link
+            </button>
+        </div>
+
+        <div class="admindashboard-stats-grid">
+            <div class="admindashboard-stat-card">
+                <i class="bi bi-clock-history"></i>
+                <div>
+                    <div class="stat-value" id="pendingCount">0</div>
+                    <div class="stat-label">Pending Review</div>
+                </div>
+            </div>
+            <div class="admindashboard-stat-card">
+                <i class="bi bi-check-circle-fill"></i>
+                <div>
+                    <div class="stat-value" id="approvedCount">0</div>
+                    <div class="stat-label">Approved</div>
+                </div>
+            </div>
+            <div class="admindashboard-stat-card">
+                <i class="bi bi-eye-fill"></i>
+                <div>
+                    <div class="stat-value" id="underReviewCount">0</div>
+                    <div class="stat-label">Under Review</div>
+                </div>
+            </div>
+            <div class="admindashboard-stat-card">
+                <i class="bi bi-file-earmark-check"></i>
+                <div>
+                    <div class="stat-value" id="totalSubmissions">0</div>
+                    <div class="stat-label">Total Submissions</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="admindashboard-card">
+            <div class="admindashboard-card-head">
+                <h3><i class="bi bi-list-check"></i> All Submissions</h3>
+                <div class="admindashboard-filters">
+                    <select id="statusFilter" class="admindashboard-input">
+                        <option value="">All Status</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Under Review">Under Review</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                    <input type="text" id="searchDocuments" class="admindashboard-input" placeholder="Search by name, PAN, email...">
+                </div>
+            </div>
+            <div class="admindashboard-table-wrapper">
+                <table class="admindashboard-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Investor Name</th>
+                        <th>PAN Number</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Bank Account</th>
+                        <th>Nominees</th>
+                        <th>Submitted Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="documentsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</template>
+
+&lt;!&ndash; Document Detail Modal &ndash;&gt;
+<div id="documentDetailModal" class="admindashboard-modal">
+    <div class="admindashboard-modal-content">
+        <div class="admindashboard-modal-header">
+            <h3><i class="bi bi-file-text-fill"></i> Document Details</h3>
+            <button class="admindashboard-modal-close" onclick="closeDocumentModal()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <div class="admindashboard-modal-body" id="documentDetailBody">
+            &lt;!&ndash; Content loaded dynamically &ndash;&gt;
+        </div>
+    </div>
+</div>
+-->
+
+
+<script>
+    // Configuration
+    const API_BASE_URL = 'http://localhost:8080/api';
+
+    let nomineeCount = 0;
+    const maxNominees = 3;
+
+    // Add Nominee
+    document.getElementById('addNomineeBtn').addEventListener('click', function() {
+        if (nomineeCount >= maxNominees) {
+            showAlert('You can add maximum 3 nominees only', 'error');
+            return;
+        }
+        addNomineeCard();
+    });
+
+    function addNomineeCard() {
+        nomineeCount++;
+        const container = document.getElementById('nomineesContainer');
+
+        const nomineeCard = document.createElement('div');
+        nomineeCard.className = 'nominee-card';
+        nomineeCard.innerHTML = `
+            <div class="nominee-header">
+                <h4><i class="bi bi-person-badge"></i> Nominee ${nomineeCount}</h4>
+                <button type="button" class="remove-nominee-btn" onclick="removeNominee(this)">
+                    <i class="bi bi-x-circle-fill"></i>
+                </button>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Nominee Name <span class="required">*</span></label>
+                    <input type="text" name="nominees[${nomineeCount - 1}].nomineeName" required>
+                </div>
+                <div class="form-group">
+                    <label>Relationship <span class="required">*</span></label>
+                    <select name="nominees[${nomineeCount - 1}].relationship" required>
+                        <option value="">Select</option>
+                        <option value="Spouse">Spouse</option>
+                        <option value="Father">Father</option>
+                        <option value="Mother">Mother</option>
+                        <option value="Son">Son</option>
+                        <option value="Daughter">Daughter</option>
+                        <option value="Brother">Brother</option>
+                        <option value="Sister">Sister</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Date of Birth <span class="required">*</span></label>
+                    <input type="date" name="nominees[${nomineeCount - 1}].dateOfBirth" class="nominee-dob" required>
+                </div>
+                <div class="form-group">
+                    <label>Allocation % <span class="required">*</span></label>
+                    <input type="number" name="nominees[${nomineeCount - 1}].allocationPercentage" min="1" max="100" placeholder="e.g., 50" required>
+                    <small class="helper-text">Total must equal 100%</small>
+                </div>
+                <div class="form-group full-width">
+                    <label>Address <span class="required">*</span></label>
+                    <textarea name="nominees[${nomineeCount - 1}].nomineeAddress" required></textarea>
+                </div>
+
+                <div class="guardian-section">
+                    <div class="info-banner">
+                        <i class="bi bi-info-circle-fill"></i>
+                        <span>This nominee is a minor. Guardian details are required.</span>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Guardian Name</label>
+                            <input type="text" name="nominees[${nomineeCount - 1}].guardianName">
+                        </div>
+                        <div class="form-group">
+                            <label>Guardian Relationship</label>
+                            <select name="nominees[${nomineeCount - 1}].guardianRelationship">
+                                <option value="">Select</option>
+                                <option value="Father">Father</option>
+                                <option value="Mother">Mother</option>
+                                <option value="Legal Guardian">Legal Guardian</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Guardian PAN</label>
+                            <input type="text" name="nominees[${nomineeCount - 1}].guardianPan" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" placeholder="ABCDE1234F" style="text-transform: uppercase;">
+                        </div>
+                        <div class="form-group">
+                            <label>Guardian ID Proof</label>
+                            <input type="file" name="nominees[${nomineeCount - 1}].guardianIdProof" accept=".pdf,.jpg,.jpeg,.png">
+                            <small class="helper-text">PDF, JPG, PNG (Max 5MB)</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(nomineeCard);
+
+        // Add DOB listener for minor detection
+        const dobInput = nomineeCard.querySelector('.nominee-dob');
+        const guardianSection = nomineeCard.querySelector('.guardian-section');
+
+        dobInput.addEventListener('change', function() {
+            const dob = new Date(this.value);
+            const today = new Date();
+            const age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            const isMinor = age < 18 || (age === 18 && monthDiff < 0);
+
+            if (isMinor) {
+                guardianSection.classList.add('active');
+                guardianSection.querySelectorAll('input, select').forEach(input => {
+                    if (!input.name.includes('guardianIdProof')) {
+                        input.required = true;
+                    }
+                });
+            } else {
+                guardianSection.classList.remove('active');
+                guardianSection.querySelectorAll('input, select').forEach(input => {
+                    input.required = false;
+                    input.value = '';
+                });
+            }
+        });
+    }
+
+    function removeNominee(btn) {
+        btn.closest('.nominee-card').remove();
+        nomineeCount--;
+        updateNomineeNumbers();
+    }
+
+    function updateNomineeNumbers() {
+        const nominees = document.querySelectorAll('.nominee-card');
+        nominees.forEach((card, index) => {
+            card.querySelector('h4').innerHTML = `<i class="bi bi-person-badge"></i> Nominee ${index + 1}`;
+        });
+    }
+
+    // Form Submit - DYNAMIC API CALL
+    document.getElementById('documentUploadForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+
+        // Validate account numbers match
+        const accNum = formData.get('bankAccountNumber');
+        const accNumConfirm = formData.get('bankAccountNumberConfirm');
+
+        if (accNum !== accNumConfirm) {
+            showAlert('Bank account numbers do not match!', 'error');
+            return;
+        }
+
+        // Validate nominee allocations
+        const nomineeCards = document.querySelectorAll('.nominee-card');
+        if (nomineeCards.length > 0) {
+            let total = 0;
+            nomineeCards.forEach((card, index) => {
+                const allocation = parseInt(formData.get(`nominees[${index}].allocationPercentage`) || 0);
+                total += allocation;
+            });
+
+            if (total !== 100) {
+                showAlert(`Total nominee allocation must be 100%. Current: ${total}%`, 'error');
+                return;
+            }
+        }
+
+        // Validate file sizes
+        const files = {
+            'panCardFile': 5,
+            'aadhaarCardFile': 5,
+            'photographFile': 2,
+            'bankProofFile': 5,
+            'signatureFile': 2
+        };
+
+        for (let [name, maxSizeMB] of Object.entries(files)) {
+            const file = formData.get(name);
+            if (file && file.size > maxSizeMB * 1024 * 1024) {
+                showAlert(`${name} exceeds ${maxSizeMB}MB limit`, 'error');
+                return;
+            }
+        }
+
+        // Show progress
+        document.getElementById('submitBtn').disabled = true;
+        document.getElementById('progressBar').classList.add('active');
+        simulateProgress();
+
+        // DYNAMIC API CALL
+        try {
+            const response = await fetch(`${API_BASE_URL}/customer-documents/submit`, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'Submission failed');
+            }
+
+            const result = await response.json();
+
+            showAlert(`✅ Documents submitted successfully! Reference ID: ${result.id}. You will receive a confirmation email shortly.`, 'success');
+            this.reset();
+            document.getElementById('nomineesContainer').innerHTML = '';
+            nomineeCount = 0;
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        } catch (error) {
+            console.error('Error:', error);
+            showAlert('Failed to submit documents: ' + error.message, 'error');
+        } finally {
+            document.getElementById('submitBtn').disabled = false;
+            document.getElementById('progressBar').classList.remove('active');
+            document.getElementById('progressBarFill').style.width = '0%';
+        }
+    });
+
+    function simulateProgress() {
+        let progress = 0;
+        const progressBar = document.getElementById('progressBarFill');
+        const interval = setInterval(() => {
+            progress += 10;
+            progressBar.style.width = progress + '%';
+            if (progress >= 90) {
+                clearInterval(interval);
+            }
+        }, 200);
+    }
+
+    function showAlert(message, type) {
+        const alert = document.getElementById('alertMessage');
+        alert.textContent = message;
+        alert.className = 'alert ' + type;
+        setTimeout(() => {
+            alert.className = 'alert';
+        }, 10000);
+    }
+
+    // Reset form
+    document.querySelector('button[type="reset"]').addEventListener('click', function() {
+        document.getElementById('nomineesContainer').innerHTML = '';
+        nomineeCount = 0;
+    });
+
+
+    // === Placeholder Pages ===
+function showPlaceholderPage(title) {
+    const container = document.getElementById('admindashboardView');
+    container.innerHTML = '';
+    const clone = cloneTemplate('placeholderPageTemplate');
+    setElementContent(clone, '[data-page-title]', title);
+    container.appendChild(clone);
+}
+
+// === SPA Router ===
+function admindashboardRouter() {
+    const h = location.hash || '#/dashboard';
+    admindashboardHighlight(h);
+
+    switch(h) {
+        case '#/dashboard':
+            admindashboardLoad();
+            break;
+        case '#/clients':
+            admindashboardLoadClients();
+            break;
+        case '#/plans':
+            showPlaceholderPage('Plans Page (to implement)');
+            break;
+        case '#/investments':
+            showPlaceholderPage('Investments Page (to implement)');
+            break;
+        case '#/blogs':
+            admindashboardLoadBlogs();
+            break;
+        case '#/seo':
+            showPlaceholderPage('SEO Page (to implement)');
+            break;
+        case '#/settings':
+            showPlaceholderPage('Settings Page (to implement)');
+            break;
+        case '#/documents':  // ✅ ADD THIS LINE
+            loadDocumentsPage();  // ✅ ADD THIS LINE
+            break;  // ✅ ADD THIS LINE
+        case '#/careers':
+            admindashboardLoadCareers();
+            break;
+        default:
+            showPlaceholderPage('Page Not Found');
+    }
+}
+
+// === Event Listeners ===
+document.addEventListener('DOMContentLoaded', () => {
+    // Display admin name
+    const name = localStorage.getItem('adminName') || 'Admin';
+    const nameEl = document.getElementById('adminNameDisplay');
+    if (nameEl) nameEl.textContent = name;
+
+    // Profile menu toggle
+    const btn = document.getElementById('adminProfileBtn');
+    const menu = document.getElementById('adminProfileMenu');
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+    });
+    document.addEventListener('click', () => { menu.style.display = 'none'; });
+    menu.addEventListener('click', (e) => { e.stopPropagation(); });
+
+    // Logout from profile menu
+    document.getElementById('dashboardLogoutLink').addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.removeItem('admindashboard_jwt');
+        localStorage.removeItem('admindashboard_roles');
+        localStorage.removeItem('jwt');
+        localStorage.removeItem('roles');
+        window.location.href = 'http://localhost:8080/adminlogin.html';
+    });
+
+    // Sidebar logout button
+    document.getElementById('admindashboardBtnLogout').addEventListener('click', () => {
+        localStorage.removeItem('admindashboard_jwt');
+        localStorage.removeItem('admindashboard_roles');
+        localStorage.removeItem('jwt');
+        localStorage.removeItem('roles');
+        location.href = 'admin' +
+            'login.html';
+    });
+
+    // Sidebar toggle for mobile
+    const burger = document.getElementById('admindashboardBurger');
+    if (burger) {
+        burger.addEventListener('click', () => {
+            document.querySelector('.admindashboard-sidebar').classList.toggle('open');
+        });
+    }
+
+    // Initialize router
+    admindashboardRouter();
+});
+
+window.addEventListener('hashchange', admindashboardRouter);
+
+// === Auth Guard: Check JWT and roles safely ===
+let admindashboardRoles = [];
+try {
+    admindashboardRoles = JSON.parse(localStorage.getItem('admindashboard_roles') || localStorage.getItem('roles') || '[]');
+} catch (e) {
+    console.error('Invalid roles in localStorage', e);
+}
+const admindashboardJwt = localStorage.getItem('admindashboard_jwt') || localStorage.getItem('jwt');
+const admindashboardIsAdmin = admindashboardRoles.some(r => r === 'ROLE_ADMIN' || r === 'ROLE_SUPER_ADMIN');
+if (!admindashboardJwt || !admindashboardIsAdmin) {
+    window.location.href = 'admin-login.html';
+}
+
+
+// API Configuration
+const API_BASE_URL = 'http://localhost:8080/api';
+
+// Documents Page Handler - DYNAMIC
+function loadDocumentsPage() {
+    const view = document.getElementById('admindashboardView');
+    const template = document.getElementById('documentsContainerTemplate');
+    const clone = template.content.cloneNode(true);
+    view.innerHTML = '';
+    view.appendChild(clone);
+
+    // Initialize
+    loadDocumentStats();
+    loadDocumentSubmissions();
+
+    // Copy link button
+    document.getElementById('copyLinkBtn').addEventListener('click', copyUploadLink);
+
+    // Filters
+    document.getElementById('statusFilter').addEventListener('change', filterDocuments);
+    document.getElementById('searchDocuments').addEventListener('input', filterDocuments);
+}
+
+function copyUploadLink() {
+    const link = window.location.origin + '/customer-document-upload.html';
+    navigator.clipboard.writeText(link).then(() => {
+        alert('Upload link copied to clipboard!\n\n' + link);
+    }).catch(() => {
+        prompt('Copy this link:', link);
+    });
+}
+
+// DYNAMIC: Load stats from backend
+async function loadDocumentStats() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/admin/documents/stats`);
+        if (!response.ok) throw new Error('Failed to load stats');
+
+        const stats = await response.json();
+
+        document.getElementById('pendingCount').textContent = stats.pending || 0;
+        document.getElementById('approvedCount').textContent = stats.approved || 0;
+        document.getElementById('underReviewCount').textContent = stats.underReview || 0;
+        document.getElementById('totalSubmissions').textContent = stats.total || 0;
+    } catch (error) {
+        console.error('Error loading stats:', error);
+        // Show default values
+        document.getElementById('pendingCount').textContent = '0';
+        document.getElementById('approvedCount').textContent = '0';
+        document.getElementById('underReviewCount').textContent = '0';
+        document.getElementById('totalSubmissions').textContent = '0';
+    }
+}
+
+// DYNAMIC: Load document submissions from backend
+async function loadDocumentSubmissions(status = '', search = '') {
+    try {
+        let url = `${API_BASE_URL}/admin/documents?`;
+        if (status) url += `status=${status}&`;
+        if (search) url += `search=${search}&`;
+
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Failed to load documents');
+
+        const documents = await response.json();
+        renderDocumentsTable(documents);
+    } catch (error) {
+        console.error('Error loading documents:', error);
+        document.getElementById('documentsTableBody').innerHTML = `
+            <tr>
+                <td colspan="10" style="text-align: center; padding: 40px; color: var(--color-text-secondary);">
+                    <i class="bi bi-exclamation-circle" style="font-size: 48px; display: block; margin-bottom: 12px;"></i>
+                    Failed to load documents. Please check your connection and try again.
+                </td>
+            </tr>
+        `;
+    }
+}
+
+function renderDocumentsTable(documents) {
+    const tbody = document.getElementById('documentsTableBody');
+
+    if (documents.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="10" style="text-align: center; padding: 40px; color: var(--color-text-secondary);">
+                    <i class="bi bi-inbox" style="font-size: 48px; display: block; margin-bottom: 12px;"></i>
+                    No document submissions found
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = '';
+
+    documents.forEach(doc => {
+        let statusClass = 'warning';
+        if (doc.status === 'Approved') statusClass = 'success';
+        if (doc.status === 'Rejected') statusClass = 'danger';
+        if (doc.status === 'Under Review') statusClass = 'secondary';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><strong>#${doc.id}</strong></td>
+            <td><strong>${doc.investorName}</strong></td>
+            <td>${doc.panNumber}</td>
+            <td>${doc.investorEmail}</td>
+            <td>${doc.investorPhone}</td>
+            <td>${doc.bankAccountNumber ? doc.bankAccountNumber.substring(0, 4) + 'XXXXX' + doc.bankAccountNumber.slice(-4) : 'N/A'}</td>
+            <td>
+                <span class="admindashboard-badge secondary">
+                    ${doc.nomineesCount || 0} Nominee${doc.nomineesCount > 1 ? 's' : ''}
+                </span>
+            </td>
+            <td>${formatDate(doc.submittedDate)}</td>
+            <td>
+                <span class="admindashboard-badge ${statusClass}">
+                    ${doc.status}
+                </span>
+            </td>
+            <td class="actions-cell">
+                <button class="admindashboard-btn secondary" style="font-size: 11px; padding: 4px 8px;" onclick="viewDocumentDetails(${doc.id})">
+                    <i class="bi bi-eye-fill"></i> View
+                </button>
+                ${doc.status === 'Pending' || doc.status === 'Under Review' ? `
+                    <button class="admindashboard-btn primary" style="font-size: 11px; padding: 4px 8px;" onclick="approveDocument(${doc.id})">
+                        <i class="bi bi-check-circle-fill"></i> Approve
+                    </button>
+                    <button class="admindashboard-btn danger" style="font-size: 11px; padding: 4px 8px;" onclick="rejectDocument(${doc.id})">
+                        <i class="bi bi-x-circle-fill"></i> Reject
+                    </button>
+                ` : ''}
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function filterDocuments() {
+    const statusFilter = document.getElementById('statusFilter').value;
+    const searchTerm = document.getElementById('searchDocuments').value;
+    loadDocumentSubmissions(statusFilter, searchTerm);
+}
+
+// DYNAMIC: View document details
+async function viewDocumentDetails(id) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/admin/documents/${id}`);
+        if (!response.ok) throw new Error('Failed to load document details');
+
+        const doc = await response.json();
+
+        const modal = document.getElementById('documentDetailModal');
+        const body = document.getElementById('documentDetailBody');
+
+        body.innerHTML = `
+            <h4 style="margin-bottom: 20px;">Investor Information</h4>
+            <div class="document-detail-grid">
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Full Name</div>
+                    <div class="document-detail-value">${doc.investorName}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Email</div>
+                    <div class="document-detail-value">${doc.investorEmail}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Phone</div>
+                    <div class="document-detail-value">${doc.investorPhone}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Date of Birth</div>
+                    <div class="document-detail-value">${formatDate(doc.investorDob)}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">PAN Number</div>
+                    <div class="document-detail-value">${doc.panNumber}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Aadhaar Number</div>
+                    <div class="document-detail-value">${doc.aadhaarNumber}</div>
+                </div>
+                <div class="document-detail-item" style="grid-column: 1 / -1;">
+                    <div class="document-detail-label">Address</div>
+                    <div class="document-detail-value">${doc.investorAddress}</div>
+                </div>
+            </div>
+
+            <h4 style="margin: 30px 0 20px 0;">Bank Details</h4>
+            <div class="document-detail-grid">
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Account Name</div>
+                    <div class="document-detail-value">${doc.bankAccountName}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Bank Name</div>
+                    <div class="document-detail-value">${doc.bankName}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Account Number</div>
+                    <div class="document-detail-value">${doc.bankAccountNumber}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">IFSC Code</div>
+                    <div class="document-detail-value">${doc.bankIfsc}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Branch</div>
+                    <div class="document-detail-value">${doc.bankBranch}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Account Type</div>
+                    <div class="document-detail-value">${doc.bankAccountType}</div>
+                </div>
+            </div>
+
+            ${doc.nominees && doc.nominees.length > 0 ? `
+                <h4 style="margin: 30px 0 20px 0;">Nominees</h4>
+                ${doc.nominees.map((nominee, index) => `
+                    <div class="document-detail-grid" style="background: var(--color-secondary); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+                        <div class="document-detail-item">
+                            <div class="document-detail-label">Nominee ${index + 1}</div>
+                            <div class="document-detail-value">${nominee.nomineeName}</div>
+                        </div>
+                        <div class="document-detail-item">
+                            <div class="document-detail-label">Relationship</div>
+                            <div class="document-detail-value">${nominee.relationship}</div>
+                        </div>
+                        <div class="document-detail-item">
+                            <div class="document-detail-label">Date of Birth</div>
+                            <div class="document-detail-value">${formatDate(nominee.dateOfBirth)}</div>
+                        </div>
+                        <div class="document-detail-item">
+                            <div class="document-detail-label">Allocation</div>
+                            <div class="document-detail-value">${nominee.allocationPercentage}%</div>
+                        </div>
+                        ${nominee.isMinor ? `
+                            <div class="document-detail-item" style="grid-column: 1 / -1;">
+                                <div class="document-detail-label">Guardian</div>
+                                <div class="document-detail-value">${nominee.guardianName} (${nominee.guardianRelationship}) - PAN: ${nominee.guardianPan}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('')}
+            ` : ''}
+
+            <h4 style="margin: 30px 0 20px 0;">Uploaded Documents</h4>
+            <div class="document-files-grid">
+                ${doc.panCardFileUrl ? `
+                    <div class="document-file-card" onclick="window.open('${doc.panCardFileUrl}', '_blank')">
+                        <i class="bi bi-file-pdf-fill"></i>
+                        <div class="document-file-name">PAN Card</div>
+                    </div>
+                ` : ''}
+                ${doc.aadhaarCardFileUrl ? `
+                    <div class="document-file-card" onclick="window.open('${doc.aadhaarCardFileUrl}', '_blank')">
+                        <i class="bi bi-file-pdf-fill"></i>
+                        <div class="document-file-name">Aadhaar Card</div>
+                    </div>
+                ` : ''}
+                ${doc.photographFileUrl ? `
+                    <div class="document-file-card" onclick="window.open('${doc.photographFileUrl}', '_blank')">
+                        <i class="bi bi-file-image-fill"></i>
+                        <div class="document-file-name">Photograph</div>
+                    </div>
+                ` : ''}
+                ${doc.bankProofFileUrl ? `
+                    <div class="document-file-card" onclick="window.open('${doc.bankProofFileUrl}', '_blank')">
+                        <i class="bi bi-file-pdf-fill"></i>
+                        <div class="document-file-name">Bank Proof</div>
+                    </div>
+                ` : ''}
+                ${doc.signatureFileUrl ? `
+                    <div class="document-file-card" onclick="window.open('${doc.signatureFileUrl}', '_blank')">
+                        <i class="bi bi-file-image-fill"></i>
+                        <div class="document-file-name">Signature</div>
+                    </div>
+                ` : ''}
+            </div>
+
+            <h4 style="margin: 30px 0 20px 0;">Declarations</h4>
+            <div class="document-detail-grid">
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Tax Residency</div>
+                    <div class="document-detail-value">${doc.taxResidencyCountry}</div>
+                </div>
+                <div class="document-detail-item">
+                    <div class="document-detail-label">Risk Profile</div>
+                    <div class="document-detail-value">${doc.riskProfile}</div>
+                </div>
+            </div>
+        `;
+
+        modal.classList.add('active');
+    } catch (error) {
+        console.error('Error loading document details:', error);
+        alert('Failed to load document details: ' + error.message);
+    }
+}
+
+function closeDocumentModal() {
+    document.getElementById('documentDetailModal').classList.remove('active');
+}
+
+// DYNAMIC: Approve document
+async function approveDocument(id) {
+    if (!confirm('Are you sure you want to approve this document submission?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/admin/documents/${id}/approve`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Failed to approve');
+        }
+
+        alert('Document approved successfully! Investor will receive confirmation email.');
+        loadDocumentSubmissions();
+        loadDocumentStats();
+    } catch (error) {
+        console.error('Error approving document:', error);
+        alert('Error approving document: ' + error.message);
+    }
+}
+
+// DYNAMIC: Reject document
+async function rejectDocument(id) {
+    const reason = prompt('Please enter rejection reason:');
+    if (!reason || reason.trim() === '') {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/admin/documents/${id}/reject`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ reason: reason.trim() })
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Failed to reject');
+        }
+
+        alert('Document rejected! Investor will receive an email with the reason.');
+        loadDocumentSubmissions();
+        loadDocumentStats();
+    } catch (error) {
+        console.error('Error rejecting document:', error);
+        alert('Error rejecting document: ' + error.message);
+    }
+}
+
+// Utility function to format dates
+function formatDate(dateString) {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-IN', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+    const modal = document.getElementById('documentDetailModal');
+    if (e.target === modal) {
+        closeDocumentModal();
+    }
+});
+
+
+const response = await fetch(`${API_BASE_URL}/customer-documents/submit`, {
+    method: 'POST',
+    body: formData
+});
+
+if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Submission failed');
+}
+
+const result = await response.json();
+
+if (result.success) {
+    showAlert(`✅ ${result.message} Reference ID: ${result.id}`, 'success');
+    this.reset();
+} else {
+    showAlert(result.message, 'error');
+}
+
+</script>
+</body>
+</html>
