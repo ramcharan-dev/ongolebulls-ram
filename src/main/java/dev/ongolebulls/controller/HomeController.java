@@ -85,9 +85,6 @@ public class HomeController {
         return "sign-in"; // Loads login.html from src/main/resources/templates/
     }
 
-    @GetMapping("/customer-document-upload")
-    public String showDocumentUploadPage() {
-        return "customer-document-upload";
-    }
+
 
 }
