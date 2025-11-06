@@ -373,64 +373,10 @@ html, body {
     font-weight:500;
 }
 
-
-
-#blogsGrid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-}
-
-
 /* Blog cards */
 .small-card { font-size: 0.85rem; }
 .small-text { font-size: 0.8rem; }
 .card-img-top { height: 120px; object-fit: cover; }
-
-/* Blog Form */
-.admindashboard-blog-form{
-    margin-top:20px;
-}
-.admindashboard-blog-form .form-row{
-    margin-bottom:20px;
-}
-.admindashboard-blog-form label{
-    display:block;
-    margin-bottom:8px;
-    font-weight:500;
-    color:var(--text);
-}
-.admindashboard-blog-form .required{
-    color:var(--danger);
-}
-.admindashboard-input-file{
-    width:100%;
-    padding:10px;
-    border-radius:8px;
-    border:1px solid rgba(255,255,255,.12);
-    background:rgba(255,255,255,.06);
-    color:var(--text);
-    outline:0;
-    cursor:pointer;
-}
-.admindashboard-input-file:focus{
-    border-color:var(--accent);
-    box-shadow:0 0 0 3px rgba(206,76,40,.25);
-}
-.image-preview{
-    margin-top:10px;
-}
-.current-image-label{
-    font-size:13px;
-    color:var(--muted);
-    margin-top:8px;
-}
-.form-actions{
-    display:flex;
-    gap:12px;
-    margin-top:24px;
-}
-
 .row{
     display:flex;
     flex-wrap:wrap;

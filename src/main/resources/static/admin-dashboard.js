@@ -1,6 +1,6 @@
 // === Backend API base URL ===
 const ADMINDASHBOARD_API = 'http://localhost:8080/api';
-const IMAGE_BASE_URL = 'http://localhost:8080/assets/';
+const JOB_API = 'http://localhost:8080/api/jobs';
 
 const admindashboardToken = localStorage.getItem('admindashboard_jwt') || localStorage.getItem('jwt');
 const admindashboardAuthHeaders = () => admindashboardToken ? { 'Authorization': 'Bearer ' + admindashboardToken } : {};
@@ -57,22 +57,16 @@ function showErrorCard(title, message) {
     container.appendChild(clone);
 }
 
-// === Close Sidebar (Mobile) ===
-function closeSidebar() {
-    const sidebar = document.querySelector('.admindashboard-sidebar');
-    const backdrop = document.getElementById('admindashboardBackdrop');
-    if (sidebar) sidebar.classList.remove('open');
-    if (backdrop) backdrop.classList.remove('show');
-}
-
 // === Dashboard Renderer ===
 function admindashboardRender(kpi, sip, risk, goals, leaderboard, alerts) {
     const view = document.getElementById('admindashboardView');
     view.innerHTML = '';
 
+    // Clone main dashboard template
     const mainTemplate = cloneTemplate('dashboardMainTemplate');
     view.appendChild(mainTemplate);
 
+    // Render KPIs
     const kpiContainer = document.getElementById('kpiContainer');
     const kpiData = [
         { icon: 'bi-people-fill', label: 'Total Clients', value: kpi.totalClients },
@@ -92,8 +86,10 @@ function admindashboardRender(kpi, sip, risk, goals, leaderboard, alerts) {
         kpiContainer.appendChild(kpiClone);
     });
 
+    // Render Charts
     const chartsContainer = document.getElementById('chartsContainer');
 
+    // SIP Chart
     const sipChartClone = cloneTemplate('chartCardTemplate');
     const sipIcon = sipChartClone.querySelector('[data-icon]');
     sipIcon.className = 'bi bi-bar-chart-fill';
@@ -105,6 +101,7 @@ function admindashboardRender(kpi, sip, risk, goals, leaderboard, alerts) {
     sipCanvas.removeAttribute('data-canvas');
     chartsContainer.appendChild(sipChartClone);
 
+    // Risk Chart
     const riskChartClone = cloneTemplate('chartCardTemplate');
     const riskIcon = riskChartClone.querySelector('[data-icon]');
     riskIcon.className = 'bi bi-pie-chart-fill';
@@ -116,6 +113,7 @@ function admindashboardRender(kpi, sip, risk, goals, leaderboard, alerts) {
     riskCanvas.removeAttribute('data-canvas');
     chartsContainer.appendChild(riskChartClone);
 
+    // Goals Chart
     const goalsChartClone = cloneTemplate('chartCardTemplate');
     const goalsIcon = goalsChartClone.querySelector('[data-icon]');
     goalsIcon.className = 'bi bi-pie-chart';
@@ -127,6 +125,7 @@ function admindashboardRender(kpi, sip, risk, goals, leaderboard, alerts) {
     goalsCanvas.removeAttribute('data-canvas');
     chartsContainer.appendChild(goalsChartClone);
 
+    // Leaderboard
     const leaderboardClone = cloneTemplate('leaderboardCardTemplate');
     chartsContainer.appendChild(leaderboardClone);
 
@@ -139,10 +138,12 @@ function admindashboardRender(kpi, sip, risk, goals, leaderboard, alerts) {
         leaderboardList.appendChild(rowClone);
     });
 
+    // Alerts Card
     const alertsCard = document.getElementById('alertsCard');
     const alertsClone = cloneTemplate('alertsCardTemplate');
     alertsCard.appendChild(alertsClone);
 
+    // Action Buttons
     const alertsActions = document.getElementById('alertsActions');
     const actions = [
         { class: 'primary', icon: 'bi-person-plus-fill', text: 'Add New Client', id: 'admindashboardAddClient' },
@@ -164,6 +165,7 @@ function admindashboardRender(kpi, sip, risk, goals, leaderboard, alerts) {
         alertsActions.appendChild(btnClone);
     });
 
+    // Alerts List
     const alertsList = document.getElementById('alertsList');
     alerts.forEach(alert => {
         const alertClone = cloneTemplate('alertItemTemplate');
@@ -172,6 +174,7 @@ function admindashboardRender(kpi, sip, risk, goals, leaderboard, alerts) {
         alertsList.appendChild(alertClone);
     });
 
+    // Initialize Charts
     new Chart(document.getElementById('admindashboard-chart-sip'), {
         type: 'bar',
         data: {
@@ -202,6 +205,7 @@ function admindashboardRender(kpi, sip, risk, goals, leaderboard, alerts) {
         options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
     });
 
+    // Attach Event Handlers
     document.getElementById('admindashboardAddClient').onclick = () => location.hash = '#/clients';
     document.getElementById('admindashboardRmReport').onclick = () => window.open(ADMINDASHBOARD_API + '/reports/rm?format=pdf','_blank');
     document.getElementById('admindashboardBroadcast').onclick = () => alert('Open broadcast dialog here');
@@ -227,31 +231,17 @@ async function admindashboardLoad() {
     }
 }
 
-// === Clients Loader with Search ===
-let allClients = [];
-
-async function admindashboardLoadClients(searchQuery = '') {
+// === Clients Loader ===
+async function admindashboardLoadClients() {
     showLoadingCard('Loading Clients...');
 
     try {
-        if (allClients.length === 0) {
-            allClients = await admindashboardGet('/clients', []);
-        }
+        const clients = await admindashboardGet('/clients', []);
+        console.log('API response for /clients:', clients);
 
-        if (!Array.isArray(allClients)) {
+        if (!Array.isArray(clients)) {
             throw new Error("API did not return an array");
         }
-
-        const filteredClients = searchQuery
-            ? allClients.filter(client => {
-                const search = searchQuery.toLowerCase();
-                return (
-                    (client.fullName && client.fullName.toLowerCase().includes(search)) ||
-                    (client.email && client.email.toLowerCase().includes(search)) ||
-                    (client.phone && client.phone.includes(search))
-                );
-            })
-            : allClients;
 
         const container = document.getElementById('admindashboardView');
         container.innerHTML = '';
@@ -260,33 +250,11 @@ async function admindashboardLoadClients(searchQuery = '') {
         container.appendChild(tableClone);
 
         const tbody = document.getElementById('clientsTableBody');
-
-        if (filteredClients.length === 0) {
-            const row = document.createElement('tr');
-            const cell = document.createElement('td');
-            cell.colSpan = 3;
-            cell.textContent = searchQuery ? 'No clients found matching your search.' : 'No clients available.';
-            cell.style.textAlign = 'center';
-            cell.style.padding = '20px';
-            cell.style.color = 'var(--muted)';
-            row.appendChild(cell);
-            tbody.appendChild(row);
-            return;
-        }
-
-        filteredClients.forEach(client => {
+        clients.forEach(client => {
             const rowClone = cloneTemplate('clientRowTemplate');
-            const cells = rowClone.querySelectorAll('td');
-
-            cells[0].setAttribute('data-label', 'Full Name');
             setElementContent(rowClone, '[data-fullname]', client.fullName || '');
-
-            cells[1].setAttribute('data-label', 'Email');
             setElementContent(rowClone, '[data-email]', client.email || '');
-
-            cells[2].setAttribute('data-label', 'Phone');
             setElementContent(rowClone, '[data-phone]', client.phone || '');
-
             tbody.appendChild(rowClone);
         });
     } catch (err) {
@@ -300,14 +268,9 @@ async function admindashboardLoadBlogs() {
     showLoadingCard('Loading Blogs...');
 
     try {
-        const response = await fetch(ADMINDASHBOARD_API + '/blogs', {
+        const response = await fetch('/api/blogs', {
             headers: admindashboardAuthHeaders()
         });
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-
         const blogs = await response.json();
 
         const container = document.getElementById('admindashboardView');
@@ -317,38 +280,16 @@ async function admindashboardLoadBlogs() {
         container.appendChild(blogsContainer);
 
         const grid = document.getElementById('blogsGrid');
-        const addBtn = document.getElementById('addBlogBtn');
-
-        if (addBtn) {
-            addBtn.onclick = () => {
-                location.hash = '#/blogs/new';
-            };
-        }
-
-        if (blogs.length === 0) {
-            const emptyMsg = document.createElement('p');
-            emptyMsg.textContent = 'No blogs found. Click "+ Add Blog" to create your first blog.';
-            emptyMsg.style.color = 'var(--muted)';
-            emptyMsg.style.padding = '20px';
-            grid.appendChild(emptyMsg);
-            return;
-        }
 
         blogs.forEach(blog => {
             const cardClone = cloneTemplate('blogCardTemplate');
 
             const img = cardClone.querySelector('[data-image]');
-
             if (blog.image) {
-                img.src = IMAGE_BASE_URL + blog.image;
-                img.alt = blog.title || 'Blog image';
-
-                img.onerror = function() {
-                    this.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Crect fill="%23ddd" width="300" height="200"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E';
-                };
+                img.src = `/assets/${blog.image}`;
+                img.alt = blog.title;
             } else {
-                img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Crect fill="%23ddd" width="300" height="200"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E';
-                img.alt = 'No image available';
+                img.remove();
             }
             img.removeAttribute('data-image');
 
@@ -358,359 +299,31 @@ async function admindashboardLoadBlogs() {
 
             const editBtn = cardClone.querySelector('[data-edit]');
             editBtn.removeAttribute('data-edit');
-            editBtn.onclick = () => {
-                location.hash = `#/blogs/edit/${blog.id}`;
-            };
+            editBtn.onclick = () => location.href = `#/blogs/edit/${blog.id}`;
 
             const deleteBtn = cardClone.querySelector('[data-delete]');
             deleteBtn.removeAttribute('data-delete');
             deleteBtn.onclick = async () => {
                 if (confirm('Are you sure you want to delete this blog?')) {
-                    try {
-                        const res = await fetch(`${ADMINDASHBOARD_API}/blogs/${blog.id}`, {
-                            method: 'DELETE',
-                            headers: admindashboardAuthHeaders()
-                        });
-                        if (res.ok) {
-                            alert('Blog deleted successfully');
-                            admindashboardLoadBlogs();
-                        } else {
-                            alert('Failed to delete blog');
-                        }
-                    } catch (err) {
-                        alert('Error deleting blog: ' + err.message);
-                    }
+                    const res = await fetch(`/api/blogs/${blog.id}`, {
+                        method: 'DELETE',
+                        headers: admindashboardAuthHeaders()
+                    });
+                    if (res.ok) admindashboardLoadBlogs();
+                    else alert('Failed to delete blog');
                 }
             };
 
             grid.appendChild(cardClone);
         });
 
+        document.getElementById('addBlogBtn').onclick = () => location.href = '#/blogs/new';
+
     } catch (error) {
-        showErrorCard('Blogs', 'Error loading blogs: ' + error.message);
+        showErrorCard('Blogs', 'Error loading blogs.');
+        console.error(error);
     }
 }
-
-async function showBlogForm(blogId = null) {
-    const container = document.getElementById('admindashboardView');
-    container.innerHTML = '';
-
-    const loadingClone = cloneTemplate('loadingCardTemplate');
-    setElementContent(loadingClone, '[data-title]', blogId ? 'Loading Blog...' : 'Preparing Form...');
-    container.appendChild(loadingClone);
-
-    try {
-        await new Promise(resolve => setTimeout(resolve, 100));
-
-        container.innerHTML = '';
-        const formTemplate = cloneTemplate('blogFormTemplate');
-        container.appendChild(formTemplate);
-
-        const form = document.getElementById('blogForm');
-        const messageDiv = document.getElementById('blogFormMessage');
-        const formTitle = document.querySelector('[data-form-title]');
-        const imagePreview = document.getElementById('imagePreview');
-        const previewImg = document.getElementById('previewImg');
-        const fileInput = form.querySelector('input[name="imageFile"]');
-
-        if (blogId) {
-            formTitle.textContent = 'Edit Blog';
-            const response = await fetch(`${ADMINDASHBOARD_API}/blogs/${blogId}`, {
-                headers: admindashboardAuthHeaders()
-            });
-
-            if (!response.ok) throw new Error('Blog not found');
-
-            const blog = await response.json();
-
-            form.querySelector('input[name="title"]').value = blog.title || '';
-            form.querySelector('textarea[name="shortDescription"]').value = blog.shortDescription || '';
-            form.querySelector('textarea[name="fullContent"]').value = blog.fullContent || '';
-            form.querySelector('input[name="author"]').value = blog.author || '';
-            form.querySelector('input[name="metaTitle"]').value = blog.metaTitle || '';
-            form.querySelector('input[name="metaKeywords"]').value = blog.metaKeywords || '';
-            form.querySelector('textarea[name="metaDescription"]').value = blog.metaDescription || '';
-
-            if (blog.image) {
-                previewImg.src = IMAGE_BASE_URL + blog.image;
-                previewImg.onerror = function() {
-                    this.style.display = 'none';
-                };
-                imagePreview.style.display = 'block';
-            } else {
-                previewImg.src = '';
-                imagePreview.style.display = 'none';
-            }
-
-            form.dataset.editingId = blogId;
-        } else {
-            formTitle.textContent = 'Add New Blog';
-            form.reset();
-            form.dataset.editingId = '';
-            previewImg.src = '';
-            imagePreview.style.display = 'none';
-        }
-
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                if (!file.type.startsWith('image/')) {
-                    alert('Please select a valid image file');
-                    fileInput.value = '';
-                    return;
-                }
-
-                if (file.size > 5 * 1024 * 1024) {
-                    alert('File size should be less than 5MB');
-                    fileInput.value = '';
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    previewImg.src = event.target.result;
-                    imagePreview.style.display = 'block';
-                };
-                reader.onerror = () => {
-                    alert('Failed to read file');
-                    fileInput.value = '';
-                };
-                reader.readAsDataURL(file);
-            } else {
-                previewImg.src = '';
-                imagePreview.style.display = 'none';
-            }
-        });
-
-        document.getElementById('backToBlogsBtn').onclick = () => {
-            location.hash = '#/blogs';
-        };
-
-        document.getElementById('cancelBlogBtn').onclick = () => {
-            location.hash = '#/blogs';
-        };
-
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            messageDiv.textContent = '';
-            messageDiv.style.color = '';
-
-            const formData = new FormData(form);
-            const editingId = form.dataset.editingId;
-
-            let url = `${ADMINDASHBOARD_API}/blogs`;
-            let method = 'POST';
-
-            if (editingId) {
-                url += `/${editingId}`;
-                method = 'PUT';
-            }
-
-            try {
-                const res = await fetch(url, {
-                    method: method,
-                    headers: admindashboardAuthHeaders(),
-                    body: formData
-                });
-
-                if (!res.ok) {
-                    const errorText = await res.text();
-                    throw new Error(errorText || `HTTP error ${res.status}`);
-                }
-
-                await res.json();
-
-                messageDiv.style.color = '#22c55e';
-                messageDiv.textContent = editingId ? 'Blog updated successfully!' : 'Blog created successfully!';
-
-                setTimeout(() => {
-                    location.hash = '#/blogs';
-                }, 1500);
-            } catch (err) {
-                messageDiv.style.color = '#ef4444';
-                messageDiv.textContent = `Failed to ${editingId ? 'update' : 'create'} blog: ${err.message}`;
-            }
-        });
-
-    } catch (err) {
-        showErrorCard('Blog Form', err.message || 'Failed to load blog form.');
-    }
-}
-
-// === Edit Profile Loader ===
-// async function admindashboardLoadEditProfile() {
-//     const container = document.getElementById("admindashboardView");
-//     container.innerHTML = "";
-//
-//     // show a loading card
-//     const loadingClone = cloneTemplate("loadingCardTemplate");
-//     setElementContent(loadingClone, "[data-title]", "Loading Profile…");
-//     container.appendChild(loadingClone);
-//
-//     try {
-//         await new Promise((resolve) => setTimeout(resolve, 100));
-//
-//         // replace loader with form
-//         container.innerHTML = "";
-//         const formTemplate = cloneTemplate("editProfileTemplate");
-//         container.appendChild(formTemplate);
-//
-//         const adminId = 1;
-//         const form = document.getElementById("editAdminForm");
-//         const messageDiv = document.getElementById("responseMessage");
-//
-//         // load existing admin data
-//         const response = await fetch(`${ADMINDASHBOARD_API}/admin/${adminId}`);
-//         if (!response.ok) throw new Error("Failed to fetch admin details");
-//
-//         const data = await response.json();
-//         document.getElementById("adminEmail").value = data.email || "";
-//         document.getElementById("adminPassword").value = data.password || "";
-//         document.getElementById("adminName").value = data.name || "";
-//
-//         // handle form submission
-//         form.onsubmit = async (e) => {
-//             e.preventDefault();
-//             const submitBtn = form.querySelector("button[type='submit']");
-//             submitBtn.disabled = true;
-//             messageDiv.innerText = "Updating…";
-//             messageDiv.style.color = "#2563eb";
-//
-//             const email = document.getElementById("adminEmail").value.trim();
-//             const password = document.getElementById("adminPassword").value.trim();
-//             const name = document.getElementById("adminName").value.trim();
-//
-//             try {
-//                 const res = await fetch(`${ADMINDASHBOARD_API}/admin/update/${adminId}`, {
-//                     method: "PUT",
-//                     headers: { "Content-Type": "application/json" },
-//                     body: JSON.stringify({ email, password, name }),
-//                 });
-//
-//                 const result = await res.json();
-//                 if (!res.ok || !result.success) throw new Error(result.message || "Update failed");
-//
-//                 messageDiv.innerText = result.message || "Profile updated successfully";
-//                 messageDiv.style.color = "#22c55e";
-//
-//                 localStorage.setItem("adminName", name);
-//                 const nameEl = document.getElementById("adminNameDisplay");
-//                 if (nameEl) nameEl.textContent = name;
-//
-//                 setTimeout(() => (messageDiv.innerText = ""), 3000);
-//             } catch (err) {
-//                 messageDiv.innerText = "Error: " + err.message;
-//                 messageDiv.style.color = "#ef4444";
-//             } finally {
-//                 submitBtn.disabled = false;
-//             }
-//         };
-//     } catch (err) {
-//         showErrorCard("Edit Profile", err.message || "Failed to load profile.");
-//     }
-// }
-
-
-
-function admindashboardLoadAdminDetails() {
-    const view = document.getElementById("admindashboardView");
-    const template = document.getElementById("editAdminTemplate");
-
-    view.innerHTML = "";
-    view.appendChild(template.content.cloneNode(true));
-
-    setupAdminDetailsEvents();
-}
-
-function setupAdminDetailsEvents() {
-    const adminId = 1;
-    const form = document.getElementById("editAdminForm");
-    const messageDiv = document.getElementById("responseMessage");
-    const API = "/api/admin";
-
-    if (!form) {
-        console.error("Form not found. Template may not be loaded.");
-        return;
-    }
-
-    // Load current admin details
-    fetch(`${API}/${adminId}`)
-        .then(res => {
-            if (!res.ok) throw new Error("Failed to fetch admin details");
-            return res.json();
-        })
-        .then(data => {
-            document.getElementById("adminEmail").value = data.email || "";
-            document.getElementById("adminPassword").value = data.password || "";
-            document.getElementById("adminName").value = data.name || "";
-        })
-        .catch(err => {
-            messageDiv.innerText = err.message;
-            messageDiv.style.color = "red";
-        });
-
-    // Save changes
-    form.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        const payload = {
-            email: document.getElementById("adminEmail").value,
-            password: document.getElementById("adminPassword").value,
-            name: document.getElementById("adminName").value
-        };
-
-        fetch(`${API}/update/${adminId}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        })
-            .then(res => res.json())
-            .then(data => {
-                messageDiv.innerText = data.message;
-                messageDiv.style.color = data.success ? "green" : "red";
-
-                // ✅ Reload latest updated data
-                loadUpdatedAdminDetails();
-                refreshAdminHeader();
-            })
-            .catch(err => {
-                messageDiv.innerText = err.message;
-                messageDiv.style.color = "red";
-            });
-    });
-}
-
-// ✅ helper reload function
-function loadUpdatedAdminDetails() {
-    const adminId = 1;
-
-    fetch(`/api/admin/${adminId}`)
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById("adminEmail").value = data.email;
-            document.getElementById("adminPassword").value = data.password;
-            document.getElementById("adminName").value = data.name;
-        });
-}
-
-
-
-function refreshAdminHeader() {
-    fetch("/api/admin/1")
-        .then(res => res.json())
-        .then(data => {
-            const label = document.getElementById("adminNameDisplay");
-            if (label) {
-                label.innerText = data.name;
-            }
-        });
-}
-
-
-
-
-
-
 
 // === Careers Loader ===
 async function admindashboardLoadCareers() {
@@ -747,6 +360,7 @@ async function admindashboardLoadCareers() {
             tbody.appendChild(rowClone);
         });
 
+        // Attach form submit handler
         const form = document.getElementById('addJobForm');
         const messageDiv = document.getElementById('jobFormMessage');
 
@@ -858,19 +472,6 @@ function admindashboardRouter() {
     const h = location.hash || '#/dashboard';
     admindashboardHighlight(h);
 
-    // Close sidebar on navigation (for mobile)
-    closeSidebar();
-
-    if (h.startsWith('#/blogs/edit/')) {
-        const blogId = h.split('/')[3];
-        showBlogForm(blogId);
-        return;
-    }
-    if (h === '#/blogs/new') {
-        showBlogForm(null);
-        return;
-    }
-
     switch(h) {
         case '#/dashboard':
             admindashboardLoad();
@@ -887,8 +488,8 @@ function admindashboardRouter() {
         case '#/blogs':
             admindashboardLoadBlogs();
             break;
-        case 'seo':
-            loadSeoSettings();
+        case '#/seo':
+            showPlaceholderPage('SEO Page (to implement)');
             break;
         case '#/settings':
             showPlaceholderPage('Settings Page (to implement)');
@@ -899,35 +500,9 @@ function admindashboardRouter() {
         case '#/careers':
             admindashboardLoadCareers();
             break;
-        case '#/admin-details':   //<--- ✅ NEW
-            admindashboardLoadAdminDetails();
-            break;
         default:
             showPlaceholderPage('Page Not Found');
     }
-}
-
-// === Search Handler ===
-let searchTimeout;
-function handleSearch() {
-    const searchInput = document.getElementById('admindashboardTopSearch');
-    const searchQuery = searchInput.value.trim();
-
-    clearTimeout(searchTimeout);
-
-    searchTimeout = setTimeout(() => {
-        const currentHash = location.hash || '#/dashboard';
-
-        if (currentHash === '#/clients') {
-            admindashboardLoadClients(searchQuery);
-        } else if (searchQuery) {
-            // If user is searching but not on clients page, navigate to clients
-            location.hash = '#/clients';
-            setTimeout(() => {
-                admindashboardLoadClients(searchQuery);
-            }, 100);
-        }
-    }, 300);
 }
 
 // === Event Listeners ===
@@ -947,13 +522,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', () => { menu.style.display = 'none'; });
     menu.addEventListener('click', (e) => { e.stopPropagation(); });
 
-    // Edit Profile link
-    // document.getElementById('editProfileLink').addEventListener('click', (e) => {
-    //     e.preventDefault();
-    //     menu.style.display = 'none';
-    //     location.hash = '#/edit-profile';
-    // });
-
     // Logout from profile menu
     document.getElementById('dashboardLogoutLink').addEventListener('click', (e) => {
         e.preventDefault();
@@ -961,8 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('admindashboard_roles');
         localStorage.removeItem('jwt');
         localStorage.removeItem('roles');
-        localStorage.removeItem('adminName');
-        window.location.href = 'adminlogin.html';
+        window.location.href = 'http://localhost:8080/adminlogin.html';
     });
 
     // Sidebar logout button
@@ -971,50 +538,15 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('admindashboard_roles');
         localStorage.removeItem('jwt');
         localStorage.removeItem('roles');
-        localStorage.removeItem('adminName');
-        location.href = 'adminlogin.html';
+        location.href = 'admin' +
+            'login.html';
     });
 
     // Sidebar toggle for mobile
     const burger = document.getElementById('admindashboardBurger');
-    const sidebar = document.querySelector('.admindashboard-sidebar');
-    const backdrop = document.getElementById('admindashboardBackdrop');
-
     if (burger) {
-        burger.addEventListener('click', (e) => {
-            e.stopPropagation();
-            sidebar.classList.toggle('open');
-            backdrop.classList.toggle('show');
-        });
-    }
-
-    // Close sidebar when clicking backdrop
-    if (backdrop) {
-        backdrop.addEventListener('click', () => {
-            closeSidebar();
-        });
-    }
-
-    // Close sidebar when clicking nav links (handled in router now)
-    const navLinks = document.querySelectorAll('.admindashboard-nav');
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            // Router will handle closing sidebar
-        });
-    });
-
-    // Search functionality
-    const searchInput = document.getElementById('admindashboardTopSearch');
-    if (searchInput) {
-        searchInput.addEventListener('input', handleSearch);
-
-        // Clear search when navigating away from clients
-        window.addEventListener('hashchange', () => {
-            const currentHash = location.hash || '#/dashboard';
-            if (currentHash !== '#/clients') {
-                searchInput.value = '';
-                allClients = [];
-            }
+        burger.addEventListener('click', () => {
+            document.querySelector('.admindashboard-sidebar').classList.toggle('open');
         });
     }
 
