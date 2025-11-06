@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8"/>
     <title>Admin Dashboard</title>
@@ -10,8 +10,15 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="admin-dashboard.css"/>
+
+
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/classic/ckeditor.js"></script>
+
 </head>
 <body>
+
+
+
 
 <div class="admindashboard-layout" role="application" aria-label="Admin Dashboard">
 
@@ -61,7 +68,10 @@
                 </button>
                 <div id="adminProfileMenu" class="admindashboard-profile-menu" style="display:none;">
                     <div class="admindashboard-profile-welcome">Welcome !</div>
-                    <a href="#/admin-details" class="admindashboard-nav"><i class="bi bi-person-check"></i> <span>Edit Profile</span></a>
+                    <a href="#/admin-details" class="admindashboard-nav" id="editProfileLink">
+                        <i class="bi bi-person-check"></i> <span>Edit Profile</span>
+                    </a>
+
 
 
                     <a href="#" id="dashboardLogoutLink" class="admindashboard-profile-link">
@@ -259,7 +269,12 @@
 
             <div class="form-row">
                 <label>Full Content: <span class="required">*</span><br/>
-                    <textarea name="fullContent" rows="8" required class="admindashboard-textarea"></textarea>
+                  <!--  <textarea name="fullContent"  rows="8" required class="admindashboard-textarea"></textarea>-->
+                    <textarea id="blogFullContent" name="fullContent" rows="8" class="admindashboard-textarea"></textarea>
+
+
+                    </textarea>
+
                 </label>
             </div>
 
@@ -280,23 +295,28 @@
             </div>
 
             <!-- SEO Information Section -->
-            <div class="form-row">
-                <label>Meta Title:<br/>
-                    <input type="text" name="metaTitle" class="admindashboard-input"/>
-                </label>
+            <div class="seo-section">
+                <div class="seo-section-title"><h2>SEO Information</h2></div>
+
+                <div class="form-row">
+                    <label>Meta Title:<br/>
+                        <input type="text" name="metaTitle" class="admindashboard-input"/>
+                    </label>
+                </div>
+
+                <div class="form-row">
+                    <label>Meta Keywords:<br/>
+                        <input type="text" name="metaKeywords" class="admindashboard-input"/>
+                    </label>
+                </div>
+
+                <div class="form-row">
+                    <label>Meta Description:<br/>
+                        <textarea name="metaDescription" rows="3" class="admindashboard-textarea"></textarea>
+                    </label>
+                </div>
             </div>
 
-            <div class="form-row">
-                <label>Meta Keywords:<br/>
-                    <input type="text" name="metaKeywords" class="admindashboard-input"/>
-                </label>
-            </div>
-
-            <div class="form-row">
-                <label>Meta Description:<br/>
-                    <textarea name="metaDescription" rows="3" class="admindashboard-textarea"></textarea>
-                </label>
-            </div>
 
             <div class="form-actions">
                 <button class="admindashboard-btn primary" type="submit">
@@ -345,9 +365,30 @@
         <label>Skills Required:<br/><textarea name="skillsRequired" rows="3" class="admindashboard-textarea"></textarea></label><br/><br/>
         <label>Key Responsibility:<br/><textarea name="keyResponsibility" rows="3" class="admindashboard-textarea"></textarea></label><br/><br/>
         <label>Roles and Responsibilities:<br/><textarea name="rolesAndResponsibilities" rows="3" class="admindashboard-textarea"></textarea></label><br/><br/>
+
+        <!-- SEO Section Start -->
+        <div class="seo-section">
+            <div class="seo-section-title"><h2>SEO Information</h2></div>
+            <div class="form-row">
+                <label for="seoTitle">Meta Title</label>
+                <input type="text" id="seoTitle" name="seoTitle" class="admindashboard-input" />
+            </div>
+            <div class="form-row">
+                <label for="seoKeywords">Meta Keywords</label>
+                <textarea id="seoKeywords" name="seoKeywords" class="admindashboard-input" rows="2"></textarea>
+            </div>
+            <div class="form-row">
+                <label for="seoDescription">Meta Description</label>
+                <textarea id="seoDescription" name="seoDescription" class="admindashboard-input" rows="2"></textarea>
+            </div>
+        </div>
+        <!-- SEO Section End -->
+
         <button class="admindashboard-btn primary" type="submit">Add Job</button>
     </form>
+
     <div id="jobFormMessage" class="admindashboard-form-message"></div>
+
 </template>
 
 
@@ -380,6 +421,7 @@
 
 
 
+
 <!-- Career Row Template -->
 <template id="careerRowTemplate">
     <tr>
@@ -397,7 +439,8 @@
 
 
 
-<section id="seoPage">
+
+<section id="seoPage"   style="display:none;">
     <h2>SEO Settings</h2>
     <div id="seoListContainer">
         <!-- SEO entries will be dynamically inserted here -->
@@ -441,6 +484,8 @@
 
 
 
+
+
 <!-- Placeholder Page Template -->
 <template id="placeholderPageTemplate">
     <h2 data-page-title></h2>
@@ -451,10 +496,6 @@
 
 <!-- Custom JavaScript -->
 <script src="admin-dashboard.js"></script>
-
-
-
-
 
 
 </body>

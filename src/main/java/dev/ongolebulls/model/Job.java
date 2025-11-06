@@ -42,7 +42,41 @@ public class Job {
     @OneToMany(mappedBy = "job")
     private List<JobApplication> applications;
 
+
+
+    private String seoTitle;
+    private String seoKeywords;
+    private String seoDescription;
+
+    public String getSeoTitle() {
+        return seoTitle;
+    }
+
+    public void setSeoTitle(String seoTitle) {
+        this.seoTitle = seoTitle;
+    }
+
+    public String getSeoKeywords() {
+        return seoKeywords;
+    }
+
+    public void setSeoKeywords(String seoKeywords) {
+        this.seoKeywords = seoKeywords;
+    }
+
+    public String getSeoDescription() {
+        return seoDescription;
+    }
+
+    public void setSeoDescription(String seoDescription) {
+        this.seoDescription = seoDescription;
+    }
+
+
     // Getters and Setters
+
+
+
 
     public Long getId() {
         return id;
