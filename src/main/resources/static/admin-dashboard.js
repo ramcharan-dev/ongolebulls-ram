@@ -406,12 +406,50 @@ async function showBlogForm(blogId = null) {
         const formTemplate = cloneTemplate('blogFormTemplate');
         container.appendChild(formTemplate);
 
+
+
+
+
+
         const form = document.getElementById('blogForm');
         const messageDiv = document.getElementById('blogFormMessage');
         const formTitle = document.querySelector('[data-form-title]');
         const imagePreview = document.getElementById('imagePreview');
         const previewImg = document.getElementById('previewImg');
         const fileInput = form.querySelector('input[name="imageFile"]');
+
+
+
+        // Remove any other instances if needed (optional, good practice)
+        if (window.blogContentEditor && window.blogContentEditor.destroy) {
+            window.blogContentEditor.destroy();
+        }
+        ClassicEditor
+            .create(document.getElementById('blogFullContent'), {
+                toolbar: [
+                    'heading',
+                    '|',
+                    'undo', 'redo',
+                    '|',
+                    'bold', 'italic',
+                    'link', 'unlink',
+                    '|',
+                    'bulletedList', 'numberedList',
+                    'blockQuote', 'code',
+                    '|',
+                    'alignment',
+                    'horizontalLine'
+                ]
+            })
+            .then(editor => {
+                window.blogContentEditor = editor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+
+
 
         if (blogId) {
             formTitle.textContent = 'Edit Blog';
@@ -616,6 +654,19 @@ function admindashboardLoadAdminDetails() {
     const view = document.getElementById("admindashboardView");
     const template = document.getElementById("editAdminTemplate");
 
+
+    const editProfileLink = document.getElementById('editProfileLink');
+    const profileMenu = document.getElementById('adminProfileMenu');
+    if (editProfileLink) {
+        editProfileLink.addEventListener('click', e => {
+            e.preventDefault();
+            if (profileMenu) profileMenu.style.display = 'none';
+            location.hash = '#/admin-details'; // important to include the '#'
+        });
+    }
+
+
+
     view.innerHTML = "";
     view.appendChild(template.content.cloneNode(true));
 
@@ -627,6 +678,9 @@ function setupAdminDetailsEvents() {
     const form = document.getElementById("editAdminForm");
     const messageDiv = document.getElementById("responseMessage");
     const API = "/api/admin";
+
+
+
 
     if (!form) {
         console.error("Form not found. Template may not be loaded.");
@@ -825,6 +879,9 @@ function handleEditJob(job) {
     form.scrollIntoView({ behavior: 'smooth' });
 }
 
+
+
+
 async function handleDeleteJob(jobId) {
     if (!confirm('Are you sure you want to delete this job?')) return;
 
@@ -844,6 +901,12 @@ async function handleDeleteJob(jobId) {
     }
 }
 
+
+
+
+
+
+
 // === Placeholder Pages ===
 function showPlaceholderPage(title) {
     const container = document.getElementById('admindashboardView');
@@ -853,59 +916,9 @@ function showPlaceholderPage(title) {
     container.appendChild(clone);
 }
 
-// === SPA Router ===
-function admindashboardRouter() {
-    const h = location.hash || '#/dashboard';
-    admindashboardHighlight(h);
 
-    // Close sidebar on navigation (for mobile)
-    closeSidebar();
 
-    if (h.startsWith('#/blogs/edit/')) {
-        const blogId = h.split('/')[3];
-        showBlogForm(blogId);
-        return;
-    }
-    if (h === '#/blogs/new') {
-        showBlogForm(null);
-        return;
-    }
 
-    switch(h) {
-        case '#/dashboard':
-            admindashboardLoad();
-            break;
-        case '#/clients':
-            admindashboardLoadClients();
-            break;
-        case '#/plans':
-            showPlaceholderPage('Plans Page (to implement)');
-            break;
-        case '#/investments':
-            showPlaceholderPage('Investments Page (to implement)');
-            break;
-        case '#/blogs':
-            admindashboardLoadBlogs();
-            break;
-        case 'seo':
-            loadSeoSettings();
-            break;
-        case '#/settings':
-            showPlaceholderPage('Settings Page (to implement)');
-            break;
-        case '#/documents':  // ✅ ADD THIS LINE
-            loadDocumentsPage();  // ✅ ADD THIS LINE
-            break;  // ✅ ADD THIS LINE
-        case '#/careers':
-            admindashboardLoadCareers();
-            break;
-        case '#/admin-details':   //<--- ✅ NEW
-            admindashboardLoadAdminDetails();
-            break;
-        default:
-            showPlaceholderPage('Page Not Found');
-    }
-}
 
 // === Search Handler ===
 let searchTimeout;
@@ -930,12 +943,16 @@ function handleSearch() {
     }, 300);
 }
 
+
 // === Event Listeners ===
 document.addEventListener('DOMContentLoaded', () => {
     // Display admin name
     const name = localStorage.getItem('adminName') || 'Admin';
     const nameEl = document.getElementById('adminNameDisplay');
     if (nameEl) nameEl.textContent = name;
+
+
+
 
     // Profile menu toggle
     const btn = document.getElementById('adminProfileBtn');
@@ -947,7 +964,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', () => { menu.style.display = 'none'; });
     menu.addEventListener('click', (e) => { e.stopPropagation(); });
 
-    // Edit Profile link
+
+
+
+
+
     // document.getElementById('editProfileLink').addEventListener('click', (e) => {
     //     e.preventDefault();
     //     menu.style.display = 'none';
@@ -1024,6 +1045,72 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.addEventListener('hashchange', admindashboardRouter);
 
+
+
+
+// === SPA Router ===
+function admindashboardRouter() {
+    const h = location.hash || '#/dashboard';
+
+    const hash = location.hash || '#/dashboard'; // default route
+    // hide or show elements based on route
+    if (hash === '#/admin-details') {
+        admindashboardLoadAdminDetails();
+    }
+    admindashboardHighlight(h);
+
+    // Close sidebar on navigation (for mobile)
+    closeSidebar();
+
+    if (h.startsWith('#/blogs/edit/')) {
+        const blogId = h.split('/')[3];
+        showBlogForm(blogId);
+        return;
+    }
+    if (h === '#/blogs/new') {
+        showBlogForm(null);
+        return;
+    }
+
+    switch(h) {
+        case '#/dashboard':
+            admindashboardLoad();
+            break;
+        case '#/clients':
+            admindashboardLoadClients();
+            break;
+        case '#/plans':
+            showPlaceholderPage('Plans Page (to implement)');
+            break;
+        case '#/investments':
+            showPlaceholderPage('Investments Page (to implement)');
+            break;
+        case '#/blogs':
+            admindashboardLoadBlogs();
+            break;
+        case '#/seo':
+            loadSeoSettings();
+            break;
+        case '#/settings':
+            showPlaceholderPage('Settings Page (to implement)');
+            break;
+        case '#/documents':
+            showPlaceholderPage('Documents Page (to implement)');
+            break;
+        case '#/careers':
+            admindashboardLoadCareers();
+            break;
+        case '#/admin-details':   //<--- ✅ NEW
+            admindashboardLoadAdminDetails();
+            break;
+        default:
+            showPlaceholderPage('Page Not Found');
+    }
+}
+
+
+
+
 // === Auth Guard: Check JWT and roles safely ===
 let admindashboardRoles = [];
 try {
@@ -1049,9 +1136,13 @@ function loadDocumentsPage() {
     view.innerHTML = '';
     view.appendChild(clone);
 
-    // Initialize
-    loadDocumentStats();
-    loadDocumentSubmissions();
+
+
+const API_BASE_SEO = 'http://localhost:8080/api/adminseo'; // Change as per backend URL
+
+async function loadSeoSettings() {
+    const container = document.getElementById('admindashboardView');
+    container.innerHTML = '';
 
     // Copy link button
     document.getElementById('copyLinkBtn').addEventListener('click', copyUploadLink);
