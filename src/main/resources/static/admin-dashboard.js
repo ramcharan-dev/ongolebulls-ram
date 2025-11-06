@@ -952,22 +952,31 @@ document.addEventListener('click', function(e) {
     }
 });
 
+async function submitCustomerDocument() {
+    const response = await fetch(`${API_BASE_URL}/customer-documents/submit`, {
+        method: 'POST',
+        body: formData
+    });
 
-const response = await fetch(`${API_BASE_URL}/customer-documents/submit`, {
-    method: 'POST',
-    body: formData
+    // Check if response is not OK
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Submission failed');
+    }
+
+    const result = await response.json();
+
+    if (result.success) {
+        showAlert(`✅ ${result.message} Reference ID: ${result.id}`, 'success');
+        // Reset the form (if inside form submit handler)
+        this.reset();
+    } else {
+        showAlert(result.message, 'error');
+    }
+}
+
+// Call the function
+submitCustomerDocument().catch(error => {
+    console.error("Error submitting document:", error);
+    showAlert(error.message, "error");
 });
-
-if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || 'Submission failed');
-}
-
-const result = await response.json();
-
-if (result.success) {
-    showAlert(`✅ ${result.message} Reference ID: ${result.id}`, 'success');
-    this.reset();
-} else {
-    showAlert(result.message, 'error');
-}

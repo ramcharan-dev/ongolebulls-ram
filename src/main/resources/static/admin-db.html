@@ -1,3 +1,458 @@
+<!--<!doctype html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="utf-8"/>-->
+<!--    <title>Admin Dashboard</title>-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1"/>-->
+
+<!--    &lt;!&ndash; Bootstrap Icons CDN &ndash;&gt;-->
+<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>-->
+
+<!--    &lt;!&ndash; Custom CSS &ndash;&gt;-->
+<!--    <link rel="stylesheet" href="admin-dashboard.css"/>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<div class="admindashboard-layout" role="application" aria-label="Admin Dashboard">-->
+
+
+
+<!--    &lt;!&ndash; Sidebar &ndash;&gt;-->
+<!--    <aside class="admindashboard-sidebar" aria-label="Primary">-->
+<!--        <div class="admindashboard-brand">-->
+<!--            <i class="bi bi-shield-lock-fill"></i>-->
+<!--            <span>Admin Dashboard</span>-->
+<!--        </div>-->
+
+<!--        <nav class="admindashboard-navlist" id="admindashboardNav">-->
+<!--            <a href="#/dashboard" class="admindashboard-nav" data-route="#/dashboard"><i class="bi bi-speedometer2"></i> <span>Dashboard</span></a>-->
+<!--            <a href="#/clients" class="admindashboard-nav" data-route="#/clients"><i class="bi bi-people-fill"></i> <span>Clients</span></a>-->
+<!--            <a href="#/plans" class="admindashboard-nav" data-route="#/plans"><i class="bi bi-ui-checks-grid"></i> <span>Plans</span></a>-->
+<!--            <a href="#/investments" class="admindashboard-nav" data-route="#/investments"><i class="bi bi-graph-up-arrow"></i> <span>Investments</span></a>-->
+<!--            <a href="#/blogs" class="admindashboard-nav" data-route="#/blogs"><i class="bi bi-journal-text"></i> <span>Blogs</span></a>-->
+<!--            <a href="#/seo" class="admindashboard-nav" data-route="#/seo"><i class="bi bi-search"></i> <span>SEO</span></a>-->
+<!--            <a href="#/settings" class="admindashboard-nav" data-route="#/settings"><i class="bi bi-gear-fill"></i> <span>Settings</span></a>-->
+<!--            <a href="#/documents" class="admindashboard-nav" data-route="#/documents"><i class="bi bi-file-earmark-fill"></i> <span>Documents</span></a>-->
+<!--            <a href="#/careers" class="admindashboard-nav" data-route="#/careers"><i class="bi bi-briefcase-fill"></i> <span>Careers</span></a>-->
+<!--        </nav>-->
+
+<!--        <div class="admindashboard-sidebar-footer">-->
+<!--            <button id="admindashboardBtnLogout" class="admindashboard-btn danger" title="Logout">-->
+<!--                <i class="bi bi-box-arrow-right"></i> <span>Logout</span>-->
+<!--            </button>-->
+<!--        </div>-->
+<!--    </aside>-->
+
+<!--    &lt;!&ndash; Main &ndash;&gt;-->
+<!--    <main class="admindashboard-main">-->
+<!--        <header class="admindashboard-topbar">-->
+<!--            <div class="admindashboard-top-wrap">-->
+<!--                <button class="admindashboard-burger" id="admindashboardBurger"><i class="bi bi-list"></i></button>-->
+<!--                <div class="admindashboard-search-wrap">-->
+<!--                    <i class="bi bi-search admindashboard-search-icon"></i>-->
+<!--                    <input class="admindashboard-search" id="admindashboardTopSearch" placeholder="Search clients, email"/>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="admindashboard-profile-nav">-->
+<!--                <button id="adminProfileBtn" class="admindashboard-icon-btn admindashboard-profile-btn">-->
+<!--                    <i class="bi bi-person-circle"></i>-->
+<!--                    <span id="adminNameDisplay"></span>-->
+<!--                    <i class="bi bi-caret-down-fill"></i>-->
+<!--                </button>-->
+<!--                <div id="adminProfileMenu" class="admindashboard-profile-menu" style="display:none;">-->
+<!--                    <div class="admindashboard-profile-welcome">Welcome !</div>-->
+<!--                    <a href="#/admin-details" class="admindashboard-nav"><i class="bi bi-person-check"></i> <span>Edit Profile</span></a>-->
+
+
+<!--                    <a href="#" id="dashboardLogoutLink" class="admindashboard-profile-link">-->
+<!--                        <i class="bi bi-box-arrow-right"></i> Logout-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </header>-->
+
+<!--        <section id="admindashboardView"></section>-->
+<!--    </main>-->
+<!--</div>-->
+
+
+<!--&lt;!&ndash; Backdrop for mobile sidebar &ndash;&gt;-->
+<!--<div class="admindashboard-backdrop" id="admindashboardBackdrop"></div>-->
+
+<!--&lt;!&ndash; ========== TEMPLATES ========== &ndash;&gt;-->
+
+<!--&lt;!&ndash; Loading Card Template &ndash;&gt;-->
+<!--<template id="loadingCardTemplate">-->
+<!--    <div class="admindashboard-card">-->
+<!--        <div class="admindashboard-card-head">-->
+<!--            <h3 data-title></h3>-->
+<!--            <span class="admindashboard-badge">-->
+<!--                <i class="bi bi-arrow-repeat admindashboard-spin"></i> Loading-->
+<!--            </span>-->
+<!--        </div>-->
+<!--        <div class="admindashboard-skeleton"></div>-->
+<!--    </div>-->
+<!--</template>-->
+
+<!--&lt;!&ndash; Error Card Template &ndash;&gt;-->
+<!--<template id="errorCardTemplate">-->
+<!--    <div class="admindashboard-card">-->
+<!--        <div class="admindashboard-card-head">-->
+<!--            <h3 data-title></h3>-->
+<!--            <span class="admindashboard-badge danger">-->
+<!--                <i class="bi bi-exclamation-triangle"></i> Error-->
+<!--            </span>-->
+<!--        </div>-->
+<!--        <div class="admindashboard-error" data-message></div>-->
+<!--    </div>-->
+<!--</template>-->
+
+<!--&lt;!&ndash; Dashboard Main Template &ndash;&gt;-->
+<!--<template id="dashboardMainTemplate">-->
+<!--    <div class="admindashboard-kpi" id="kpiContainer"></div>-->
+<!--    <div class="admindashboard-grid" id="chartsContainer"></div>-->
+<!--    <div class="admindashboard-card" id="alertsCard"></div>-->
+<!--</template>-->
+
+<!--&lt;!&ndash; KPI Card Template &ndash;&gt;-->
+<!--<template id="kpiCardTemplate">-->
+<!--    <div class="admindashboard-kpi-card">-->
+<!--        <div>-->
+<!--            <i data-icon></i>-->
+<!--            <span data-label></span>-->
+<!--        </div>-->
+<!--        <div class="admindashboard-kpi-value" data-value></div>-->
+<!--    </div>-->
+<!--</template>-->
+
+<!--&lt;!&ndash; Chart Card Template &ndash;&gt;-->
+<!--<template id="chartCardTemplate">-->
+<!--    <div class="admindashboard-card">-->
+<!--        <div class="admindashboard-card-head">-->
+<!--            <h3><i data-icon></i> <span data-title></span></h3>-->
+<!--        </div>-->
+<!--        <canvas data-canvas height="140"></canvas>-->
+<!--    </div>-->
+<!--</template>-->
+
+<!--&lt;!&ndash; Leaderboard Card Template &ndash;&gt;-->
+<!--<template id="leaderboardCardTemplate">-->
+<!--    <div class="admindashboard-card">-->
+<!--        <div class="admindashboard-card-head">-->
+<!--            <h3><i class="bi bi-award-fill"></i> RM Leaderboard</h3>-->
+<!--        </div>-->
+<!--        <div class="admindashboard-list" id="leaderboardList"></div>-->
+<!--    </div>-->
+<!--</template>-->
+
+<!--&lt;!&ndash; Leaderboard Row Template &ndash;&gt;-->
+<!--<template id="leaderboardRowTemplate">-->
+<!--    <div class="admindashboard-list-row">-->
+<!--        <div class="admindashboard-rank" data-rank></div>-->
+<!--        <div class="admindashboard-list-name">-->
+<!--            <i class="bi bi-person-badge-fill"></i>-->
+<!--            <span data-name></span>-->
+<!--        </div>-->
+<!--        <div class="admindashboard-list-value" data-value></div>-->
+<!--    </div>-->
+<!--</template>-->
+
+<!--&lt;!&ndash; Alerts Card Template &ndash;&gt;-->
+<!--<template id="alertsCardTemplate">-->
+<!--    <div class="admindashboard-card-head">-->
+<!--        <h3><i class="bi bi-bell-fill"></i> Alerts</h3>-->
+<!--        <div class="admindashboard-card-actions" id="alertsActions"></div>-->
+<!--    </div>-->
+<!--    <ul class="admindashboard-alerts" id="alertsList"></ul>-->
+<!--</template>-->
+
+<!--&lt;!&ndash; Action Button Template &ndash;&gt;-->
+<!--<template id="actionButtonTemplate">-->
+<!--    <button class="admindashboard-btn" data-button>-->
+<!--        <i data-icon></i>-->
+<!--        <span data-text></span>-->
+<!--    </button>-->
+<!--</template>-->
+
+<!--&lt;!&ndash; Alert Item Template &ndash;&gt;-->
+<!--<template id="alertItemTemplate">-->
+<!--    <li>-->
+<!--        <div class="admindashboard-alert-title">-->
+<!--            <i class="bi bi-info-circle-fill"></i>-->
+<!--            <span data-title></span>-->
+<!--        </div>-->
+<!--        <div class="admindashboard-alert-sub" data-detail></div>-->
+<!--    </li>-->
+<!--</template>-->
+
+<!--&lt;!&ndash; Clients Table Template &ndash;&gt;-->
+<!--<template id="clientsTableTemplate">-->
+<!--    <h2>Clients</h2>-->
+<!--    <table class="admindashboard-table">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            <th>Full Name</th>-->
+<!--            <th>Email</th>-->
+<!--            <th>Phone</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody id="clientsTableBody"></tbody>-->
+<!--    </table>-->
+<!--</template>-->
+
+<!--&lt;!&ndash; Client Row Template &ndash;&gt;-->
+<!--<template id="clientRowTemplate">-->
+<!--    <tr>-->
+<!--        <td data-fullname></td>-->
+<!--        <td data-email></td>-->
+<!--        <td data-phone></td>-->
+<!--    </tr>-->
+<!--</template>-->
+
+<!--&lt;!&ndash; Blogs Container Template &ndash;&gt;-->
+<!--<template id="blogsContainerTemplate">-->
+<!--    <button class="btn btn-primary mb-3" id="addBlogBtn">+ Add Blog</button>-->
+<!--    <div class="row g-3" id="blogsGrid"></div>-->
+<!--</template>-->
+
+<!--&lt;!&ndash; Blog Card Template &ndash;&gt;-->
+<!--<template id="blogCardTemplate">-->
+<!--    <div class="col-sm-6 col-md-4 col-lg-3">-->
+<!--        <div class="card h-100 small-card">-->
+<!--            <img class="card-img-top" data-image alt="">-->
+<!--            <div class="card-body p-2">-->
+<!--                <h6 class="card-title mb-1" data-title></h6>-->
+<!--                <p class="card-text mb-1 small-text" data-description></p>-->
+<!--                <p class="text-muted mb-0">-->
+<!--                    <small data-meta></small>-->
+<!--                </p>-->
+<!--            </div>-->
+<!--            <div class="card-footer d-flex justify-content-between p-2">-->
+<!--                <button class="btn btn-sm btn-warning edit-blog" data-edit>Edit</button>-->
+<!--                <button class="btn btn-sm btn-danger delete-blog" data-delete>Delete</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</template>-->
+
+<!--&lt;!&ndash; Blog Form Template (Add/Edit) &ndash;&gt;-->
+<!--<template id="blogFormTemplate">-->
+<!--    <div class="admindashboard-card">-->
+<!--        <div class="admindashboard-card-head">-->
+<!--            <h3><i class="bi bi-journal-text"></i> <span data-form-title>Add New Blog</span></h3>-->
+<!--            <button class="admindashboard-btn" id="backToBlogsBtn">-->
+<!--                <i class="bi bi-arrow-left"></i> Back to Blogs-->
+<!--            </button>-->
+<!--        </div>-->
+<!--        <form id="blogForm" class="admindashboard-blog-form" enctype="multipart/form-data">-->
+<!--            <div class="form-row">-->
+<!--                <label>Title: <span class="required">*</span><br/>-->
+<!--                    <input type="text" name="title" required class="admindashboard-input"/>-->
+<!--                </label>-->
+<!--            </div>-->
+
+<!--            <div class="form-row">-->
+<!--                <label>Short Description: <span class="required">*</span><br/>-->
+<!--                    <textarea name="shortDescription" rows="3" required class="admindashboard-textarea"></textarea>-->
+<!--                </label>-->
+<!--            </div>-->
+
+<!--            <div class="form-row">-->
+<!--                <label>Full Content: <span class="required">*</span><br/>-->
+<!--                    <textarea name="fullContent" rows="8" required class="admindashboard-textarea"></textarea>-->
+<!--                </label>-->
+<!--            </div>-->
+
+<!--            <div class="form-row">-->
+<!--                <label>Author: <span class="required">*</span><br/>-->
+<!--                    <input type="text" name="author" required class="admindashboard-input"/>-->
+<!--                </label>-->
+<!--            </div>-->
+
+<!--            <div class="form-row">-->
+<!--                <label>Blog Image:<br/>-->
+<!--                    <input type="file" name="imageFile" accept="image/*" class="admindashboard-input-file"/>-->
+<!--                </label>-->
+<!--                <div class="image-preview" id="imagePreview" style="display:none;">-->
+<!--                    <img id="previewImg" src="" alt="Preview" style="max-width:300px;max-height:200px;border-radius:8px;margin-top:10px;"/>-->
+<!--                    <div class="current-image-label">Current Image</div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; SEO Information Section &ndash;&gt;-->
+<!--            <div class="form-row">-->
+<!--                <label>Meta Title:<br/>-->
+<!--                    <input type="text" name="metaTitle" class="admindashboard-input"/>-->
+<!--                </label>-->
+<!--            </div>-->
+
+<!--            <div class="form-row">-->
+<!--                <label>Meta Keywords:<br/>-->
+<!--                    <input type="text" name="metaKeywords" class="admindashboard-input"/>-->
+<!--                </label>-->
+<!--            </div>-->
+
+<!--            <div class="form-row">-->
+<!--                <label>Meta Description:<br/>-->
+<!--                    <textarea name="metaDescription" rows="3" class="admindashboard-textarea"></textarea>-->
+<!--                </label>-->
+<!--            </div>-->
+
+<!--            <div class="form-actions">-->
+<!--                <button class="admindashboard-btn primary" type="submit">-->
+<!--                    <i class="bi bi-save"></i> Save Blog-->
+<!--                </button>-->
+<!--                <button class="admindashboard-btn" type="button" id="cancelBlogBtn">-->
+<!--                    <i class="bi bi-x-circle"></i> Cancel-->
+<!--                </button>-->
+<!--            </div>-->
+<!--        </form>-->
+<!--        <div id="blogFormMessage" class="admindashboard-form-message"></div>-->
+<!--    </div>-->
+<!--</template>-->
+
+
+<!--&lt;!&ndash; Careers Container Template &ndash;&gt;-->
+<!--<template id="careersContainerTemplate">-->
+<!--    <h2>Career Opportunities</h2>-->
+<!--    <table class="admindashboard-careers-table">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            <th>Title</th>-->
+<!--            <th>Department</th>-->
+<!--            <th>Location</th>-->
+<!--            <th>Experience</th>-->
+<!--            <th>Employment Type</th>-->
+<!--            <th>Actions</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody id="careersTableBody"></tbody>-->
+<!--    </table>-->
+
+<!--    <h3>Add New Job</h3>-->
+<!--    <form id="addJobForm" class="admindashboard-job-form">-->
+<!--        <label>Title:<br/><input type="text" name="title" required class="admindashboard-input"/></label><br/><br/>-->
+<!--        <label>Department:<br/><input type="text" name="department" class="admindashboard-input"/></label><br/><br/>-->
+<!--        <label>Location:<br/><input type="text" name="location" class="admindashboard-input"/></label><br/><br/>-->
+<!--        <label>Experience:<br/><input type="text" name="experience" class="admindashboard-input"/></label><br/><br/>-->
+<!--        <label>Employment Type:<br/><input type="text" name="employmentType" class="admindashboard-input"/></label><br/><br/>-->
+<!--        <label>Description:<br/><textarea name="description" rows="3" class="admindashboard-textarea"></textarea></label><br/><br/>-->
+<!--        <label>Qualification:<br/><input type="text" name="qualification" class="admindashboard-input"/></label><br/><br/>-->
+<!--        <label>Salary Range:<br/><input type="text" name="salaryRange" class="admindashboard-input"/></label><br/><br/>-->
+<!--        <label>Posted Date:<br/><input type="date" name="postedDate" class="admindashboard-input"/></label><br/><br/>-->
+<!--        <label>Apply Deadline:<br/><input type="date" name="applyDeadline" class="admindashboard-input"/></label><br/><br/>-->
+<!--        <label>Remote Type:<br/><input type="text" name="remoteType" class="admindashboard-input"/></label><br/><br/>-->
+<!--        <label>Skills Required:<br/><textarea name="skillsRequired" rows="3" class="admindashboard-textarea"></textarea></label><br/><br/>-->
+<!--        <label>Key Responsibility:<br/><textarea name="keyResponsibility" rows="3" class="admindashboard-textarea"></textarea></label><br/><br/>-->
+<!--        <label>Roles and Responsibilities:<br/><textarea name="rolesAndResponsibilities" rows="3" class="admindashboard-textarea"></textarea></label><br/><br/>-->
+<!--        <button class="admindashboard-btn primary" type="submit">Add Job</button>-->
+<!--    </form>-->
+<!--    <div id="jobFormMessage" class="admindashboard-form-message"></div>-->
+<!--</template>-->
+
+
+
+
+<!--<template id="editAdminTemplate">-->
+<!--    <div class="edit-admin-container">-->
+<!--        <h2>Edit Admin User Details</h2>-->
+<!--        <form id="editAdminForm">-->
+<!--            <label>Email:</label>-->
+<!--            <input type="email" id="adminEmail" required />-->
+
+<!--            <label>Password:</label>-->
+<!--            <input type="password" id="adminPassword" required />-->
+
+<!--            <label>Name:</label>-->
+<!--            <input type="text" id="adminName" required />-->
+
+<!--            <button type="submit" id="adminSaveBtn">Save Changes</button>-->
+<!--        </form>-->
+
+<!--        <div id="responseMessage"></div>-->
+<!--    </div>-->
+<!--</template>-->
+
+
+
+
+
+
+
+
+<!--&lt;!&ndash; Career Row Template &ndash;&gt;-->
+<!--<template id="careerRowTemplate">-->
+<!--    <tr>-->
+<!--        <td data-title></td>-->
+<!--        <td data-department></td>-->
+<!--        <td data-location></td>-->
+<!--        <td data-experience></td>-->
+<!--        <td data-employmenttype></td>-->
+<!--        <td>-->
+<!--            <button class="edit-job-btn" data-edit>Edit</button>-->
+<!--            <button class="delete-job-btn" data-delete>Delete</button>-->
+<!--        </td>-->
+<!--    </tr>-->
+<!--</template>-->
+
+
+
+<!--<section id="seoPage">-->
+<!--    <h2>SEO Settings</h2>-->
+<!--    <div id="seoListContainer">-->
+<!--        &lt;!&ndash; SEO entries will be dynamically inserted here &ndash;&gt;-->
+<!--    </div>-->
+<!--    <button id="addSeoBtn" class="admindashboard-btn primary">Add New SEO Setting</button>-->
+
+<!--    &lt;!&ndash; Edit form modal/dialog &ndash;&gt;-->
+<!--    <div id="seoEditModal" class="modal" style="display:none;">-->
+<!--        <form id="seoEditForm" class="admindashboard-form">-->
+<!--            <input type="hidden" name="id" id="seoId" />-->
+<!--            <label>Slug (URL Path)</label>-->
+<!--            <input type="text" name="slug" id="seoSlug" required />-->
+
+<!--            <label>Meta Title</label>-->
+<!--            <input type="text" name="metaTitle" id="seoMetaTitle" />-->
+
+<!--            <label>Meta Description</label>-->
+<!--            <textarea name="metaDescription" id="seoMetaDescription"></textarea>-->
+
+<!--            <label>Meta Keywords</label>-->
+<!--            <input type="text" name="metaKeywords" id="seoMetaKeywords" />-->
+
+<!--            <label>Robots Tag</label>-->
+<!--            <select name="robotsTag" id="seoRobotsTag">-->
+<!--                <option value="index,follow">index, follow</option>-->
+<!--                <option value="noindex,nofollow">noindex, nofollow</option>-->
+<!--            </select>-->
+
+<!--            <label>Schema JSON</label>-->
+<!--            <textarea name="schemaJson" id="seoSchemaJson" rows="6"></textarea>-->
+
+<!--            <div class="form-actions">-->
+<!--                <button type="submit" class="admindashboard-btn primary">Save</button>-->
+<!--                <button type="button" class="admindashboard-btn" id="seoCancelBtn">Cancel</button>-->
+<!--            </div>-->
+<!--            <div id="seoFormMessage"></div>-->
+<!--        </form>-->
+<!--    </div>-->
+<!--</section>-->
+
+
+
+
+<!--&lt;!&ndash; Placeholder Page Template &ndash;&gt;-->
+<!--<template id="placeholderPageTemplate">-->
+<!--    <h2 data-page-title></h2>-->
+<!--</template>-->
+
+<!--&lt;!&ndash; Chart.js CDN &ndash;&gt;-->
+<!--<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>-->
+
+<!--&lt;!&ndash; Custom JavaScript &ndash;&gt;-->
+<!--<script src="admin-dashboard.js"></script>-->
+<!--</body>-->
+<!--</html>-->
 <!doctype html>
 <html lang="en">
 <head>
@@ -286,8 +741,6 @@
 <template id="placeholderPageTemplate">
     <h2 data-page-title></h2>
 </template>
-
-
 
 <!-- Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
