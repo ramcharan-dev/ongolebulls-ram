@@ -1,6 +1,6 @@
 // === Backend API base URL ===
 const ADMINDASHBOARD_API = 'http://localhost:8080/api';
-const IMAGE_BASE_URL = 'http://localhost:8080/assets/';
+const JOB_API = 'http://localhost:8080/api/jobs';
 
 const admindashboardToken = localStorage.getItem('admindashboard_jwt') || localStorage.getItem('jwt');
 const admindashboardAuthHeaders = () => admindashboardToken ? { 'Authorization': 'Bearer ' + admindashboardToken } : {};
@@ -57,22 +57,16 @@ function showErrorCard(title, message) {
     container.appendChild(clone);
 }
 
-// === Close Sidebar (Mobile) ===
-function closeSidebar() {
-    const sidebar = document.querySelector('.admindashboard-sidebar');
-    const backdrop = document.getElementById('admindashboardBackdrop');
-    if (sidebar) sidebar.classList.remove('open');
-    if (backdrop) backdrop.classList.remove('show');
-}
-
 // === Dashboard Renderer ===
 function admindashboardRender(kpi, sip, risk, goals, leaderboard, alerts) {
     const view = document.getElementById('admindashboardView');
     view.innerHTML = '';
 
+    // Clone main dashboard template
     const mainTemplate = cloneTemplate('dashboardMainTemplate');
     view.appendChild(mainTemplate);
 
+    // Render KPIs
     const kpiContainer = document.getElementById('kpiContainer');
     const kpiData = [
         { icon: 'bi-people-fill', label: 'Total Clients', value: kpi.totalClients },
@@ -92,8 +86,10 @@ function admindashboardRender(kpi, sip, risk, goals, leaderboard, alerts) {
         kpiContainer.appendChild(kpiClone);
     });
 
+    // Render Charts
     const chartsContainer = document.getElementById('chartsContainer');
 
+    // SIP Chart
     const sipChartClone = cloneTemplate('chartCardTemplate');
     const sipIcon = sipChartClone.querySelector('[data-icon]');
     sipIcon.className = 'bi bi-bar-chart-fill';
@@ -105,6 +101,7 @@ function admindashboardRender(kpi, sip, risk, goals, leaderboard, alerts) {
     sipCanvas.removeAttribute('data-canvas');
     chartsContainer.appendChild(sipChartClone);
 
+    // Risk Chart
     const riskChartClone = cloneTemplate('chartCardTemplate');
     const riskIcon = riskChartClone.querySelector('[data-icon]');
     riskIcon.className = 'bi bi-pie-chart-fill';
@@ -116,6 +113,7 @@ function admindashboardRender(kpi, sip, risk, goals, leaderboard, alerts) {
     riskCanvas.removeAttribute('data-canvas');
     chartsContainer.appendChild(riskChartClone);
 
+    // Goals Chart
     const goalsChartClone = cloneTemplate('chartCardTemplate');
     const goalsIcon = goalsChartClone.querySelector('[data-icon]');
     goalsIcon.className = 'bi bi-pie-chart';
@@ -127,6 +125,7 @@ function admindashboardRender(kpi, sip, risk, goals, leaderboard, alerts) {
     goalsCanvas.removeAttribute('data-canvas');
     chartsContainer.appendChild(goalsChartClone);
 
+    // Leaderboard
     const leaderboardClone = cloneTemplate('leaderboardCardTemplate');
     chartsContainer.appendChild(leaderboardClone);
 
@@ -139,10 +138,12 @@ function admindashboardRender(kpi, sip, risk, goals, leaderboard, alerts) {
         leaderboardList.appendChild(rowClone);
     });
 
+    // Alerts Card
     const alertsCard = document.getElementById('alertsCard');
     const alertsClone = cloneTemplate('alertsCardTemplate');
     alertsCard.appendChild(alertsClone);
 
+    // Action Buttons
     const alertsActions = document.getElementById('alertsActions');
     const actions = [
         { class: 'primary', icon: 'bi-person-plus-fill', text: 'Add New Client', id: 'admindashboardAddClient' },
@@ -164,6 +165,7 @@ function admindashboardRender(kpi, sip, risk, goals, leaderboard, alerts) {
         alertsActions.appendChild(btnClone);
     });
 
+    // Alerts List
     const alertsList = document.getElementById('alertsList');
     alerts.forEach(alert => {
         const alertClone = cloneTemplate('alertItemTemplate');
@@ -172,6 +174,7 @@ function admindashboardRender(kpi, sip, risk, goals, leaderboard, alerts) {
         alertsList.appendChild(alertClone);
     });
 
+    // Initialize Charts
     new Chart(document.getElementById('admindashboard-chart-sip'), {
         type: 'bar',
         data: {
@@ -202,6 +205,7 @@ function admindashboardRender(kpi, sip, risk, goals, leaderboard, alerts) {
         options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
     });
 
+    // Attach Event Handlers
     document.getElementById('admindashboardAddClient').onclick = () => location.hash = '#/clients';
     document.getElementById('admindashboardRmReport').onclick = () => window.open(ADMINDASHBOARD_API + '/reports/rm?format=pdf','_blank');
     document.getElementById('admindashboardBroadcast').onclick = () => alert('Open broadcast dialog here');
@@ -227,31 +231,17 @@ async function admindashboardLoad() {
     }
 }
 
-// === Clients Loader with Search ===
-let allClients = [];
-
-async function admindashboardLoadClients(searchQuery = '') {
+// === Clients Loader ===
+async function admindashboardLoadClients() {
     showLoadingCard('Loading Clients...');
 
     try {
-        if (allClients.length === 0) {
-            allClients = await admindashboardGet('/clients', []);
-        }
+        const clients = await admindashboardGet('/clients', []);
+        console.log('API response for /clients:', clients);
 
-        if (!Array.isArray(allClients)) {
+        if (!Array.isArray(clients)) {
             throw new Error("API did not return an array");
         }
-
-        const filteredClients = searchQuery
-            ? allClients.filter(client => {
-                const search = searchQuery.toLowerCase();
-                return (
-                    (client.fullName && client.fullName.toLowerCase().includes(search)) ||
-                    (client.email && client.email.toLowerCase().includes(search)) ||
-                    (client.phone && client.phone.includes(search))
-                );
-            })
-            : allClients;
 
         const container = document.getElementById('admindashboardView');
         container.innerHTML = '';
@@ -260,33 +250,11 @@ async function admindashboardLoadClients(searchQuery = '') {
         container.appendChild(tableClone);
 
         const tbody = document.getElementById('clientsTableBody');
-
-        if (filteredClients.length === 0) {
-            const row = document.createElement('tr');
-            const cell = document.createElement('td');
-            cell.colSpan = 3;
-            cell.textContent = searchQuery ? 'No clients found matching your search.' : 'No clients available.';
-            cell.style.textAlign = 'center';
-            cell.style.padding = '20px';
-            cell.style.color = 'var(--muted)';
-            row.appendChild(cell);
-            tbody.appendChild(row);
-            return;
-        }
-
-        filteredClients.forEach(client => {
+        clients.forEach(client => {
             const rowClone = cloneTemplate('clientRowTemplate');
-            const cells = rowClone.querySelectorAll('td');
-
-            cells[0].setAttribute('data-label', 'Full Name');
             setElementContent(rowClone, '[data-fullname]', client.fullName || '');
-
-            cells[1].setAttribute('data-label', 'Email');
             setElementContent(rowClone, '[data-email]', client.email || '');
-
-            cells[2].setAttribute('data-label', 'Phone');
             setElementContent(rowClone, '[data-phone]', client.phone || '');
-
             tbody.appendChild(rowClone);
         });
     } catch (err) {
@@ -300,14 +268,9 @@ async function admindashboardLoadBlogs() {
     showLoadingCard('Loading Blogs...');
 
     try {
-        const response = await fetch(ADMINDASHBOARD_API + '/blogs', {
+        const response = await fetch('/api/blogs', {
             headers: admindashboardAuthHeaders()
         });
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-
         const blogs = await response.json();
 
         const container = document.getElementById('admindashboardView');
@@ -317,38 +280,16 @@ async function admindashboardLoadBlogs() {
         container.appendChild(blogsContainer);
 
         const grid = document.getElementById('blogsGrid');
-        const addBtn = document.getElementById('addBlogBtn');
-
-        if (addBtn) {
-            addBtn.onclick = () => {
-                location.hash = '#/blogs/new';
-            };
-        }
-
-        if (blogs.length === 0) {
-            const emptyMsg = document.createElement('p');
-            emptyMsg.textContent = 'No blogs found. Click "+ Add Blog" to create your first blog.';
-            emptyMsg.style.color = 'var(--muted)';
-            emptyMsg.style.padding = '20px';
-            grid.appendChild(emptyMsg);
-            return;
-        }
 
         blogs.forEach(blog => {
             const cardClone = cloneTemplate('blogCardTemplate');
 
             const img = cardClone.querySelector('[data-image]');
-
             if (blog.image) {
-                img.src = IMAGE_BASE_URL + blog.image;
-                img.alt = blog.title || 'Blog image';
-
-                img.onerror = function() {
-                    this.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Crect fill="%23ddd" width="300" height="200"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E';
-                };
+                img.src = `/assets/${blog.image}`;
+                img.alt = blog.title;
             } else {
-                img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Crect fill="%23ddd" width="300" height="200"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E';
-                img.alt = 'No image available';
+                img.remove();
             }
             img.removeAttribute('data-image');
 
@@ -358,28 +299,18 @@ async function admindashboardLoadBlogs() {
 
             const editBtn = cardClone.querySelector('[data-edit]');
             editBtn.removeAttribute('data-edit');
-            editBtn.onclick = () => {
-                location.hash = `#/blogs/edit/${blog.id}`;
-            };
+            editBtn.onclick = () => location.href = `#/blogs/edit/${blog.id}`;
 
             const deleteBtn = cardClone.querySelector('[data-delete]');
             deleteBtn.removeAttribute('data-delete');
             deleteBtn.onclick = async () => {
                 if (confirm('Are you sure you want to delete this blog?')) {
-                    try {
-                        const res = await fetch(`${ADMINDASHBOARD_API}/blogs/${blog.id}`, {
-                            method: 'DELETE',
-                            headers: admindashboardAuthHeaders()
-                        });
-                        if (res.ok) {
-                            alert('Blog deleted successfully');
-                            admindashboardLoadBlogs();
-                        } else {
-                            alert('Failed to delete blog');
-                        }
-                    } catch (err) {
-                        alert('Error deleting blog: ' + err.message);
-                    }
+                    const res = await fetch(`/api/blogs/${blog.id}`, {
+                        method: 'DELETE',
+                        headers: admindashboardAuthHeaders()
+                    });
+                    if (res.ok) admindashboardLoadBlogs();
+                    else alert('Failed to delete blog');
                 }
             };
 
@@ -698,6 +629,7 @@ async function admindashboardLoadCareers() {
             tbody.appendChild(rowClone);
         });
 
+        // Attach form submit handler
         const form = document.getElementById('addJobForm');
         const messageDiv = document.getElementById('jobFormMessage');
 
@@ -984,8 +916,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('admindashboard_roles');
         localStorage.removeItem('jwt');
         localStorage.removeItem('roles');
-        localStorage.removeItem('adminName');
-        window.location.href = 'adminlogin.html';
+        window.location.href = 'http://localhost:8080/adminlogin.html';
     });
 
     // Sidebar logout button
@@ -994,15 +925,12 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('admindashboard_roles');
         localStorage.removeItem('jwt');
         localStorage.removeItem('roles');
-        localStorage.removeItem('adminName');
-        location.href = 'adminlogin.html';
+        location.href = 'admin' +
+            'login.html';
     });
 
     // Sidebar toggle for mobile
     const burger = document.getElementById('admindashboardBurger');
-    const sidebar = document.querySelector('.admindashboard-sidebar');
-    const backdrop = document.getElementById('admindashboardBackdrop');
-
     if (burger) {
         burger.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -1102,3 +1030,8 @@ const admindashboardIsAdmin = admindashboardRoles.some(r => r === 'ROLE_ADMIN' |
 if (!admindashboardJwt || !admindashboardIsAdmin) {
     window.location.href = 'adminlogin.html';
 }
+// Call the function
+submitCustomerDocument().catch(error => {
+    console.error("Error submitting document:", error);
+    showAlert(error.message, "error");
+});
