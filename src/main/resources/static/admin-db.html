@@ -493,7 +493,7 @@
             <a href="#/seo" class="admindashboard-nav" data-route="#/seo"><i class="bi bi-search"></i> <span>SEO</span></a>
             <a href="#/settings" class="admindashboard-nav" data-route="#/settings"><i class="bi bi-gear-fill"></i> <span>Settings</span></a>
             <a href="#/documents" class="admindashboard-nav" data-route="#/documents"><i class="bi bi-file-earmark-fill"></i> <span>Documents</span></a>
-            <a href="#/careers" class="admindashboard-nav" data-route="#/careers"><i class="bi bi-briefcase-fill"></i> <span>Careers</span></a>
+            <a href="#/careers" class="admindashboard-nav" data-route="#/careers"><i class="bi bi-brief -fill"></i> <span>Careers</span></a>
         </nav>
 
         <div class="admindashboard-sidebar-footer">
@@ -749,6 +749,38 @@
     <div id="jobFormMessage" class="admindashboard-form-message"></div>
 
 </template>
+
+
+
+
+<template id="editAdminTemplate">
+    <div class="edit-admin-container">
+        <h2>Edit Admin User Details</h2>
+        <form id="editAdminForm">
+            <label for="adminEmail">Email:</label>
+            <input type="email" id="adminEmail" required />
+
+            <label for="adminPassword">Password:</label>
+            <input type="password" id="adminPassword" />
+
+            <label for="adminName">Name:</label>
+            <input type="text" id="adminName" required />
+
+            <button type="submit" id="adminSaveBtn" class="admindashboard-btn primary">Save Changes</button>
+        </form>
+
+        <div id="responseMessage"></div>
+    </div>
+</template>
+
+
+
+
+
+
+
+
+
 
 <!-- Career Row Template -->
 <template id="careerRowTemplate">
