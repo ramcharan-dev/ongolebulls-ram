@@ -406,11 +406,6 @@ async function showBlogForm(blogId = null) {
         const formTemplate = cloneTemplate('blogFormTemplate');
         container.appendChild(formTemplate);
 
-
-
-
-
-
         const form = document.getElementById('blogForm');
         const messageDiv = document.getElementById('blogFormMessage');
         const formTitle = document.querySelector('[data-form-title]');
@@ -418,9 +413,6 @@ async function showBlogForm(blogId = null) {
         const previewImg = document.getElementById('previewImg');
         const fileInput = form.querySelector('input[name="imageFile"]');
 
-
-
-        // Remove any other instances if needed (optional, good practice)
         if (window.blogContentEditor && window.blogContentEditor.destroy) {
             window.blogContentEditor.destroy();
         }
@@ -447,9 +439,6 @@ async function showBlogForm(blogId = null) {
             .catch(error => {
                 console.error(error);
             });
-
-
-
 
         if (blogId) {
             formTitle.textContent = 'Edit Blog';
@@ -575,196 +564,104 @@ async function showBlogForm(blogId = null) {
     }
 }
 
-// === Edit Profile Loader ===
-// async function admindashboardLoadEditProfile() {
-//     const container = document.getElementById("admindashboardView");
-//     container.innerHTML = "";
-//
-//     // show a loading card
-//     const loadingClone = cloneTemplate("loadingCardTemplate");
-//     setElementContent(loadingClone, "[data-title]", "Loading Profile…");
-//     container.appendChild(loadingClone);
-//
-//     try {
-//         await new Promise((resolve) => setTimeout(resolve, 100));
-//
-//         // replace loader with form
-//         container.innerHTML = "";
-//         const formTemplate = cloneTemplate("editProfileTemplate");
-//         container.appendChild(formTemplate);
-//
-//         const adminId = 1;
-//         const form = document.getElementById("editAdminForm");
-//         const messageDiv = document.getElementById("responseMessage");
-//
-//         // load existing admin data
-//         const response = await fetch(`${ADMINDASHBOARD_API}/admin/${adminId}`);
-//         if (!response.ok) throw new Error("Failed to fetch admin details");
-//
-//         const data = await response.json();
-//         document.getElementById("adminEmail").value = data.email || "";
-//         document.getElementById("adminPassword").value = data.password || "";
-//         document.getElementById("adminName").value = data.name || "";
-//
-//         // handle form submission
-//         form.onsubmit = async (e) => {
-//             e.preventDefault();
-//             const submitBtn = form.querySelector("button[type='submit']");
-//             submitBtn.disabled = true;
-//             messageDiv.innerText = "Updating…";
-//             messageDiv.style.color = "#2563eb";
-//
-//             const email = document.getElementById("adminEmail").value.trim();
-//             const password = document.getElementById("adminPassword").value.trim();
-//             const name = document.getElementById("adminName").value.trim();
-//
-//             try {
-//                 const res = await fetch(`${ADMINDASHBOARD_API}/admin/update/${adminId}`, {
-//                     method: "PUT",
-//                     headers: { "Content-Type": "application/json" },
-//                     body: JSON.stringify({ email, password, name }),
-//                 });
-//
-//                 const result = await res.json();
-//                 if (!res.ok || !result.success) throw new Error(result.message || "Update failed");
-//
-//                 messageDiv.innerText = result.message || "Profile updated successfully";
-//                 messageDiv.style.color = "#22c55e";
-//
-//                 localStorage.setItem("adminName", name);
-//                 const nameEl = document.getElementById("adminNameDisplay");
-//                 if (nameEl) nameEl.textContent = name;
-//
-//                 setTimeout(() => (messageDiv.innerText = ""), 3000);
-//             } catch (err) {
-//                 messageDiv.innerText = "Error: " + err.message;
-//                 messageDiv.style.color = "#ef4444";
-//             } finally {
-//                 submitBtn.disabled = false;
-//             }
-//         };
-//     } catch (err) {
-//         showErrorCard("Edit Profile", err.message || "Failed to load profile.");
-//     }
-// }
+// === Edit Admin Profile Loader ===
+async function admindashboardLoadAdminDetails() {
+    const container = document.getElementById("admindashboardView");
+    container.innerHTML = "";
 
+    // Show loading
+    const loadingClone = cloneTemplate("loadingCardTemplate");
+    setElementContent(loadingClone, "[data-title]", "Loading Profile…");
+    container.appendChild(loadingClone);
 
+    try {
+        await new Promise((resolve) => setTimeout(resolve, 100));
 
-function admindashboardLoadAdminDetails() {
-    const view = document.getElementById("admindashboardView");
-    const template = document.getElementById("editAdminTemplate");
+        // Replace with form
+        container.innerHTML = "";
+        const formTemplate = cloneTemplate("editAdminTemplate");
+        container.appendChild(formTemplate);
 
+        const adminId = 1;
+        const form = document.getElementById("editAdminForm");
+        const messageDiv = document.getElementById("responseMessage");
 
-    const editProfileLink = document.getElementById('editProfileLink');
-    const profileMenu = document.getElementById('adminProfileMenu');
-    if (editProfileLink) {
-        editProfileLink.addEventListener('click', e => {
+        // Load existing admin data
+        const response = await fetch(`${ADMINDASHBOARD_API}/admin/${adminId}`, {
+            headers: admindashboardAuthHeaders()
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch admin details");
+
+        const data = await response.json();
+        document.getElementById("adminEmail").value = data.email || "";
+        document.getElementById("adminPassword").value = ""; // Don't prefill password
+        document.getElementById("adminName").value = data.name || "";
+
+        // Handle form submission
+        form.onsubmit = async (e) => {
             e.preventDefault();
-            if (profileMenu) profileMenu.style.display = 'none';
-            location.hash = '#/admin-details'; // important to include the '#'
-        });
-    }
+            const submitBtn = document.getElementById("adminSaveBtn");
+            submitBtn.disabled = true;
+            messageDiv.innerText = "Updating…";
+            messageDiv.style.color = "#2563eb";
 
+            const email = document.getElementById("adminEmail").value.trim();
+            const password = document.getElementById("adminPassword").value.trim();
+            const name = document.getElementById("adminName").value.trim();
 
-
-    view.innerHTML = "";
-    view.appendChild(template.content.cloneNode(true));
-
-    setupAdminDetailsEvents();
-}
-
-function setupAdminDetailsEvents() {
-    const adminId = 1;
-    const form = document.getElementById("editAdminForm");
-    const messageDiv = document.getElementById("responseMessage");
-    const API = "/api/admin";
-
-
-
-
-    if (!form) {
-        console.error("Form not found. Template may not be loaded.");
-        return;
-    }
-
-    // Load current admin details
-    fetch(`${API}/${adminId}`)
-        .then(res => {
-            if (!res.ok) throw new Error("Failed to fetch admin details");
-            return res.json();
-        })
-        .then(data => {
-            document.getElementById("adminEmail").value = data.email || "";
-            document.getElementById("adminPassword").value = data.password || "";
-            document.getElementById("adminName").value = data.name || "";
-        })
-        .catch(err => {
-            messageDiv.innerText = err.message;
-            messageDiv.style.color = "red";
-        });
-
-    // Save changes
-    form.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        const payload = {
-            email: document.getElementById("adminEmail").value,
-            password: document.getElementById("adminPassword").value,
-            name: document.getElementById("adminName").value
-        };
-
-        fetch(`${API}/update/${adminId}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        })
-            .then(res => res.json())
-            .then(data => {
-                messageDiv.innerText = data.message;
-                messageDiv.style.color = data.success ? "green" : "red";
-
-                // ✅ Reload latest updated data
-                loadUpdatedAdminDetails();
-                refreshAdminHeader();
-            })
-            .catch(err => {
-                messageDiv.innerText = err.message;
-                messageDiv.style.color = "red";
-            });
-    });
-}
-
-// ✅ helper reload function
-function loadUpdatedAdminDetails() {
-    const adminId = 1;
-
-    fetch(`/api/admin/${adminId}`)
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById("adminEmail").value = data.email;
-            document.getElementById("adminPassword").value = data.password;
-            document.getElementById("adminName").value = data.name;
-        });
-}
-
-
-
-function refreshAdminHeader() {
-    fetch("/api/admin/1")
-        .then(res => res.json())
-        .then(data => {
-            const label = document.getElementById("adminNameDisplay");
-            if (label) {
-                label.innerText = data.name;
+            if (!email || !name) {
+                messageDiv.innerText = "Email and Name are required";
+                messageDiv.style.color = "#ef4444";
+                submitBtn.disabled = false;
+                return;
             }
-        });
+
+            const payload = { email, name };
+            if (password && password.length >= 6) {
+                payload.password = password;
+            } else if (password && password.length < 6) {
+                messageDiv.innerText = "Password must be at least 6 characters";
+                messageDiv.style.color = "#ef4444";
+                submitBtn.disabled = false;
+                return;
+            }
+
+            try {
+                const res = await fetch(`${ADMINDASHBOARD_API}/admin/update/${adminId}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        ...admindashboardAuthHeaders()
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                const result = await res.json();
+                if (!res.ok || !result.success) throw new Error(result.message || "Update failed");
+
+                messageDiv.innerText = result.message || "Profile updated successfully";
+                messageDiv.style.color = "#22c55e";
+
+                // Update the name in header
+                const nameEl = document.getElementById("adminNameDisplay");
+                if (nameEl) nameEl.textContent = name;
+
+                // Clear password field
+                document.getElementById("adminPassword").value = "";
+
+                setTimeout(() => (messageDiv.innerText = ""), 3000);
+            } catch (err) {
+                messageDiv.innerText = "Error: " + err.message;
+                messageDiv.style.color = "#ef4444";
+            } finally {
+                submitBtn.disabled = false;
+            }
+        };
+    } catch (err) {
+        showErrorCard("Edit Profile", err.message || "Failed to load profile.");
+    }
 }
-
-
-
-
-
-
 
 // === Careers Loader ===
 async function admindashboardLoadCareers() {
@@ -879,9 +776,6 @@ function handleEditJob(job) {
     form.scrollIntoView({ behavior: 'smooth' });
 }
 
-
-
-
 async function handleDeleteJob(jobId) {
     if (!confirm('Are you sure you want to delete this job?')) return;
 
@@ -901,12 +795,6 @@ async function handleDeleteJob(jobId) {
     }
 }
 
-
-
-
-
-
-
 // === Placeholder Pages ===
 function showPlaceholderPage(title) {
     const container = document.getElementById('admindashboardView');
@@ -915,10 +803,6 @@ function showPlaceholderPage(title) {
     setElementContent(clone, '[data-page-title]', title);
     container.appendChild(clone);
 }
-
-
-
-
 
 // === Search Handler ===
 let searchTimeout;
@@ -934,7 +818,6 @@ function handleSearch() {
         if (currentHash === '#/clients') {
             admindashboardLoadClients(searchQuery);
         } else if (searchQuery) {
-            // If user is searching but not on clients page, navigate to clients
             location.hash = '#/clients';
             setTimeout(() => {
                 admindashboardLoadClients(searchQuery);
@@ -943,6 +826,121 @@ function handleSearch() {
     }, 300);
 }
 
+// === SEO Settings Loader ===
+const API_BASE_SEO = 'http://localhost:8080/api/adminseo';
+
+async function loadSeoSettings() {
+    const container = document.getElementById('admindashboardView');
+    container.innerHTML = '';
+
+    const seoSection = document.getElementById('seoPage');
+    const seoClone = seoSection.cloneNode(true);
+    seoClone.style.display = 'block';
+    container.appendChild(seoClone);
+
+    const seoListContainer = seoClone.querySelector('#seoListContainer');
+    const addBtn = seoClone.querySelector('#addSeoBtn');
+    const editModal = seoClone.querySelector('#seoEditModal');
+    const form = seoClone.querySelector('#seoEditForm');
+    const cancelBtn = seoClone.querySelector('#seoCancelBtn');
+    const formMessage = seoClone.querySelector('#seoFormMessage');
+
+    seoListContainer.textContent = 'Loading SEO settings...';
+
+    try {
+        const response = await fetch(API_BASE_SEO);
+        if (!response.ok) throw new Error('Failed to fetch SEO settings');
+        const seoList = await response.json();
+
+        seoListContainer.innerHTML = '';
+
+        if (seoList.length === 0) {
+            seoListContainer.textContent = 'No SEO settings found.';
+            return;
+        }
+
+        seoList.forEach(seo => {
+            const div = document.createElement('div');
+            div.classList.add('seo-entry');
+            div.innerHTML = `
+                <strong>${seo.slug}</strong> - ${seo.metaTitle || 'No Title'}<br/>
+                <small>${seo.metaDescription || ''}</small><br/>
+                <button class="editBtn" data-id="${seo.id}">Edit</button>
+            `;
+            seoListContainer.appendChild(div);
+        });
+
+        seoListContainer.querySelectorAll('.editBtn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const id = btn.dataset.id;
+                try {
+                    const res = await fetch(`${API_BASE_SEO}/${id}`);
+                    if (!res.ok) throw new Error('Failed to fetch SEO entry');
+                    const seo = await res.json();
+
+                    form.querySelector('#seoId').value = seo.id || '';
+                    form.querySelector('#seoSlug').value = seo.slug || '';
+                    form.querySelector('#seoMetaTitle').value = seo.metaTitle || '';
+                    form.querySelector('#seoMetaDescription').value = seo.metaDescription || '';
+                    form.querySelector('#seoMetaKeywords').value = seo.metaKeywords || '';
+                    form.querySelector('#seoRobotsTag').value = seo.robotsTag || 'index,follow';
+                    form.querySelector('#seoSchemaJson').value = seo.schemaJson || '';
+
+                    editModal.style.display = 'block';
+                    formMessage.textContent = '';
+                } catch (err) {
+                    alert(err.message);
+                }
+            });
+        });
+    } catch (err) {
+        seoListContainer.textContent = err.message;
+    }
+
+    addBtn.addEventListener('click', () => {
+        form.reset();
+        form.querySelector('#seoId').value = '';
+        formMessage.textContent = '';
+        editModal.style.display = 'block';
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        editModal.style.display = 'none';
+    });
+
+    form.addEventListener('submit', async e => {
+        e.preventDefault();
+        formMessage.textContent = '';
+
+        const payload = {
+            id: form.querySelector('#seoId').value || null,
+            slug: form.querySelector('#seoSlug').value,
+            metaTitle: form.querySelector('#seoMetaTitle').value,
+            metaDescription: form.querySelector('#seoMetaDescription').value,
+            metaKeywords: form.querySelector('#seoMetaKeywords').value,
+            robotsTag: form.querySelector('#seoRobotsTag').value,
+            schemaJson: form.querySelector('#seoSchemaJson').value
+        };
+
+        try {
+            const res = await fetch(`${API_BASE_SEO}/save`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (!res.ok) throw new Error('Failed to save SEO entry');
+
+            formMessage.style.color = 'green';
+            formMessage.textContent = 'Saved successfully!';
+            editModal.style.display = 'none';
+
+            loadSeoSettings();
+        } catch (err) {
+            formMessage.style.color = 'red';
+            formMessage.textContent = err.message;
+        }
+    });
+}
 
 // === Event Listeners ===
 document.addEventListener('DOMContentLoaded', () => {
@@ -951,29 +949,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const nameEl = document.getElementById('adminNameDisplay');
     if (nameEl) nameEl.textContent = name;
 
-
-
-
     // Profile menu toggle
-    const btn = document.getElementById('adminProfileBtn');
-    const menu = document.getElementById('adminProfileMenu');
-    btn.addEventListener('click', (e) => {
+    const profileBtn = document.getElementById('adminProfileBtn');
+    const profileMenu = document.getElementById('adminProfileMenu');
+
+    profileBtn.addEventListener('click', e => {
         e.stopPropagation();
-        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+        const isVisible = profileMenu.style.display === 'block';
+        profileMenu.style.display = isVisible ? 'none' : 'block';
+        profileBtn.setAttribute('aria-expanded', !isVisible);
     });
-    document.addEventListener('click', () => { menu.style.display = 'none'; });
-    menu.addEventListener('click', (e) => { e.stopPropagation(); });
 
+    document.addEventListener('click', () => {
+        profileMenu.style.display = 'none';
+        profileBtn.setAttribute('aria-expanded', 'false');
+    });
 
+    profileMenu.addEventListener('click', e => e.stopPropagation());
 
-
-
-
-    // document.getElementById('editProfileLink').addEventListener('click', (e) => {
-    //     e.preventDefault();
-    //     menu.style.display = 'none';
-    //     location.hash = '#/edit-profile';
-    // });
+    // Edit profile link
+    const editProfileLink = document.getElementById('editProfileLink');
+    if (editProfileLink) {
+        editProfileLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            profileMenu.style.display = 'none';
+            location.hash = '#/admin-details';
+        });
+    }
 
     // Logout from profile menu
     document.getElementById('dashboardLogoutLink').addEventListener('click', (e) => {
@@ -1009,27 +1011,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Close sidebar when clicking backdrop
     if (backdrop) {
         backdrop.addEventListener('click', () => {
             closeSidebar();
         });
     }
 
-    // Close sidebar when clicking nav links (handled in router now)
-    const navLinks = document.querySelectorAll('.admindashboard-nav');
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            // Router will handle closing sidebar
-        });
-    });
-
     // Search functionality
     const searchInput = document.getElementById('admindashboardTopSearch');
     if (searchInput) {
         searchInput.addEventListener('input', handleSearch);
 
-        // Clear search when navigating away from clients
         window.addEventListener('hashchange', () => {
             const currentHash = location.hash || '#/dashboard';
             if (currentHash !== '#/clients') {
@@ -1045,21 +1037,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.addEventListener('hashchange', admindashboardRouter);
 
-
-
-
 // === SPA Router ===
 function admindashboardRouter() {
     const h = location.hash || '#/dashboard';
 
-    const hash = location.hash || '#/dashboard'; // default route
-    // hide or show elements based on route
-    if (hash === '#/admin-details') {
-        admindashboardLoadAdminDetails();
-    }
     admindashboardHighlight(h);
-
-    // Close sidebar on navigation (for mobile)
     closeSidebar();
 
     if (h.startsWith('#/blogs/edit/')) {
@@ -1100,7 +1082,7 @@ function admindashboardRouter() {
         case '#/careers':
             admindashboardLoadCareers();
             break;
-        case '#/admin-details':   //<--- ✅ NEW
+        case '#/admin-details':
             admindashboardLoadAdminDetails();
             break;
         default:
@@ -1108,10 +1090,7 @@ function admindashboardRouter() {
     }
 }
 
-
-
-
-// === Auth Guard: Check JWT and roles safely ===
+// === Auth Guard ===
 let admindashboardRoles = [];
 try {
     admindashboardRoles = JSON.parse(localStorage.getItem('admindashboard_roles') || localStorage.getItem('roles') || '[]');
@@ -1121,146 +1100,5 @@ try {
 const admindashboardJwt = localStorage.getItem('admindashboard_jwt') || localStorage.getItem('jwt');
 const admindashboardIsAdmin = admindashboardRoles.some(r => r === 'ROLE_ADMIN' || r === 'ROLE_SUPER_ADMIN');
 if (!admindashboardJwt || !admindashboardIsAdmin) {
-    window.location.href = 'admin-login.html';
+    window.location.href = 'adminlogin.html';
 }
-
-
-
-
-
-
-const API_BASE_SEO = 'http://localhost:8080/api/adminseo'; // Change as per backend URL
-
-async function loadSeoSettings() {
-    const container = document.getElementById('admindashboardView');
-    container.innerHTML = '';
-
-    const seoSection = document.getElementById('seoPage');
-    const seoClone = seoSection.cloneNode(true);
-    seoClone.style.display = 'block';
-    container.appendChild(seoClone);
-
-    const seoListContainer = seoClone.querySelector('#seoListContainer');
-    const addBtn = seoClone.querySelector('#addSeoBtn');
-    const editModal = seoClone.querySelector('#seoEditModal');
-    const form = seoClone.querySelector('#seoEditForm');
-    const cancelBtn = seoClone.querySelector('#seoCancelBtn');
-    const formMessage = seoClone.querySelector('#seoFormMessage');
-
-    seoListContainer.textContent = 'Loading SEO settings...';
-
-    try {
-        const response = await fetch(API_BASE_SEO);
-        if (!response.ok) throw new Error('Failed to fetch SEO settings');
-        const seoList = await response.json();
-
-        seoListContainer.innerHTML = '';
-
-        if (seoList.length === 0) {
-            seoListContainer.textContent = 'No SEO settings found.';
-            return;
-        }
-
-        seoList.forEach(seo => {
-            const div = document.createElement('div');
-            div.classList.add('seo-entry');
-            div.innerHTML = `
-        <strong>${seo.slug}</strong> - ${seo.metaTitle || 'No Title'}<br/>
-        <small>${seo.metaDescription || ''}</small><br/>
-        <button class="editBtn" data-id="${seo.id}">Edit</button>
-      `;
-            seoListContainer.appendChild(div);
-        });
-
-        // Edit buttons
-        seoListContainer.querySelectorAll('.editBtn').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const id = btn.dataset.id;
-                try {
-                    const res = await fetch(`${API_BASE_SEO}/${id}`);
-                    if (!res.ok) throw new Error('Failed to fetch SEO entry');
-                    const seo = await res.json();
-
-                    form.id.value = seo.id || '';
-                    form.slug.value = seo.slug || '';
-                    form.metaTitle.value = seo.metaTitle || '';
-                    form.metaDescription.value = seo.metaDescription || '';
-                    form.metaKeywords.value = seo.metaKeywords || '';
-                    form.robotsTag.value = seo.robotsTag || 'index,follow';
-                    form.schemaJson.value = seo.schemaJson || '';
-
-                    editModal.style.display = 'block';
-                    formMessage.textContent = '';
-                } catch (err) {
-                    alert(err.message);
-                }
-            });
-        });
-    } catch (err) {
-        seoListContainer.textContent = err.message;
-    }
-
-    addBtn.addEventListener('click', () => {
-        form.reset();
-        form.id.value = '';
-        formMessage.textContent = '';
-        editModal.style.display = 'block';
-    });
-
-    cancelBtn.addEventListener('click', () => {
-        editModal.style.display = 'none';
-    });
-
-    form.addEventListener('submit', async e => {
-        e.preventDefault();
-        formMessage.textContent = '';
-
-        const payload = {
-            id: form.id.value || null,
-            slug: form.slug.value,
-            metaTitle: form.metaTitle.value,
-            metaDescription: form.metaDescription.value,
-            metaKeywords: form.metaKeywords.value,
-            robotsTag: form.robotsTag.value,
-            schemaJson: form.schemaJson.value
-        };
-
-        try {
-            const res = await fetch(`${API_BASE_SEO}/save`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            if (!res.ok) throw new Error('Failed to save SEO entry');
-
-            formMessage.style.color = 'green';
-            formMessage.textContent = 'Saved successfully!';
-            editModal.style.display = 'none';
-
-            loadSeoSettings();
-        } catch (err) {
-            formMessage.style.color = 'red';
-            formMessage.textContent = err.message;
-        }
-    });
-}
-
-// Router integration example:
-function router() {
-    const hash = location.hash.slice(2);
-    const container = document.getElementById('admindashboardView');
-    switch (hash) {
-        case 'dashboard':
-            // loadDashboard(); (your other pages)
-            break;
-        case 'seo':
-            loadSeoSettings();
-            break;
-        // other routes
-        default:
-            container.innerHTML = '<h2>Page Not Found</h2>';
-    }
-}
-
-window.addEventListener('hashchange', router);
-window.addEventListener('DOMContentLoaded', router);

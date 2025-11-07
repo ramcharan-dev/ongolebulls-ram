@@ -34,8 +34,12 @@ public class Job {
     @Lob
     @Column(columnDefinition = "TEXT")
     private String keyResponsibility;
-    private String department;
-    @Lob
+
+
+
+
+
+  @Lob
     @Column(columnDefinition = "TEXT")
     private String rolesAndResponsibilities;
 
