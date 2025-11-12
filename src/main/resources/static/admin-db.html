@@ -7,6 +7,7 @@
 
     <!-- Bootstrap Icons CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="admin-dashboard.css"/>
@@ -38,9 +39,12 @@
             <a href="#/investments" class="admindashboard-nav" data-route="#/investments"><i class="bi bi-graph-up-arrow"></i> <span>Investments</span></a>
             <a href="#/blogs" class="admindashboard-nav" data-route="#/blogs"><i class="bi bi-journal-text"></i> <span>Blogs</span></a>
             <a href="#/seo" class="admindashboard-nav" data-route="#/seo"><i class="bi bi-search"></i> <span>SEO</span></a>
+            <a href="#/services" class="admindashboard-nav" data-route="#/services">
+                <i class="bi bi-grid-fill"></i> <span>Services</span>
+            </a>
             <a href="#/settings" class="admindashboard-nav" data-route="#/settings"><i class="bi bi-gear-fill"></i> <span>Settings</span></a>
             <a href="#/documents" class="admindashboard-nav" data-route="#/documents"><i class="bi bi-file-earmark-fill"></i> <span>Documents</span></a>
-            <a href="#/careers" class="admindashboard-nav" data-route="#/careers"><i class="bi bi-briefcase-fill"></i> <span>Careers</span></a>
+            <a href="#/careers" class="admindashboard-nav" data-route="#/careers"><i class="bi bi-brief -fill"></i> <span>Careers</span></a>
         </nav>
 
         <div class="admindashboard-sidebar-footer">
@@ -269,7 +273,7 @@
 
             <div class="form-row">
                 <label>Full Content: <span class="required">*</span><br/>
-                  <!--  <textarea name="fullContent"  rows="8" required class="admindashboard-textarea"></textarea>-->
+                    <!--  <textarea name="fullContent"  rows="8" required class="admindashboard-textarea"></textarea>-->
                     <textarea id="blogFullContent" name="fullContent" rows="8" class="admindashboard-textarea"></textarea>
 
 
@@ -484,13 +488,156 @@
 
 
 
-
-
 <!-- Placeholder Page Template -->
 <template id="placeholderPageTemplate">
     <h2 data-page-title></h2>
 </template>
 
+
+<!-- Services Container Template -->
+<template id="servicesContainerTemplate">
+    <div class="admindashboard-card" id="servicesCard">
+        <div class="admindashboard-card-head d-flex justify-content-between align-items-center">
+            <h3><i class="bi bi-grid-fill"></i> Services Admin</h3>
+            <button class="admindashboard-btn primary" id="btnNewService">
+                <i class="bi bi-plus-lg"></i> New Service
+            </button>
+        </div>
+
+        <div id="servicesList" class="row g-3"></div>
+
+        <!-- Modal: Service Form -->
+        <div class="modal fade" id="modalService" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form id="serviceForm" class="needs-validation" novalidate>
+                        <div class="modal-header">
+                            <h5 class="modal-title">Create / Edit Service</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" id="serviceId">
+                            <div class="form-row">
+                                <label>Slug:<span class="required">*</span>
+                                    <input required class="admindashboard-input" id="slug">
+                                </label>
+                            </div>
+                            <div class="form-row">
+                                <label>Title:<span class="required">*</span>
+                                    <input required class="admindashboard-input" id="title">
+                                </label>
+                            </div>
+                            <div class="form-row">
+                                <label>Subtitle:
+                                    <textarea class="admindashboard-textarea" id="subtitle"></textarea>
+                                </label>
+                            </div>
+                            <div class="form-row">
+                                <label>Banner Image URL:
+                                    <input class="admindashboard-input" id="bannerImage">
+                                </label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="isActive" checked>
+                                <label class="form-check-label" for="isActive">Active</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="admindashboard-btn" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="admindashboard-btn primary">Save Service</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal: Add Section -->
+        <div class="modal fade" id="modalSection" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="sectionForm">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Add Section</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" id="sectionServiceId">
+                            <div class="form-row">
+                                <label>Section Type:
+                                    <select id="sectionType" class="admindashboard-select">
+                                        <option value="hero">Hero</option>
+                                        <option value="features">Features</option>
+                                        <option value="steps">Steps</option>
+                                        <option value="why-choose-us">Why Choose Us</option>
+                                        <option value="faq">FAQ</option>
+                                        <option value="cta">CTA</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <div class="form-row">
+                                <label>Title:
+                                    <input id="sectionTitle" class="admindashboard-input">
+                                </label>
+                            </div>
+                            <div class="form-row">
+                                <label>Subtitle:
+                                    <textarea id="sectionSubtitle" class="admindashboard-textarea"></textarea>
+                                </label>
+                            </div>
+                            <div class="form-row">
+                                <label>Order Index:
+                                    <input type="number" id="sectionOrder" class="admindashboard-input" value="0">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="admindashboard-btn" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="admindashboard-btn primary">Add Section</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal: Add Item -->
+        <div class="modal fade" id="modalItem" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="itemForm">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Add Item</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" id="itemSectionId">
+                            <div class="form-row">
+                                <label>Icon (lucide name):<input id="itemIcon" class="admindashboard-input"></label>
+                            </div>
+                            <div class="form-row">
+                                <label>Title:<input id="itemTitle" class="admindashboard-input" required></label>
+                            </div>
+                            <div class="form-row">
+                                <label>Description:
+                                    <textarea id="itemDescription" class="admindashboard-textarea"></textarea>
+                                </label>
+                            </div>
+                            <div class="form-row">
+                                <label>Order Index:
+                                    <input type="number" id="itemOrder" class="admindashboard-input" value="0">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="admindashboard-btn" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="admindashboard-btn primary">Add Item</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</template>
 
 
 <!-- Chart.js CDN -->
