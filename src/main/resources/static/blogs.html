@@ -34,8 +34,9 @@
 
     /* Hero Section */
     .hero-section {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      padding: 4rem 0 3rem;
+     background: linear-gradient(135deg, #0c2638 0% 0%, #b8934a 100%);
+     padding: 4rem 0 3rem;
+
       margin-bottom: 3rem;
       position: relative;
       overflow: hidden;
@@ -348,6 +349,16 @@
       margin: 0 auto;
       padding: 0 1.5rem;
     }
+
+    /* Added ONLY for Load More button */
+    .load-more-wrap { display: none; justify-content: center; margin: 0 0 3rem; }
+    .load-more-btn {
+      display: inline-flex; align-items: center; gap: .5rem; padding: .7rem 1.2rem;
+      border-radius: 10px; border: 1px solid #e9ecef; background: #fff; color: var(--text-dark);
+      font-weight: 600; transition: var(--transition); cursor: pointer;
+    }
+    .load-more-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,.08); }
+    .load-more-btn:disabled { opacity: .6; cursor: not-allowed; }
   </style>
 </head>
 <body>
@@ -378,12 +389,24 @@
   </div>
 
   <div class="blog-grid" id="blogGrid"></div>
+
+  <!-- Added ONLY for Load More -->
+  <div class="load-more-wrap">
+    <button id="loadMoreBtn" class="load-more-btn">
+      <i class="fas fa-plus-circle"></i> Load More
+    </button>
+  </div>
 </div>
 
 <!-- Common Footer -->
 <div id="footer-container"></div>
 
 <script>
+  // Added ONLY for Load More
+  const PAGE_SIZE = 6;
+  let allBlogs = [];
+  let rendered = 0;
+
   function formatDate(dateString) {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('en-US', options);
@@ -394,6 +417,71 @@
     const wordCount = description ? description.split(' ').length : 100;
     const minutes = Math.ceil(wordCount / wordsPerMinute);
     return `${minutes} min read`;
+  }
+
+  // Added ONLY for Load More
+  function createBlogCard(blog, indexOffset) {
+    const imageUrl = blog.image
+      ? `/assets/${encodeURIComponent(blog.image)}`
+      : 'https://via.placeholder.com/600x300/667eea/ffffff?text=Blog+Image';
+
+    const blogCard = document.createElement('div');
+    blogCard.className = 'blog-card fade-in';
+    blogCard.style.animationDelay = `${(indexOffset % PAGE_SIZE) * 0.1}s`;
+
+    blogCard.innerHTML = `
+      <div class="blog-image-wrapper">
+        <img src="${imageUrl}" alt="${blog.title || 'Blog Image'}" onerror="this.src='https://via.placeholder.com/600x300/667eea/ffffff?text=Blog+Image'" />
+        <div class="blog-image-overlay">
+          <i class="fas fa-clock"></i>
+          ${calculateReadTime(blog.shortDescription || blog.content)}
+        </div>
+      </div>
+      <div class="blog-content">
+        <div class="blog-meta">
+          <div class="blog-meta-item">
+            <i class="fas fa-calendar-alt"></i>
+            <span>${formatDate(blog.createdAt)}</span>
+          </div>
+          <div class="blog-meta-item">
+            <i class="fas fa-user"></i>
+            <span>${blog.author || 'OngleBulls Invest'}</span>
+          </div>
+        </div>
+        <h3 class="blog-title">${blog.title}</h3>
+        <p class="blog-description">${blog.shortDescription || 'Click to read more about this insightful article on investment strategies and market trends.'}</p>
+        <div class="blog-footer">
+          <a href="/blog_details.html?id=${blog.id}" class="read-more-btn">
+            Read Article
+            <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    `;
+    return blogCard;
+  }
+
+  // Added ONLY for Load More
+  function renderNextPage() {
+    const blogGrid = document.getElementById('blogGrid');
+    const start = rendered;
+    const end = Math.min(rendered + PAGE_SIZE, allBlogs.length);
+    for (let i = start; i < end; i++) {
+      blogGrid.appendChild(createBlogCard(allBlogs[i], i));
+    }
+    rendered = end;
+
+    const wrap = document.querySelector('.load-more-wrap');
+    const btn = document.getElementById('loadMoreBtn');
+    if (rendered >= allBlogs.length) {
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-check-circle"></i> No More Articles';
+      setTimeout(()=> wrap.style.display = 'none', 600);
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-plus-circle"></i> Load More';
+      wrap.style.display = 'flex';
+    }
   }
 
   async function loadBlogs() {
@@ -416,47 +504,14 @@
       // Sort blogs by date (newest first)
       blogs.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-      blogs.forEach((blog, index) => {
-        const imageUrl = blog.image
-          ? `/assets/${encodeURIComponent(blog.image)}`
-          : 'https://via.placeholder.com/600x300/667eea/ffffff?text=Blog+Image';
+      // Store and render first 6 ONLY
+      allBlogs = blogs;
+      renderNextPage();
 
-        const blogCard = document.createElement('div');
-        blogCard.className = 'blog-card fade-in';
-        blogCard.style.animationDelay = `${index * 0.1}s`;
-
-        blogCard.innerHTML = `
-          <div class="blog-image-wrapper">
-            <img src="${imageUrl}" alt="${blog.title || 'Blog Image'}" onerror="this.src='https://via.placeholder.com/600x300/667eea/ffffff?text=Blog+Image'" />
-            <div class="blog-image-overlay">
-              <i class="fas fa-clock"></i>
-              ${calculateReadTime(blog.shortDescription || blog.content)}
-            </div>
-          </div>
-          <div class="blog-content">
-            <div class="blog-meta">
-              <div class="blog-meta-item">
-                <i class="fas fa-calendar-alt"></i>
-                <span>${formatDate(blog.createdAt)}</span>
-              </div>
-              <div class="blog-meta-item">
-                <i class="fas fa-user"></i>
-                <span>${blog.author || 'OngleBulls Invest'}</span>
-              </div>
-            </div>
-            <h3 class="blog-title">${blog.title}</h3>
-            <p class="blog-description">${blog.shortDescription || 'Click to read more about this insightful article on investment strategies and market trends.'}</p>
-            <div class="blog-footer">
-              <a href="/blog_details.html?id=${blog.id}" class="read-more-btn">
-                Read Article
-                <i class="fas fa-arrow-right"></i>
-              </a>
-            </div>
-          </div>
-        `;
-
-        blogGrid.appendChild(blogCard);
-      });
+      // Show load more if more than PAGE_SIZE
+      if (allBlogs.length > PAGE_SIZE) {
+        document.querySelector('.load-more-wrap').style.display = 'flex';
+      }
 
     } catch (error) {
       console.error('Error loading blogs:', error);
@@ -466,7 +521,11 @@
     }
   }
 
-  window.onload = loadBlogs;
+  window.onload = () => {
+    loadBlogs();
+    // Added ONLY for Load More
+    document.getElementById('loadMoreBtn').addEventListener('click', renderNextPage);
+  };
 </script>
 </body>
 </html>

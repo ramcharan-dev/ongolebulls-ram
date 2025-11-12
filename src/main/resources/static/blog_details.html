@@ -1,255 +1,82 @@
-<!--
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Blog Details</title>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-    <script src="/common.js" defer></script>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-&lt;!&ndash; Common Header &ndash;&gt;
-<div id="header-container"></div>
-<div class="container mt-5">
-    <h2 id="blogTitle">Loading...</h2>
-    <p class="text-muted">
-        <strong>Author:</strong> <span id="blogAuthor"></span> |
-        <strong>Date:</strong> <span id="blogDate"></span>
-    </p>
-    <img id="blogImage" class="img-fluid mb-4" style="display:none;" />
-    <div id="blogContent"></div>
-    <a href="/blogs.html" class="btn btn-secondary mt-4">Back to Blogs</a>
-</div>
-&lt;!&ndash; Common Footer &ndash;&gt;
-<div id="footer-container"></div>
-<script>
-    async function loadBlog() {
-        const params = new URLSearchParams(window.location.search);
-        const id = params.get("id");
-        const res = await fetch(`/api/blogs/${id}`);
-
-        if (!res.ok) {
-            document.getElementById("blogTitle").innerText = "Blog not found.";
-            document.getElementById("blogContent").innerHTML = "";
-            return;
-        }
-
-        const blog = await res.json();
-        document.getElementById("blogTitle").innerText = blog.title;
-        document.getElementById("blogAuthor").innerText = blog.author;
-        document.getElementById("blogDate").innerText = new Date(blog.createdAt).toLocaleDateString();
-        document.getElementById("blogContent").innerHTML = blog.fullContent;
-
-        if (blog.image) {
-            const img = document.getElementById("blogImage");
-            img.src = `/assets/${blog.image}`;
-            img.style.display = "block";
-            img.style.width = "500px";
-            img.style.height = "500px";
-            img.style.animation = "fadeIn 2s ease-in-out";
-        }
-    }
-
-    window.onload = loadBlog;
-</script>
-</body>
-</html>
-<style>
-    /* Global Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Body Styling */
-body {
-  font-family: "Poppins", "Segoe UI", Roboto, sans-serif;
-  background-color: #f8f9fb;
-  color: #222;
-  line-height: 1.7;
-}
-
-/* Container */
-.container {
-  max-width: 900px;
-  background: #fff;
-  padding: 40px 50px;
-  border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-  margin-bottom: 80px;
-  animation: fadeSlideUp 0.8s ease;
-}
-
-/* Blog Title */
-#blogTitle {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: #003366;
-  margin-bottom: 15px;
-  border-left: 6px solid #d32f2f;
-  padding-left: 12px;
-  animation: fadeIn 1.2s ease-in;
-}
-
-/* Author and Date Info */
-.text-muted {
-  font-size: 0.95rem;
-  color: #6c757d !important;
-  margin-bottom: 25px;
-}
-
-/* Blog Image */
-#blogImage {
-  display: block;
-  width: 100%;
-  max-width: 750px;
-  height: auto;
-  border-radius: 14px;
-  margin: 20px 0;
-  object-fit: cover;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  animation: fadeIn 1.5s ease-in-out;
-}
-
-/* Blog Content */
-#blogContent {
-  font-size: 1.05rem;
-  color: #333;
-  line-height: 1.9;
-  text-align: justify;
-}
-
-#blogContent h3,
-#blogContent h4 {
-  color: #003366;
-  margin-top: 30px;
-  margin-bottom: 10px;
-}
-
-#blogContent p {
-  margin-bottom: 15px;
-}
-
-/* Buttons */
-.btn-secondary {
-  background-color: #003366;
-  border: none;
-  padding: 10px 25px;
-  border-radius: 30px;
-  transition: all 0.3s ease;
-  font-weight: 500;
-}
-
-.btn-secondary:hover {
-  background-color: #d32f2f;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* Footer Padding */
-#footer-container {
-  margin-top: 50px;
-}
-
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeSlideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .container {
-    padding: 25px;
-  }
-
-  #blogTitle {
-    font-size: 1.7rem;
-  }
-
-  #blogImage {
-    max-width: 100%;
-  }
-
-  #blogContent {
-    font-size: 1rem;
-  }
-}
-
-</style>-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Blog Details</title>
+    <title>Blog Details | Ongolebulls Invest</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
     <script src="/common.js" defer></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="style.css">
 
-    <!-- Google Font -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* Container Styling */
-        .container {
+        /* ====== Global Reset ====== */
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        body {
+          font-family: "Inter", sans-serif;
+          background-color: #f9fafb;
+          color: #1f2937;
+          line-height: 1.8;
+        }
+
+        /* ====== Container ====== */
+        .blog-container {
           background: #ffffff;
+          max-width: 1050px;
           margin: 60px auto;
           padding: 50px 60px;
           border-radius: 20px;
-          box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
-          animation: fadeUp 1s ease;
-          transition: all 0.3s ease;
+          box-shadow: 0 8px 35px rgba(0, 0, 0, 0.06);
+          animation: fadeUp 0.9s ease;
         }
 
-        .container:hover {
-          box-shadow: 0 10px 50px rgba(0, 0, 0, 0.12);
-        }
-
-        /* Blog Title */
+        /* ====== Title ====== */
         #blogTitle {
-          font-size: 2.4rem;
+          font-size: 2.3rem;
           font-weight: 700;
           color: #0f172a;
           text-align: center;
-          line-height: 1.3;
-          margin-bottom: 20px;
-          animation: fadeIn 1.2s ease-in-out;
+          margin-bottom: 15px;
+          letter-spacing: 0.5px;
+          border-bottom: 3px solid #e11d48;
+          padding-bottom: 8px;
+          animation: fadeIn 1.1s ease-in;
         }
 
-        /* Blog Image */
-        #blogImage {
-          display: block;
-          max-width: 100%;
-          border-radius: 16px;
-          margin: 25px auto 30px auto;
-          box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
-          animation: zoomIn 1.2s ease-in-out;
-        }
-
-        /* Author + Date */
+        /* ====== Meta Info ====== */
         .meta-info {
           text-align: center;
           font-size: 0.95rem;
           color: #6b7280;
-          margin-bottom: 35px;
+          margin-bottom: 30px;
         }
 
         .meta-info strong {
           color: #111827;
         }
 
-        /* Blog Content */
+        /* ====== Image ====== */
+        #blogImage {
+          display: block;
+          width: 100%;
+          max-width: 720px;
+          height: auto;
+          border-radius: 14px;
+          margin: 25px auto;
+          object-fit: cover;
+          box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+          animation: zoomIn 1.2s ease-in-out;
+        }
+
+        /* ====== Content ====== */
         #blogContent {
           font-size: 1.08rem;
           color: #374151;
@@ -261,8 +88,9 @@ body {
           margin-bottom: 1.2rem;
         }
 
-        #blogContent h3, #blogContent h4 {
-          color: #0f172a;
+        #blogContent h3,
+        #blogContent h4 {
+          color: #1e3a8a;
           font-weight: 600;
           margin-top: 2rem;
           margin-bottom: 0.8rem;
@@ -272,17 +100,16 @@ body {
           color: #2563eb;
           text-decoration: none;
           border-bottom: 1px solid transparent;
-          transition: border-color 0.3s;
+          transition: 0.3s;
         }
 
         #blogContent a:hover {
           border-color: #2563eb;
         }
 
-        /* Back Button */
+        /* ====== Back Button ====== */
         .btn-secondary {
           display: block;
-          width: fit-content;
           margin: 40px auto 0;
           background: linear-gradient(90deg, #0f172a, #1e3a8a);
           color: #fff;
@@ -298,29 +125,39 @@ body {
         .btn-secondary:hover {
           background: linear-gradient(90deg, #1e3a8a, #0f172a);
           transform: translateY(-2px);
-          box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
         }
 
-        /* Animations */
+        /* ====== Footer ====== */
+        #footer-container {
+          text-align: center;
+          margin-top: 60px;
+          color: #6b7280;
+          font-size: 0.9rem;
+          padding-bottom: 30px;
+        }
+
+        /* ====== Animations ====== */
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(25px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
+          from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes zoomIn {
-          from { opacity: 0; transform: scale(0.96); }
+          from { opacity: 0; transform: scale(0.95); }
           to { opacity: 1; transform: scale(1); }
         }
 
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Responsive */
+        /* ====== Responsive ====== */
         @media (max-width: 768px) {
-          .container {
-            padding: 30px 25px;
+          .blog-container {
+            padding: 25px;
+            margin: 25px;
           }
 
           #blogTitle {
@@ -330,31 +167,32 @@ body {
           #blogContent {
             font-size: 1rem;
           }
+
+          #blogImage {
+            max-width: 100%;
+            margin: 15px 0;
+          }
         }
     </style>
 </head>
 
 <body>
 <!-- Common Header -->
-<div id="header-container">My Corporate Blog Portal</div>
+<div id="header-container"></div>
 
-<div class="container">
+<div class="blog-container">
     <h2 id="blogTitle">Loading...</h2>
-
-    <img id="blogImage" class="img-fluid mb-4" style="display:none;" />
-
     <p class="meta-info">
         <strong>Author:</strong> <span id="blogAuthor"></span> |
         <strong>Date:</strong> <span id="blogDate"></span>
     </p>
-
+    <img id="blogImage" style="display:none;" />
     <div id="blogContent"></div>
-
     <a href="/blogs.html" class="btn btn-secondary">← Back to Blogs</a>
 </div>
 
-<!-- Common Footer -->
-<div id="footer-container">© 2025 My Blog | All Rights Reserved</div>
+<!-- Footer -->
+<div id="footer-container">© 2025 Ongolebulls Invest | All Rights Reserved</div>
 
 <script>
     async function loadBlog() {
