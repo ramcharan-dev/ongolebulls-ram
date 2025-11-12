@@ -879,9 +879,6 @@ function handleEditJob(job) {
     form.scrollIntoView({ behavior: 'smooth' });
 }
 
-
-
-
 async function handleDeleteJob(jobId) {
     if (!confirm('Are you sure you want to delete this job?')) return;
 
@@ -901,12 +898,6 @@ async function handleDeleteJob(jobId) {
     }
 }
 
-
-
-
-
-
-
 // === Placeholder Pages ===
 function showPlaceholderPage(title) {
     const container = document.getElementById('admindashboardView');
@@ -916,6 +907,11 @@ function showPlaceholderPage(title) {
     container.appendChild(clone);
 }
 
+// === Search Handler ===
+let searchTimeout;
+function handleSearch() {
+    const searchInput = document.getElementById('admindashboardTopSearch');
+    const searchQuery = searchInput.value.trim();
 
 
 
@@ -943,6 +939,50 @@ function handleSearch() {
     }, 300);
 }
 
+    addBtn.addEventListener('click', () => {
+        form.reset();
+        form.querySelector('#seoId').value = '';
+        formMessage.textContent = '';
+        editModal.style.display = 'block';
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        editModal.style.display = 'none';
+    });
+
+    form.addEventListener('submit', async e => {
+        e.preventDefault();
+        formMessage.textContent = '';
+
+        const payload = {
+            id: form.querySelector('#seoId').value || null,
+            slug: form.querySelector('#seoSlug').value,
+            metaTitle: form.querySelector('#seoMetaTitle').value,
+            metaDescription: form.querySelector('#seoMetaDescription').value,
+            metaKeywords: form.querySelector('#seoMetaKeywords').value,
+            robotsTag: form.querySelector('#seoRobotsTag').value,
+            schemaJson: form.querySelector('#seoSchemaJson').value
+        };
+
+        try {
+            const res = await fetch(`${API_BASE_SEO}/save`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (!res.ok) throw new Error('Failed to save SEO entry');
+
+            formMessage.style.color = 'green';
+            formMessage.textContent = 'Saved successfully!';
+            editModal.style.display = 'none';
+
+            loadSeoSettings();
+        } catch (err) {
+            formMessage.style.color = 'red';
+            formMessage.textContent = err.message;
+        }
+    });
+}
 
 // === Event Listeners ===
 document.addEventListener('DOMContentLoaded', () => {
@@ -951,18 +991,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const nameEl = document.getElementById('adminNameDisplay');
     if (nameEl) nameEl.textContent = name;
 
-
-
-
     // Profile menu toggle
-    const btn = document.getElementById('adminProfileBtn');
-    const menu = document.getElementById('adminProfileMenu');
-    btn.addEventListener('click', (e) => {
+    const profileBtn = document.getElementById('adminProfileBtn');
+    const profileMenu = document.getElementById('adminProfileMenu');
+
+    profileBtn.addEventListener('click', e => {
         e.stopPropagation();
-        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+        const isVisible = profileMenu.style.display === 'block';
+        profileMenu.style.display = isVisible ? 'none' : 'block';
+        profileBtn.setAttribute('aria-expanded', !isVisible);
     });
-    document.addEventListener('click', () => { menu.style.display = 'none'; });
-    menu.addEventListener('click', (e) => { e.stopPropagation(); });
+
+    document.addEventListener('click', () => {
+        profileMenu.style.display = 'none';
+        profileBtn.setAttribute('aria-expanded', 'false');
+    });
+
+    profileMenu.addEventListener('click', e => e.stopPropagation());
+
+    // Edit profile link
+    const editProfileLink = document.getElementById('editProfileLink');
+    if (editProfileLink) {
+        editProfileLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            profileMenu.style.display = 'none';
+            location.hash = '#/admin-details';
+        });
+    }
 
 
 
@@ -1045,21 +1100,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.addEventListener('hashchange', admindashboardRouter);
 
-
-
-
 // === SPA Router ===
 function admindashboardRouter() {
     const h = location.hash || '#/dashboard';
 
-    const hash = location.hash || '#/dashboard'; // default route
-    // hide or show elements based on route
-    if (hash === '#/admin-details') {
-        admindashboardLoadAdminDetails();
-    }
     admindashboardHighlight(h);
-
-    // Close sidebar on navigation (for mobile)
     closeSidebar();
 
     if (h.startsWith('#/blogs/edit/')) {
@@ -1100,7 +1145,7 @@ function admindashboardRouter() {
         case '#/careers':
             admindashboardLoadCareers();
             break;
-        case '#/admin-details':   //<--- ✅ NEW
+        case '#/admin-details':
             admindashboardLoadAdminDetails();
             break;
         case '#/services':
@@ -1110,10 +1155,7 @@ function admindashboardRouter() {
     }
 }
 
-
-
-
-// === Auth Guard: Check JWT and roles safely ===
+// === Auth Guard ===
 let admindashboardRoles = [];
 try {
     admindashboardRoles = JSON.parse(localStorage.getItem('admindashboard_roles') || localStorage.getItem('roles') || '[]');
@@ -1123,7 +1165,7 @@ try {
 const admindashboardJwt = localStorage.getItem('admindashboard_jwt') || localStorage.getItem('jwt');
 const admindashboardIsAdmin = admindashboardRoles.some(r => r === 'ROLE_ADMIN' || r === 'ROLE_SUPER_ADMIN');
 if (!admindashboardJwt || !admindashboardIsAdmin) {
-    window.location.href = 'admin-login.html';
+    window.location.href = 'adminlogin.html';
 }
 
 
