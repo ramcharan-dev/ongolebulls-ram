@@ -1,25 +1,18 @@
-// Function to load header and footer dynamically
-document.addEventListener("DOMContentLoaded", function () {
-    // Load Header
-    fetch("/header.html")
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById("header-container").innerHTML = data;
-        });
-
-    // Load Footer
-    fetch("/footer.html")
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById("footer-container").innerHTML = data;
-        });
-});
 document.addEventListener("DOMContentLoaded", () => {
+
+  // Load Header once
   fetch("/header.html")
-    .then(r => r.text())
+    .then(res => res.text())
     .then(html => {
       document.getElementById("header-container").innerHTML = html;
-      initNavInteractions();
+      initNavInteractions();  // Call only after header loads
+    });
+
+  // Load Footer once
+  fetch("/footer.html")
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("footer-container").innerHTML = html;
     });
 });
 
@@ -33,13 +26,11 @@ function initNavInteractions() {
     });
   }
 
-  // Handle each dropdown toggle button
+  // Dropdown toggle
   document.querySelectorAll(".dropdown-toggle").forEach(btn => {
     btn.addEventListener("click", e => {
-      e.preventDefault();  // Prevent redirection or default behavior
-      const parent = btn.closest('.dropdown');
-      parent.classList.toggle("open");
+      e.preventDefault();
+      btn.closest('.dropdown').classList.toggle("open");
     });
   });
 }
-

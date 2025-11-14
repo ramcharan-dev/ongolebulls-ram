@@ -4,6 +4,7 @@ package dev.ongolebulls.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import aj.org.objectweb.asm.commons.Remapper;
 import dev.ongolebulls.model.SeoSetting;
 import dev.ongolebulls.repository.SeoSettingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +33,7 @@ public class SeoService {
         seo.setUpdatedAt(LocalDateTime.now());
         return seoRepo.save(seo);
     }
+
+
 }
 

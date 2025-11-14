@@ -119,7 +119,7 @@
     btn.setAttribute('aria-expanded', !isVisible);
     btn.textContent = isVisible ? "+" : "–";
 });
-});
+
 
     updatePaginationControls();
 }

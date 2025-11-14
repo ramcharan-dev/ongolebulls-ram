@@ -830,16 +830,21 @@ height: auto;
     }
 }*/
 
+/*
 .services-container {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
-    padding: 40px 0; /* Increased padding to increase height */
+    padding: 40px 0; */
+/* Increased padding to increase height *//*
+
 
 }
 
-/* Service Card Styling */
+*/
+/* Service Card Styling *//*
+
 .service-card {
     background: white;
     border-radius: 10px;
@@ -853,16 +858,26 @@ height: auto;
     position: relative;
 }
 
-/* Hover Effect - Expanding Width & Adding Gradient */
+*/
+/* Hover Effect - Expanding Width & Adding Gradient *//*
+
 .service-card:hover {
-    transform: scale(1.05); /* Slightly increasing size */
+    transform: scale(1.05); */
+/* Slightly increasing size *//*
+
     width: 300px;
-    border-color: #004d00; /* Dark Green Border */
-    background: linear-gradient(135deg, #005c00, #002400); /* Dark Green Gradient */
+    border-color: #004d00; */
+/* Dark Green Border *//*
+
+    background: linear-gradient(135deg, #005c00, #002400); */
+/* Dark Green Gradient *//*
+
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* Image Styling */
+*/
+/* Image Styling *//*
+
 .service-img {
     width: 100%;
     height: 150px;
@@ -871,18 +886,24 @@ height: auto;
     transition: opacity 0.3s ease-in-out;
 }
 
-/* On Hover - Reduce Image Opacity */
+*/
+/* On Hover - Reduce Image Opacity *//*
+
 .service-card:hover .service-img {
     opacity: 0.8;
 }
 
-/* Service Info */
+*/
+/* Service Info *//*
+
 .service-info {
     padding: 15px;
     transition: color 0.3s ease-in-out;
 }
 
-/* Service Title */
+*/
+/* Service Title *//*
+
 .service-title {
     font-size: 18px;
     margin: 10px 0;
@@ -891,12 +912,18 @@ height: auto;
     transition: color 0.3s ease-in-out;
 }
 
-/* On Hover - Change Text Color */
+*/
+/* On Hover - Change Text Color *//*
+
 .service-card:hover .service-title {
-    color: #fff; /* White color */
+    color: #fff; */
+/* White color *//*
+
 }
 
-/* Service Text */
+*/
+/* Service Text *//*
+
 .service-text {
     font-size: 14px;
     color: black;
@@ -904,12 +931,18 @@ height: auto;
     transition: color 0.3s ease-in-out;
 }
 
-/* On Hover - Change Text Color */
+*/
+/* On Hover - Change Text Color *//*
+
 .service-card:hover .service-text {
-    color: #d4d4d4; /* Light gray */
+    color: #d4d4d4; */
+/* Light gray *//*
+
 }
 
-/* Responsive Adjustments */
+*/
+/* Responsive Adjustments *//*
+
 @media screen and (max-width: 768px) {
     .service-card {
         width: 90%;
@@ -929,6 +962,7 @@ height: auto;
         width: 100%;
     }
 }
+*/
 
 
 .investment-section {

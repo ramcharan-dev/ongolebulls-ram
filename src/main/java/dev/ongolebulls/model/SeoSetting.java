@@ -1,8 +1,13 @@
 package dev.ongolebulls.model;
 
+import dev.ongolebulls.repository.SeoSettingRepository;
 import jakarta.persistence.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 
+//import java.lang.ScopedValue;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Entity
 @Table(name = "seo_settings")
@@ -17,6 +22,10 @@ public class SeoSetting {
     private String robotsTag;         // index, follow / noindex, nofollow
     @Column(columnDefinition = "TEXT")
     private String schemaJson;        // Optional JSON-LD
+
+
+
+
 
     // Getters & Setters
     public Long getId() {
@@ -96,4 +105,8 @@ public class SeoSetting {
     public void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
+
+
+
 }

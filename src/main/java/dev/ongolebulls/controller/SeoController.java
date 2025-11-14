@@ -34,5 +34,8 @@ public class SeoController {
         SeoSetting saved = seoService.saveSeo(seo);
         return ResponseEntity.ok(saved);
     }
+
+
+
 }
 
