@@ -3,8 +3,6 @@ package dev.ongolebulls.controller;
 import dev.ongolebulls.model.AdminUser;
 import dev.ongolebulls.repository.AdminUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -99,70 +97,5 @@ public class AdminAuthController {
             return response;
         }
     }
-
-
-    @PutMapping("/update/{id}")
-    public Map<String, Object> updateAdmin(@PathVariable Long id, @RequestBody Map<String, String> body) {
-        Map<String, Object> response = new HashMap<>();
-        try {
-            // Find admin user by id
-            Optional<AdminUser> existingUserOpt = adminUserRepository.findById(id);
-            if (!existingUserOpt.isPresent()) {
-                response.put("success", false);
-                response.put("message", "Admin user not found");
-                return response;
-            }
-
-            AdminUser existingUser = existingUserOpt.get();
-
-            // Get updated fields; keep old value if null
-            String email = body.get("email");
-            String password = body.get("password");
-            String name = body.get("name");
-
-            if (email != null && !email.isEmpty()) {
-                // Check if email already exists with another admin
-                Optional<AdminUser> foundUser = adminUserRepository.findByEmail(email);
-                if (foundUser.isPresent() && !foundUser.get().getId().equals(id)) {
-                    response.put("success", false);
-                    response.put("message", "Another admin with this email already exists");
-                    return response;
-                }
-                existingUser.setEmail(email);
-            }
-
-            if (password != null && !password.isEmpty()) {
-                existingUser.setPassword(password); // Remember to hash in production!
-            }
-
-            if (name != null && !name.isEmpty()) {
-                existingUser.setName(name);
-            }
-
-            adminUserRepository.save(existingUser);
-
-            response.put("success", true);
-            response.put("message", "Admin updated successfully");
-            return response;
-
-        } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Server error: " + e.getMessage());
-            return response;
-        }
-    }
-
-
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getAdminById(@PathVariable Long id) {
-        Optional<AdminUser> admin = adminUserRepository.findById(id);
-        if (admin.isPresent()) {
-            return ResponseEntity.ok(admin.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "Admin user not found"));
-        }
-    }
-
 
 }
