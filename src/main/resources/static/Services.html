@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Services - Ongole Bulls</title>
+    <div id="header-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <script src="/common.js" defer></script>
+    <link rel="stylesheet" href="/css/style.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: rgb(189, 42, 31);
+            --accent: rgb(187, 146, 54);
+            --dark-bg: rgb(13, 38, 58);
+            --text-dark: #2d2d2d;
+            --text-gray: #797e85;
+            --bg-light: #f8f9fa;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Loading State */
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 60vh;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(187, 146, 54, 0.2);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: var(--text-gray);
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        /* Hero Header */
+        .services-hero {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #1a4d6f 100%);
+            padding: 120px 24px 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .services-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(187, 146, 54, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(189, 42, 31, 0.1) 0%, transparent 50%);
+        }
+
+        .services-badge {
+            display: inline-block;
+            background: rgba(187, 146, 54, 0.2);
+            color: var(--accent);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            border: 1px solid rgba(187, 146, 54, 0.3);
+        }
+
+        .services-hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .services-hero h1 {
+            font-size: 52px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--white);
+            letter-spacing: -1px;
+        }
+
+        .services-hero p {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: -40px auto 0;
+            padding: 0 24px 80px;
+            position: relative;
+            z-index: 2;
+            margin-top:80px;
+
+        }
+
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 32px;
+            margin-top:70px;
+            margin-bottom:80px;
+        }
+
+        .service-card {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .service-image-wrapper {
+            width: 100%;
+            height: 240px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+            position: relative;
+        }
+
+        .service-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .service-card:hover .service-image {
+            transform: scale(1.05);
+        }
+
+        .service-badge-card {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: var(--accent);
+            color: var(--white);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .service-content {
+            padding: 28px 24px;
+        }
+
+        .service-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .service-description {
+            font-size: 15px;
+            color: var(--text-gray);
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .learn-more-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: var(--white);
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .learn-more-btn:hover {
+            background: #a02d24;
+            transform: translateX(4px);
+        }
+
+        /* Service Detail Page */
+        .service-detail {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 48px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-gray);
+            text-decoration: none;
+            margin-bottom: 32px;
+            font-weight: 600;
+            padding: 10px 16px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-button:hover {
+            color: var(--primary);
+            background: rgba(189, 42, 31, 0.05);
+        }
+
+        .service-banner {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 48px;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 17px;
+            color: var(--text-gray);
+            margin-bottom: 48px;
+            text-align: center;
+          <!--  max-width: 700px;-->
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #1a4d6f 100%);
+            color: var(--white);
+            padding: 64px 48px;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 28px;
+        }
+
+        .feature-item {
+            background: var(--white);
+            padding: 36px 28px;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .feature-item:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .feature-description {
+            font-size: 15px;
+            color: var(--text-gray);
+            line-height: 1.7;
+        }
+
+        /* Steps Timeline */
+        .steps-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .step-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 24px;
+            top: 56px;
+            width: 2px;
+            height: calc(100% - 32px);
+            background: var(--accent);
+            opacity: 0.3;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: var(--accent);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+            padding-top: 4px;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .step-description {
+            font-size: 15px;
+            color: var(--text-gray);
+            line-height: 1.7;
+        }
+
+        /* Why Choose Us */
+        .why-choose-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 28px;
+        }
+
+        .why-item {
+            background: var(--white);
+            padding: 32px 28px;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+            border-left: 4px solid var(--accent);
+            transition: all 0.3s;
+        }
+
+        .why-item:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .why-icon {
+            font-size: 40px;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .why-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .why-description {
+            font-size: 15px;
+            color: var(--text-gray);
+            line-height: 1.7;
+        }
+
+        /* FAQ */
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--white);
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .faq-item:hover,
+        .faq-item.active {
+            border-color: var(--accent);
+        }
+
+        .faq-question {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .faq-icon {
+            font-size: 20px;
+            color: var(--text-gray);
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+            color: var(--accent);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+        }
+
+        .faq-answer-content {
+            padding: 0 24px 20px;
+            color: var(--text-gray);
+            line-height: 1.7;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary) 0%, #a02d24 100%);
+            color: var(--white);
+            padding: 72px 48px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 38px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .cta-description {
+            font-size: 17px;
+            margin-bottom: 32px;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 16px 36px;
+            background: var(--accent);
+            color: var(--white);
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .cta-button:hover {
+            background: #a07835;
+            transform: translateY(-2px);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 100px 24px;
+            background: var(--white);
+            border-radius: 16px;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            color: var(--text-gray);
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .empty-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .empty-description {
+            font-size: 16px;
+            color: var(--text-gray);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .services-hero {
+                padding: 80px 20px 60px;
+            }
+
+            .services-hero h1 {
+                font-size: 36px;
+            }
+
+            .container {
+                padding: 0 16px 60px;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .service-detail {
+                padding: 32px 20px;
+            }
+
+            .features-grid,
+            .why-choose-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="servicesContainer"></div>
+
+<script>
+    const API_BASE = 'http://localhost:8080/api';
+    const urlParams = new URLSearchParams(window.location.search);
+    const serviceSlug = urlParams.get('service');
+
+    if (serviceSlug) {
+        loadServiceDetail(serviceSlug);
+    } else {
+        loadAllServices();
+    }
+
+    async function loadAllServices() {
+        const container = document.getElementById('servicesContainer');
+        container.innerHTML = `
+            <div class="loading-container">
+                <div class="spinner"></div>
+                <p class="loading-text">Loading services...</p>
+            </div>
+        `;
+
+        try {
+            const response = await fetch(`${API_BASE}/services`);
+            if (!response.ok) throw new Error('Failed to load services');
+
+            const services = await response.json();
+            const activeServices = services.filter(s => s.active);
+
+            if (activeServices.length === 0) {
+                container.innerHTML = `
+                    <div class="services-hero">
+                        <div class="services-hero-content">
+                            <span class="services-badge"><i class="bi bi-briefcase"></i> Investment Insights</span>
+                            <h1>Our Financial Services</h1>
+                            <p>Comprehensive solutions designed to help you achieve your financial goals</p>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="empty-state">
+                            <i class="bi bi-briefcase empty-icon"></i>
+                            <h2 class="empty-title">No Services Available</h2>
+                            <p class="empty-description">We're working on bringing you amazing services.</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = `
+                <div class="services-hero">
+                    <div class="services-hero-content">
+                        <span class="services-badge"><i class="bi bi-briefcase"></i> Investment Insights</span>
+                        <h1>Our Financial Services</h1>
+                        <p>Explore our comprehensive range of investment services designed to help you build wealth, minimize risks, and achieve financial security through expert guidance and strategic planning.</p>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="services-grid">
+            `;
+
+            activeServices.forEach((service, index) => {
+                html += `
+                    <div class="service-card" onclick="navigateToService('${service.slug}')">
+                        <div class="service-image-wrapper">
+                            ${service.bannerImage ?
+                                `<img src="${service.bannerImage}" alt="${service.title}" class="service-image">` :
+                                `<div class="service-image"></div>`
+                            }
+                            ${index === 0 ? '<span class="service-badge-card">Popular</span>' : ''}
+                        </div>
+                        <div class="service-content">
+                            <h3 class="service-title">${service.title}</h3>
+                            <p class="service-description">${service.subtitle || 'Comprehensive solutions tailored to your financial goals'}</p>
+                            <button class="learn-more-btn">
+                                Learn More <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div></div>';
+            container.innerHTML = html;
+
+        } catch (error) {
+            console.error('Error:', error);
+            container.innerHTML = `
+                <div class="services-hero">
+                    <div class="services-hero-content">
+                        <span class="services-badge"><i class="bi bi-briefcase"></i> Investment Insights</span>
+                        <h1>Our Financial Services</h1>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="empty-state">
+                        <i class="bi bi-exclamation-triangle empty-icon"></i>
+                        <h2 class="empty-title">Error Loading Services</h2>
+                        <p class="empty-description">${error.message}</p>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    async function loadServiceDetail(slug) {
+        const container = document.getElementById('servicesContainer');
+        container.innerHTML = `
+            <div class="loading-container">
+                <div class="spinner"></div>
+                <p class="loading-text">Loading service details...</p>
+            </div>
+        `;
+
+        try {
+            const decodedSlug = decodeURIComponent(slug).trim();
+            const allServicesResponse = await fetch(`${API_BASE}/services`);
+            if (!allServicesResponse.ok) throw new Error('Failed to load services');
+
+            const allServices = await allServicesResponse.json();
+
+            let service = allServices.find(s => {
+                const serviceSlug = (s.slug || '').trim();
+                const cleanServiceSlug = serviceSlug.startsWith('/') ? serviceSlug.substring(1) : serviceSlug;
+                const cleanSearchSlug = decodedSlug.startsWith('/') ? decodedSlug.substring(1) : decodedSlug;
+                return cleanServiceSlug.toLowerCase() === cleanSearchSlug.toLowerCase();
+            });
+
+            if (!service) {
+                service = allServices.find(s =>
+                    s.title && s.title.toLowerCase().trim() === decodedSlug.toLowerCase().trim()
+                );
+            }
+
+            if (!service) throw new Error('Service not found');
+
+            const sectionsResponse = await fetch(`${API_BASE}/service-sections/service/${service.id}`);
+            if (!sectionsResponse.ok) throw new Error('Failed to load sections');
+
+            const sections = await sectionsResponse.json();
+            sections.sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));
+
+            let html = `
+                <div class="services-hero">
+                    <div class="services-hero-content">
+                        <span class="services-badge"><i class="bi bi-briefcase"></i> Investment Insights</span>
+                        <h1>${service.title}</h1>
+                        <p>${service.subtitle || 'Comprehensive solutions tailored to your goals'}</p>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="service-detail">
+                        <a href="services.html" class="back-button">
+                            <i class="bi bi-arrow-left"></i> Back to Services
+                        </a>
+                        ${service.bannerImage ? `<img src="${service.bannerImage}" alt="${service.title}" class="service-banner">` : ''}
+            `;
+
+            for (const section of sections) {
+                html += await renderSection(section);
+            }
+
+            html += '</div></div>';
+            container.innerHTML = html;
+            initializeFAQs();
+
+        } catch (error) {
+            console.error('Error:', error);
+            container.innerHTML = `
+                <div class="services-hero">
+                    <div class="services-hero-content">
+                        <span class="services-badge"><i class="bi bi-briefcase"></i> Investment Insights</span>
+                        <h1>Service Details</h1>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="empty-state">
+                        <i class="bi bi-exclamation-triangle empty-icon"></i>
+                        <h2 class="empty-title">Error Loading Service</h2>
+                        <p class="empty-description">${error.message}</p>
+                        <br><br>
+                        <a href="services.html" class="cta-button">Back to Services</a>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    async function renderSection(section) {
+        const itemsResponse = await fetch(`${API_BASE}/section-items/section/${section.id}`);
+        const items = itemsResponse.ok ? await itemsResponse.json() : [];
+        items.sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));
+
+        let html = '<div class="section">';
+
+        switch (section.sectionType) {
+            case 'hero':
+                html += `
+                    <div class="hero-section">
+                        <h2 class="section-title" style="color: white;">${section.title || 'Welcome'}</h2>
+                        ${section.subtitle ? `<p class="section-subtitle" style="color: rgba(255,255,255,0.9);">${section.subtitle}</p>` : ''}
+                        ${items.map(item => `
+                            <div style="margin-top: 20px;">
+                                <h3 style="font-size: 20px; margin-bottom: 10px; font-weight: 700; color: white;">${item.title}</h3>
+                                ${item.description ? `<p style="opacity: 0.9; font-size: 16px; color: rgba(255,255,255,0.9);">${item.description}</p>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                break;
+
+            case 'features':
+                html += `
+                    <h2 class="section-title">${section.title || 'Our Features'}</h2>
+                    ${section.subtitle ? `<p class="section-subtitle">${section.subtitle}</p>` : ''}
+                    <div class="features-grid">
+                `;
+                items.forEach(item => {
+                    html += `
+                        <div class="feature-item">
+                            <i class="${item.icon || 'bi bi-star'} feature-icon"></i>
+                            <h3 class="feature-title">${item.title}</h3>
+                            ${item.description ? `<p class="feature-description">${item.description}</p>` : ''}
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                break;
+
+            case 'steps':
+                html += `
+                    <h2 class="section-title">${section.title || 'How It Works'}</h2>
+                    ${section.subtitle ? `<p class="section-subtitle">${section.subtitle}</p>` : ''}
+                    <div class="steps-container">
+                `;
+                items.forEach((item, index) => {
+                    html += `
+                        <div class="step-item">
+                            <div class="step-number">${index + 1}</div>
+                            <div class="step-content">
+                                <h3 class="step-title">${item.title}</h3>
+                                ${item.description ? `<p class="step-description">${item.description}</p>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                break;
+
+            case 'why_choose_us':
+                html += `
+                    <h2 class="section-title">${section.title || 'Why Choose Us'}</h2>
+                    ${section.subtitle ? `<p class="section-subtitle">${section.subtitle}</p>` : ''}
+                    <div class="why-choose-grid">
+                `;
+                items.forEach(item => {
+                    html += `
+                        <div class="why-item">
+                            <i class="${item.icon || 'bi bi-check-circle'} why-icon"></i>
+                            <h3 class="why-title">${item.title}</h3>
+                            ${item.description ? `<p class="why-description">${item.description}</p>` : ''}
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                break;
+
+            case 'faq':
+                html += `
+                    <h2 class="section-title">${section.title || 'Frequently Asked Questions'}</h2>
+                    ${section.subtitle ? `<p class="section-subtitle">${section.subtitle}</p>` : ''}
+                    <div class="faq-container">
+                `;
+                items.forEach(item => {
+                    html += `
+                        <div class="faq-item">
+                            <button class="faq-question">
+                                <span>${item.title}</span>
+                                <i class="bi bi-chevron-down faq-icon"></i>
+                            </button>
+                            <div class="faq-answer">
+                                ${item.description ? `<div class="faq-answer-content">${item.description}</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                break;
+
+            case 'cta':
+                html += `
+                    <div class="cta-section">
+                        <h2 class="cta-title">${section.title || 'Ready to Get Started?'}</h2>
+                        <p class="cta-description">${section.subtitle || 'Contact us today to learn more'}</p>
+                        ${items.length > 0 && items[0].description ? `<p style="margin-bottom: 32px; opacity: 0.95;">${items[0].description}</p>` : ''}
+                        <a href="contact.html" class="cta-button">Get Started Now</a>
+                    </div>
+                `;
+                break;
+
+            default:
+                html += `
+                    <div style="background: white; padding: 48px 40px; border-radius: 16px; border: 1px solid #e9ecef;">
+                        <h2 class="section-title">${section.title || ''}</h2>
+                        ${section.subtitle ? `<p class="section-subtitle">${section.subtitle}</p>` : ''}
+                        ${items.length > 0 ? `
+                            <div style="display: grid; gap: 24px;">
+                                ${items.map(item => `
+                                    <div style="padding: 28px; border-left: 4px solid var(--accent); background: #f8f9fa; border-radius: 12px;">
+                                        <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 12px; color: var(--text-dark);">${item.title}</h3>
+                                        ${item.description ? `<p style="color: var(--text-gray); font-size: 15px; line-height: 1.7;">${item.description}</p>` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                break;
+        }
+
+        html += '</div>';
+        return html;
+    }
+
+    function initializeFAQs() {
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', function() {
+                const faqItem = this.parentElement;
+                const wasActive = faqItem.classList.contains('active');
+
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+
+                if (!wasActive) {
+                    faqItem.classList.add('active');
+                }
+            });
+        });
+    }
+
+    function navigateToService(slug) {
+        let cleanSlug = slug;
+        if (cleanSlug.startsWith('/')) {
+            cleanSlug = cleanSlug.substring(1);
+        }
+        const encodedSlug = encodeURIComponent(cleanSlug);
+        window.location.href = `services.html?service=${encodedSlug}`;
+    }
+</script>
+
+<div id="footer-container"></div>
+</body>
+</html>

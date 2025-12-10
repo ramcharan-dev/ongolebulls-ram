@@ -64,9 +64,9 @@ public class AdminDashboardController {
         return ResponseEntity.ok("Compliance summary for period: " + period);
     }
 
-    @GetMapping("/clients")
-    public ResponseEntity<List<Client>> getClients() {
-        return ResponseEntity.ok(service.getAllClients());
-    }
+//    @GetMapping("/clients")
+//    public ResponseEntity<List<Client>> getClients() {
+//        return ResponseEntity.ok(service.getAllClients());
+//    }
 
 }
