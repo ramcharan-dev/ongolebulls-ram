@@ -1,0 +1,49 @@
+server:
+  port: ${SERVER_PORT:8080}
+  error:
+    include-message: always
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://awseb-e-f2hq7tiesh-stack-awsebrdsdatabase-dnw6qusnl0mz.cfywsmks4rlh.ap-south-1.rds.amazonaws.com:3306/ongolebulls
+    username: root
+    password: root1234
+
+  jpa:
+    hibernate:
+      ddl-auto: ${HIBERNATE_DDL_AUTO:update}
+    show-sql: true
+    open-in-view: true
+
+  mail:
+    host: ${EMAIL_HOST:mail.ongolebullsinvest.com}
+    port: ${EMAIL_PORT:587}
+    username: ${EMAIL_USERNAME:info@ongolebullsinvest.com}
+    password: ${EMAIL_PASSWORD:Ongole@bulls@2024}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.ssl.enable: false
+      mail.debug: true
+
+  security:
+    user:
+      name: ${ADMIN_USERNAME:admin}
+      password: ${ADMIN_PASSWORD:admin123}
+
+  main:
+    allow-circular-references: true
+
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+
+thymeleaf:
+  prefix: classpath:/templates/
+  suffix: .html
+  enabled: true
+
+encryption:
+  key: lTB/6CsfDkNm46qjwXf/NuFx09ddhVU0z6rO7VJcyeA=
