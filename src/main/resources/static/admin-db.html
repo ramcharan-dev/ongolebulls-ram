@@ -12,14 +12,9 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="admin-dashboard.css"/>
 
-
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/classic/ckeditor.js"></script>
-
 </head>
 <body>
-
-
-
 
 <div class="admindashboard-layout" role="application" aria-label="Admin Dashboard">
 
@@ -38,13 +33,17 @@
             <a href="#/plans" class="admindashboard-nav" data-route="#/plans"><i class="bi bi-ui-checks-grid"></i> <span>Plans</span></a>
             <a href="#/investments" class="admindashboard-nav" data-route="#/investments"><i class="bi bi-graph-up-arrow"></i> <span>Investments</span></a>
             <a href="#/blogs" class="admindashboard-nav" data-route="#/blogs"><i class="bi bi-journal-text"></i> <span>Blogs</span></a>
+            <a href="#/services" class="admindashboard-nav" data-route="#/services">
+                <i class="bi bi-briefcase-fill"></i> <span>Services</span>
+            </a>
+
             <a href="#/seo" class="admindashboard-nav" data-route="#/seo"><i class="bi bi-search"></i> <span>SEO</span></a>
             <a href="#/services" class="admindashboard-nav" data-route="#/services">
                 <i class="bi bi-grid-fill"></i> <span>Services</span>
             </a>
             <a href="#/settings" class="admindashboard-nav" data-route="#/settings"><i class="bi bi-gear-fill"></i> <span>Settings</span></a>
             <a href="#/documents" class="admindashboard-nav" data-route="#/documents"><i class="bi bi-file-earmark-fill"></i> <span>Documents</span></a>
-            <a href="#/careers" class="admindashboard-nav" data-route="#/careers"><i class="bi bi-brief -fill"></i> <span>Careers</span></a>
+            <a href="#/careers" class="admindashboard-nav" data-route="#/careers"><i class="bi bi-briefcase-fill"></i> <span>Careers</span></a>
         </nav>
 
         <div class="admindashboard-sidebar-footer">
@@ -88,7 +87,6 @@
         <section id="admindashboardView"></section>
     </main>
 </div>
-
 
 <!-- Backdrop for mobile sidebar -->
 <div class="admindashboard-backdrop" id="admindashboardBackdrop"></div>
@@ -199,28 +197,116 @@
     </li>
 </template>
 
-<!-- Clients Table Template -->
-<template id="clientsTableTemplate">
-    <h2>Clients</h2>
-    <table class="admindashboard-table">
-        <thead>
-        <tr>
-            <th>Full Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-        </tr>
-        </thead>
-        <tbody id="clientsTableBody"></tbody>
-    </table>
-</template>
-
-<!-- Client Row Template -->
-<template id="clientRowTemplate">
-    <tr>
-        <td data-fullname></td>
-        <td data-email></td>
-        <td data-phone></td>
-    </tr>
+<!-- Client Form Template -->
+<template id="clientFormTemplate">
+    <div id="clientFormContainer" class="admindashboard-card">
+        <form id="clientForm">
+            <input type="hidden" name="id"/>
+            <div class="form-row">
+                <label>Full Name:<br/>
+                    <input type="text" name="fullName" class="admindashboard-input" required/>
+                </label>
+            </div>
+            <div class="form-row">
+                <label>Email:<br/>
+                    <input type="email" name="email" class="admindashboard-input" required/>
+                </label>
+            </div>
+            <div class="form-row">
+                <label>Phone:<br/>
+                    <input type="text" name="phone" class="admindashboard-input" required/>
+                </label>
+            </div>
+            <div class="form-row">
+                <label>Aadhaar:<br/>
+                    <input type="text" name="aadhaar" class="admindashboard-input"/>
+                </label>
+            </div>
+            <div class="form-row">
+                <label>Address:<br/>
+                    <input type="text" name="address" class="admindashboard-input"/>
+                </label>
+            </div>
+            <div class="form-row">
+                <label>City:<br/>
+                    <input type="text" name="city" class="admindashboard-input"/>
+                </label>
+            </div>
+            <div class="form-row">
+                <label>State:<br/>
+                    <input type="text" name="state" class="admindashboard-input"/>
+                </label>
+            </div>
+            <div class="form-row">
+                <label>Pin Code:<br/>
+                    <input type="text" name="pinCode" class="admindashboard-input"/>
+                </label>
+            </div>
+            <div class="form-row">
+                <label>Annual Income:<br/>
+                    <input type="number" name="annualIncome" step="0.01" class="admindashboard-input"/>
+                </label>
+            </div>
+            <div class="form-row">
+                <label>Bank Account Details:<br/>
+                    <input type="text" name="bankAccountDetails" class="admindashboard-input"/>
+                </label>
+            </div>
+            <div class="form-row">
+                <label>Email Verified:<br/>
+                    <select name="emailVerified" class="admindashboard-input">
+                        <option value="">-- Select --</option>
+                        <option value="true">Verified</option>
+                        <option value="false">Not Verified</option>
+                    </select>
+                </label>
+            </div>
+            <div class="form-row">
+                <label>Investment Experience:<br/>
+                    <input type="text" name="investmentExperience" class="admindashboard-input"/>
+                </label>
+            </div>
+            <div class="form-row">
+                <label>Nominee Name:<br/>
+                    <input type="text" name="nomineeName" class="admindashboard-input"/>
+                </label>
+            </div>
+            <div class="form-row">
+                <label>Nominee Relation:<br/>
+                    <input type="text" name="nomineeRelation" class="admindashboard-input"/>
+                </label>
+            </div>
+            <div class="form-row">
+                <label>Occupation:<br/>
+                    <input type="text" name="occupation" class="admindashboard-input"/>
+                </label>
+            </div>
+            <div class="form-row">
+                <label>PAN Card:<br/>
+                    <input type="text" name="panCard" class="admindashboard-input"/>
+                </label>
+            </div>
+            <div class="form-row">
+                <label>Preferred Investments:<br/>
+                    <input type="text" name="preferredInvestments" class="admindashboard-input"/>
+                </label>
+            </div>
+            <div class="form-row">
+                <label>Reset Token:<br/>
+                    <input type="text" name="resetToken" class="admindashboard-input"/>
+                </label>
+            </div>
+            <div class="form-row">
+                <label>Risk Profile:<br/>
+                    <input type="text" name="riskProfile" class="admindashboard-input"/>
+                </label>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="admindashboard-btn primary">Save</button>
+                <button type="button" id="cancelClientBtn" class="admindashboard-btn">Cancel</button>
+            </div>
+        </form>
+    </div>
 </template>
 
 <!-- Blogs Container Template -->
@@ -249,7 +335,7 @@
     </div>
 </template>
 
-<!-- Blog Form Template (Add/Edit) -->
+<!-- Blog Form Template -->
 <template id="blogFormTemplate">
     <div class="admindashboard-card">
         <div class="admindashboard-card-head">
@@ -273,12 +359,7 @@
 
             <div class="form-row">
                 <label>Full Content: <span class="required">*</span><br/>
-                    <!--  <textarea name="fullContent"  rows="8" required class="admindashboard-textarea"></textarea>-->
                     <textarea id="blogFullContent" name="fullContent" rows="8" class="admindashboard-textarea"></textarea>
-
-
-                    </textarea>
-
                 </label>
             </div>
 
@@ -321,7 +402,6 @@
                 </div>
             </div>
 
-
             <div class="form-actions">
                 <button class="admindashboard-btn primary" type="submit">
                     <i class="bi bi-save"></i> Save Blog
@@ -335,6 +415,129 @@
     </div>
 </template>
 
+<!-- SEO Container Template -->
+<template id="seoContainerTemplate">
+    <div class="admindashboard-card">
+        <div class="admindashboard-card-head">
+            <h3><i class="bi bi-search"></i> SEO Settings</h3>
+            <button class="admindashboard-btn primary" id="addNewSeoBtn">
+                <i class="bi bi-plus-circle"></i> Add New SEO Entry
+            </button>
+        </div>
+
+        <!-- SEO Entries List -->
+        <div id="seoEntriesList" class="seo-entries-list"></div>
+    </div>
+
+    <!-- SEO Form (Hidden by default) -->
+    <div class="admindashboard-card" id="seoFormCard" style="display:none; margin-top:20px;">
+        <div class="admindashboard-card-head">
+            <h3><i class="bi bi-pencil-square"></i> <span id="seoFormTitle">Add SEO Entry</span></h3>
+            <button class="admindashboard-btn" id="cancelSeoFormBtn">
+                <i class="bi bi-x-circle"></i> Cancel
+            </button>
+        </div>
+
+        <form id="seoForm" class="admindashboard-seo-form">
+            <input type="hidden" id="seoId" name="id" />
+
+            <div class="form-row">
+                <label>Slug (URL Path): <span class="required">*</span><br/>
+                    <input type="text" id="seoSlug" name="slug" required class="admindashboard-input"
+                           placeholder="e.g., /about-us, /services, /contact"/>
+                    <small class="form-help">The URL path for this page (e.g., /about-us)</small>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Meta Title:<br/>
+                    <input type="text" id="seoMetaTitle" name="metaTitle" class="admindashboard-input"
+                           placeholder="Page title for search engines"/>
+                    <small class="form-help">Recommended length: 50-60 characters</small>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Meta Description:<br/>
+                    <textarea id="seoMetaDescription" name="metaDescription" rows="3"
+                              class="admindashboard-textarea"
+                              placeholder="Brief description of the page for search results"></textarea>
+                    <small class="form-help">Recommended length: 150-160 characters</small>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Meta Keywords:<br/>
+                    <input type="text" id="seoMetaKeywords" name="metaKeywords" class="admindashboard-input"
+                           placeholder="keyword1, keyword2, keyword3"/>
+                    <small class="form-help">Comma-separated keywords relevant to the page</small>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Robots Tag:<br/>
+                    <select id="seoRobotsTag" name="robotsTag" class="admindashboard-input">
+                        <option value="index,follow">index, follow (Default - Allow indexing)</option>
+                        <option value="noindex,follow">noindex, follow (Don't index, follow links)</option>
+                        <option value="index,nofollow">index, nofollow (Index, don't follow links)</option>
+                        <option value="noindex,nofollow">noindex, nofollow (Don't index or follow)</option>
+                    </select>
+                    <small class="form-help">Controls how search engines crawl and index this page</small>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Schema JSON (Structured Data):<br/>
+                    <textarea id="seoSchemaJson" name="schemaJson" rows="6"
+                              class="admindashboard-textarea code-input"
+                              placeholder='{"@context": "https://schema.org", "@type": "WebPage", ...}'></textarea>
+                    <small class="form-help">Valid JSON-LD structured data for rich snippets</small>
+                </label>
+            </div>
+
+            <div class="form-actions">
+                <button class="admindashboard-btn primary" type="submit">
+                    <i class="bi bi-save"></i> Save SEO Settings
+                </button>
+                <button class="admindashboard-btn" type="button" id="cancelSeoBtn">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </button>
+            </div>
+        </form>
+        <div id="seoFormMessage" class="admindashboard-form-message"></div>
+    </div>
+</template>
+
+<!-- SEO Entry Card Template -->
+<template id="seoEntryCardTemplate">
+    <div class="seo-entry-card">
+        <div class="seo-entry-header">
+            <div class="seo-entry-slug">
+                <i class="bi bi-link-45deg"></i>
+                <span data-slug></span>
+            </div>
+            <div class="seo-entry-actions">
+                <button class="admindashboard-btn-small primary" data-edit-seo>
+                    <i class="bi bi-pencil"></i> Edit
+                </button>
+                <button class="admindashboard-btn-small danger" data-delete-seo>
+                    <i class="bi bi-trash"></i> Delete
+                </button>
+            </div>
+        </div>
+        <div class="seo-entry-body">
+            <div class="seo-entry-field">
+                <strong>Meta Title:</strong> <span data-meta-title></span>
+            </div>
+            <div class="seo-entry-field">
+                <strong>Meta Description:</strong> <span data-meta-description></span>
+            </div>
+            <div class="seo-entry-field">
+                <strong>Robots:</strong> <span class="admindashboard-badge" data-robots></span>
+            </div>
+        </div>
+    </div>
+</template>
 
 <!-- Careers Container Template -->
 <template id="careersContainerTemplate">
@@ -370,7 +573,7 @@
         <label>Key Responsibility:<br/><textarea name="keyResponsibility" rows="3" class="admindashboard-textarea"></textarea></label><br/><br/>
         <label>Roles and Responsibilities:<br/><textarea name="rolesAndResponsibilities" rows="3" class="admindashboard-textarea"></textarea></label><br/><br/>
 
-        <!-- SEO Section Start -->
+        <!-- SEO Section -->
         <div class="seo-section">
             <div class="seo-section-title"><h2>SEO Information</h2></div>
             <div class="form-row">
@@ -386,18 +589,29 @@
                 <textarea id="seoDescription" name="seoDescription" class="admindashboard-input" rows="2"></textarea>
             </div>
         </div>
-        <!-- SEO Section End -->
 
         <button class="admindashboard-btn primary" type="submit">Add Job</button>
     </form>
 
     <div id="jobFormMessage" class="admindashboard-form-message"></div>
-
 </template>
 
+<!-- Career Row Template -->
+<template id="careerRowTemplate">
+    <tr>
+        <td data-title></td>
+        <td data-department></td>
+        <td data-location></td>
+        <td data-experience></td>
+        <td data-employmenttype></td>
+        <td>
+            <button class="edit-job-btn" data-edit>Edit</button>
+            <button class="delete-job-btn" data-delete>Delete</button>
+        </td>
+    </tr>
+</template>
 
-
-
+<!-- Edit Admin Template -->
 <template id="editAdminTemplate">
     <div class="edit-admin-container">
         <h2>Edit Admin User Details</h2>
@@ -424,67 +638,505 @@
 
 
 
+<!-- Add these templates to your admin-dashboard.html file -->
 
+<!-- Services Container Template -->
+<template id="servicesContainerTemplate">
+    <div class="services-header">
+        <div class="services-header-content">
+            <h2><i class="bi bi-briefcase-fill"></i> Manage Services</h2>
+            <p class="services-subtitle">Create and manage your service pages</p>
+        </div>
+        <button class="admindashboard-btn primary" id="addServiceBtn">
+            <i class="bi bi-plus-circle"></i> Add Service
+        </button>
+    </div>
+    <div class="services-grid" id="servicesGrid"></div>
+</template>
 
-<!-- Career Row Template -->
-<template id="careerRowTemplate">
-    <tr>
-        <td data-title></td>
-        <td data-department></td>
-        <td data-location></td>
-        <td data-experience></td>
-        <td data-employmenttype></td>
-        <td>
-            <button class="edit-job-btn" data-edit>Edit</button>
-            <button class="delete-job-btn" data-delete>Delete</button>
-        </td>
-    </tr>
+<!-- Service Card Template -->
+<template id="serviceCardTemplate">
+    <div class="service-card">
+        <div class="service-card-header">
+            <h3 class="service-card-title" data-title></h3>
+            <p class="service-card-subtitle" data-subtitle></p>
+        </div>
+        <div class="service-card-slug" data-slug></div>
+        <div class="service-card-actions">
+            <button class="admindashboard-btn-small" data-view>
+                <i class="bi bi-eye"></i> View
+            </button>
+            <button class="admindashboard-btn-small" data-manage-sections>
+                <i class="bi bi-layout-text-sidebar"></i> Manage Sections
+            </button>
+            <button class="admindashboard-btn-small primary" data-edit>
+                <i class="bi bi-pencil"></i> Edit
+            </button>
+            <button class="admindashboard-btn-small danger" data-delete>
+                <i class="bi bi-trash"></i> Delete
+            </button>
+        </div>
+    </div>
+</template>
+
+<!-- Service Form Template -->
+<template id="serviceFormTemplate">
+    <div class="admindashboard-card">
+        <div class="admindashboard-card-head">
+            <h3><i class="bi bi-plus-circle-fill"></i> <span data-form-title>Add New Service</span></h3>
+            <button class="admindashboard-btn" id="backToServicesBtn">
+                <i class="bi bi-arrow-left"></i> Back to Services
+            </button>
+        </div>
+        <form id="serviceForm" class="admindashboard-service-form">
+            <div class="form-row">
+                <label>Service Title: <span class="required">*</span><br/>
+                    <input type="text" name="title" required class="admindashboard-input" placeholder="e.g., Wealth Management Services"/>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Subtitle:<br/>
+                    <input type="text" name="subtitle" class="admindashboard-input" placeholder="Brief description of the service"/>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Slug (URL): <span class="required">*</span><br/>
+                    <input type="text" name="slug" required class="admindashboard-input" placeholder="wealth-management"/>
+                    <small class="form-help">URL-friendly version (lowercase, hyphens only)</small>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Banner Image URL:<br/>
+                    <input type="text" name="bannerImage" class="admindashboard-input" placeholder="URL to banner image"/>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="isActive" checked/>
+                    <span>Active (visible on website)</span>
+                </label>
+            </div>
+
+            <!-- SEO Section -->
+            <div class="seo-section">
+                <div class="seo-section-title"><h2>SEO Information</h2></div>
+
+                <div class="form-row">
+                    <label>Meta Title:<br/>
+                        <input type="text" name="metaTitle" class="admindashboard-input" placeholder="SEO title for search engines"/>
+                        <small class="form-help">Recommended: 50-60 characters</small>
+                    </label>
+                </div>
+
+                <div class="form-row">
+                    <label>Meta Keywords:<br/>
+                        <input type="text" name="metaKeywords" class="admindashboard-input" placeholder="keyword1, keyword2, keyword3"/>
+                        <small class="form-help">Comma-separated keywords</small>
+                    </label>
+                </div>
+
+                <div class="form-row">
+                    <label>Meta Description:<br/>
+                        <textarea name="metaDescription" rows="3" class="admindashboard-textarea" placeholder="Brief description for search results"></textarea>
+                        <small class="form-help">Recommended: 150-160 characters</small>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="admindashboard-btn primary" type="submit">
+                    <i class="bi bi-save"></i> <span data-submit-text>Create Service</span>
+                </button>
+                <button class="admindashboard-btn" type="button" id="cancelServiceBtn">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </button>
+            </div>
+        </form>
+        <div id="serviceFormMessage" class="admindashboard-form-message"></div>
+    </div>
+</template>
+
+<!-- Sections Management Template -->
+<template id="sectionsManagementTemplate">
+    <div class="admindashboard-card">
+        <div class="admindashboard-card-head">
+            <h3><i class="bi bi-layout-text-sidebar"></i> Manage Sections: <span data-service-title></span></h3>
+            <button class="admindashboard-btn" id="backToServicesFromSections">
+                <i class="bi bi-arrow-left"></i> Back to Services
+            </button>
+        </div>
+        <button class="admindashboard-btn primary" id="addSectionBtn" style="margin-bottom: 20px;">
+            <i class="bi bi-plus-circle"></i> Add Section
+        </button>
+        <div class="sections-list" id="sectionsList"></div>
+    </div>
+</template>
+
+<!-- Section Card Template -->
+<template id="sectionCardTemplate">
+    <div class="section-card">
+        <div class="section-card-header">
+            <h4><i data-type-icon></i> <span data-title></span></h4>
+            <span class="admindashboard-badge" data-type></span>
+        </div>
+        <p class="section-card-subtitle" data-subtitle></p>
+        <div class="section-card-actions">
+            <button class="admindashboard-btn-small" data-manage-items>
+                <i class="bi bi-list-ul"></i> Manage Items
+            </button>
+            <button class="admindashboard-btn-small primary" data-edit>
+                <i class="bi bi-pencil"></i> Edit
+            </button>
+            <button class="admindashboard-btn-small danger" data-delete>
+                <i class="bi bi-trash"></i> Delete
+            </button>
+        </div>
+    </div>
+</template>
+
+<!-- Section Form Template -->
+<template id="sectionFormTemplate">
+    <div class="admindashboard-card">
+        <div class="admindashboard-card-head">
+            <h3><i class="bi bi-plus-circle-fill"></i> <span data-form-title>Add New Section</span></h3>
+            <button class="admindashboard-btn" id="backToSectionsBtn">
+                <i class="bi bi-arrow-left"></i> Back to Sections
+            </button>
+        </div>
+        <form id="sectionForm" class="admindashboard-section-form">
+            <input type="hidden" name="serviceId"/>
+
+            <div class="form-row">
+                <label>Section Type: <span class="required">*</span><br/>
+                    <select name="sectionType" required class="admindashboard-input">
+                        <option value="">-- Select Type --</option>
+                        <option value="hero">Hero Banner</option>
+                        <option value="features">Features</option>
+                        <option value="steps">Steps/Process</option>
+                        <option value="why_choose_us">Why Choose Us</option>
+                        <option value="faq">FAQ</option>
+                        <option value="cta">Call to Action</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Section Title:<br/>
+                    <input type="text" name="title" class="admindashboard-input" placeholder="e.g., Our Features"/>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Section Subtitle:<br/>
+                    <input type="text" name="subtitle" class="admindashboard-input" placeholder="Brief description"/>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Display Order:<br/>
+                    <input type="number" name="orderIndex" class="admindashboard-input" placeholder="0" min="0"/>
+                    <small class="form-help">Lower numbers appear first</small>
+                </label>
+            </div>
+
+            <!-- SEO Section -->
+            <div class="seo-section">
+                <div class="seo-section-title"><h2>SEO Information</h2></div>
+
+                <div class="form-row">
+                    <label>Meta Title:<br/>
+                        <input type="text" name="metaTitle" class="admindashboard-input"/>
+                    </label>
+                </div>
+
+                <div class="form-row">
+                    <label>Meta Keywords:<br/>
+                        <input type="text" name="metaKeywords" class="admindashboard-input"/>
+                    </label>
+                </div>
+
+                <div class="form-row">
+                    <label>Meta Description:<br/>
+                        <textarea name="metaDescription" rows="2" class="admindashboard-textarea"></textarea>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="admindashboard-btn primary" type="submit">
+                    <i class="bi bi-save"></i> <span data-submit-text>Create Section</span>
+                </button>
+                <button class="admindashboard-btn" type="button" id="cancelSectionBtn">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </button>
+            </div>
+        </form>
+        <div id="sectionFormMessage" class="admindashboard-form-message"></div>
+    </div>
+</template>
+
+<!-- Section Items Management Template -->
+<template id="sectionItemsManagementTemplate">
+    <div class="admindashboard-card">
+        <div class="admindashboard-card-head">
+            <h3><i class="bi bi-list-ul"></i> Manage Items: <span data-section-title></span></h3>
+            <button class="admindashboard-btn" id="backToSectionsFromItems">
+                <i class="bi bi-arrow-left"></i> Back to Sections
+            </button>
+        </div>
+        <button class="admindashboard-btn primary" id="addItemBtn" style="margin-bottom: 20px;">
+            <i class="bi bi-plus-circle"></i> Add Item
+        </button>
+        <div class="section-items-grid" id="sectionItemsGrid"></div>
+    </div>
+</template>
+
+<!-- Section Item Card Template -->
+<template id="sectionItemCardTemplate">
+    <div class="section-item-card">
+        <div class="section-item-header">
+            <div class="section-item-icon">
+                <i data-icon></i>
+            </div>
+            <div class="section-item-content">
+                <h5 class="section-item-title" data-title></h5>
+                <p class="section-item-description" data-description></p>
+            </div>
+        </div>
+        <div class="section-item-actions">
+            <button class="admindashboard-btn-small primary" data-edit>
+                <i class="bi bi-pencil"></i> Edit
+            </button>
+            <button class="admindashboard-btn-small danger" data-delete>
+                <i class="bi bi-trash"></i> Delete
+            </button>
+        </div>
+    </div>
+</template>
+
+<!-- Section Item Form Template -->
+<template id="sectionItemFormTemplate">
+    <div class="admindashboard-card">
+        <div class="admindashboard-card-head">
+            <h3><i class="bi bi-plus-circle-fill"></i> <span data-form-title>Add New Item</span></h3>
+            <button class="admindashboard-btn" id="backToItemsBtn">
+                <i class="bi bi-arrow-left"></i> Back to Items
+            </button>
+        </div>
+        <form id="itemForm" class="admindashboard-item-form">
+            <input type="hidden" name="sectionId"/>
+
+            <div class="form-row">
+                <label>Icon (Bootstrap Icon class): <span class="required">*</span><br/>
+                    <input type="text" name="icon" required class="admindashboard-input" placeholder="e.g., bi-shield-check"/>
+                    <small class="form-help">Visit <a href="https://icons.getbootstrap.com/" target="_blank">Bootstrap Icons</a> for icon names</small>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Title: <span class="required">*</span><br/>
+                    <input type="text" name="title" required class="admindashboard-input" placeholder="e.g., Secure & Reliable"/>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Description:<br/>
+                    <textarea name="description" rows="4" class="admindashboard-textarea" placeholder="Detailed description of this item"></textarea>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Display Order:<br/>
+                    <input type="number" name="orderIndex" class="admindashboard-input" placeholder="0" min="0"/>
+                    <small class="form-help">Lower numbers appear first</small>
+                </label>
+            </div>
+
+            <!-- SEO Section -->
+            <div class="seo-section">
+                <div class="seo-section-title"><h2>SEO Information</h2></div>
+
+                <div class="form-row">
+                    <label>Meta Title:<br/>
+                        <input type="text" name="metaTitle" class="admindashboard-input"/>
+                    </label>
+                </div>
+
+                <div class="form-row">
+                    <label>Meta Keywords:<br/>
+                        <input type="text" name="metaKeywords" class="admindashboard-input"/>
+                    </label>
+                </div>
+
+                <div class="form-row">
+                    <label>Meta Description:<br/>
+                        <textarea name="metaDescription" rows="2" class="admindashboard-textarea"></textarea>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="admindashboard-btn primary" type="submit">
+                    <i class="bi bi-save"></i> <span data-submit-text>Create Item</span>
+                </button>
+                <button class="admindashboard-btn" type="button" id="cancelItemBtn">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </button>
+            </div>
+        </form>
+        <div id="itemFormMessage" class="admindashboard-form-message"></div>
+    </div>
 </template>
 
 
 
+<!-- Add these templates to your admin-dashboard.html file, inside the <body> tag with other templates -->
 
-<section id="seoPage"   style="display:none;">
-    <h2>SEO Settings</h2>
-    <div id="seoListContainer">
-        <!-- SEO entries will be dynamically inserted here -->
+<!-- Settings Container Template -->
+<template id="settingsContainerTemplate">
+    <div class="services-header">
+        <div class="services-header-content">
+            <h2><i class="bi bi-gear-fill"></i> Settings Management</h2>
+            <p class="services-subtitle">Manage your website configuration</p>
+        </div>
+        <button class="admindashboard-btn primary" id="addSettingBtn">
+            <i class="bi bi-plus-circle"></i> Add Settings
+        </button>
     </div>
-    <button id="addSeoBtn" class="admindashboard-btn primary">Add New SEO Setting</button>
+    <div class="services-grid" id="settingsGrid"></div>
+</template>
 
-    <!-- Edit form modal/dialog -->
-    <div id="seoEditModal" class="modal" style="display:none;">
-        <form id="seoEditForm" class="admindashboard-form">
-            <input type="hidden" name="id" id="seoId" />
-            <label>Slug (URL Path)</label>
-            <input type="text" name="slug" id="seoSlug" required />
+<!-- Setting Card Template -->
+<template id="settingCardTemplate">
+    <div class="service-card">
+        <div class="service-card-header">
+            <h3 class="service-card-title" data-site-name></h3>
+            <p class="service-card-subtitle" data-contact-email></p>
+        </div>
+        <div class="service-card-slug">
+            <div style="margin-bottom: 8px;"><strong>Phone:</strong> <span data-contact-phone></span></div>
+            <div style="margin-bottom: 8px;"><strong>Address:</strong> <span data-address></span></div>
+            <div><strong>SEO Title:</strong> <span data-seo-title></span></div>
+        </div>
+        <div class="service-card-actions">
+            <button class="admindashboard-btn-small primary" data-edit>
+                <i class="bi bi-pencil"></i> Edit
+            </button>
+            <button class="admindashboard-btn-small danger" data-delete>
+                <i class="bi bi-trash"></i> Delete
+            </button>
+        </div>
+    </div>
+</template>
 
-            <label>Meta Title</label>
-            <input type="text" name="metaTitle" id="seoMetaTitle" />
+<!-- Settings Form Template -->
+<template id="settingsFormTemplate">
+    <div class="admindashboard-card">
+        <div class="admindashboard-card-head">
+            <h3><i class="bi bi-gear-fill"></i> <span data-form-title>Add New Settings</span></h3>
+            <button class="admindashboard-btn" id="backToSettingsBtn">
+                <i class="bi bi-arrow-left"></i> Back to Settings
+            </button>
+        </div>
+        <form id="settingsForm" class="admindashboard-service-form">
+            <div class="form-row">
+                <label>Site Name: <span class="required">*</span><br/>
+                    <input type="text" name="siteName" required class="admindashboard-input" placeholder="My Company"/>
+                </label>
+            </div>
 
-            <label>Meta Description</label>
-            <textarea name="metaDescription" id="seoMetaDescription"></textarea>
+            <div class="form-row">
+                <label>Logo URL:<br/>
+                    <input type="text" name="logoUrl" class="admindashboard-input" placeholder="https://example.com/logo.png"/>
+                </label>
+            </div>
 
-            <label>Meta Keywords</label>
-            <input type="text" name="metaKeywords" id="seoMetaKeywords" />
+            <div class="form-row">
+                <label>Favicon URL:<br/>
+                    <input type="text" name="faviconUrl" class="admindashboard-input" placeholder="https://example.com/favicon.ico"/>
+                </label>
+            </div>
 
-            <label>Robots Tag</label>
-            <select name="robotsTag" id="seoRobotsTag">
-                <option value="index,follow">index, follow</option>
-                <option value="noindex,nofollow">noindex, nofollow</option>
-            </select>
+            <div class="form-row">
+                <label>Contact Email: <span class="required">*</span><br/>
+                    <input type="email" name="contactEmail" required class="admindashboard-input" placeholder="contact@example.com"/>
+                </label>
+            </div>
 
-            <label>Schema JSON</label>
-            <textarea name="schemaJson" id="seoSchemaJson" rows="6"></textarea>
+            <div class="form-row">
+                <label>Contact Phone:<br/>
+                    <input type="text" name="contactPhone" class="admindashboard-input" placeholder="+1 234 567 8900"/>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Address:<br/>
+                    <textarea name="address" rows="3" class="admindashboard-textarea" placeholder="123 Main St, City, Country"></textarea>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Facebook URL:<br/>
+                    <input type="text" name="facebookUrl" class="admindashboard-input" placeholder="https://facebook.com/yourpage"/>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Instagram URL:<br/>
+                    <input type="text" name="instagramUrl" class="admindashboard-input" placeholder="https://instagram.com/yourpage"/>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>LinkedIn URL:<br/>
+                    <input type="text" name="linkedInUrl" class="admindashboard-input" placeholder="https://linkedin.com/company/yourcompany"/>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Twitter URL:<br/>
+                    <input type="text" name="twitterUrl" class="admindashboard-input" placeholder="https://twitter.com/yourhandle"/>
+                </label>
+            </div>
+
+            <div class="seo-section">
+                <div class="seo-section-title"><h2>SEO Information</h2></div>
+
+                <div class="form-row">
+                    <label>SEO Title:<br/>
+                        <input type="text" name="seoTitle" class="admindashboard-input" placeholder="My Company - Home"/>
+                    </label>
+                </div>
+
+                <div class="form-row">
+                    <label>SEO Keywords:<br/>
+                        <input type="text" name="seoKeywords" class="admindashboard-input" placeholder="keyword1, keyword2, keyword3"/>
+                    </label>
+                </div>
+
+                <div class="form-row">
+                    <label>SEO Description:<br/>
+                        <textarea name="seoDescription" rows="3" class="admindashboard-textarea" placeholder="Description for search engines"></textarea>
+                    </label>
+                </div>
+            </div>
 
             <div class="form-actions">
-                <button type="submit" class="admindashboard-btn primary">Save</button>
-                <button type="button" class="admindashboard-btn" id="seoCancelBtn">Cancel</button>
+                <button class="admindashboard-btn primary" type="submit">
+                    <i class="bi bi-save"></i> <span data-submit-text>Create Settings</span>
+                </button>
+                <button class="admindashboard-btn" type="button" id="cancelSettingsBtn">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </button>
             </div>
-            <div id="seoFormMessage"></div>
         </form>
+        <div id="settingsFormMessage" class="admindashboard-form-message"></div>
     </div>
-</section>
-
+</template>
 
 
 
@@ -492,153 +1144,6 @@
 <template id="placeholderPageTemplate">
     <h2 data-page-title></h2>
 </template>
-
-
-<!-- Services Container Template -->
-<template id="servicesContainerTemplate">
-    <div class="admindashboard-card" id="servicesCard">
-        <div class="admindashboard-card-head d-flex justify-content-between align-items-center">
-            <h3><i class="bi bi-grid-fill"></i> Services Admin</h3>
-            <button class="admindashboard-btn primary" id="btnNewService">
-                <i class="bi bi-plus-lg"></i> New Service
-            </button>
-        </div>
-
-        <div id="servicesList" class="row g-3"></div>
-
-        <!-- Modal: Service Form -->
-        <div class="modal fade" id="modalService" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <form id="serviceForm" class="needs-validation" novalidate>
-                        <div class="modal-header">
-                            <h5 class="modal-title">Create / Edit Service</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <input type="hidden" id="serviceId">
-                            <div class="form-row">
-                                <label>Slug:<span class="required">*</span>
-                                    <input required class="admindashboard-input" id="slug">
-                                </label>
-                            </div>
-                            <div class="form-row">
-                                <label>Title:<span class="required">*</span>
-                                    <input required class="admindashboard-input" id="title">
-                                </label>
-                            </div>
-                            <div class="form-row">
-                                <label>Subtitle:
-                                    <textarea class="admindashboard-textarea" id="subtitle"></textarea>
-                                </label>
-                            </div>
-                            <div class="form-row">
-                                <label>Banner Image URL:
-                                    <input class="admindashboard-input" id="bannerImage">
-                                </label>
-                            </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="isActive" checked>
-                                <label class="form-check-label" for="isActive">Active</label>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="admindashboard-btn" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="admindashboard-btn primary">Save Service</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal: Add Section -->
-        <div class="modal fade" id="modalSection" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form id="sectionForm">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Add Section</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <input type="hidden" id="sectionServiceId">
-                            <div class="form-row">
-                                <label>Section Type:
-                                    <select id="sectionType" class="admindashboard-select">
-                                        <option value="hero">Hero</option>
-                                        <option value="features">Features</option>
-                                        <option value="steps">Steps</option>
-                                        <option value="why-choose-us">Why Choose Us</option>
-                                        <option value="faq">FAQ</option>
-                                        <option value="cta">CTA</option>
-                                    </select>
-                                </label>
-                            </div>
-                            <div class="form-row">
-                                <label>Title:
-                                    <input id="sectionTitle" class="admindashboard-input">
-                                </label>
-                            </div>
-                            <div class="form-row">
-                                <label>Subtitle:
-                                    <textarea id="sectionSubtitle" class="admindashboard-textarea"></textarea>
-                                </label>
-                            </div>
-                            <div class="form-row">
-                                <label>Order Index:
-                                    <input type="number" id="sectionOrder" class="admindashboard-input" value="0">
-                                </label>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="admindashboard-btn" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="admindashboard-btn primary">Add Section</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal: Add Item -->
-        <div class="modal fade" id="modalItem" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form id="itemForm">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Add Item</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <input type="hidden" id="itemSectionId">
-                            <div class="form-row">
-                                <label>Icon (lucide name):<input id="itemIcon" class="admindashboard-input"></label>
-                            </div>
-                            <div class="form-row">
-                                <label>Title:<input id="itemTitle" class="admindashboard-input" required></label>
-                            </div>
-                            <div class="form-row">
-                                <label>Description:
-                                    <textarea id="itemDescription" class="admindashboard-textarea"></textarea>
-                                </label>
-                            </div>
-                            <div class="form-row">
-                                <label>Order Index:
-                                    <input type="number" id="itemOrder" class="admindashboard-input" value="0">
-                                </label>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="admindashboard-btn" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="admindashboard-btn primary">Add Item</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</template>
-
 
 <!-- Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
