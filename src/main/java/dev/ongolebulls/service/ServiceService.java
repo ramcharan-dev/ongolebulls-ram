@@ -3,7 +3,7 @@ package dev.ongolebulls.service;
 import aj.org.objectweb.asm.commons.Remapper;
 import dev.ongolebulls.model.SeoSetting;
 import dev.ongolebulls.model.Service;
-import dev.ongolebulls.repository.SeoSettingRepository;
+
 import dev.ongolebulls.repository.ServiceRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

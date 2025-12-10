@@ -263,6 +263,7 @@ public class User implements UserDetails {
 
     private String fullName;
 
+
     @Column(unique = true, nullable = false)
     private String email;
 
@@ -277,6 +278,9 @@ public class User implements UserDetails {
     private String passwordHash;
 
     private boolean isForSelf = true; // default true
+
+
+
     private String relativeFullName;
     private String relativeRelation;
 

@@ -119,7 +119,7 @@
     btn.setAttribute('aria-expanded', !isVisible);
     btn.textContent = isVisible ? "+" : "–";
 });
-
+});
 
     updatePaginationControls();
 }
@@ -377,4 +377,3 @@
 
     // Initial data fetch on page load
     fetchJobsFromAPI();
-

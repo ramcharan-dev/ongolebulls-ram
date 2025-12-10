@@ -3,6 +3,7 @@ package dev.ongolebulls.service;
 
 import dev.ongolebulls.model.CandidateApplication;
 import dev.ongolebulls.repository.CandidateRepository;
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -118,9 +119,50 @@ public class EmailService {
         message.setTo(toEmail);
         message.setSubject(subject);
         message.setText(body);
+
         message.setFrom("hr@ongolebullsinvest.com"); // same as configured email
 
         mailSender.send(message);
     }
+
+    public void sendHtmlMail(String to, String subject, String htmlBody) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setFrom("info@ongolebullsinvest.com");
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(htmlBody, true); // true = HTML
+
+            mailSender.send(message);
+            System.out.println("✓ HTML Email sent successfully to: " + to);
+        } catch (MessagingException e) {
+            System.err.println("✗ Failed to send HTML email to " + to + ": " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Failed to send HTML email", e);
+        }
+    }
+
+
+////    @Autowired
+////    private JavaMailSender mailSender;
+//
+//    public void sendMail(String to, String subject, String body) {
+//        try {
+//            SimpleMailMessage message = new SimpleMailMessage();
+//            message.setFrom("info@ongolebullsinvest.com");
+//            message.setTo(to);
+//            message.setSubject(subject);
+//            message.setText(body);
+//
+//            mailSender.send(message);
+//            System.out.println("✓ Email sent successfully to: " + to);
+//        } catch (Exception e) {
+//            System.err.println("✗ Failed to send email to " + to + ": " + e.getMessage());
+//            e.printStackTrace();
+//            throw new RuntimeException("Failed to send email", e);
+//        }
+//    }
 
 }
