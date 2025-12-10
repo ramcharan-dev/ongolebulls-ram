@@ -227,15 +227,20 @@ async function admindashboardLoad() {
     }
 }
 
-// === Clients Loader with Search ===
+// === Clients Section ===
 let allClients = [];
 
 async function admindashboardLoadClients(searchQuery = '') {
     showLoadingCard('Loading Clients...');
 
     try {
-        if (allClients.length === 0) {
-            allClients = await admindashboardGet('/clients', []);
+        if (allClients.length === 0 || !searchQuery) {
+            const res = await fetch(`${ADMINDASHBOARD_API}/clients`, {
+                headers: admindashboardAuthHeaders()
+            });
+
+            if (!res.ok) throw new Error(`Failed to load clients: HTTP ${res.status}`);
+            allClients = await res.json();
         }
 
         if (!Array.isArray(allClients)) {
@@ -248,7 +253,8 @@ async function admindashboardLoadClients(searchQuery = '') {
                 return (
                     (client.fullName && client.fullName.toLowerCase().includes(search)) ||
                     (client.email && client.email.toLowerCase().includes(search)) ||
-                    (client.phone && client.phone.includes(search))
+                    (client.phone && client.phone.includes(search)) ||
+                    (client.panCard && client.panCard.toLowerCase().includes(search))
                 );
             })
             : allClients;
@@ -256,44 +262,338 @@ async function admindashboardLoadClients(searchQuery = '') {
         const container = document.getElementById('admindashboardView');
         container.innerHTML = '';
 
-        const tableClone = cloneTemplate('clientsTableTemplate');
-        container.appendChild(tableClone);
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'admindashboard-card-head';
+        container.appendChild(headerDiv);
 
-        const tbody = document.getElementById('clientsTableBody');
+        const h2 = document.createElement('h2');
+        const icon = document.createElement('i');
+        icon.className = 'bi bi-people-fill';
+        h2.appendChild(icon);
+        h2.appendChild(document.createTextNode(' Clients Management'));
+        headerDiv.appendChild(h2);
+
+        const addBtn = document.createElement('button');
+        addBtn.className = 'admindashboard-btn primary';
+        addBtn.id = 'addClientBtn';
+        const btnIcon = document.createElement('i');
+        btnIcon.className = 'bi bi-person-plus-fill';
+        addBtn.appendChild(btnIcon);
+        addBtn.appendChild(document.createTextNode(' Add New Client'));
+        headerDiv.appendChild(addBtn);
+
+        const formTemplate = document.getElementById('clientFormTemplate');
+        if (formTemplate) {
+            const formClone = formTemplate.content.cloneNode(true);
+            const formContainer = formClone.querySelector('#clientFormContainer');
+            formContainer.style.display = 'none';
+            container.appendChild(formClone);
+        }
+
+        const tableCard = document.createElement('div');
+        tableCard.className = 'admindashboard-card';
+        tableCard.style.marginTop = '20px';
+
+        const table = document.createElement('table');
+        table.className = 'admindashboard-table';
+
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+
+        ['Full Name', 'Email', 'Phone', 'Actions'].forEach(text => {
+            const th = document.createElement('th');
+            th.textContent = text;
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        tbody.id = 'clientsTableBody';
+        table.appendChild(tbody);
+
+        tableCard.appendChild(table);
+        container.appendChild(tableCard);
 
         if (filteredClients.length === 0) {
             const row = document.createElement('tr');
             const cell = document.createElement('td');
-            cell.colSpan = 3;
-            cell.textContent = searchQuery ? 'No clients found matching your search.' : 'No clients available.';
+            cell.colSpan = 4;
+            cell.textContent = searchQuery
+                ? 'No clients found matching your search.'
+                : 'No clients available. Click "Add New Client" to get started.';
             cell.style.textAlign = 'center';
             cell.style.padding = '20px';
             cell.style.color = 'var(--muted)';
             row.appendChild(cell);
             tbody.appendChild(row);
-            return;
+        } else {
+            filteredClients.forEach(client => {
+                const row = document.createElement('tr');
+
+                const nameCell = document.createElement('td');
+                nameCell.setAttribute('data-label', 'Full Name');
+                nameCell.textContent = client.fullName || '—';
+                row.appendChild(nameCell);
+
+                const emailCell = document.createElement('td');
+                emailCell.setAttribute('data-label', 'Email');
+                emailCell.textContent = client.email || '—';
+                row.appendChild(emailCell);
+
+                const phoneCell = document.createElement('td');
+                phoneCell.setAttribute('data-label', 'Phone');
+                phoneCell.textContent = client.phone || '—';
+                row.appendChild(phoneCell);
+
+                const actionsCell = document.createElement('td');
+                actionsCell.setAttribute('data-label', 'Actions');
+                actionsCell.className = 'action-buttons';
+
+                const editBtn = document.createElement('button');
+                editBtn.className = 'admindashboard-btn-small primary';
+                const editIcon = document.createElement('i');
+                editIcon.className = 'bi bi-pencil';
+                editBtn.appendChild(editIcon);
+                editBtn.appendChild(document.createTextNode(' Edit'));
+                editBtn.onclick = () => openEditClientForm(client.id);
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'admindashboard-btn-small danger';
+                const deleteIcon = document.createElement('i');
+                deleteIcon.className = 'bi bi-trash';
+                deleteBtn.appendChild(deleteIcon);
+                deleteBtn.appendChild(document.createTextNode(' Delete'));
+                deleteBtn.onclick = () => deleteClient(client.id);
+
+                actionsCell.appendChild(editBtn);
+                actionsCell.appendChild(document.createTextNode(' '));
+                actionsCell.appendChild(deleteBtn);
+                row.appendChild(actionsCell);
+
+                tbody.appendChild(row);
+            });
         }
 
-        filteredClients.forEach(client => {
-            const rowClone = cloneTemplate('clientRowTemplate');
-            const cells = rowClone.querySelectorAll('td');
+        setupClientButtons();
 
-            cells[0].setAttribute('data-label', 'Full Name');
-            setElementContent(rowClone, '[data-fullname]', client.fullName || '');
-
-            cells[1].setAttribute('data-label', 'Email');
-            setElementContent(rowClone, '[data-email]', client.email || '');
-
-            cells[2].setAttribute('data-label', 'Phone');
-            setElementContent(rowClone, '[data-phone]', client.phone || '');
-
-            tbody.appendChild(rowClone);
-        });
     } catch (err) {
         showErrorCard('Clients', `Error loading clients: ${err.message}`);
         console.error(err);
     }
 }
+
+function setupClientButtons() {
+    const addClientBtn = document.getElementById('addClientBtn');
+    if (addClientBtn) {
+        addClientBtn.onclick = () => openEditClientForm();
+    }
+
+    const cancelBtn = document.getElementById('cancelClientBtn');
+    if (cancelBtn) {
+        cancelBtn.onclick = () => {
+            const form = document.getElementById('clientForm');
+            const formContainer = document.getElementById('clientFormContainer');
+            if (form) form.reset();
+            if (formContainer) formContainer.style.display = 'none';
+        };
+    }
+
+    const clientForm = document.getElementById('clientForm');
+    if (clientForm && !clientForm.dataset.listenerAttached) {
+        clientForm.onsubmit = handleClientFormSubmit;
+        clientForm.dataset.listenerAttached = 'true';
+    }
+}
+
+async function openEditClientForm(id) {
+    const formContainer = document.getElementById('clientFormContainer');
+    const form = document.getElementById('clientForm');
+
+    if (!formContainer || !form) {
+        console.error('Client form elements not found');
+        alert('Form not found. Please refresh the page.');
+        return;
+    }
+
+    form.reset();
+    formContainer.style.display = 'block';
+    formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    let formTitle = formContainer.querySelector('h3');
+    if (!formTitle) {
+        formTitle = document.createElement('h3');
+        form.insertBefore(formTitle, form.firstChild);
+    }
+
+    if (!id) {
+        form.dataset.editingId = '';
+
+        const icon = document.createElement('i');
+        icon.className = 'bi bi-person-plus-fill';
+        formTitle.innerHTML = '';
+        formTitle.appendChild(icon);
+        formTitle.appendChild(document.createTextNode(' Add New Client'));
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            const saveIcon = document.createElement('i');
+            saveIcon.className = 'bi bi-save';
+            submitBtn.innerHTML = '';
+            submitBtn.appendChild(saveIcon);
+            submitBtn.appendChild(document.createTextNode(' Add Client'));
+        }
+        return;
+    }
+
+    const icon = document.createElement('i');
+    icon.className = 'bi bi-pencil-fill';
+    formTitle.innerHTML = '';
+    formTitle.appendChild(icon);
+    formTitle.appendChild(document.createTextNode(' Edit Client'));
+
+    try {
+        const res = await fetch(`${ADMINDASHBOARD_API}/clients/${id}`, {
+            headers: admindashboardAuthHeaders()
+        });
+
+        if (!res.ok) throw new Error('Failed to load client data');
+        const client = await res.json();
+
+        form.dataset.editingId = client.id || '';
+
+        const setFieldValue = (name, value) => {
+            const field = form.querySelector(`[name="${name}"]`);
+            if (field) field.value = value || '';
+        };
+
+        setFieldValue('fullName', client.fullName);
+        setFieldValue('email', client.email);
+        setFieldValue('phone', client.phone);
+        setFieldValue('aadhaar', client.aadhaar);
+        setFieldValue('panCard', client.panCard);
+        setFieldValue('address', client.address);
+        setFieldValue('city', client.city);
+        setFieldValue('state', client.state);
+        setFieldValue('pinCode', client.pinCode);
+        setFieldValue('occupation', client.occupation);
+        setFieldValue('annualIncome', client.annualIncome);
+        setFieldValue('investmentExperience', client.investmentExperience);
+        setFieldValue('riskProfile', client.riskProfile);
+        setFieldValue('preferredInvestments', client.preferredInvestments);
+        setFieldValue('bankAccountDetails', client.bankAccountDetails);
+        setFieldValue('nomineeName', client.nomineeName);
+        setFieldValue('nomineeRelation', client.nomineeRelation);
+        setFieldValue('resetToken', client.resetToken);
+
+        const emailVerifiedField = form.querySelector('[name="emailVerified"]');
+        if (emailVerifiedField && client.emailVerified != null) {
+            emailVerifiedField.value = client.emailVerified.toString();
+        }
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            const saveIcon = document.createElement('i');
+            saveIcon.className = 'bi bi-save';
+            submitBtn.innerHTML = '';
+            submitBtn.appendChild(saveIcon);
+            submitBtn.appendChild(document.createTextNode(' Update Client'));
+        }
+
+    } catch (err) {
+        alert('Error loading client: ' + err.message);
+        formContainer.style.display = 'none';
+    }
+}
+
+async function handleClientFormSubmit(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+    const clientData = {};
+
+    formData.forEach((value, key) => {
+        if (key !== 'id') {
+            clientData[key] = value;
+        }
+    });
+
+    if (clientData.emailVerified === 'true') {
+        clientData.emailVerified = true;
+    } else if (clientData.emailVerified === 'false') {
+        clientData.emailVerified = false;
+    } else {
+        delete clientData.emailVerified;
+    }
+
+    const editingId = form.dataset.editingId;
+    const url = editingId
+        ? `${ADMINDASHBOARD_API}/clients/${editingId}`
+        : `${ADMINDASHBOARD_API}/clients`;
+    const method = editingId ? 'PUT' : 'POST';
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalContent = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Saving...';
+
+    try {
+        const res = await fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                ...admindashboardAuthHeaders()
+            },
+            body: JSON.stringify(clientData)
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json().catch(() => ({}));
+            throw new Error(errorData.message || `HTTP error ${res.status}`);
+        }
+
+        alert(editingId ? 'Client updated successfully!' : 'Client added successfully!');
+
+        form.reset();
+        document.getElementById('clientFormContainer').style.display = 'none';
+
+        allClients = [];
+        admindashboardLoadClients();
+
+    } catch (err) {
+        alert(`Failed to ${editingId ? 'update' : 'add'} client: ${err.message}`);
+        submitBtn.textContent = originalContent;
+    } finally {
+        submitBtn.disabled = false;
+    }
+}
+
+async function deleteClient(id) {
+    if (!confirm('Are you sure you want to delete this client? This action cannot be undone.')) {
+        return;
+    }
+
+    try {
+        const res = await fetch(`${ADMINDASHBOARD_API}/clients/${id}`, {
+            method: 'DELETE',
+            headers: admindashboardAuthHeaders()
+        });
+
+        if (!res.ok) throw new Error(`Failed to delete client: HTTP ${res.status}`);
+
+        alert('Client deleted successfully');
+
+        allClients = [];
+        admindashboardLoadClients();
+
+    } catch (err) {
+        alert('Error deleting client: ' + err.message);
+    }
+}
+
+window.openEditClientForm = openEditClientForm;
+window.deleteClient = deleteClient;
 
 // === Blogs Loader ===
 async function admindashboardLoadBlogs() {
@@ -575,85 +875,217 @@ async function showBlogForm(blogId = null) {
     }
 }
 
-// === Edit Profile Loader ===
-// async function admindashboardLoadEditProfile() {
-//     const container = document.getElementById("admindashboardView");
-//     container.innerHTML = "";
-//
-//     // show a loading card
-//     const loadingClone = cloneTemplate("loadingCardTemplate");
-//     setElementContent(loadingClone, "[data-title]", "Loading Profile…");
-//     container.appendChild(loadingClone);
-//
-//     try {
-//         await new Promise((resolve) => setTimeout(resolve, 100));
-//
-//         // replace loader with form
-//         container.innerHTML = "";
-//         const formTemplate = cloneTemplate("editProfileTemplate");
-//         container.appendChild(formTemplate);
-//
-//         const adminId = 1;
-//         const form = document.getElementById("editAdminForm");
-//         const messageDiv = document.getElementById("responseMessage");
-//
-//         // load existing admin data
-//         const response = await fetch(`${ADMINDASHBOARD_API}/admin/${adminId}`);
-//         if (!response.ok) throw new Error("Failed to fetch admin details");
-//
-//         const data = await response.json();
-//         document.getElementById("adminEmail").value = data.email || "";
-//         document.getElementById("adminPassword").value = data.password || "";
-//         document.getElementById("adminName").value = data.name || "";
-//
-//         // handle form submission
-//         form.onsubmit = async (e) => {
-//             e.preventDefault();
-//             const submitBtn = form.querySelector("button[type='submit']");
-//             submitBtn.disabled = true;
-//             messageDiv.innerText = "Updating…";
-//             messageDiv.style.color = "#2563eb";
-//
-//             const email = document.getElementById("adminEmail").value.trim();
-//             const password = document.getElementById("adminPassword").value.trim();
-//             const name = document.getElementById("adminName").value.trim();
-//
-//             try {
-//                 const res = await fetch(`${ADMINDASHBOARD_API}/admin/update/${adminId}`, {
-//                     method: "PUT",
-//                     headers: { "Content-Type": "application/json" },
-//                     body: JSON.stringify({ email, password, name }),
-//                 });
-//
-//                 const result = await res.json();
-//                 if (!res.ok || !result.success) throw new Error(result.message || "Update failed");
-//
-//                 messageDiv.innerText = result.message || "Profile updated successfully";
-//                 messageDiv.style.color = "#22c55e";
-//
-//                 localStorage.setItem("adminName", name);
-//                 const nameEl = document.getElementById("adminNameDisplay");
-//                 if (nameEl) nameEl.textContent = name;
-//
-//                 setTimeout(() => (messageDiv.innerText = ""), 3000);
-//             } catch (err) {
-//                 messageDiv.innerText = "Error: " + err.message;
-//                 messageDiv.style.color = "#ef4444";
-//             } finally {
-//                 submitBtn.disabled = false;
-//             }
-//         };
-//     } catch (err) {
-//         showErrorCard("Edit Profile", err.message || "Failed to load profile.");
-//     }
-// }
+// === SEO Settings Loader ===
+const API_BASE_SEO = 'http://localhost:8080/api/adminseo';
 
+async function loadSeoSettings() {
+    showLoadingCard('Loading SEO Settings...');
 
+    try {
+        const response = await fetch(API_BASE_SEO, {
+            headers: admindashboardAuthHeaders()
+        });
 
-function admindashboardLoadAdminDetails() {
-    const view = document.getElementById("admindashboardView");
-    const template = document.getElementById("editAdminTemplate");
+        if (!response.ok) throw new Error('Failed to fetch SEO settings');
+        const seoList = await response.json();
 
+        const container = document.getElementById('admindashboardView');
+        container.innerHTML = '';
+
+        const seoContainerClone = cloneTemplate('seoContainerTemplate');
+        container.appendChild(seoContainerClone);
+
+        const seoEntriesList = document.getElementById('seoEntriesList');
+        const seoFormCard = document.getElementById('seoFormCard');
+        const seoForm = document.getElementById('seoForm');
+        const seoFormMessage = document.getElementById('seoFormMessage');
+        const addNewSeoBtn = document.getElementById('addNewSeoBtn');
+        const cancelSeoFormBtn = document.getElementById('cancelSeoFormBtn');
+        const cancelSeoBtn = document.getElementById('cancelSeoBtn');
+
+        if (seoList.length === 0) {
+            const emptyMsg = document.createElement('div');
+            emptyMsg.className = 'admindashboard-empty';
+            emptyMsg.textContent = 'No SEO entries found. Click "Add New SEO Entry" to create your first entry.';
+            seoEntriesList.appendChild(emptyMsg);
+        } else {
+            seoList.forEach(seo => {
+                const entryClone = cloneTemplate('seoEntryCardTemplate');
+
+                setElementContent(entryClone, '[data-slug]', seo.slug || 'N/A');
+                setElementContent(entryClone, '[data-meta-title]', seo.metaTitle || 'Not set');
+                setElementContent(entryClone, '[data-meta-description]',
+                    seo.metaDescription ?
+                    (seo.metaDescription.length > 100 ? seo.metaDescription.substring(0, 100) + '...' : seo.metaDescription)
+                    : 'Not set'
+                );
+                setElementContent(entryClone, '[data-robots]', seo.robotsTag || 'index,follow');
+
+                const editBtn = entryClone.querySelector('[data-edit-seo]');
+                editBtn.removeAttribute('data-edit-seo');
+                editBtn.onclick = () => loadSeoEntryForEdit(seo.id);
+
+                const deleteBtn = entryClone.querySelector('[data-delete-seo]');
+                deleteBtn.removeAttribute('data-delete-seo');
+                deleteBtn.onclick = () => deleteSeoEntry(seo.id);
+
+                seoEntriesList.appendChild(entryClone);
+            });
+        }
+
+        addNewSeoBtn.onclick = () => {
+            seoForm.reset();
+            document.getElementById('seoId').value = '';
+            document.getElementById('seoFormTitle').textContent = 'Add New SEO Entry';
+            seoFormCard.style.display = 'block';
+            seoFormMessage.textContent = '';
+
+            seoFormCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+
+        cancelSeoFormBtn.onclick = cancelSeoBtn.onclick = () => {
+            seoFormCard.style.display = 'none';
+            seoForm.reset();
+            seoFormMessage.textContent = '';
+        };
+
+        seoForm.onsubmit = async (e) => {
+            e.preventDefault();
+            seoFormMessage.textContent = '';
+
+            const payload = {
+                id: document.getElementById('seoId').value || null,
+                slug: document.getElementById('seoSlug').value.trim(),
+                metaTitle: document.getElementById('seoMetaTitle').value.trim(),
+                metaDescription: document.getElementById('seoMetaDescription').value.trim(),
+                metaKeywords: document.getElementById('seoMetaKeywords').value.trim(),
+                robotsTag: document.getElementById('seoRobotsTag').value,
+                schemaJson: document.getElementById('seoSchemaJson').value.trim()
+            };
+
+            if (!payload.slug || !payload.slug.startsWith('/')) {
+                seoFormMessage.style.color = '#ef4444';
+                seoFormMessage.textContent = 'Slug must start with / (e.g., /about-us)';
+                return;
+            }
+
+            if (payload.schemaJson) {
+                try {
+                    JSON.parse(payload.schemaJson);
+                } catch (err) {
+                    seoFormMessage.style.color = '#ef4444';
+                    seoFormMessage.textContent = 'Invalid JSON in Schema field: ' + err.message;
+                    return;
+                }
+            }
+
+            const submitBtn = seoForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Saving...';
+
+            try {
+                const res = await fetch(`${API_BASE_SEO}/save`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...admindashboardAuthHeaders()
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!res.ok) {
+                    const errorData = await res.json().catch(() => ({}));
+                    throw new Error(errorData.message || `HTTP error ${res.status}`);
+                }
+
+                seoFormMessage.style.color = '#22c55e';
+                seoFormMessage.textContent = payload.id ? 'SEO entry updated successfully!' : 'SEO entry created successfully!';
+
+                setTimeout(() => {
+                    seoFormCard.style.display = 'none';
+                    loadSeoSettings();
+                }, 1500);
+
+            } catch (err) {
+                seoFormMessage.style.color = '#ef4444';
+                seoFormMessage.textContent = `Failed to save: ${err.message}`;
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        };
+
+    } catch (err) {
+        showErrorCard('SEO Settings', 'Failed to load SEO settings: ' + err.message);
+        console.error(err);
+    }
+}
+
+async function loadSeoEntryForEdit(id) {
+    const seoFormCard = document.getElementById('seoFormCard');
+    const seoForm = document.getElementById('seoForm');
+    const seoFormMessage = document.getElementById('seoFormMessage');
+    const seoFormTitle = document.getElementById('seoFormTitle');
+
+    seoFormMessage.textContent = 'Loading...';
+    seoFormMessage.style.color = '#3b82f6';
+    seoFormCard.style.display = 'block';
+    seoFormCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    try {
+        const response = await fetch(`${API_BASE_SEO}/${id}`, {
+            headers: admindashboardAuthHeaders()
+        });
+
+        if (!response.ok) throw new Error('Failed to load SEO entry');
+        const seo = await response.json();
+
+        document.getElementById('seoId').value = seo.id || '';
+        document.getElementById('seoSlug').value = seo.slug || '';
+        document.getElementById('seoMetaTitle').value = seo.metaTitle || '';
+        document.getElementById('seoMetaDescription').value = seo.metaDescription || '';
+        document.getElementById('seoMetaKeywords').value = seo.metaKeywords || '';
+        document.getElementById('seoRobotsTag').value = seo.robotsTag || 'index,follow';
+        document.getElementById('seoSchemaJson').value = seo.schemaJson || '';
+
+        seoFormTitle.textContent = 'Edit SEO Entry';
+        seoFormMessage.textContent = '';
+
+    } catch (err) {
+        seoFormMessage.style.color = '#ef4444';
+        seoFormMessage.textContent = 'Error loading SEO entry: ' + err.message;
+    }
+}
+
+async function deleteSeoEntry(id) {
+    if (!confirm('Are you sure you want to delete this SEO entry? This action cannot be undone.')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_SEO}/${id}`, {
+            method: 'DELETE',
+            headers: admindashboardAuthHeaders()
+        });
+
+        if (!response.ok) throw new Error('Failed to delete SEO entry');
+
+        alert('SEO entry deleted successfully');
+        loadSeoSettings();
+
+    } catch (err) {
+        alert('Error deleting SEO entry: ' + err.message);
+    }
+}
+
+// === Edit Admin Profile Loader ===
+async function admindashboardLoadAdminDetails() {
+    const container = document.getElementById("admindashboardView");
+    container.innerHTML = "";
+
+    const loadingClone = cloneTemplate("loadingCardTemplate");
+    setElementContent(loadingClone, "[data-title]", "Loading Profile…");
+    container.appendChild(loadingClone);
 
     const editProfileLink = document.getElementById('editProfileLink');
     const profileMenu = document.getElementById('adminProfileMenu');
@@ -665,20 +1097,40 @@ function admindashboardLoadAdminDetails() {
         });
     }
 
+        container.innerHTML = "";
+        const formTemplate = cloneTemplate("editAdminTemplate");
+        container.appendChild(formTemplate);
 
 
-    view.innerHTML = "";
-    view.appendChild(template.content.cloneNode(true));
+        const response = await fetch(`${ADMINDASHBOARD_API}/admin/${adminId}`, {
+            headers: admindashboardAuthHeaders()
+        });
 
     setupAdminDetailsEvents();
 }
 
-function setupAdminDetailsEvents() {
-    const adminId = 1;
-    const form = document.getElementById("editAdminForm");
-    const messageDiv = document.getElementById("responseMessage");
-    const API = "/api/admin";
+        const data = await response.json();
+        document.getElementById("adminEmail").value = data.email || "";
+        document.getElementById("adminPassword").value = "";
+        document.getElementById("adminName").value = data.name || "";
 
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const submitBtn = document.getElementById("adminSaveBtn");
+            submitBtn.disabled = true;
+            messageDiv.innerText = "Updating…";
+            messageDiv.style.color = "#2563eb";
+
+            const email = document.getElementById("adminEmail").value.trim();
+            const password = document.getElementById("adminPassword").value.trim();
+            const name = document.getElementById("adminName").value.trim();
+
+            if (!email || !name) {
+                messageDiv.innerText = "Email and Name are required";
+                messageDiv.style.color = "#ef4444";
+                submitBtn.disabled = false;
+                return;
+            }
 
 
 
@@ -703,15 +1155,10 @@ function setupAdminDetailsEvents() {
             messageDiv.style.color = "red";
         });
 
-    // Save changes
-    form.addEventListener("submit", (e) => {
-        e.preventDefault();
+                const nameEl = document.getElementById("adminNameDisplay");
+                if (nameEl) nameEl.textContent = name;
 
-        const payload = {
-            email: document.getElementById("adminEmail").value,
-            password: document.getElementById("adminPassword").value,
-            name: document.getElementById("adminName").value
-        };
+                document.getElementById("adminPassword").value = "";
 
         fetch(`${API}/update/${adminId}`, {
             method: "PUT",
@@ -939,59 +1386,12 @@ function handleSearch() {
     }, 300);
 }
 
-    addBtn.addEventListener('click', () => {
-        form.reset();
-        form.querySelector('#seoId').value = '';
-        formMessage.textContent = '';
-        editModal.style.display = 'block';
-    });
-
-    cancelBtn.addEventListener('click', () => {
-        editModal.style.display = 'none';
-    });
-
-    form.addEventListener('submit', async e => {
-        e.preventDefault();
-        formMessage.textContent = '';
-
-        const payload = {
-            id: form.querySelector('#seoId').value || null,
-            slug: form.querySelector('#seoSlug').value,
-            metaTitle: form.querySelector('#seoMetaTitle').value,
-            metaDescription: form.querySelector('#seoMetaDescription').value,
-            metaKeywords: form.querySelector('#seoMetaKeywords').value,
-            robotsTag: form.querySelector('#seoRobotsTag').value,
-            schemaJson: form.querySelector('#seoSchemaJson').value
-        };
-
-        try {
-            const res = await fetch(`${API_BASE_SEO}/save`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            if (!res.ok) throw new Error('Failed to save SEO entry');
-
-            formMessage.style.color = 'green';
-            formMessage.textContent = 'Saved successfully!';
-            editModal.style.display = 'none';
-
-            loadSeoSettings();
-        } catch (err) {
-            formMessage.style.color = 'red';
-            formMessage.textContent = err.message;
-        }
-    });
-}
-
 // === Event Listeners ===
 document.addEventListener('DOMContentLoaded', () => {
-    // Display admin name
     const name = localStorage.getItem('adminName') || 'Admin';
     const nameEl = document.getElementById('adminNameDisplay');
     if (nameEl) nameEl.textContent = name;
 
-    // Profile menu toggle
     const profileBtn = document.getElementById('adminProfileBtn');
     const profileMenu = document.getElementById('adminProfileMenu');
 
@@ -1009,7 +1409,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     profileMenu.addEventListener('click', e => e.stopPropagation());
 
-    // Edit profile link
     const editProfileLink = document.getElementById('editProfileLink');
     if (editProfileLink) {
         editProfileLink.addEventListener('click', (e) => {
@@ -1019,18 +1418,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-
-
-
-
-
-    // document.getElementById('editProfileLink').addEventListener('click', (e) => {
-    //     e.preventDefault();
-    //     menu.style.display = 'none';
-    //     location.hash = '#/edit-profile';
-    // });
-
-    // Logout from profile menu
     document.getElementById('dashboardLogoutLink').addEventListener('click', (e) => {
         e.preventDefault();
         localStorage.removeItem('admindashboard_jwt');
@@ -1041,7 +1428,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'adminlogin.html';
     });
 
-    // Sidebar logout button
     document.getElementById('admindashboardBtnLogout').addEventListener('click', () => {
         localStorage.removeItem('admindashboard_jwt');
         localStorage.removeItem('admindashboard_roles');
@@ -1051,7 +1437,6 @@ document.addEventListener('DOMContentLoaded', () => {
         location.href = 'adminlogin.html';
     });
 
-    // Sidebar toggle for mobile
     const burger = document.getElementById('admindashboardBurger');
     const sidebar = document.querySelector('.admindashboard-sidebar');
     const backdrop = document.getElementById('admindashboardBackdrop');
@@ -1071,15 +1456,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Close sidebar when clicking nav links (handled in router now)
-    const navLinks = document.querySelectorAll('.admindashboard-nav');
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            // Router will handle closing sidebar
-        });
-    });
-
-    // Search functionality
     const searchInput = document.getElementById('admindashboardTopSearch');
     if (searchInput) {
         searchInput.addEventListener('input', handleSearch);
@@ -1094,18 +1470,976 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Initialize router
     admindashboardRouter();
 });
 
 window.addEventListener('hashchange', admindashboardRouter);
 
-// === SPA Router ===
+
+
+
+
+// ========== FIXED SERVICES SECTION - SIMPLE DIRECT APPROACH ==========
+// ========== COMPLETE SERVICES SECTION - FIXED ==========
+
+let allServices = [];
+let currentServiceId = null;
+let currentSectionId = null;
+let currentServiceTitle = '';
+
+// Load all services
+async function admindashboardLoadServices() {
+    showLoadingCard('Loading Services...');
+
+    try {
+        const response = await fetch(`${ADMINDASHBOARD_API}/services`, {
+            headers: admindashboardAuthHeaders()
+        });
+
+        if (!response.ok) throw new Error(`Failed to load services: HTTP ${response.status}`);
+        allServices = await response.json();
+
+        if (!Array.isArray(allServices)) {
+            throw new Error("API did not return an array");
+        }
+
+        const container = document.getElementById('admindashboardView');
+        container.innerHTML = '';
+
+        const servicesContainer = cloneTemplate('servicesContainerTemplate');
+        container.appendChild(servicesContainer);
+
+        const grid = document.getElementById('servicesGrid');
+
+        if (allServices.length === 0) {
+            const emptyMsg = document.createElement('div');
+            emptyMsg.className = 'admindashboard-empty';
+            emptyMsg.textContent = 'No services available. Click "Add Service" to get started.';
+            grid.appendChild(emptyMsg);
+        } else {
+            allServices.forEach(service => {
+                const cardClone = cloneTemplate('serviceCardTemplate');
+
+                setElementContent(cardClone, '[data-title]', service.title || 'Untitled Service');
+                setElementContent(cardClone, '[data-subtitle]', service.subtitle || 'Comprehensive solutions tailored to your goals');
+
+                let cleanSlug = service.slug || '';
+                if (cleanSlug.startsWith('/')) {
+                    cleanSlug = cleanSlug.substring(1);
+                }
+
+                const slugEl = cardClone.querySelector('[data-slug]');
+                slugEl.innerHTML = '<span style="color: var(--muted); font-size: 13px;">Slug:</span> <code>services.html?service=' + cleanSlug + '</code>';
+                slugEl.removeAttribute('data-slug');
+
+                const viewBtn = cardClone.querySelector('[data-view]');
+                viewBtn.removeAttribute('data-view');
+                viewBtn.onclick = () => window.open(`services.html?service=${cleanSlug}`, '_blank');
+
+                const manageSectionsBtn = cardClone.querySelector('[data-manage-sections]');
+                manageSectionsBtn.removeAttribute('data-manage-sections');
+                manageSectionsBtn.onclick = () => loadServiceSections(service.id, service.title);
+
+                const editBtn = cardClone.querySelector('[data-edit]');
+                editBtn.removeAttribute('data-edit');
+                editBtn.onclick = () => showServiceForm(service.id);
+
+                const deleteBtn = cardClone.querySelector('[data-delete]');
+                deleteBtn.removeAttribute('data-delete');
+                deleteBtn.onclick = () => deleteService(service.id);
+
+                grid.appendChild(cardClone);
+            });
+        }
+
+        const addServiceBtn = document.getElementById('addServiceBtn');
+        if (addServiceBtn) {
+            addServiceBtn.onclick = () => showServiceForm();
+        }
+
+    } catch (err) {
+        showErrorCard('Services', `Error loading services: ${err.message}`);
+        console.error(err);
+    }
+}
+
+// Show service form (create/edit)
+async function showServiceForm(serviceId = null) {
+    const container = document.getElementById('admindashboardView');
+    container.innerHTML = '';
+
+    const formClone = cloneTemplate('serviceFormTemplate');
+    container.appendChild(formClone);
+
+    const form = container.querySelector('#serviceForm');
+    const messageDiv = container.querySelector('#serviceFormMessage');
+    const formTitle = container.querySelector('[data-form-title]');
+    const submitText = container.querySelector('[data-submit-text]');
+
+    if (!form || !messageDiv || !formTitle || !submitText) {
+        console.error('Service form elements not found');
+        showErrorCard('Service Form', 'Form template is missing required elements');
+        return;
+    }
+
+    if (serviceId) {
+        formTitle.textContent = 'Edit Service';
+        submitText.textContent = 'Update Service';
+
+        try {
+            const response = await fetch(`${ADMINDASHBOARD_API}/services/${serviceId}`, {
+                headers: admindashboardAuthHeaders()
+            });
+
+            if (!response.ok) throw new Error('Service not found');
+            const service = await response.json();
+
+            form.querySelector('[name="title"]').value = service.title || '';
+            form.querySelector('[name="subtitle"]').value = service.subtitle || '';
+            form.querySelector('[name="slug"]').value = service.slug || '';
+            form.querySelector('[name="bannerImage"]').value = service.bannerImage || '';
+            form.querySelector('[name="isActive"]').checked = service.active !== false;
+            form.querySelector('[name="metaTitle"]').value = service.metaTitle || '';
+            form.querySelector('[name="metaDescription"]').value = service.metaDescription || '';
+            form.querySelector('[name="metaKeywords"]').value = service.metaKeywords || '';
+
+            form.dataset.editingId = serviceId;
+        } catch (err) {
+            messageDiv.style.color = '#ef4444';
+            messageDiv.textContent = 'Error loading service: ' + err.message;
+        }
+    } else {
+        formTitle.textContent = 'Add New Service';
+        submitText.textContent = 'Create Service';
+    }
+
+    document.getElementById('backToServicesBtn').onclick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        admindashboardLoadServices();
+    };
+
+    document.getElementById('cancelServiceBtn').onclick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        admindashboardLoadServices();
+    };
+
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        messageDiv.textContent = '';
+
+        const formData = new FormData(form);
+        const serviceData = {
+            title: formData.get('title'),
+            subtitle: formData.get('subtitle'),
+            slug: formData.get('slug'),
+            bannerImage: formData.get('bannerImage'),
+            active: formData.get('isActive') === 'on',
+            metaTitle: formData.get('metaTitle'),
+            metaDescription: formData.get('metaDescription'),
+            metaKeywords: formData.get('metaKeywords')
+        };
+
+        const editingId = form.dataset.editingId;
+        const url = editingId
+            ? `${ADMINDASHBOARD_API}/services/${editingId}`
+            : `${ADMINDASHBOARD_API}/services`;
+        const method = editingId ? 'PUT' : 'POST';
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Saving...';
+
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...admindashboardAuthHeaders()
+                },
+                body: JSON.stringify(serviceData)
+            });
+
+            if (!response.ok) {
+                const error = await response.json().catch(() => ({}));
+                throw new Error(error.message || `HTTP ${response.status}`);
+            }
+
+            messageDiv.style.color = '#22c55e';
+            messageDiv.textContent = editingId ? 'Service updated successfully!' : 'Service created successfully!';
+
+            setTimeout(() => {
+                admindashboardLoadServices();
+            }, 1500);
+        } catch (err) {
+            messageDiv.style.color = '#ef4444';
+            messageDiv.textContent = `Failed to ${editingId ? 'update' : 'create'} service: ${err.message}`;
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }
+    };
+}
+
+// Delete service
+async function deleteService(serviceId) {
+    if (!confirm('Are you sure you want to delete this service? This will also delete all associated sections and items.')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${ADMINDASHBOARD_API}/services/${serviceId}`, {
+            method: 'DELETE',
+            headers: admindashboardAuthHeaders()
+        });
+
+        if (!response.ok) throw new Error(`Failed to delete: HTTP ${response.status}`);
+
+        alert('Service deleted successfully');
+        allServices = [];
+        admindashboardLoadServices();
+    } catch (err) {
+        alert('Error deleting service: ' + err.message);
+    }
+}
+
+// ========== SECTIONS MANAGEMENT - FIXED ==========
+async function loadServiceSections(serviceId, serviceTitle) {
+    currentServiceId = serviceId;
+    currentServiceTitle = serviceTitle;
+    showLoadingCard('Loading Sections...');
+
+    try {
+        const response = await fetch(`${ADMINDASHBOARD_API}/service-sections/service/${serviceId}`, {
+            headers: admindashboardAuthHeaders()
+        });
+
+        if (!response.ok) throw new Error('Failed to load sections');
+        const sections = await response.json();
+
+        const container = document.getElementById('admindashboardView');
+        container.innerHTML = '';
+
+        const sectionsClone = cloneTemplate('sectionsManagementTemplate');
+        container.appendChild(sectionsClone);
+
+        setElementContent(sectionsClone, '[data-service-title]', serviceTitle);
+
+        const sectionsList = document.getElementById('sectionsList');
+
+        if (sections.length === 0) {
+            const emptyMsg = document.createElement('div');
+            emptyMsg.className = 'admindashboard-empty';
+            emptyMsg.textContent = 'No sections found. Click "Add Section" to create your first section.';
+            sectionsList.appendChild(emptyMsg);
+        } else {
+            sections.sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));
+
+            sections.forEach(section => {
+                const cardClone = cloneTemplate('sectionCardTemplate');
+
+                const typeIcon = getSectionTypeIcon(section.sectionType);
+                const iconEl = cardClone.querySelector('[data-type-icon]');
+                iconEl.className = typeIcon;
+                iconEl.removeAttribute('data-type-icon');
+
+                setElementContent(cardClone, '[data-title]', section.title || section.sectionType);
+                setElementContent(cardClone, '[data-type]', section.sectionType);
+
+                const subtitleEl = cardClone.querySelector('[data-subtitle]');
+                if (section.subtitle) {
+                    subtitleEl.textContent = section.subtitle;
+                } else {
+                    subtitleEl.style.display = 'none';
+                }
+                subtitleEl.removeAttribute('data-subtitle');
+
+                const manageItemsBtn = cardClone.querySelector('[data-manage-items]');
+                manageItemsBtn.removeAttribute('data-manage-items');
+                manageItemsBtn.onclick = () => loadSectionItems(section.id, section.title, serviceId, serviceTitle);
+
+                const editBtn = cardClone.querySelector('[data-edit]');
+                editBtn.removeAttribute('data-edit');
+                editBtn.onclick = () => showSectionForm(serviceId, serviceTitle, section.id);
+
+                const deleteBtn = cardClone.querySelector('[data-delete]');
+                deleteBtn.removeAttribute('data-delete');
+                deleteBtn.onclick = () => deleteSection(section.id, serviceId, serviceTitle);
+
+                sectionsList.appendChild(cardClone);
+            });
+        }
+
+        // CRITICAL FIX: Attach button handlers after DOM is fully rendered
+        setTimeout(() => {
+            const addSectionBtn = document.getElementById('addSectionBtn');
+            if (addSectionBtn) {
+                addSectionBtn.onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showSectionForm(serviceId, serviceTitle);
+                };
+            }
+
+            // THE KEY FIX: Direct function call instead of hash change
+            const backToServicesBtn = document.getElementById('backToServicesFromSections');
+            if (backToServicesBtn) {
+                backToServicesBtn.onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Back to Services clicked - loading services directly');
+                    admindashboardLoadServices(); // Direct function call
+                };
+            }
+        }, 100);
+
+    } catch (err) {
+        showErrorCard('Sections', 'Error loading sections: ' + err.message);
+    }
+}
+
+function getSectionTypeIcon(type) {
+    const icons = {
+        hero: 'bi bi-star-fill',
+        features: 'bi bi-grid-3x3-gap-fill',
+        steps: 'bi bi-list-ol',
+        why_choose_us: 'bi bi-patch-check-fill',
+        faq: 'bi bi-question-circle-fill',
+        cta: 'bi bi-megaphone-fill'
+    };
+    return icons[type] || 'bi bi-file-text';
+}
+
+// Show section form
+async function showSectionForm(serviceId, serviceTitle, sectionId = null) {
+    const container = document.getElementById('admindashboardView');
+    container.innerHTML = '';
+
+    const formClone = cloneTemplate('sectionFormTemplate');
+    container.appendChild(formClone);
+
+    const form = container.querySelector('#sectionForm');
+    const messageDiv = container.querySelector('#sectionFormMessage');
+    const formTitle = container.querySelector('[data-form-title]');
+    const submitText = container.querySelector('[data-submit-text]');
+
+    if (!form || !messageDiv || !formTitle || !submitText) {
+        console.error('Section form elements not found');
+        showErrorCard('Section Form', 'Form template is missing required elements');
+        return;
+    }
+
+    form.querySelector('[name="serviceId"]').value = serviceId;
+
+    if (sectionId) {
+        formTitle.textContent = 'Edit Section';
+        submitText.textContent = 'Update Section';
+
+        try {
+            const response = await fetch(`${ADMINDASHBOARD_API}/service-sections/${sectionId}`, {
+                headers: admindashboardAuthHeaders()
+            });
+
+            if (!response.ok) throw new Error('Section not found');
+            const section = await response.json();
+
+            form.querySelector('[name="sectionType"]').value = section.sectionType || '';
+            form.querySelector('[name="title"]').value = section.title || '';
+            form.querySelector('[name="subtitle"]').value = section.subtitle || '';
+            form.querySelector('[name="orderIndex"]').value = section.orderIndex || 0;
+            form.querySelector('[name="metaTitle"]').value = section.metaTitle || '';
+            form.querySelector('[name="metaKeywords"]').value = section.metaKeywords || '';
+            form.querySelector('[name="metaDescription"]').value = section.metaDescription || '';
+
+            form.dataset.editingId = sectionId;
+        } catch (err) {
+            messageDiv.style.color = '#ef4444';
+            messageDiv.textContent = 'Error loading section: ' + err.message;
+        }
+    } else {
+        formTitle.textContent = 'Add New Section';
+        submitText.textContent = 'Create Section';
+    }
+
+    setTimeout(() => {
+        const backToSectionsBtn = document.getElementById('backToSectionsBtn');
+        if (backToSectionsBtn) {
+            backToSectionsBtn.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                loadServiceSections(serviceId, serviceTitle);
+            };
+        }
+
+        const cancelSectionBtn = document.getElementById('cancelSectionBtn');
+        if (cancelSectionBtn) {
+            cancelSectionBtn.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                loadServiceSections(serviceId, serviceTitle);
+            };
+        }
+    }, 100);
+
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        messageDiv.textContent = '';
+
+        const formData = new FormData(form);
+        const sectionData = {
+            serviceId: formData.get('serviceId'),
+            sectionType: formData.get('sectionType'),
+            title: formData.get('title'),
+            subtitle: formData.get('subtitle'),
+            orderIndex: parseInt(formData.get('orderIndex')) || 0,
+            metaTitle: formData.get('metaTitle'),
+            metaKeywords: formData.get('metaKeywords'),
+            metaDescription: formData.get('metaDescription')
+        };
+
+        const editingId = form.dataset.editingId;
+        const url = editingId
+            ? `${ADMINDASHBOARD_API}/service-sections/${editingId}`
+            : `${ADMINDASHBOARD_API}/service-sections`;
+        const method = editingId ? 'PUT' : 'POST';
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Saving...';
+
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...admindashboardAuthHeaders()
+                },
+                body: JSON.stringify(sectionData)
+            });
+
+            if (!response.ok) {
+                const error = await response.json().catch(() => ({}));
+                throw new Error(error.message || `HTTP ${response.status}`);
+            }
+
+            messageDiv.style.color = '#22c55e';
+            messageDiv.textContent = editingId ? 'Section updated successfully!' : 'Section created successfully!';
+
+            setTimeout(() => {
+                loadServiceSections(serviceId, serviceTitle);
+            }, 1500);
+        } catch (err) {
+            messageDiv.style.color = '#ef4444';
+            messageDiv.textContent = `Failed to ${editingId ? 'update' : 'create'} section: ${err.message}`;
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }
+    };
+}
+
+async function deleteSection(sectionId, serviceId, serviceTitle) {
+    if (!confirm('Are you sure you want to delete this section? This will also delete all items in this section.')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${ADMINDASHBOARD_API}/service-sections/${sectionId}`, {
+            method: 'DELETE',
+            headers: admindashboardAuthHeaders()
+        });
+
+        if (!response.ok) throw new Error(`Failed to delete: HTTP ${response.status}`);
+
+        alert('Section deleted successfully');
+        loadServiceSections(serviceId, serviceTitle);
+    } catch (err) {
+        alert('Error deleting section: ' + err.message);
+    }
+}
+
+// ========== SECTION ITEMS MANAGEMENT ==========
+
+async function loadSectionItems(sectionId, sectionTitle, serviceId, serviceTitle) {
+    currentSectionId = sectionId;
+    showLoadingCard('Loading Items...');
+
+    try {
+        const response = await fetch(`${ADMINDASHBOARD_API}/section-items/section/${sectionId}`, {
+            headers: admindashboardAuthHeaders()
+        });
+
+        if (!response.ok) throw new Error('Failed to load items');
+        const items = await response.json();
+
+        const container = document.getElementById('admindashboardView');
+        container.innerHTML = '';
+
+        const itemsClone = cloneTemplate('sectionItemsManagementTemplate');
+        container.appendChild(itemsClone);
+
+        setElementContent(itemsClone, '[data-section-title]', sectionTitle);
+
+        const itemsGrid = document.getElementById('sectionItemsGrid');
+
+        if (items.length === 0) {
+            const emptyMsg = document.createElement('div');
+            emptyMsg.className = 'admindashboard-empty';
+            emptyMsg.textContent = 'No items found. Click "Add Item" to create your first item.';
+            itemsGrid.appendChild(emptyMsg);
+        } else {
+            items.sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));
+
+            items.forEach(item => {
+                const cardClone = cloneTemplate('sectionItemCardTemplate');
+
+                const iconEl = cardClone.querySelector('[data-icon]');
+                iconEl.className = item.icon || 'bi bi-star';
+                iconEl.removeAttribute('data-icon');
+
+                setElementContent(cardClone, '[data-title]', item.title || 'Untitled');
+                setElementContent(cardClone, '[data-description]', item.description || 'No description');
+
+                const editBtn = cardClone.querySelector('[data-edit]');
+                editBtn.removeAttribute('data-edit');
+                editBtn.onclick = () => showItemForm(sectionId, sectionTitle, serviceId, serviceTitle, item.id);
+
+                const deleteBtn = cardClone.querySelector('[data-delete]');
+                deleteBtn.removeAttribute('data-delete');
+                deleteBtn.onclick = () => deleteItem(item.id, sectionId, sectionTitle, serviceId, serviceTitle);
+
+                itemsGrid.appendChild(cardClone);
+            });
+        }
+
+        setTimeout(() => {
+            const addItemBtn = document.getElementById('addItemBtn');
+            if (addItemBtn) {
+                addItemBtn.onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showItemForm(sectionId, sectionTitle, serviceId, serviceTitle);
+                };
+            }
+
+            const backToSectionsFromItemsBtn = document.getElementById('backToSectionsFromItems');
+            if (backToSectionsFromItemsBtn) {
+                backToSectionsFromItemsBtn.onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    loadServiceSections(serviceId, serviceTitle);
+                };
+            }
+        }, 100);
+
+    } catch (err) {
+        showErrorCard('Items', 'Error loading items: ' + err.message);
+    }
+}
+
+// Show item form
+async function showItemForm(sectionId, sectionTitle, serviceId, serviceTitle, itemId = null) {
+    const container = document.getElementById('admindashboardView');
+    container.innerHTML = '';
+
+    const formClone = cloneTemplate('sectionItemFormTemplate');
+    container.appendChild(formClone);
+
+    const form = container.querySelector('#itemForm');
+    const messageDiv = container.querySelector('#itemFormMessage');
+    const formTitle = container.querySelector('[data-form-title]');
+    const submitText = container.querySelector('[data-submit-text]');
+
+    if (!form || !messageDiv || !formTitle || !submitText) {
+        console.error('Item form elements not found');
+        showErrorCard('Item Form', 'Form template is missing required elements');
+        return;
+    }
+
+    form.querySelector('[name="sectionId"]').value = sectionId;
+
+    if (itemId) {
+        formTitle.textContent = 'Edit Item';
+        submitText.textContent = 'Update Item';
+
+        try {
+            const response = await fetch(`${ADMINDASHBOARD_API}/section-items/section/${sectionId}`, {
+                headers: admindashboardAuthHeaders()
+            });
+
+            if (!response.ok) throw new Error('Failed to load items');
+            const items = await response.json();
+            const item = items.find(i => i.id === itemId);
+
+            if (!item) throw new Error('Item not found');
+
+            form.querySelector('[name="icon"]').value = item.icon || '';
+            form.querySelector('[name="title"]').value = item.title || '';
+            form.querySelector('[name="description"]').value = item.description || '';
+            form.querySelector('[name="orderIndex"]').value = item.orderIndex || 0;
+            form.querySelector('[name="metaTitle"]').value = item.metaTitle || '';
+            form.querySelector('[name="metaKeywords"]').value = item.metaKeywords || '';
+            form.querySelector('[name="metaDescription"]').value = item.metaDescription || '';
+
+            form.dataset.editingId = itemId;
+        } catch (err) {
+            messageDiv.style.color = '#ef4444';
+            messageDiv.textContent = 'Error loading item: ' + err.message;
+        }
+    } else {
+        formTitle.textContent = 'Add New Item';
+        submitText.textContent = 'Create Item';
+    }
+
+    setTimeout(() => {
+        const backToItemsBtn = document.getElementById('backToItemsBtn');
+        if (backToItemsBtn) {
+            backToItemsBtn.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                loadSectionItems(sectionId, sectionTitle, serviceId, serviceTitle);
+            };
+        }
+
+        const cancelItemBtn = document.getElementById('cancelItemBtn');
+        if (cancelItemBtn) {
+            cancelItemBtn.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                loadSectionItems(sectionId, sectionTitle, serviceId, serviceTitle);
+            };
+        }
+    }, 100);
+
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        messageDiv.textContent = '';
+
+        const formData = new FormData(form);
+        const itemData = {
+            sectionId: formData.get('sectionId'),
+            icon: formData.get('icon'),
+            title: formData.get('title'),
+            description: formData.get('description'),
+            orderIndex: parseInt(formData.get('orderIndex')) || 0,
+            metaTitle: formData.get('metaTitle'),
+            metaKeywords: formData.get('metaKeywords'),
+            metaDescription: formData.get('metaDescription')
+        };
+
+        const editingId = form.dataset.editingId;
+        const url = editingId
+            ? `${ADMINDASHBOARD_API}/section-items/${editingId}`
+            : `${ADMINDASHBOARD_API}/section-items`;
+        const method = editingId ? 'PUT' : 'POST';
+
+        if (!editingId) {
+            itemData.id = generateUUID();
+        }
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Saving...';
+
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...admindashboardAuthHeaders()
+                },
+                body: JSON.stringify(itemData)
+            });
+
+            if (!response.ok) {
+                const error = await response.json().catch(() => ({}));
+                throw new Error(error.message || `HTTP ${response.status}`);
+            }
+
+            messageDiv.style.color = '#22c55e';
+            messageDiv.textContent = editingId ? 'Item updated successfully!' : 'Item created successfully!';
+
+            setTimeout(() => {
+                loadSectionItems(sectionId, sectionTitle, serviceId, serviceTitle);
+            }, 1500);
+        } catch (err) {
+            messageDiv.style.color = '#ef4444';
+            messageDiv.textContent = `Failed to ${editingId ? 'update' : 'create'} item: ${err.message}`;
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }
+    };
+}
+
+async function deleteItem(itemId, sectionId, sectionTitle, serviceId, serviceTitle) {
+    if (!confirm('Are you sure you want to delete this item?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${ADMINDASHBOARD_API}/section-items/${itemId}`, {
+            method: 'DELETE',
+            headers: admindashboardAuthHeaders()
+        });
+
+        if (!response.ok) throw new Error(`Failed to delete: HTTP ${response.status}`);
+
+        alert('Item deleted successfully');
+        loadSectionItems(sectionId, sectionTitle, serviceId, serviceTitle);
+    } catch (err) {
+        alert('Error deleting item: ' + err.message);
+    }
+}
+
+// Helper function to generate UUID
+function generateUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+
+
+
+// ========== SETTINGS MANAGEMENT SECTION ==========
+// Add this code to your admin-dashboard.js file
+
+// Load all settings
+async function admindashboardLoadSettings() {
+    showLoadingCard('Loading Settings...');
+
+    try {
+        const response = await fetch(`${ADMINDASHBOARD_API}/settings`, {
+            headers: admindashboardAuthHeaders()
+        });
+
+        if (!response.ok) throw new Error(`Failed to load settings: HTTP ${response.status}`);
+        const settings = await response.json();
+
+        if (!Array.isArray(settings)) {
+            throw new Error("API did not return an array");
+        }
+
+        const container = document.getElementById('admindashboardView');
+        container.innerHTML = '';
+
+        const settingsContainerClone = cloneTemplate('settingsContainerTemplate');
+        container.appendChild(settingsContainerClone);
+
+        const grid = document.getElementById('settingsGrid');
+
+        if (settings.length === 0) {
+            const emptyMsg = document.createElement('div');
+            emptyMsg.className = 'admindashboard-empty';
+            emptyMsg.textContent = 'No settings available. Click "Add Settings" to get started.';
+            grid.appendChild(emptyMsg);
+        } else {
+            settings.forEach(setting => {
+                const cardClone = cloneTemplate('settingCardTemplate');
+
+                setElementContent(cardClone, '[data-site-name]', setting.siteName || 'Unnamed Setting');
+                setElementContent(cardClone, '[data-contact-email]', setting.contactEmail || 'No email set');
+                setElementContent(cardClone, '[data-contact-phone]', setting.contactPhone || 'Not set');
+                setElementContent(cardClone, '[data-address]', setting.address || 'Not set');
+                setElementContent(cardClone, '[data-seo-title]', setting.seoTitle || 'Not set');
+
+                const editBtn = cardClone.querySelector('[data-edit]');
+                editBtn.removeAttribute('data-edit');
+                editBtn.onclick = () => showSettingsForm(setting.id);
+
+                const deleteBtn = cardClone.querySelector('[data-delete]');
+                deleteBtn.removeAttribute('data-delete');
+                deleteBtn.onclick = () => deleteSetting(setting.id);
+
+                grid.appendChild(cardClone);
+            });
+        }
+
+        const addSettingBtn = document.getElementById('addSettingBtn');
+        if (addSettingBtn) {
+            addSettingBtn.onclick = () => showSettingsForm();
+        }
+
+    } catch (err) {
+        showErrorCard('Settings', `Error loading settings: ${err.message}`);
+        console.error(err);
+    }
+}
+
+// Show settings form (create/edit)
+async function showSettingsForm(settingId = null) {
+    const container = document.getElementById('admindashboardView');
+    container.innerHTML = '';
+
+    const formClone = cloneTemplate('settingsFormTemplate');
+    container.appendChild(formClone);
+
+    const form = container.querySelector('#settingsForm');
+    const messageDiv = container.querySelector('#settingsFormMessage');
+    const formTitle = container.querySelector('[data-form-title]');
+    const submitText = container.querySelector('[data-submit-text]');
+
+    if (!form || !messageDiv || !formTitle || !submitText) {
+        console.error('Settings form elements not found');
+        showErrorCard('Settings Form', 'Form template is missing required elements');
+        return;
+    }
+
+    // ---- BACK BUTTON HANDLER ----
+    const backToSettingsBtn = container.querySelector('#backToSettingsBtn');
+    if (backToSettingsBtn) {
+        backToSettingsBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            // Call the load function directly instead of using hash
+            admindashboardLoadSettings();
+        });
+    }
+
+    // ---- CANCEL BUTTON HANDLER ----
+    const cancelSettingsBtn = container.querySelector('#cancelSettingsBtn');
+    if (cancelSettingsBtn) {
+        cancelSettingsBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            // Call the load function directly instead of using hash
+            admindashboardLoadSettings();
+        });
+    }
+
+    // Load settings if editing
+    if (settingId) {
+        formTitle.textContent = 'Edit Settings';
+        submitText.textContent = 'Update Settings';
+
+        try {
+            const response = await fetch(`${ADMINDASHBOARD_API}/settings/${settingId}`, {
+                headers: admindashboardAuthHeaders()
+            });
+
+            if (!response.ok) throw new Error('Settings not found');
+            const setting = await response.json();
+
+            form.querySelector('[name="siteName"]').value = setting.siteName || '';
+            form.querySelector('[name="logoUrl"]').value = setting.logoUrl || '';
+            form.querySelector('[name="faviconUrl"]').value = setting.faviconUrl || '';
+            form.querySelector('[name="contactEmail"]').value = setting.contactEmail || '';
+            form.querySelector('[name="contactPhone"]').value = setting.contactPhone || '';
+            form.querySelector('[name="address"]').value = setting.address || '';
+            form.querySelector('[name="facebookUrl"]').value = setting.facebookUrl || '';
+            form.querySelector('[name="instagramUrl"]').value = setting.instagramUrl || '';
+            form.querySelector('[name="linkedInUrl"]').value = setting.linkedInUrl || '';
+            form.querySelector('[name="twitterUrl"]').value = setting.twitterUrl || '';
+            form.querySelector('[name="seoTitle"]').value = setting.seoTitle || '';
+            form.querySelector('[name="seoKeywords"]').value = setting.seoKeywords || '';
+            form.querySelector('[name="seoDescription"]').value = setting.seoDescription || '';
+
+            form.dataset.editingId = settingId;
+        } catch (err) {
+            messageDiv.style.color = '#ef4444';
+            messageDiv.textContent = 'Error loading settings: ' + err.message;
+        }
+    } else {
+        formTitle.textContent = 'Add New Settings';
+        submitText.textContent = 'Create Settings';
+    }
+
+    // Submit handler
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        messageDiv.textContent = '';
+
+        const formData = new FormData(form);
+        const settingsData = Object.fromEntries(formData.entries());
+
+        const editingId = form.dataset.editingId;
+        const url = editingId
+            ? `${ADMINDASHBOARD_API}/settings/${editingId}`
+            : `${ADMINDASHBOARD_API}/settings`;
+        const method = editingId ? 'PUT' : 'POST';
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Saving...';
+
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...admindashboardAuthHeaders()
+                },
+                body: JSON.stringify(settingsData)
+            });
+
+            if (!response.ok) {
+                const error = await response.json().catch(() => ({}));
+                throw new Error(error.message || `HTTP ${response.status}`);
+            }
+
+            messageDiv.style.color = '#22c55e';
+            messageDiv.textContent = editingId
+                ? 'Settings updated successfully!'
+                : 'Settings created successfully!';
+
+            setTimeout(() => {
+                admindashboardLoadSettings();
+            }, 1200);
+
+        } catch (err) {
+            messageDiv.style.color = '#ef4444';
+            messageDiv.textContent = `Failed to ${editingId ? 'update' : 'create'} settings: ${err.message}`;
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }
+    };
+}
+
+// Delete setting
+async function deleteSetting(settingId) {
+    if (!confirm('Are you sure you want to delete these settings? This action cannot be undone.')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${ADMINDASHBOARD_API}/settings/${settingId}`, {
+            method: 'DELETE',
+            headers: admindashboardAuthHeaders()
+        });
+
+        if (!response.ok) throw new Error(`Failed to delete: HTTP ${response.status}`);
+
+        alert('Settings deleted successfully');
+        admindashboardLoadSettings();
+    } catch (err) {
+        alert('Error deleting settings: ' + err.message);
+    }
+}
+
+
+
+
+
+
+
+
+// ========== UPDATE ROUTER ==========
+// Update your existing admindashboardRouter function to include services
+
 function admindashboardRouter() {
     const h = location.hash || '#/dashboard';
 
     admindashboardHighlight(h);
     closeSidebar();
+
+
+
+
 
     if (h.startsWith('#/blogs/edit/')) {
         const blogId = h.split('/')[3];
@@ -1124,6 +2458,9 @@ function admindashboardRouter() {
         case '#/clients':
             admindashboardLoadClients();
             break;
+        case '#/services':
+            admindashboardLoadServices();
+            break;
         case '#/plans':
             showPlaceholderPage('Plans Page (to implement)');
             break;
@@ -1137,7 +2474,7 @@ function admindashboardRouter() {
             loadSeoSettings();
             break;
         case '#/settings':
-            showPlaceholderPage('Settings Page (to implement)');
+            admindashboardLoadSettings();
             break;
         case '#/documents':
             showPlaceholderPage('Documents Page (to implement)');
@@ -1166,156 +2503,4 @@ const admindashboardJwt = localStorage.getItem('admindashboard_jwt') || localSto
 const admindashboardIsAdmin = admindashboardRoles.some(r => r === 'ROLE_ADMIN' || r === 'ROLE_SUPER_ADMIN');
 if (!admindashboardJwt || !admindashboardIsAdmin) {
     window.location.href = 'adminlogin.html';
-}
-
-
-
-
-
-
-const API_BASE_SEO = 'http://localhost:8080/api/adminseo'; // Change as per backend URL
-
-async function loadSeoSettings() {
-    const container = document.getElementById('admindashboardView');
-    container.innerHTML = '';
-
-    const seoSection = document.getElementById('seoPage');
-    const seoClone = seoSection.cloneNode(true);
-    seoClone.style.display = 'block';
-    container.appendChild(seoClone);
-
-    const seoListContainer = seoClone.querySelector('#seoListContainer');
-    const addBtn = seoClone.querySelector('#addSeoBtn');
-    const editModal = seoClone.querySelector('#seoEditModal');
-    const form = seoClone.querySelector('#seoEditForm');
-    const cancelBtn = seoClone.querySelector('#seoCancelBtn');
-    const formMessage = seoClone.querySelector('#seoFormMessage');
-
-    seoListContainer.textContent = 'Loading SEO settings...';
-
-    try {
-        const response = await fetch(API_BASE_SEO);
-        if (!response.ok) throw new Error('Failed to fetch SEO settings');
-        const seoList = await response.json();
-
-        seoListContainer.innerHTML = '';
-
-        if (seoList.length === 0) {
-            seoListContainer.textContent = 'No SEO settings found.';
-            return;
-        }
-
-        seoList.forEach(seo => {
-            const div = document.createElement('div');
-            div.classList.add('seo-entry');
-            div.innerHTML = `
-        <strong>${seo.slug}</strong> - ${seo.metaTitle || 'No Title'}<br/>
-        <small>${seo.metaDescription || ''}</small><br/>
-        <button class="editBtn" data-id="${seo.id}">Edit</button>
-      `;
-            seoListContainer.appendChild(div);
-        });
-
-        // Edit buttons
-        seoListContainer.querySelectorAll('.editBtn').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const id = btn.dataset.id;
-                try {
-                    const res = await fetch(`${API_BASE_SEO}/${id}`);
-                    if (!res.ok) throw new Error('Failed to fetch SEO entry');
-                    const seo = await res.json();
-
-                    form.id.value = seo.id || '';
-                    form.slug.value = seo.slug || '';
-                    form.metaTitle.value = seo.metaTitle || '';
-                    form.metaDescription.value = seo.metaDescription || '';
-                    form.metaKeywords.value = seo.metaKeywords || '';
-                    form.robotsTag.value = seo.robotsTag || 'index,follow';
-                    form.schemaJson.value = seo.schemaJson || '';
-
-                    editModal.style.display = 'block';
-                    formMessage.textContent = '';
-                } catch (err) {
-                    alert(err.message);
-                }
-            });
-        });
-    } catch (err) {
-        seoListContainer.textContent = err.message;
-    }
-
-    addBtn.addEventListener('click', () => {
-        form.reset();
-        form.id.value = '';
-        formMessage.textContent = '';
-        editModal.style.display = 'block';
-    });
-
-    cancelBtn.addEventListener('click', () => {
-        editModal.style.display = 'none';
-    });
-
-    form.addEventListener('submit', async e => {
-        e.preventDefault();
-        formMessage.textContent = '';
-
-        const payload = {
-            id: form.id.value || null,
-            slug: form.slug.value,
-            metaTitle: form.metaTitle.value,
-            metaDescription: form.metaDescription.value,
-            metaKeywords: form.metaKeywords.value,
-            robotsTag: form.robotsTag.value,
-            schemaJson: form.schemaJson.value
-        };
-
-        try {
-            const res = await fetch(`${API_BASE_SEO}/save`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            if (!res.ok) throw new Error('Failed to save SEO entry');
-
-            formMessage.style.color = 'green';
-            formMessage.textContent = 'Saved successfully!';
-            editModal.style.display = 'none';
-
-            loadSeoSettings();
-        } catch (err) {
-            formMessage.style.color = 'red';
-            formMessage.textContent = err.message;
-        }
-    });
-}
-
-// Router integration example:
-function router() {
-    const hash = location.hash.slice(2);
-    const container = document.getElementById('admindashboardView');
-    switch (hash) {
-        case 'dashboard':
-            // loadDashboard(); (your other pages)
-            break;
-        case 'seo':
-            loadSeoSettings();
-            break;
-        // other routes
-        default:
-            container.innerHTML = '<h2>Page Not Found</h2>';
-    }
-}
-
-window.addEventListener('hashchange', router);
-window.addEventListener('DOMContentLoaded', router);
-
-function loadServices() {
-    const container = document.getElementById('admindashboard-main');
-    const template = document.getElementById('servicesContainerTemplate');
-    container.innerHTML = template.innerHTML;
-
-    // import main service admin JS logic
-    import('/assets/js/admin/services-admin.js')
-      .then(() => console.log('Services Admin loaded'))
-      .catch(err => console.error('Error loading Services Admin:', err));
 }

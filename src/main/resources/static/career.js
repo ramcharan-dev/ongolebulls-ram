@@ -377,4 +377,3 @@
 
     // Initial data fetch on page load
     fetchJobsFromAPI();
-
