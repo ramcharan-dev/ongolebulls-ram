@@ -49,7 +49,6 @@ public class BlogController {
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-    // Update blog
     @PutMapping("/{id}")
     public ResponseEntity<Blog> updateBlog(
             @PathVariable Long id,
@@ -59,16 +58,32 @@ public class BlogController {
         Blog existing = blogService.getBlogById(id);
         if (existing == null) return ResponseEntity.notFound().build();
 
-        existing.setTitle(updatedBlog.getTitle());
-        existing.setShortDescription(updatedBlog.getShortDescription());
-        existing.setFullContent(updatedBlog.getFullContent());
-        existing.setAuthor(updatedBlog.getAuthor());
+        // ✅ Only update non-null or non-empty fields
+        if (updatedBlog.getTitle() != null && !updatedBlog.getTitle().isBlank()) {
+            existing.setTitle(updatedBlog.getTitle());
+        }
 
-        handleImageUpload(existing, imageFile);
+        if (updatedBlog.getShortDescription() != null && !updatedBlog.getShortDescription().isBlank()) {
+            existing.setShortDescription(updatedBlog.getShortDescription());
+        }
+
+        if (updatedBlog.getFullContent() != null && !updatedBlog.getFullContent().isBlank()) {
+            existing.setFullContent(updatedBlog.getFullContent());
+        }
+
+        if (updatedBlog.getAuthor() != null && !updatedBlog.getAuthor().isBlank()) {
+            existing.setAuthor(updatedBlog.getAuthor());
+        }
+
+        // ✅ Only update image if new file uploaded
+        if (imageFile != null && !imageFile.isEmpty()) {
+            handleImageUpload(existing, imageFile);
+        }
 
         Blog saved = blogService.saveBlog(existing);
         return ResponseEntity.ok(saved);
     }
+
 
     // Delete blog
     @DeleteMapping("/{id}")

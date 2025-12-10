@@ -1793,8 +1793,92 @@ body {
     font-size: 0.85rem;
   }
 }
+/* Scoped, trustworthy, brand-aligned styling */
+  .svc-scope{
+    --ob-red: 189 42 31;
+    --ob-gold: 187 146 54;
+    --ob-blue: 13 38 58;
 
+    --ink: rgb(var(--ob-blue));
+    --brand: rgb(var(--ob-gold));
+    --accent: rgb(var(--ob-red));
+    --bg: rgba(var(--ob-blue), .02);
 
+    background: var(--bg);
+    color: var(--ink);
+  }
+  .svc-title{
+    font-weight: 800;
+    letter-spacing:.2px;
+  }
+  .svc-sub{
+    color: rgba(var(--ob-blue), .70);
+    margin: .25rem 0 0;
+    font-size: .95rem;
+  }
+
+  /* Grid cards: equal height using flex and min-heights */
+  .svc-grid .svc-card{ display:flex; width: 25%; }
+  .svc-card .svc-card__inner{
+    display:flex; flex-direction:column;
+    background:#fff;
+    border:1px solid rgba(var(--ob-blue), .10);
+    border-radius:18px;
+    overflow:hidden;
+    width:100%;
+    min-height: 100%;
+    box-shadow: 0 10px 26px rgba(0,0,0,.06);
+    transition: transform 180ms cubic-bezier(.22,.61,.36,1), box-shadow 180ms cubic-bezier(.22,.61,.36,1), border-color 180ms;
+  }
+  .svc-card .svc-card__inner:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 18px 44px rgba(0,0,0,.10);
+    border-color: rgba(var(--ob-blue), .16);
+  }
+
+  .svc-media{ position:relative; width:100%; aspect-ratio: 16/9; background: #f7f9fb; }
+  .svc-media img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  }
+
+  .svc-body{ padding:16px 16px 18px; display:flex; flex-direction:column; gap:8px; flex:1; }
+  .svc-heading{ margin:0; font-weight:800; font-size:1.05rem; color: var(--ink); }
+  .svc-text{ margin:0; color: rgba(var(--ob-blue), .75); font-size:.92rem; line-height:1.5; }
+  .svc-actions{ margin-top:auto; }
+  .svc-link{
+    display:inline-flex; align-items:center; gap:.35rem;
+    font-weight:800; letter-spacing:.2px; text-decoration:none;
+    color: var(--accent);
+    transition: color 160ms ease;
+  }
+  .svc-link:hover{ color: rgba(var(--ob-red), .85); }
+
+  /* Professional pager */
+  .svc-page-btn{
+    width:44px; height:44px; border-radius:12px; border:1px solid rgba(var(--ob-blue), .14);
+    background:#fff; color: var(--ink);
+    display:inline-flex; align-items:center; justify-content:center;
+    transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
+  }
+  .svc-page-btn:hover{ transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,.08); border-color: rgba(var(--ob-blue), .22); }
+  .svc-page-btn:disabled{ opacity:.45; cursor:not-allowed; transform:none; box-shadow:none; }
+
+  .svc-dots{ display:flex; align-items:center; gap:10px; }
+  .svc-dot{
+    width:10px; height:10px; border-radius:50%;
+    background: rgba(var(--ob-blue), .25); border:0; padding:0; cursor:pointer;
+    transition: transform 140ms ease, background 140ms ease, box-shadow 140ms ease;
+  }
+  .svc-dot:hover{ transform: scale(1.12); background: rgba(var(--ob-blue), .45); }
+  .svc-dot.is-active{
+    background: var(--brand);
+    box-shadow: 0 0 0 6px rgba(var(--ob-gold), .16);
+  }
+
+  /* Accessibility: reduce motion */
+  @media (prefers-reduced-motion: reduce){
+    .svc-card .svc-card__inner, .svc-page-btn, .svc-dot{ transition:none!important; }
+  }
 </style>
 
     <hr class="custom-line">
@@ -1968,12 +2052,235 @@ body {
 </section>
 
 
-<!-- Services Section -->
+<section id="services" class="svc-scope py-5">
+  <div class="container">
+    <div class="text-center mb-4">
+      <h2 class="svc-title">Our Financial Services</h2>
+      <p class="svc-sub">Goal‑based, research‑driven, and regulation‑first advisory</p>
+    </div>
+
+    <!-- Grid -->
+    <div class="svc-grid row row-cols-1 row-cols-md-2 g-4">
+      <!-- Card 1 -->
+      <article class="svc-card col">
+        <div class="svc-card__inner">
+          <div class="svc-media">
+            <img src="assets/w-m.jpg" alt="Wealth Management" loading="lazy">
+          </div>
+          <div class="svc-body">
+            <h5 class="svc-heading">Wealth Management</h5>
+            <p class="svc-text">
+              Personalized strategies for long‑term growth, disciplined asset allocation, and active risk management.
+            </p>
+            <div class="svc-actions">
+              <a href="wealth-management.html" class="svc-link">Read more <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 2 -->
+      <article class="svc-card col">
+        <div class="svc-card__inner">
+          <div class="svc-media">
+            <img src="assets/smart investment.jpg" alt="Investment Planning" loading="lazy">
+          </div>
+          <div class="svc-body">
+            <h5 class="svc-heading">Investment Planning</h5>
+            <p class="svc-text">
+              Active and passive portfolios built to your risk profile to maximize returns while minimizing drawdowns.
+            </p>
+            <div class="svc-actions">
+              <a href="investment-management.html" class="svc-link">Read more <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="svc-card col">
+        <div class="svc-card__inner">
+          <div class="svc-media">
+            <img src="assets/MF.jpg" alt="Mutual Fund Investment" loading="lazy">
+          </div>
+          <div class="svc-body">
+            <h5 class="svc-heading">Mutual Fund Investment</h5>
+            <p class="svc-text">
+              Diversify with curated funds, optimize for taxes and horizon, and track seamlessly in your dashboard.
+            </p>
+            <div class="svc-actions">
+              <a href="mutual-fund.html" class="svc-link">Read more <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 4 -->
+      <article class="svc-card col">
+        <div class="svc-card__inner">
+          <div class="svc-media">
+            <img src="assets/download (3).jpeg" alt="Portfolio Management Services (PMS)" loading="lazy">
+          </div>
+          <div class="svc-body">
+            <h5 class="svc-heading">PMS (Portfolio Management)</h5>
+            <p class="svc-text">
+              Bespoke, professionally managed portfolios with direct securities ownership for discerning investors.
+            </p>
+            <div class="svc-actions">
+              <a href="pms.html" class="svc-link">Read more <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 5 -->
+      <article class="svc-card col">
+        <div class="svc-card__inner">
+          <div class="svc-media">
+            <img src="assets/invest.jpg" alt="HNI & Family Office Services" loading="lazy">
+          </div>
+          <div class="svc-body">
+            <h5 class="svc-heading">HNI & Family Office</h5>
+            <p class="svc-text">
+              Estate planning, tax optimization, and succession strategies to protect and grow multi‑gen wealth.
+            </p>
+            <div class="svc-actions">
+              <a href="hni-services.html" class="svc-link">Read more <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 6 -->
+      <article class="svc-card col">
+        <div class="svc-card__inner">
+          <div class="svc-media">
+            <img src="assets/stocks.jpg" alt="Stock Market & Bond Investment" loading="lazy">
+          </div>
+          <div class="svc-body">
+            <h5 class="svc-heading">Stocks & Bonds</h5>
+            <p class="svc-text">
+              Research‑backed equity, IPO, and fixed‑income ideas for diversification and reliable cashflows.
+            </p>
+            <div class="svc-actions">
+              <a href="stock-markets-bonds.html" class="svc-link">Read more <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 7 -->
+      <article class="svc-card col">
+        <div class="svc-card__inner">
+          <div class="svc-media">
+            <img src="assets/sma.webp" alt="Tax Optimization & Estate Planning" loading="lazy">
+          </div>
+          <div class="svc-body">
+            <h5 class="svc-heading">Tax & Estate Planning</h5>
+            <p class="svc-text">
+              Minimize liabilities and structure legacy transfers with compliant, efficient frameworks.
+            </p>
+            <div class="svc-actions">
+              <a href="Tax-Optimization-planning.html" class="svc-link">Read more <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- Professional pager -->
+    <div class="svc-pager d-flex align-items-center justify-content-center gap-3 mt-4">
+      <button class="svc-page-btn svc-prev" type="button" aria-label="Previous">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <div class="svc-dots" role="tablist" aria-label="Pages">
+        <!-- dots injected by JS -->
+      </div>
+      <button class="svc-page-btn svc-next" type="button" aria-label="Next">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Dependencies: Bootstrap Icons for chevrons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<script>
+  // Services pagination: 4 per page with dots indicator
+  (function(){
+    const root = document.querySelector('.svc-scope');
+    if(!root) return;
+
+    const grid = root.querySelector('.svc-grid');
+    const cards = Array.from(grid.querySelectorAll('.svc-card'));
+    const prevBtn = root.querySelector('.svc-prev');
+    const nextBtn = root.querySelector('.svc-next');
+    const dotsWrap = root.querySelector('.svc-dots');
+
+    const perPage = 4;
+    const total = cards.length;
+    const totalPages = Math.max(1, Math.ceil(total / perPage));
+
+    // initial page from query
+    const params = new URLSearchParams(location.search);
+    let page = Math.min(Math.max(parseInt(params.get('page')||'1',10) || 1, 1), totalPages);
+
+    // uniform heights via CSS grid structure, ensure images load first
+    function setEqualHeights(){
+      // No JS height calc; layout ensures equal height via flex and min-height
+    }
+
+    function render(){
+      // show slice
+      cards.forEach((el, i) => {
+        const p = Math.floor(i / perPage) + 1;
+        el.style.display = (p === page) ? '' : 'none';
+      });
+      // controls
+      prevBtn.disabled = (page === 1);
+      nextBtn.disabled = (page === totalPages);
+      // dots
+      dotsWrap.innerHTML = '';
+      for(let i=1;i<=totalPages;i++){
+        const dot = document.createElement('button');
+        dot.className = 'svc-dot' + (i===page ? ' is-active' : '');
+        dot.setAttribute('type','button');
+        dot.setAttribute('aria-label','Go to page ' + i);
+        dot.addEventListener('click', ()=>{ page = i; render(); updateUrl(); });
+        dotsWrap.appendChild(dot);
+      }
+    }
+
+    function updateUrl(){
+      const p = new URLSearchParams(location.search);
+      if(page === 1) p.delete('page'); else p.set('page', String(page));
+      const newUrl = location.pathname + (p.toString() ? '?' + p.toString() : '') + location.hash;
+      history.replaceState({}, '', newUrl);
+    }
+
+    prevBtn.addEventListener('click', ()=>{ if(page>1){ page--; render(); updateUrl(); } });
+    nextBtn.addEventListener('click', ()=>{ if(page<totalPages){ page++; render(); updateUrl(); } });
+
+    document.addEventListener('keydown', e=>{
+      if(e.key==='ArrowLeft' && page>1){ page--; render(); updateUrl(); }
+      if(e.key==='ArrowRight' && page<totalPages){ page++; render(); updateUrl(); }
+    });
+
+    window.addEventListener('load', setEqualHeights, {once:true});
+    render();
+  })();
+</script>
+
+
+
+<!--
+ Services Section
 <section id="services" class="py-5 bg-light">
  <div class="text-center"> <h2>Our Financial Services</h2></div>
   <div class="container">
     <div class="services-container">
-      <!-- Service Card 1: Wealth Management -->
+      &lt;!&ndash; Service Card 1: Wealth Management &ndash;&gt;
       <div class="service-card" onclick="window.location.href='wealth-management.html'">
         <img src="assets/w-m.jpg" alt="Wealth Management" class="service-img">
         <div class="service-info">
@@ -1981,7 +2288,7 @@ body {
           <p class="service-text">We provide personalized wealth management strategies focused on long-term growth, asset allocation, and risk management to ensure your wealth is protected and maximized.</p>
         </div>
       </div>
-      <!-- Service Card 2: Investment Management -->
+      &lt;!&ndash; Service Card 2: Investment Management &ndash;&gt;
       <div class="service-card" onclick="window.location.href='investment-management.html'">
         <img src="assets/smart investment.jpg" alt="Investment Management" class="service-img">
         <div class="service-info">
@@ -1989,16 +2296,16 @@ body {
           <p class="service-text">Our investment planning services offer both active and passive portfolio management to help you make informed decisions, maximize returns, and minimize risks.</p>
         </div>
       </div>
-      <!-- Service Card 3: SIP -->
-      <!--<div class="service-card" onclick="window.location.href='sip.html'">
+      &lt;!&ndash; Service Card 3: SIP &ndash;&gt;
+      &lt;!&ndash;<div class="service-card" onclick="window.location.href='sip.html'">
         <img src="assets/sip-1704527305.webp" alt="SIP" class="service-img">
         <div class="service-info">
           <h5 class="service-title">Systematic Investment Plan (SIP)</h5>
           <p class="service-text">Start building wealth with SIPs—a disciplined, affordable way to invest in mutual funds and stocks, ensuring steady growth over time.</p>
         </div>
-      </div>-->
+      </div>&ndash;&gt;
 
-      <!-- Service Card 3: Mutual Fund -->
+      &lt;!&ndash; Service Card 3: Mutual Fund &ndash;&gt;
       <div class="service-card" onclick="window.location.href='mutual-fund.html'">
         <img src="assets/MF.jpg" alt="Mutual Fund Investment" class="service-img" loading="lazy">
         <div class="service-info">
@@ -2010,18 +2317,18 @@ body {
         </div>
       </div>
 
-      <!-- Service Card 4: Investment Banking -->
-     <!-- <div class="service-card" onclick="window.location.href='investment-banking.html'">
+      &lt;!&ndash; Service Card 4: Investment Banking &ndash;&gt;
+     &lt;!&ndash; <div class="service-card" onclick="window.location.href='investment-banking.html'">
         <img src="assets/invest backing.jpg" alt="Investment Banking" class="service-img">
         <div class="service-info">
           <h5 class="service-title">Investment Banking</h5>
           <p class="service-text">From capital raising to mergers and acquisitions, our investment banking services offer strategic insights and tailored solutions for businesses and startups.</p>
         </div>
-      </div>-->
+      </div>&ndash;&gt;
 
-      <!-- Service Card : PMS -->
+      &lt;!&ndash; Service Card : PMS &ndash;&gt;
       <div class="service-card" onclick="window.location.href='pms.html'">
-        <img src="assets/pms.jpg" alt="Portfolio Management Services" class="service-img" loading="lazy">
+        <img src="assets/download (3).jpeg" alt="Portfolio Management Services" class="service-img" loading="lazy">
         <div class="service-info">
           <h5 class="service-title">Portfolio Management Services (PMS)</h5>
           <p class="service-text">
@@ -2033,7 +2340,7 @@ body {
       </div>
 
 
-      <!-- Service Card 5: Investment Platforms -->
+      &lt;!&ndash; Service Card 5: Investment Platforms &ndash;&gt;
       <div class="service-card" onclick="window.location.href='hni-services.html'">
         <img src="assets/invest.jpg" alt="Investment Platforms" class="service-img">
         <div class="service-info">
@@ -2042,7 +2349,7 @@ body {
         </div>
       </div>
 
-      <!-- Service Card 6: Wealth Creation & Planning -->
+      &lt;!&ndash; Service Card 6: Wealth Creation & Planning &ndash;&gt;
       <div class="service-card" onclick="window.location.href='stock-markets-bonds.html'">
         <img src="assets/stocks.jpg" alt="Wealth Creation & Planning" class="service-img">
         <div class="service-info">
@@ -2051,16 +2358,16 @@ body {
         </div>
       </div>
 
-      <!-- Service Card 7: HNI & Family Offices -->
-      <!--<div class="service-card" onclick="window.location.href='investment-platforms.html'">
+      &lt;!&ndash; Service Card 7: HNI & Family Offices &ndash;&gt;
+      &lt;!&ndash;<div class="service-card" onclick="window.location.href='investment-platforms.html'">
         <img src="assets/digital-invest.jpg" alt="HNI & Family Offices" class="service-img">
         <div class="service-info">
           <h5 class="service-title">Digital Investment Platforms</h5>
           <p class="service-text">Our easy-to-use digital investment platforms provide real-time access to stocks, bonds, and mutual funds, making it simple to manage your portfolio on the go.</p>
         </div>
-      </div>-->
+      </div>&ndash;&gt;
 
-      <!-- Service Card 8: Stock Markets & Bonds -->
+      &lt;!&ndash; Service Card 8: Stock Markets & Bonds &ndash;&gt;
       <div class="service-card" onclick="window.location.href='Tax-Optimization-planning.html'">
         <img src="assets/sma.webp" alt="Stock Markets & Bonds" class="service-img">
         <div class="service-info">
@@ -2071,7 +2378,7 @@ body {
 
     </div>
   </div>
-</section>
+</section>-->
 
 <!--<section class="investment-section">
   <h2>Our Investment Solutions</h2>

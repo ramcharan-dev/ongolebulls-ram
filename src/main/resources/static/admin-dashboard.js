@@ -706,6 +706,11 @@ async function showBlogForm(blogId = null) {
         const formTemplate = cloneTemplate('blogFormTemplate');
         container.appendChild(formTemplate);
 
+
+
+
+
+
         const form = document.getElementById('blogForm');
         const messageDiv = document.getElementById('blogFormMessage');
         const formTitle = document.querySelector('[data-form-title]');
@@ -713,6 +718,9 @@ async function showBlogForm(blogId = null) {
         const previewImg = document.getElementById('previewImg');
         const fileInput = form.querySelector('input[name="imageFile"]');
 
+
+
+        // Remove any other instances if needed (optional, good practice)
         if (window.blogContentEditor && window.blogContentEditor.destroy) {
             window.blogContentEditor.destroy();
         }
@@ -739,6 +747,9 @@ async function showBlogForm(blogId = null) {
             .catch(error => {
                 console.error(error);
             });
+
+
+
 
         if (blogId) {
             formTitle.textContent = 'Edit Blog';
@@ -1076,22 +1087,27 @@ async function admindashboardLoadAdminDetails() {
     setElementContent(loadingClone, "[data-title]", "Loading Profile…");
     container.appendChild(loadingClone);
 
-    try {
-        await new Promise((resolve) => setTimeout(resolve, 100));
+    const editProfileLink = document.getElementById('editProfileLink');
+    const profileMenu = document.getElementById('adminProfileMenu');
+    if (editProfileLink) {
+        editProfileLink.addEventListener('click', e => {
+            e.preventDefault();
+            if (profileMenu) profileMenu.style.display = 'none';
+            location.hash = '#/admin-details'; // important to include the '#'
+        });
+    }
 
         container.innerHTML = "";
         const formTemplate = cloneTemplate("editAdminTemplate");
         container.appendChild(formTemplate);
 
-        const adminId = 1;
-        const form = document.getElementById("editAdminForm");
-        const messageDiv = document.getElementById("responseMessage");
 
         const response = await fetch(`${ADMINDASHBOARD_API}/admin/${adminId}`, {
             headers: admindashboardAuthHeaders()
         });
 
-        if (!response.ok) throw new Error("Failed to fetch admin details");
+    setupAdminDetailsEvents();
+}
 
         const data = await response.json();
         document.getElementById("adminEmail").value = data.email || "";
@@ -1116,49 +1132,86 @@ async function admindashboardLoadAdminDetails() {
                 return;
             }
 
-            const payload = { email, name };
-            if (password && password.length >= 6) {
-                payload.password = password;
-            } else if (password && password.length < 6) {
-                messageDiv.innerText = "Password must be at least 6 characters";
-                messageDiv.style.color = "#ef4444";
-                submitBtn.disabled = false;
-                return;
-            }
 
-            try {
-                const res = await fetch(`${ADMINDASHBOARD_API}/admin/update/${adminId}`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        ...admindashboardAuthHeaders()
-                    },
-                    body: JSON.stringify(payload),
-                });
 
-                const result = await res.json();
-                if (!res.ok || !result.success) throw new Error(result.message || "Update failed");
+    if (!form) {
+        console.error("Form not found. Template may not be loaded.");
+        return;
+    }
 
-                messageDiv.innerText = result.message || "Profile updated successfully";
-                messageDiv.style.color = "#22c55e";
+    // Load current admin details
+    fetch(`${API}/${adminId}`)
+        .then(res => {
+            if (!res.ok) throw new Error("Failed to fetch admin details");
+            return res.json();
+        })
+        .then(data => {
+            document.getElementById("adminEmail").value = data.email || "";
+            document.getElementById("adminPassword").value = data.password || "";
+            document.getElementById("adminName").value = data.name || "";
+        })
+        .catch(err => {
+            messageDiv.innerText = err.message;
+            messageDiv.style.color = "red";
+        });
 
                 const nameEl = document.getElementById("adminNameDisplay");
                 if (nameEl) nameEl.textContent = name;
 
                 document.getElementById("adminPassword").value = "";
 
-                setTimeout(() => (messageDiv.innerText = ""), 3000);
-            } catch (err) {
-                messageDiv.innerText = "Error: " + err.message;
-                messageDiv.style.color = "#ef4444";
-            } finally {
-                submitBtn.disabled = false;
-            }
-        };
-    } catch (err) {
-        showErrorCard("Edit Profile", err.message || "Failed to load profile.");
-    }
+        fetch(`${API}/update/${adminId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        })
+            .then(res => res.json())
+            .then(data => {
+                messageDiv.innerText = data.message;
+                messageDiv.style.color = data.success ? "green" : "red";
+
+                // ✅ Reload latest updated data
+                loadUpdatedAdminDetails();
+                refreshAdminHeader();
+            })
+            .catch(err => {
+                messageDiv.innerText = err.message;
+                messageDiv.style.color = "red";
+            });
+    });
 }
+
+// ✅ helper reload function
+function loadUpdatedAdminDetails() {
+    const adminId = 1;
+
+    fetch(`/api/admin/${adminId}`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("adminEmail").value = data.email;
+            document.getElementById("adminPassword").value = data.password;
+            document.getElementById("adminName").value = data.name;
+        });
+}
+
+
+
+function refreshAdminHeader() {
+    fetch("/api/admin/1")
+        .then(res => res.json())
+        .then(data => {
+            const label = document.getElementById("adminNameDisplay");
+            if (label) {
+                label.innerText = data.name;
+            }
+        });
+}
+
+
+
+
+
+
 
 // === Careers Loader ===
 async function admindashboardLoadCareers() {
@@ -1307,6 +1360,15 @@ function handleSearch() {
     const searchInput = document.getElementById('admindashboardTopSearch');
     const searchQuery = searchInput.value.trim();
 
+
+
+
+// === Search Handler ===
+let searchTimeout;
+function handleSearch() {
+    const searchInput = document.getElementById('admindashboardTopSearch');
+    const searchQuery = searchInput.value.trim();
+
     clearTimeout(searchTimeout);
 
     searchTimeout = setTimeout(() => {
@@ -1315,6 +1377,7 @@ function handleSearch() {
         if (currentHash === '#/clients') {
             admindashboardLoadClients(searchQuery);
         } else if (searchQuery) {
+            // If user is searching but not on clients page, navigate to clients
             location.hash = '#/clients';
             setTimeout(() => {
                 admindashboardLoadClients(searchQuery);
@@ -1386,6 +1449,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Close sidebar when clicking backdrop
     if (backdrop) {
         backdrop.addEventListener('click', () => {
             closeSidebar();
@@ -1396,6 +1460,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (searchInput) {
         searchInput.addEventListener('input', handleSearch);
 
+        // Clear search when navigating away from clients
         window.addEventListener('hashchange', () => {
             const currentHash = location.hash || '#/dashboard';
             if (currentHash !== '#/clients') {
@@ -2420,6 +2485,8 @@ function admindashboardRouter() {
         case '#/admin-details':
             admindashboardLoadAdminDetails();
             break;
+        case '#/services':
+            loadServices();
         default:
             showPlaceholderPage('Page Not Found');
     }

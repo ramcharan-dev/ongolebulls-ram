@@ -7,6 +7,7 @@
 
     <!-- Bootstrap Icons CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="admin-dashboard.css"/>
@@ -16,6 +17,8 @@
 <body>
 
 <div class="admindashboard-layout" role="application" aria-label="Admin Dashboard">
+
+
 
     <!-- Sidebar -->
     <aside class="admindashboard-sidebar" aria-label="Primary">
@@ -35,6 +38,9 @@
             </a>
 
             <a href="#/seo" class="admindashboard-nav" data-route="#/seo"><i class="bi bi-search"></i> <span>SEO</span></a>
+            <a href="#/services" class="admindashboard-nav" data-route="#/services">
+                <i class="bi bi-grid-fill"></i> <span>Services</span>
+            </a>
             <a href="#/settings" class="admindashboard-nav" data-route="#/settings"><i class="bi bi-gear-fill"></i> <span>Settings</span></a>
             <a href="#/documents" class="admindashboard-nav" data-route="#/documents"><i class="bi bi-file-earmark-fill"></i> <span>Documents</span></a>
             <a href="#/careers" class="admindashboard-nav" data-route="#/careers"><i class="bi bi-briefcase-fill"></i> <span>Careers</span></a>
@@ -68,6 +74,9 @@
                     <a href="#/admin-details" class="admindashboard-nav" id="editProfileLink">
                         <i class="bi bi-person-check"></i> <span>Edit Profile</span>
                     </a>
+
+
+
                     <a href="#" id="dashboardLogoutLink" class="admindashboard-profile-link">
                         <i class="bi bi-box-arrow-right"></i> Logout
                     </a>
@@ -607,16 +616,16 @@
     <div class="edit-admin-container">
         <h2>Edit Admin User Details</h2>
         <form id="editAdminForm">
-            <label for="adminEmail">Email:</label>
+            <label>Email:</label>
             <input type="email" id="adminEmail" required />
 
-            <label for="adminPassword">Password:</label>
-            <input type="password" id="adminPassword" />
+            <label>Password:</label>
+            <input type="password" id="adminPassword" required />
 
-            <label for="adminName">Name:</label>
+            <label>Name:</label>
             <input type="text" id="adminName" required />
 
-            <button type="submit" id="adminSaveBtn" class="admindashboard-btn primary">Save Changes</button>
+            <button type="submit" id="adminSaveBtn">Save Changes</button>
         </form>
 
         <div id="responseMessage"></div>
@@ -1141,6 +1150,7 @@
 
 <!-- Custom JavaScript -->
 <script src="admin-dashboard.js"></script>
+
 
 </body>
 </html>

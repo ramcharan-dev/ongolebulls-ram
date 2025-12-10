@@ -661,7 +661,6 @@ header a:hover {
 
 /* Responsive Flexbox */
 .container {
-    display: flex;
     justify-content: space-between; /* Ensures proper spacing */
     align-items: center; /* Aligns items vertically */
     flex-wrap: wrap; /* Ensures responsiveness */
