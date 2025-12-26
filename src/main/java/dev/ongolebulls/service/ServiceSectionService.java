@@ -15,14 +15,23 @@ public class ServiceSectionService {
     @Autowired
     private ServiceSectionRepository repo;
 
+    // =====================================================
+    // GET SECTIONS BY SERVICE ID
+    // =====================================================
     public List<ServiceSection> getByService(String serviceId) {
         return repo.findByServiceIdOrderByOrderIndexAsc(serviceId);
     }
 
+    // =====================================================
+    // GET SECTION BY ID
+    // =====================================================
     public ServiceSection getById(String id) {
         return repo.findById(id).orElse(null);
     }
 
+    // =====================================================
+    // CREATE SECTION
+    // =====================================================
     public ServiceSection create(ServiceSection s) {
         s.setId(UUID.randomUUID().toString());
         s.setCreatedAt(new Timestamp(System.currentTimeMillis()));
@@ -30,6 +39,9 @@ public class ServiceSectionService {
         return repo.save(s);
     }
 
+    // =====================================================
+    // UPDATE SECTION
+    // =====================================================
     public ServiceSection update(String id, ServiceSection s) {
         ServiceSection existing = repo.findById(id).orElse(null);
         if (existing == null) return null;
@@ -40,8 +52,17 @@ public class ServiceSectionService {
         return repo.save(s);
     }
 
+    // =====================================================
+    // DELETE SECTION
+    // =====================================================
     public void delete(String id) {
         repo.deleteById(id);
     }
-}
 
+    // =====================================================
+    // GET ALL SECTIONS (❗ REQUIRED for /api/sections)
+    // =====================================================
+    public List<ServiceSection> getAll() {
+        return repo.findAll();
+    }
+}

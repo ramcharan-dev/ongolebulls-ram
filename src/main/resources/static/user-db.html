@@ -1,632 +1,1680 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>OngoleBulls Invest – Dashboard</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Investor Dashboard | OngoleBulls Invest</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    
+    <!-- Chart.js for Asset Allocation -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
     <style>
-        body { background:#f7f7fb; }
-        .stats-card{border-radius:14px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06);padding:14px}
-        .quick-action{border-radius:28px}
-        .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eee}
+        :root {
+            --ob-primary: #6366f1;
+            --ob-primary-dark: #4f46e5;
+            --ob-primary-light: #818cf8;
+            --ob-bg: #0a0e27;
+            --ob-bg-soft: #111827;
+            --ob-card: rgba(17, 24, 39, 0.85);
+            --ob-card-hover: rgba(31, 41, 55, 0.95);
+            --ob-border: rgba(148, 163, 184, 0.2);
+            --ob-text-main: #f9fafb;
+            --ob-text-soft: #9ca3af;
+            --ob-accent-green: #22c55e;
+            --ob-accent-red: #ef4444;
+            --ob-warning: #facc15;
+            --ob-info: #3b82f6;
+            --ob-purple: #a855f7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-  background: #f4f6fb;
-  font-family: 'Segoe UI', Roboto, sans-serif;
-  color: #333;
-}
+            background: radial-gradient(ellipse at top, #1a1f3a 0%, #0a0e27 50%, #000000 100%);
+            color: var(--ob-text-main);
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-/* Navbar */
-.navbar {
-  padding: 0.6rem 1rem;
-}
-.navbar-brand {
-  font-weight: 700;
-  color: #2d3e50 !important;
-}
-.navbar .bi {
-  cursor: pointer;
-  color: #555;
-}
-.navbar .bi:hover {
-  color: #0d6efd;
-}
+        /* Top Navbar */
+        .top-navbar {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--ob-border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-/* Stats cards */
-.stats-card {
-  border-radius: 16px;
-  background: #fff;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.06);
-  padding: 18px 12px;
-  transition: transform .2s;
-}
-.stats-card:hover {
-  transform: translateY(-3px);
-}
-.stats-card small {
-  display: block;
-  color: #777;
-  margin-bottom: 6px;
-}
+        .logo {
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: 0.1em;
+            background: linear-gradient(135deg, var(--ob-primary), var(--ob-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-/* Allocation card */
-.card {
-  border-radius: 16px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.05);
-}
-.card h6 {
-  font-weight: 600;
-  color: #2d3e50;
-}
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
 
-/* Chart container (reduce chart size) */
-#allocationChart {
-  max-width: 320px !important;
-  max-height: 220px !important;
-  margin: 0 auto;
-}
+        .notif-badge {
+            position: relative;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
 
-/* SIP Tracker */
-#sipSummary {
-  font-size: 0.9rem;
-  color: #444;
-}
-.btn-primary.btn-sm {
-  border-radius: 20px;
-  padding: 4px 14px;
-}
+        .notif-badge:hover {
+            background: var(--ob-primary-soft);
+        }
 
-/* Quick Actions */
-.quick-action {
-  flex: 1 1 48%;
-  border-radius: 14px !important;
-  padding: 10px;
-  font-size: 0.9rem;
-  text-align: center;
-  transition: all .2s;
-}
-.quick-action i {
-  margin-right: 6px;
-}
-.quick-action:hover {
-  background: #0d6efd;
-  color: #fff;
-}
+        .notif-badge::after {
+            content: '';
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            width: 8px;
+            height: 8px;
+            background: var(--ob-accent-red);
+            border-radius: 50%;
+            border: 2px solid var(--ob-bg-soft);
+        }
 
-/* Tabs */
-.nav-tabs .nav-link {
-  font-weight: 500;
-  color: #555;
-  border: none;
-  border-bottom: 2px solid transparent;
-}
-.nav-tabs .nav-link.active {
-  color: #0d6efd;
-  border-bottom: 2px solid #0d6efd;
-  background: none;
-}
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--ob-primary), var(--ob-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
 
-/* Transactions table */
-.table thead th {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #666;
-  border-bottom: 2px solid #eee;
-}
-.table tbody td {
-  font-size: 0.9rem;
-  color: #444;
-}
+        .profile-avatar:hover {
+            transform: scale(1.1);
+        }
 
-/* Alerts */
-#alertList .alert {
-  border-radius: 12px;
-  font-size: 0.9rem;
-  padding: 8px 12px;
-}
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--ob-border);
+            color: var(--ob-text-main);
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
 
-/* Learn cards */
-#tabLearn .card {
-  border-radius: 14px;
-  font-size: 0.9rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  transition: transform .2s;
-}
-#tabLearn .card:hover {
-  transform: translateY(-3px);
-}
-/* KPIs section */
-.stats-card {
-  border-radius: 16px;
-  background: #fff;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.06);
-  padding: 18px 12px;
-  transition: transform .2s, box-shadow .2s;
-  position: relative;
-  overflow: hidden;
-}
-.stats-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-}
-.stats-card small {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-.stats-card .fs-5 {
-  font-size: 1.2rem !important;
-}
+        /* Main Container */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
 
-/* Color variants for each KPI */
-#kpiNetWorth {
-  color: #0d6efd; /* blue */
-}
-#kpiNetWorth::before {
-  content: "\f51e"; /* bi-wallet2 */
-  font-family: "bootstrap-icons";
-  margin-right: 6px;
-  font-size: 1rem;
-  color: #0d6efd;
-}
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(15, 23, 42, 0.85);
+            border-right: 1px solid var(--ob-border);
+            padding: 2rem 1.5rem;
+            position: sticky;
+            top: 70px;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+        }
 
-#kpiInvested {
-  color: #198754; /* green */
-}
-#kpiInvested::before {
-  content: "\f4c0"; /* bi-cash-coin */
-  font-family: "bootstrap-icons";
-  margin-right: 6px;
-  font-size: 1rem;
-  color: #198754;
-}
+        .nav-link-custom {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            color: var(--ob-text-soft);
+            text-decoration: none;
+            transition: all 0.2s;
+            margin-bottom: 0.5rem;
+        }
 
-#kpiCurrent {
-  color: #fd7e14; /* orange */
-}
-#kpiCurrent::before {
-  content: "\f5c3"; /* bi-graph-up-arrow */
-  font-family: "bootstrap-icons";
-  margin-right: 6px;
-  font-size: 1rem;
-  color: #fd7e14;
-}
+        .nav-link-custom:hover,
+        .nav-link-custom.active {
+            background: var(--ob-primary-soft);
+            color: var(--ob-text-main);
+            transform: translateX(4px);
+        }
 
-#kpiXirr {
-  color: #dc3545; /* red */
-}
-#kpiXirr::before {
-  content: "\f30a"; /* bi-percent */
-  font-family: "bootstrap-icons";
-  margin-right: 6px;
-  font-size: 1rem;
-  color: #dc3545;
-}
+        .nav-link-custom i {
+            font-size: 1.1rem;
+            width: 24px;
+        }
 
-/* Bottom nav (mobile) */
-.bottom-nav {
-  border-top: 1px solid #ddd;
-  box-shadow: 0 -2px 6px rgba(0,0,0,0.05);
-}
-.bottom-nav i {
-  font-size: 1.3rem;
-  color: #555;
-}
-.bottom-nav i:hover {
-  color: #0d6efd;
-}
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+        }
 
+        /* Portfolio Overview Cards */
+        .portfolio-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.05) 100%);
+            background-color: var(--ob-card);
+            border: 1px solid var(--ob-border);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
 
+        .portfolio-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--ob-primary), var(--ob-purple));
+        }
+
+        .portfolio-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.2);
+            background-color: var(--ob-card-hover);
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--ob-text-soft);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--ob-text-main), var(--ob-text-soft));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+
+        .metric-tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--ob-bg-soft);
+            color: var(--ob-text-main);
+            text-align: center;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.75rem;
+            border: 1px solid var(--ob-border);
+        }
+
+        .metric-tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Asset Allocation Chart */
+        .chart-container {
+            background: var(--ob-card);
+            border: 1px solid var(--ob-border);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-toggle {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .chart-toggle-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px solid var(--ob-border);
+            color: var(--ob-text-soft);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chart-toggle-btn.active {
+            background: var(--ob-primary-soft);
+            border-color: var(--ob-primary);
+            color: var(--ob-text-main);
+        }
+
+        /* SIP Tracker */
+        .sip-tracker {
+            background: var(--ob-card);
+            border: 1px solid var(--ob-border);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .sip-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .sip-item:last-child {
+            border-bottom: none;
+        }
+
+        .sip-alert {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            color: #fca5a5;
+        }
+
+        /* Risk Profile Badge */
+        .risk-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 999px;
+            background: rgba(250, 204, 21, 0.15);
+            border: 1px solid rgba(250, 204, 21, 0.3);
+            color: #fde047;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        .risk-badge.moderate { background: rgba(250, 204, 21, 0.15); border-color: rgba(250, 204, 21, 0.3); color: #fde047; }
+        .risk-badge.conservative { background: rgba(34, 197, 94, 0.15); border-color: rgba(34, 197, 94, 0.3); color: #86efac; }
+        .risk-badge.aggressive { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: #fca5a5; }
+
+        /* Quick Action Buttons */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-btn {
+            background: var(--ob-card);
+            border: 1px solid var(--ob-border);
+            border-radius: 1rem;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--ob-text-main);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2);
+            border-color: var(--ob-primary);
+            background: var(--ob-card-hover);
+        }
+
+        .action-btn i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+            background: linear-gradient(135deg, var(--ob-primary), var(--ob-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .action-btn-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .action-btn-desc {
+            font-size: 0.75rem;
+            color: var(--ob-text-soft);
+        }
+
+        /* Transactions Table */
+        .transactions-table {
+            background: var(--ob-card);
+            border: 1px solid var(--ob-border);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        .table-custom {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-custom thead {
+            border-bottom: 1px solid var(--ob-border);
+        }
+
+        .table-custom th {
+            padding: 1rem;
+            text-align: left;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--ob-text-soft);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .table-custom td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .table-custom tbody tr:hover {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-badge.completed {
+            background: rgba(34, 197, 94, 0.2);
+            color: #86efac;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .status-badge.pending {
+            background: rgba(250, 204, 21, 0.2);
+            color: #fde047;
+            border: 1px solid rgba(250, 204, 21, 0.3);
+        }
+
+        .status-badge.missed {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* Top Funds Cards */
+        .funds-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .fund-card {
+            background: var(--ob-card);
+            border: 1px solid var(--ob-border);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .fund-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.2);
+            border-color: var(--ob-primary);
+        }
+
+        .fund-return {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--ob-accent-green);
+            margin: 0.5rem 0;
+        }
+
+        .fund-tagline {
+            font-size: 0.85rem;
+            color: var(--ob-text-soft);
+            margin-top: 0.5rem;
+        }
+
+        /* Smart Alerts */
+        .alerts-container {
+            background: var(--ob-card);
+            border: 1px solid var(--ob-border);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .alert-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            background: rgba(99, 102, 241, 0.05);
+            border-left: 3px solid var(--ob-primary);
+        }
+
+        .alert-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .alert-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        /* Learn & Grow */
+        .learn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .learn-card {
+            background: var(--ob-card);
+            border: 1px solid var(--ob-border);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .learn-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.2);
+            border-color: var(--ob-primary);
+        }
+
+        .learn-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--ob-primary), var(--ob-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Bottom Navigation (Mobile) */
+        .bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--ob-border);
+            padding: 0.75rem;
+            z-index: 1000;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+                flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--ob-text-soft);
+            text-decoration: none;
+            font-size: 0.75rem;
+            transition: color 0.2s;
+        }
+
+        .bottom-nav-item.active,
+        .bottom-nav-item:hover {
+            color: var(--ob-primary);
+        }
+
+        .bottom-nav-item i {
+            font-size: 1.25rem;
+        }
+
+        /* Loading States */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            color: var(--ob-text-soft);
+        }
+
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--ob-border);
+            border-top-color: var(--ob-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 0.75rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--ob-text-soft);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                top: 70px;
+                transition: left 0.3s ease;
+                z-index: 999;
+            }
+
+            .sidebar.show {
+                left: 0;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .portfolio-card {
+                margin-bottom: 1rem;
+            }
+
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .bottom-nav {
+                display: flex;
+                justify-content: space-around;
+            }
+
+            .main-container {
+                padding-bottom: 70px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--ob-text-main), var(--ob-text-soft));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            font-size: 0.85rem;
+            color: var(--ob-text-soft);
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 <body>
-<!-- Top Navbar -->
-<nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
-    <div class="container-fluid">
+    <!-- Top Navbar -->
+    <nav class="top-navbar">
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">
+                <i class="bi bi-list"></i>
+            </button>
+            <div class="logo">Ongole<span style="color: var(--ob-primary);">Bulls</span> Invest</div>
+            </div>
+        <div class="nav-right">
+            <div class="notif-badge">
+                <i class="bi bi-bell"></i>
+        </div>
+            <div class="profile-avatar" id="userAvatar" onclick="location.href='#profile'">U</div>
+        </div>
+    </nav>
 
-        <!-- Mobile Toggle -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- Logo -->
-        <a class="navbar-brand d-flex align-items-center fw-bold" href="#">
-            <img src="assets/logo%203.png" alt="Logo" width="45" height="45" class="me-2">
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <a href="#dashboard" class="nav-link-custom active">
+                <i class="bi bi-speedometer2"></i>
+            <span>Dashboard</span>
         </a>
-
-        <!-- Navbar Content -->
-        <div class="collapse navbar-collapse" id="mainNavbar">
-
-            <!-- Left Menu -->
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Portfolio</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">SIPs</a></li>
-                <li class="nav-item"><a class="nav-link" href="funds.html">Funds</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Reports</a></li>
-              <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
-
-
-
-
-
-            </ul>
-
-            <!-- Search Bar -->
-            <form class="d-flex me-3" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search">
-                <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
-            </form>
-
-            <!-- Right Side: Risk Badge + Icons -->
-            <div class="d-flex align-items-center gap-3">
-                <span id="riskBadge" class="badge text-bg-warning text-dark">Moderate</span>
-                <i class="bi bi-bell fs-5"></i>
-
-                <!-- User Dropdown -->
-                <div class="dropdown">
-                    <i class="bi bi-person-circle fs-4 dropdown-toggle"
-                       id="userMenu" data-bs-toggle="dropdown" aria-expanded="false"
-                       style="cursor: pointer;"></i>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <a href="/profile">My Profile</a>
-
-
-                        <li><a class="dropdown-item" href="profile.html">Settings</a></li>
-                        <li><hr class="dropdown-divider"></li>
-<!--                        <li><a class="dropdown-item text-danger" href="profile.html">Logout</a></li>-->
-                        <li><a class="dropdown-item text-danger" href="sign-in">Logout</a></li>
-                    </ul>
-                </div>
-
-                <h5>Welcome, <span id="welcomeName"></span> 👋</h5>
-            </div>
-
-
+            <a href="#explore" class="nav-link-custom">
+                <i class="bi bi-compass"></i>
+                <span>Explore Funds</span>
+            </a>
+            <a href="#sips" class="nav-link-custom">
+                <i class="bi bi-calendar-check"></i>
+                <span>SIPs</span>
+            </a>
+            <a href="#statements" class="nav-link-custom">
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Statements</span>
+            </a>
+            <a href="#help" class="nav-link-custom">
+                <i class="bi bi-question-circle"></i>
+                <span>Help</span>
+            </a>
+            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--ob-border);">
+                <a href="#profile" class="nav-link-custom">
+                    <i class="bi bi-person-gear"></i>
+                    <span>Profile & Settings</span>
+                </a>
         </div>
-    </div>
-</nav>
+    </aside>
 
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Portfolio Overview -->
+            <section id="dashboard" class="fade-in">
+                <h2 class="section-title">Portfolio Overview</h2>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3 col-sm-6">
+                        <div class="portfolio-card">
+                            <div class="metric-label">
+                                Net Worth
+                                <span class="metric-tooltip">
+                                    <i class="bi bi-info-circle" style="font-size: 0.75rem; margin-left: 0.25rem;"></i>
+                                    <span class="tooltip-text">Current value of your mutual fund holdings</span>
+                    </span>
+                </div>
+                            <div class="metric-value" id="netWorth">₹0</div>
+                </div>
+            </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="portfolio-card">
+                            <div class="metric-label">
+                                Invested Amount
+                                <span class="metric-tooltip">
+                                    <i class="bi bi-info-circle" style="font-size: 0.75rem; margin-left: 0.25rem;"></i>
+                                    <span class="tooltip-text">Total amount you have invested so far</span>
+                                </span>
+                    </div>
+                            <div class="metric-value" id="investedAmount">₹0</div>
+                </div>
+            </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="portfolio-card">
+                            <div class="metric-label">
+                                Current Value
+                                <span class="metric-tooltip">
+                                    <i class="bi bi-info-circle" style="font-size: 0.75rem; margin-left: 0.25rem;"></i>
+                                    <span class="tooltip-text">Market value based on latest NAVs</span>
+                                </span>
+                            </div>
+                            <div class="metric-value" id="currentValue">₹0</div>
+                            </div>
+                        </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="portfolio-card">
+                            <div class="metric-label">
+                                Returns (XIRR)
+                                <span class="metric-tooltip">
+                                    <i class="bi bi-info-circle" style="font-size: 0.75rem; margin-left: 0.25rem;"></i>
+                                    <span class="tooltip-text">Annualized return considering cash flows</span>
+                                    </span>
+                                </div>
+                            <div class="metric-value" id="xirr">0%</div>
+                            </div>
+                            </div>
+                        </div>
 
+                <!-- Risk Profile Tag -->
+                <div class="risk-badge moderate" id="riskBadge">
+                    <i class="bi bi-shield-check"></i>
+                    <span id="riskProfileText">Moderate Investor</span>
+                    <span style="font-size: 0.75rem; opacity: 0.8; margin-left: 0.5rem;">
+                        Suited for a mix of equity and debt. You can <a href="#" style="color: inherit; text-decoration: underline;">Retake Risk Quiz</a>.
+                    </span>
+                            </div>
 
+                <!-- Asset Allocation Chart -->
+                <div class="chart-container">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 style="font-size: 1.25rem; font-weight: 700;">Asset Allocation</h3>
+                        <div class="chart-toggle">
+                            <button class="chart-toggle-btn active" onclick="switchChartType('pie', this)">
+                                <i class="bi bi-pie-chart"></i> Pie
+                            </button>
+                            <button class="chart-toggle-btn" onclick="switchChartType('bar', this)">
+                                <i class="bi bi-bar-chart"></i> Bar
+                            </button>
+                                        </div>
+                                        </div>
+                    <p class="section-subtitle">Diversified portfolios help balance growth and stability. Revisit your goals every 6 months.</p>
+                    <div style="position: relative; height: 300px;">
+                        <canvas id="allocationChart"></canvas>
+                            </div>
+                        </div>
 
-<div class="container-fluid p-3 p-md-4">
-    <!-- KPIs -->
-    <div class="row g-3">
-        <div class="col-6 col-md-3"><div class="stats-card text-center"><small>Net Worth</small><div class="fs-5 fw-bold" id="kpiNetWorth">—</div></div></div>
-        <div class="col-6 col-md-3"><div class="stats-card text-center"><small>Invested Amount</small><div class="fs-5 fw-bold" id="kpiInvested">—</div></div></div>
-        <div class="col-6 col-md-3"><div class="stats-card text-center"><small>Current Value</small><div class="fs-5 fw-bold" id="kpiCurrent">—</div></div></div>
-        <div class="col-6 col-md-3"><div class="stats-card text-center"><small>Returns (XIRR)</small><div class="fs-5 fw-bold text-success" id="kpiXirr">—</div></div></div>
-    </div>
+                <!-- SIP Tracker -->
+                <div class="sip-tracker">
+                    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">
+                        <i class="bi bi-calendar-check"></i> SIP Tracker
+                    </h3>
+                    <p class="section-subtitle">Set a SIP once and invest consistently towards your future.</p>
+                    <div id="sipTrackerContent">
+                        <div class="sip-item">
+                            <div>
+                                <strong>Active SIPs</strong>
+                                <div style="color: var(--ob-text-soft); font-size: 0.9rem;" id="activeSips">Loading...</div>
+                    </div>
+                </div>
+                        <div class="sip-item">
+                            <div>
+                                <strong>Next SIP Date</strong>
+                                <div style="color: var(--ob-text-soft); font-size: 0.9rem;" id="nextSipDate">—</div>
+                            </div>
+                            </div>
+                        <div class="sip-item">
+                            <div>
+                                <strong>Missed SIPs</strong>
+                                <div style="color: var(--ob-text-soft); font-size: 0.9rem;" id="missedSips">0</div>
+                        </div>
+                            </div>
+                        <div id="missedSipAlert" style="display: none;" class="sip-alert">
+                            <i class="bi bi-exclamation-triangle"></i> Oops! Let's avoid breaks in your journey.
+                            </div>
+                            </div>
+                        </div>
 
-    <!-- Allocation -->
-    <div class="card mt-3">
-        <div class="card-body">
-            <h6 class="mb-3">Asset Allocation</h6>
-            <div class="row">
-                <!-- Pie chart box -->
-                <div class="col-md-6 mb-3">
-                    <div class="border rounded p-2">
-                        <h6 class="text-center">Pie Chart</h6>
-                        <canvas id="allocationChartPie" height="180"></canvas>
+                <!-- Quick Action Buttons -->
+                <div class="quick-actions">
+                    <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#investModal">
+                        <i class="bi bi-graph-up-arrow"></i>
+                        <div class="action-btn-title">Invest More</div>
+                        <div class="action-btn-desc">Explore funds curated for you</div>
+                    </a>
+                    <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#redeemModal">
+                        <i class="bi bi-cash-coin"></i>
+                        <div class="action-btn-title">Redeem</div>
+                        <div class="action-btn-desc">Withdraw from current holdings</div>
+                    </a>
+                    <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#sipModal">
+                        <i class="bi bi-arrow-repeat"></i>
+                        <div class="action-btn-title">Start SIP</div>
+                        <div class="action-btn-desc">Set up a recurring monthly plan</div>
+                    </a>
+                    <a href="#" class="action-btn" onclick="downloadStatements()">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <div class="action-btn-title">View Statements</div>
+                        <div class="action-btn-desc">Download transaction reports</div>
+                    </a>
+                    <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#nomineeModal">
+                        <i class="bi bi-people"></i>
+                        <div class="action-btn-title">Nominee Settings</div>
+                        <div class="action-btn-desc">Manage or add your nominees</div>
+                    </a>
+                        </div>
+
+                <!-- Recent Transactions -->
+                <div class="transactions-table">
+                    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">
+                        Recent Transactions
+                    </h3>
+                    <p class="section-subtitle">Stay updated with every step in your investment journey.</p>
+                        <div class="table-responsive">
+                        <table class="table-custom">
+                                <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                    <th>Fund Name</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+                                <tbody id="transactionsTableBody">
+                                <tr>
+                                    <td colspan="5" class="loading">
+                                        <div class="spinner"></div>
+                                        <span>Loading transactions...</span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                            </div>
+
+                <!-- Top Performing Funds -->
+                            <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <div>
+                            <h3 class="section-title" style="margin-bottom: 0.5rem;">Top Performing Funds</h3>
+                            <p class="section-subtitle" style="margin: 0;">🛈 Based on your risk profile</p>
+                            </div>
+                        <button class="chart-toggle-btn" onclick="viewAllFunds()">View All Suggestions</button>
+                        </div>
+                    <div class="funds-grid" id="topFundsGrid">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <span>Loading funds...</span>
+                            </div>
+                            </div>
+                            </div>
+
+                <!-- Smart Alerts -->
+                <div class="alerts-container">
+                    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">
+                        <i class="bi bi-bell"></i> Smart Alerts
+                    </h3>
+                    <div id="smartAlertsContent">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <span>Loading alerts...</span>
+                            </div>
                     </div>
                 </div>
 
-                <!-- Bar chart box -->
-                <div class="col-md-6 mb-3">
-                    <div class="border rounded p-2">
-                        <h6 class="text-center">Bar Chart</h6>
-                        <canvas id="allocationChartBar" height="180"></canvas>
+                <!-- Learn & Grow -->
+                            <div>
+                    <h3 class="section-title">Learn & Grow</h3>
+                    <div class="learn-grid">
+                        <div class="learn-card" onclick="showLearnContent('nav')">
+                            <div class="learn-icon"><i class="bi bi-book"></i></div>
+                            <h4 style="margin-bottom: 0.5rem;">What is NAV?</h4>
+                            <p style="color: var(--ob-text-soft); font-size: 0.9rem;">Understand Net Asset Value in funds</p>
+                            <div style="margin-top: 1rem; color: var(--ob-primary); font-size: 0.85rem;">Glossary →</div>
+                            </div>
+                        <div class="learn-card" onclick="showLearnContent('sip')">
+                            <div class="learn-icon"><i class="bi bi-play-circle"></i></div>
+                            <h4 style="margin-bottom: 0.5rem;">How SIPs Work</h4>
+                            <p style="color: var(--ob-text-soft); font-size: 0.9rem;">A quick explainer on SIP mechanics</p>
+                            <div style="margin-top: 1rem; color: var(--ob-primary); font-size: 0.85rem;">Video (1 min) →</div>
+                        </div>
+                        <div class="learn-card" onclick="showLearnContent('equity')">
+                            <div class="learn-icon"><i class="bi bi-file-text"></i></div>
+                            <h4 style="margin-bottom: 0.5rem;">Equity vs Debt</h4>
+                            <p style="color: var(--ob-text-soft); font-size: 0.9rem;">Know where your money grows faster</p>
+                            <div style="margin-top: 1rem; color: var(--ob-primary); font-size: 0.85rem;">Article →</div>
+                                </div>
+                        <div class="learn-card" onclick="showLearnContent('categories')">
+                            <div class="learn-icon"><i class="bi bi-pie-chart-fill"></i></div>
+                            <h4 style="margin-bottom: 0.5rem;">Fund Categories Explained</h4>
+                            <p style="color: var(--ob-text-soft); font-size: 0.9rem;">Large Cap, Mid Cap, ELSS – decoded!</p>
+                            <div style="margin-top: 1rem; color: var(--ob-primary); font-size: 0.85rem;">Infographic →</div>
+                                </div>
+                </div>
+            </div>
+        </section>
+
+            <!-- Profile Section (Hidden by default, shown when navigating) -->
+            <section id="profile" style="display: none;">
+                <h2 class="section-title">Profile & Settings</h2>
+                <!-- Profile content will be loaded here -->
+            </section>
+    </main>
+</div>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <nav class="bottom-nav">
+        <a href="#dashboard" class="bottom-nav-item active">
+            <i class="bi bi-house-door"></i>
+            <span>Home</span>
+        </a>
+        <a href="#sips" class="bottom-nav-item">
+            <i class="bi bi-calendar-check"></i>
+            <span>SIPs</span>
+        </a>
+        <a href="#explore" class="bottom-nav-item">
+            <i class="bi bi-compass"></i>
+            <span>Explore</span>
+        </a>
+        <a href="#alerts" class="bottom-nav-item">
+            <i class="bi bi-bell"></i>
+            <span>Alerts</span>
+        </a>
+        <a href="#profile" class="bottom-nav-item">
+            <i class="bi bi-person"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <!-- Invest Modal -->
+    <div class="modal fade" id="investModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background: var(--ob-card); border: 1px solid var(--ob-border); color: var(--ob-text-main);">
+                <div class="modal-header" style="border-bottom: 1px solid var(--ob-border);">
+                    <h5 class="modal-title">Invest More</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="investForm">
+                        <div class="mb-3">
+                            <label class="form-label" style="color: var(--ob-text-main);">Fund Name</label>
+                            <input type="text" class="form-control" id="investFundName" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" placeholder="Enter fund name" required>
+                    </div>
+                        <div class="mb-3">
+                            <label class="form-label" style="color: var(--ob-text-main);">Amount (₹)</label>
+                            <input type="number" class="form-control" id="investAmount" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" min="1" step="0.01" placeholder="Enter amount" required>
+                    </div>
+                        <div id="investStatus" style="margin-top: 0.75rem; font-size: 0.85rem;"></div>
+                    </form>
+                    </div>
+                <div class="modal-footer" style="border-top: 1px solid var(--ob-border);">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" form="investForm" class="btn btn-primary" style="background: var(--ob-primary); border: none;">Submit</button>
                     </div>
                 </div>
-            </div>
-            <div class="small text-muted mt-2">
-                Diversified portfolios help balance growth and stability. Revisit your goals every 6 months.
-            </div>
-        </div>
-    </div>
-
-
-
-    <!-- SIP Tracker -->
-    <div class="card mt-3">
-        <div class="card-body">
-            <h6>SIP Tracker</h6>
-            <div id="sipSummary" class="mb-2">—</div>
-            <button class="btn btn-primary btn-sm">Start New SIP</button>
-        </div>
-    </div>
-
-    <!-- Quick Actions -->
-    <div class="d-flex flex-wrap gap-2 mt-3">
-        <button class="btn btn-outline-primary quick-action" data-bs-toggle="modal" data-bs-target="#investModal"><i class="bi bi-graph-up"></i> Invest More</button>
-        <button class="btn btn-outline-danger quick-action" data-bs-toggle="modal" data-bs-target="#redeemModal"><i class="bi bi-cash-coin"></i> Redeem</button>
-        <button class="btn btn-outline-success quick-action" data-bs-toggle="modal" data-bs-target="#sipModal"><i class="bi bi-arrow-repeat"></i> Start SIP</button>
-        <button class="btn btn-outline-dark quick-action" data-bs-toggle="modal" data-bs-target="#nomineeModal"><i class="bi bi-people"></i> Nominee Settings</button>
-        <button class="btn btn-outline-secondary quick-action" data-bs-toggle="modal" data-bs-target="#statementsModal" onclick="loadStatements()"><i class="bi bi-file-earmark-text"></i> View Statements</button>
-    </div>
-
-    <!-- Tabs -->
-    <ul class="nav nav-tabs mt-4" id="tabs">
-        <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#tabTx">Recent Transactions</a></li>
-        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabFunds">Top Performing Funds</a></li>
-        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabAlerts">Smart Alerts</a></li>
-        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tabLearn">Learn & Grow</a></li>
-    </ul>
-
-    <div class="tab-content">
-        <!-- Transactions -->
-        <div class="tab-pane fade show active p-2" id="tabTx">
-            <div class="table-responsive">
-                <table class="table table-sm align-middle">
-                    <thead><tr><th>Date</th><th>Action</th><th>Fund Name</th><th>Amount</th></tr></thead>
-                    <tbody id="txBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Funds -->
-        <div class="tab-pane fade p-2" id="tabFunds">
-            <div class="text-muted small mb-2">Based on your risk profile</div>
-            <div id="fundCards" class="row g-2"></div>
-            <div class="mt-2"><button class="btn btn-outline-primary btn-sm">View All Suggestions</button></div>
-        </div>
-
-        <!-- Alerts -->
-        <div class="tab-pane fade p-2" id="tabAlerts">
-            <div id="alertList" class="d-flex flex-column gap-2"></div>
-        </div>
-
-        <!-- Learn -->
-        <div class="tab-pane fade p-2" id="tabLearn">
-            <div class="row g-2">
-                <div class="col-12 col-md-6"><div class="card p-2">📘 <strong>What is NAV?</strong> – Understand Net Asset Value in funds</div></div>
-                <div class="col-12 col-md-6"><div class="card p-2">🎬 <strong>How SIPs Work</strong> – 1-minute explainer</div></div>
-                <div class="col-12 col-md-6"><div class="card p-2">⚖️ <strong>Equity vs Debt</strong> – Where your money grows faster</div></div>
-                <div class="col-12 col-md-6"><div class="card p-2">🧭 <strong>Fund Categories Explained</strong> – Large/Mid/ELSS</div></div>
-            </div>
-        </div>
     </div>
 </div>
 
-<!-- Bottom Nav (mobile) -->
-<div class="bottom-nav d-md-none py-2">
-    <div class="container d-flex justify-content-around">
-        <i class="bi bi-house"></i>
-        <i class="bi bi-graph-up-arrow"></i>
-        <i class="bi bi-arrow-repeat"></i>
-        <i class="bi bi-bell"></i>
-        <i class="bi bi-person"></i>
-    </div>
-</div>
-
-<!-- Invest More Modal -->
-<div class="modal fade" id="investModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="investForm">
-                <div class="modal-header"><h5>Invest More</h5></div>
-                <div class="modal-body">
-                    <input type="text" name="fundName" class="form-control mb-2" placeholder="Fund Name" required>
-                    <input type="number" name="amount" class="form-control" placeholder="Amount" required>
+    <!-- Redeem Modal -->
+    <div class="modal fade" id="redeemModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background: var(--ob-card); border: 1px solid var(--ob-border); color: var(--ob-text-main);">
+                <div class="modal-header" style="border-bottom: 1px solid var(--ob-border);">
+                    <h5 class="modal-title">Redeem Investment</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-footer"><button class="btn btn-primary">Submit</button></div>
-            </form>
+                <div class="modal-body">
+                    <form id="redeemForm">
+                        <div class="mb-3">
+                            <label class="form-label" style="color: var(--ob-text-main);">Fund Name</label>
+                            <input type="text" class="form-control" id="redeemFundName" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" placeholder="Enter fund name" required>
+                    </div>
+                        <div class="mb-3">
+                            <label class="form-label" style="color: var(--ob-text-main);">Amount (₹)</label>
+                            <input type="number" class="form-control" id="redeemAmount" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" min="1" step="0.01" placeholder="Enter amount" required>
+                    </div>
+                        <div id="redeemStatus" style="margin-top: 0.75rem; font-size: 0.85rem;"></div>
+                    </form>
+                    </div>
+                <div class="modal-footer" style="border-top: 1px solid var(--ob-border);">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" form="redeemForm" class="btn btn-primary" style="background: var(--ob-primary); border: none;">Submit</button>
+                    </div>
+                </div>
+    </div>
+</div>
+
+    <!-- SIP Modal -->
+    <div class="modal fade" id="sipModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background: var(--ob-card); border: 1px solid var(--ob-border); color: var(--ob-text-main);">
+                <div class="modal-header" style="border-bottom: 1px solid var(--ob-border);">
+                    <h5 class="modal-title">Start SIP</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="sipForm">
+                        <div class="mb-3">
+                            <label class="form-label" style="color: var(--ob-text-main);">Fund Name</label>
+                            <input type="text" class="form-control" id="sipFundName" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" placeholder="Enter fund name" required>
+                    </div>
+                        <div class="mb-3">
+                            <label class="form-label" style="color: var(--ob-text-main);">Monthly Amount (₹)</label>
+                            <input type="number" class="form-control" id="sipAmount" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" min="1" step="0.01" placeholder="Enter monthly amount" required>
+                    </div>
+                        <div class="mb-3">
+                            <label class="form-label" style="color: var(--ob-text-main);">Start Date</label>
+                            <input type="date" class="form-control" id="sipStartDate" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" required>
+                    </div>
+                        <div class="mb-3">
+                            <label class="form-label" style="color: var(--ob-text-main);">Frequency</label>
+                            <select class="form-control" id="sipFrequency" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" required>
+                                <option value="MONTHLY">Monthly</option>
+                                <option value="WEEKLY">Weekly</option>
+                            </select>
+                    </div>
+                        <div id="sipStatus" style="margin-top: 0.75rem; font-size: 0.85rem;"></div>
+                    </form>
+                    </div>
+                <div class="modal-footer" style="border-top: 1px solid var(--ob-border);">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" form="sipForm" class="btn btn-primary" style="background: var(--ob-primary); border: none;">Submit</button>
+                </div>
         </div>
     </div>
 </div>
 
-<!-- Redeem Modal -->
-<div class="modal fade" id="redeemModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="redeemForm">
-                <div class="modal-header"><h5>Redeem</h5></div>
-                <div class="modal-body">
-                    <input type="text" name="fundName" class="form-control mb-2" placeholder="Fund Name" required>
-                    <input type="number" name="amount" class="form-control" placeholder="Amount" required>
+    <!-- Nominee Modal -->
+    <div class="modal fade" id="nomineeModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background: var(--ob-card); border: 1px solid var(--ob-border); color: var(--ob-text-main);">
+                <div class="modal-header" style="border-bottom: 1px solid var(--ob-border);">
+                    <h5 class="modal-title">Nominee Settings</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                    <form id="nomineeForm">
+                        <div class="mb-3">
+                            <label class="form-label" style="color: var(--ob-text-main);">Nominee Name</label>
+                            <input type="text" class="form-control" id="nomineeName" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" required>
                 </div>
-                <div class="modal-footer"><button class="btn btn-danger">Submit</button></div>
-            </form>
+                        <div class="mb-3">
+                            <label class="form-label" style="color: var(--ob-text-main);">Relationship</label>
+                            <input type="text" class="form-control" id="nomineeRelation" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" required>
+                </div>
+                        <div class="mb-3">
+                            <label class="form-label" style="color: var(--ob-text-main);">Date of Birth</label>
+                            <input type="date" class="form-control" id="nomineeDob" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" required>
+            </div>
+                        <div class="mb-3">
+                            <label class="form-label" style="color: var(--ob-text-main);">Allocation Percentage</label>
+                            <input type="number" class="form-control" id="nomineeAllocation" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" min="1" max="100" required>
         </div>
+                        <div id="nomineeStatus" style="margin-top: 0.75rem; font-size: 0.85rem;"></div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="border-top: 1px solid var(--ob-border);">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" form="nomineeForm" class="btn btn-primary" style="background: var(--ob-primary); border: none;">Save</button>
+                </div>
+            </div>
     </div>
 </div>
 
-<!-- Start SIP Modal -->
-<div class="modal fade" id="sipModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="sipForm">
-                <div class="modal-header"><h5>Start SIP</h5></div>
-                <div class="modal-body">
-                    <input type="text" name="fundName" class="form-control mb-2" placeholder="Fund Name" required>
-                    <input type="number" name="amount" class="form-control mb-2" placeholder="Amount/Month" required>
-                    <input type="date" name="startDate" class="form-control mb-2" required>
-                    <select name="frequency" class="form-control">
-                        <option value="MONTHLY">Monthly</option>
-                        <option value="WEEKLY">Weekly</option>
-                    </select>
-                </div>
-                <div class="modal-footer"><button class="btn btn-success">Submit</button></div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Nominee Modal -->
-<div class="modal fade" id="nomineeModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="nomineeForm">
-                <div class="modal-header"><h5>Nominee Settings</h5></div>
-                <div class="modal-body">
-                    <input type="text" name="name" class="form-control mb-2" placeholder="Nominee Name" required>
-                    <input type="text" name="relation" class="form-control mb-2" placeholder="Relation" required>
-                    <input type="number" name="percentage" class="form-control mb-2" placeholder="% Allocation" required>
-                </div>
-                <div class="modal-footer"><button class="btn btn-dark">Save</button></div>
-            </form>
-        </div>
-    </div>
-</div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 <script>
-    // ✅ Get logged in user from localStorage
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!user) {
-      window.location.href = "/"; // redirect to login if not logged in
+        // Configuration
+        const currentUserId = 1;
+    const API_BASE_DASHBOARD = '/api/dashboard';
+    const API_BASE_GENERIC = '/api';
+
+        // State
+        let allocationChart = null;
+        let chartType = 'pie';
+
+        // Utility Functions
+    function formatCurrency(value) {
+        if (value === null || value === undefined || isNaN(value)) return '₹0';
+            return '₹' + Number(value).toLocaleString('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 });
     }
 
-    // Show welcome name
-    document.getElementById("welcomeName").innerText = user.fullName;
-
-    // Use dynamic ID from logged in user
-    const investorId = user.id;
-
-    let pieChart, barChart;
-
-    function renderCharts(labels, data) {
-      // Pie chart
-      const ctxPie = document.getElementById('allocationChartPie').getContext('2d');
-      if (pieChart) pieChart.destroy();
-      pieChart = new Chart(ctxPie, {
-        type: 'pie',
-        data: {
-          labels: labels,
-          datasets: [{
-            data: data,
-            backgroundColor: ['#4e79a7', '#f28e2c', '#e15759', '#76b7b2'],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: { position: 'bottom' }
-          }
+    function formatPercent(value) {
+        if (value === null || value === undefined || isNaN(value)) return '0.00%';
+            const num = Number(value);
+            const sign = num >= 0 ? '+' : '';
+            return sign + num.toFixed(2) + '%';
         }
-      });
 
-      // Bar chart
-      const ctxBar = document.getElementById('allocationChartBar').getContext('2d');
-      if (barChart) barChart.destroy();
-      barChart = new Chart(ctxBar, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            data: data,
-            backgroundColor: '#4e79a7'
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: { display: false }
-          },
-          scales: {
-            y: { beginAtZero: true }
-          }
+        function formatDate(dateStr) {
+            if (!dateStr) return '—';
+            try {
+                const date = new Date(dateStr);
+                return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+            } catch (e) {
+                return dateStr;
+            }
+    }
+
+    function safeText(text) {
+        return text == null ? '' : String(text);
+    }
+
+        // API Functions
+    async function apiGet(url) {
+            try {
+        const res = await fetch(url);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return await res.json();
+            } catch (error) {
+                console.error('API GET Error:', error);
+                throw error;
+            }
+    }
+
+    async function apiPost(url, payload) {
+            try {
+        const res = await fetch(url, {
+            method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    throw new Error(`HTTP ${res.status}: ${errorText || res.statusText}`);
+                }
+                return await res.json();
+            } catch (error) {
+                console.error('API POST Error:', error);
+                throw error;
+            }
         }
-      });
-    }
 
-    async function boot() {
-      const res = await fetch(`/api/dashboard/${investorId}`);
-      const d = await res.json();
+        // Load Dashboard Data
+        async function loadDashboard() {
+            // Load metrics with error handling
+            try {
+                const metrics = await apiGet(`${API_BASE_DASHBOARD}/${currentUserId}/metrics`);
+                if (metrics) {
+                    document.getElementById('netWorth').textContent = formatCurrency(metrics.currentValue || 0);
+                    document.getElementById('investedAmount').textContent = formatCurrency(metrics.totalInvestment || 0);
+                    document.getElementById('currentValue').textContent = formatCurrency(metrics.currentValue || 0);
+                    document.getElementById('xirr').textContent = formatPercent(metrics.xirr || 0);
+                }
+            } catch (error) {
+                console.error('Error loading metrics:', error);
+                // Set default values
+                document.getElementById('netWorth').textContent = formatCurrency(0);
+                document.getElementById('investedAmount').textContent = formatCurrency(0);
+                document.getElementById('currentValue').textContent = formatCurrency(0);
+                document.getElementById('xirr').textContent = '0.00%';
+            }
 
-      // KPIs
-      document.getElementById('kpiNetWorth').textContent = d.netWorth;
-      document.getElementById('kpiInvested').textContent = d.investedAmount;
-      document.getElementById('kpiCurrent').textContent = d.currentValue;
-      document.getElementById('kpiXirr').textContent = d.xirr;
+            // Load asset allocation with error handling
+            try {
+                const allocation = await apiGet(`${API_BASE_DASHBOARD}/${currentUserId}/asset-allocation`);
+                // Store in sessionStorage for chart toggle
+                sessionStorage.setItem('allocationData', JSON.stringify(allocation || []));
+                renderAllocationChart(allocation || []);
+            } catch (error) {
+                console.error('Error loading allocation:', error);
+                // Render chart with sample data
+                const sampleData = [
+                    { assetClass: 'Equity', percentage: 45.5 },
+                    { assetClass: 'Debt', percentage: 30.2 },
+                    { assetClass: 'Liquid', percentage: 15.8 },
+                    { assetClass: 'Others', percentage: 8.5 }
+                ];
+                sessionStorage.setItem('allocationData', JSON.stringify(sampleData));
+                renderAllocationChart(sampleData);
+            }
 
-      // Risk badge
-      const rb = document.getElementById('riskBadge');
-      rb.textContent = d.riskProfile.charAt(0) + d.riskProfile.slice(1).toLowerCase() + " Investor";
+            // Load dashboard payload with error handling
+            try {
+                const payload = await apiGet(`${API_BASE_DASHBOARD}/${currentUserId}`);
+                
+                // SIP Data
+                if (payload && payload.sip) {
+                    const sip = payload.sip;
+                    document.getElementById('activeSips').textContent = 
+                        `${sip.activeCount || 0} SIPs Active – Total ${formatCurrency(sip.totalMonthly || 0)}/month`;
+                    document.getElementById('nextSipDate').textContent = 
+                        sip.nextSIPDate ? `Next SIP: ${formatCurrency(sip.totalMonthly || 0)} on ${formatDate(sip.nextSIPDate)}` : '—';
+                    document.getElementById('missedSips').textContent = sip.missedCount || 0;
+                    if (sip.missedCount > 0) {
+                        document.getElementById('missedSipAlert').style.display = 'block';
+                    }
+                } else {
+                    document.getElementById('activeSips').textContent = '0 SIPs Active';
+                    document.getElementById('nextSipDate').textContent = '—';
+                    document.getElementById('missedSips').textContent = '0';
+                }
 
-      // Allocation charts (pie + bar)
-      const labels = Object.keys(d.allocationPercent);
-      const vals = Object.values(d.allocationPercent);
-      renderCharts(labels, vals);
+                // Risk Profile
+                if (payload && payload.riskProfile) {
+                    const risk = payload.riskProfile.toUpperCase();
+                    const badge = document.getElementById('riskBadge');
+                    badge.className = 'risk-badge ' + risk.toLowerCase();
+                    document.getElementById('riskProfileText').textContent = risk.charAt(0) + risk.slice(1).toLowerCase() + ' Investor';
+                }
 
-      // SIP summary
-      const sip = d.sip;
-      const nextText = sip.nextSIPDate ? `Next SIP: ${sip.nextSIPDate}` : 'Next SIP: —';
-      document.getElementById('sipSummary').innerHTML =
-        `<strong>${sip.activeCount} SIPs Active</strong> – Total ₹${sip.totalMonthly || 0}/month<br>${nextText}, Missed: ${sip.missedCount}`;
+                // Recent Transactions
+                if (payload && payload.recentTransactions && payload.recentTransactions.length > 0) {
+                    renderTransactions(payload.recentTransactions.slice(0, 10));
+                } else {
+                    document.getElementById('transactionsTableBody').innerHTML = 
+                        '<tr><td colspan="5" class="empty-state"><i class="bi bi-inbox"></i><div>No transactions found</div></td></tr>';
+                }
 
-      // Transactions
-      const txBody = document.getElementById('txBody');
-      txBody.innerHTML = '';
-      d.recentTransactions.forEach(r => {
-        txBody.innerHTML += `<tr><td>${r.date}</td><td>${r.action}</td><td>${r.fund}</td><td>${r.amount}</td></tr>`;
-      });
+                // Top Funds
+                if (payload && payload.topFunds && payload.topFunds.length > 0) {
+                    renderTopFunds(payload.topFunds);
+                } else {
+                    document.getElementById('topFundsGrid').innerHTML = 
+                        '<div class="empty-state"><i class="bi bi-pie-chart"></i><div>No fund suggestions available</div></div>';
+                }
 
-      // Funds
-      const fc = document.getElementById('fundCards');
-      fc.innerHTML = '';
-      d.topFunds.forEach(f => {
-        fc.innerHTML += `
-          <div class="col-12 col-md-6 col-lg-4">
-            <div class="card p-2 h-100">
-              <div class="d-flex justify-content-between">
-                <strong>${f.name}</strong>
-                <span class="text-success">${f.oneYearReturn}</span>
-              </div>
-              <div class="small text-muted">${f.tagline || ''}</div>
-            </div>
-          </div>`;
-      });
+                // Smart Alerts
+                if (payload && payload.smartAlerts && payload.smartAlerts.length > 0) {
+                    renderAlerts(payload.smartAlerts);
+                } else {
+                    document.getElementById('smartAlertsContent').innerHTML = 
+                        '<div class="empty-state"><i class="bi bi-bell-slash"></i><div>No alerts at the moment</div></div>';
+                }
+            } catch (error) {
+                console.error('Error loading dashboard payload:', error);
+                // Set defaults
+                document.getElementById('activeSips').textContent = '0 SIPs Active';
+                document.getElementById('nextSipDate').textContent = '—';
+                document.getElementById('missedSips').textContent = '0';
+                document.getElementById('transactionsTableBody').innerHTML = 
+                    '<tr><td colspan="5" class="empty-state"><i class="bi bi-inbox"></i><div>No transactions found</div></td></tr>';
+                document.getElementById('topFundsGrid').innerHTML = 
+                    '<div class="empty-state"><i class="bi bi-pie-chart"></i><div>No fund suggestions available</div></div>';
+                document.getElementById('smartAlertsContent').innerHTML = 
+                    '<div class="empty-state"><i class="bi bi-bell-slash"></i><div>No alerts at the moment</div></div>';
+            }
 
-      // Alerts
-      const al = document.getElementById('alertList');
-      al.innerHTML = '';
-      d.smartAlerts.forEach(a => {
-        al.innerHTML = `<div class="alert alert-info mb-0">${a.message}</div>`;
-      });
-    }
+            // Load user basics with error handling
+            try {
+                const user = await apiGet(`${API_BASE_GENERIC}/user/${currentUserId}`);
+                if (user) {
+                    const name = user.fullName || user.username || 'User';
+                    const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                    document.getElementById('userAvatar').textContent = initials;
+                } else {
+                    document.getElementById('userAvatar').textContent = 'U';
+                }
+            } catch (error) {
+                console.error('Error loading user:', error);
+                document.getElementById('userAvatar').textContent = 'U';
+            }
+        }
 
-    boot();
+        // Render Asset Allocation Chart
+        function renderAllocationChart(allocationData) {
+            const canvas = document.getElementById('allocationChart');
+            if (!canvas) {
+                console.error('Chart canvas not found');
+                return;
+            }
+            
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                console.error('Could not get 2d context');
+                return;
+            }
+            
+            if (allocationChart) {
+                allocationChart.destroy();
+            }
 
-    function submitForm(formId, url){
-  document.getElementById(formId).addEventListener("submit", async (e)=>{
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.target));
-    data.userId = JSON.parse(localStorage.getItem("user")).id;
-    await fetch(url, {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify(data)
-    });
-    alert("Request submitted!");
-    bootstrap.Modal.getInstance(document.getElementById(e.target.id.replace("Form","Modal"))).hide();
-  });
-}
+            const colors = {
+                'EQUITY': '#3b82f6',
+                'DEBT': '#22c55e',
+                'LIQUID': '#facc15',
+                'OTHERS': '#a855f7',
+                'Equity': '#3b82f6',
+                'Debt': '#22c55e',
+                'Liquid': '#facc15',
+                'Others': '#a855f7'
+            };
 
-submitForm("investForm","/api/investments/request");
-submitForm("redeemForm","/api/redeem/request");
-submitForm("sipForm","/api/sip/request");
-submitForm("nomineeForm","/api/nominee");
+            const labels = [];
+            const data = [];
+            const backgroundColors = [];
 
+            if (allocationData && allocationData.length > 0) {
+                allocationData.forEach(item => {
+                    const assetClass = (item.assetClass || item.name || 'Unknown').toString();
+                    const assetClassUpper = assetClass.toUpperCase();
+                    const percentage = Number(item.percentage || item.allocation || 0);
+                    if (percentage > 0) {
+                        labels.push(assetClass);
+                        data.push(percentage);
+                        backgroundColors.push(colors[assetClass] || colors[assetClassUpper] || '#6b7280');
+                    }
+                });
+            }
+            
+            // If no data or all zeros, show default structure
+            if (labels.length === 0 || data.every(d => d === 0)) {
+                labels.push('Equity', 'Debt', 'Liquid', 'Others');
+                data.push(45.5, 30.2, 15.8, 8.5); // Show sample data
+                backgroundColors.push('#3b82f6', '#22c55e', '#facc15', '#a855f7');
+            }
 
+            if (chartType === 'pie') {
+                allocationChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: backgroundColors,
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: '#f9fafb',
+                                    padding: 15,
+                                    font: { size: 12 }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.label + ': ' + context.parsed.toFixed(1) + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            } else {
+                allocationChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Allocation %',
+                            data: data,
+                            backgroundColor: backgroundColors,
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.parsed.y.toFixed(1) + '%';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: { color: '#9ca3af' },
+                                grid: { color: 'rgba(148, 163, 184, 0.1)' }
+                            },
+                            x: {
+                                ticks: { color: '#9ca3af' },
+                                grid: { display: false }
+                            }
+                        }
+                    }
+                });
+            }
+        }
 
-</script>
+        function switchChartType(type, buttonElement) {
+            chartType = type;
+            document.querySelectorAll('.chart-toggle-btn').forEach(btn => btn.classList.remove('active'));
+            if (buttonElement) {
+                buttonElement.classList.add('active');
+            } else {
+                // Fallback: find button by type
+                document.querySelectorAll('.chart-toggle-btn').forEach(btn => {
+                    if (btn.textContent.includes(type === 'pie' ? 'Pie' : 'Bar')) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+            const allocation = JSON.parse(sessionStorage.getItem('allocationData') || '[]');
+            renderAllocationChart(allocation);
+        }
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        // Render Transactions
+        function renderTransactions(transactions) {
+            const tbody = document.getElementById('transactionsTableBody');
+            if (!transactions || transactions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-state"><i class="bi bi-inbox"></i><div>No transactions found</div></td></tr>';
+                return;
+            }
 
+            let html = '';
+            transactions.forEach(txn => {
+                const status = (txn.status || '').toUpperCase();
+                const type = (txn.type || '').toUpperCase();
+                let statusClass = 'pending';
+                if (status === 'COMPLETED') statusClass = 'completed';
+                else if (type.includes('MISSED')) statusClass = 'missed';
 
+                html += `
+                    <tr>
+                        <td>${formatDate(txn.transactionDate)}</td>
+                        <td>${safeText(type)}</td>
+                        <td>${safeText(txn.schemeName)}</td>
+                        <td>${formatCurrency(txn.amount)}</td>
+                        <td><span class="status-badge ${statusClass}">${safeText(status)}</span></td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
 
+        // Render Top Funds
+        function renderTopFunds(funds) {
+            const container = document.getElementById('topFundsGrid');
+            if (!funds || funds.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="bi bi-pie-chart"></i><div>No fund suggestions available</div></div>';
+                return;
+            }
 
+            let html = '';
+            funds.forEach(fund => {
+                html += `
+                    <div class="fund-card">
+                        <h4 style="font-weight: 700; margin-bottom: 0.5rem;">${safeText(fund.name)}</h4>
+                        <div class="fund-return">${safeText(fund.oneYearReturn)}</div>
+                        <div class="fund-tagline">${safeText(fund.tagline)}</div>
+                        <div style="margin-top: 1rem; font-size: 0.75rem; color: var(--ob-primary);">Why this fund? →</div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // Render Alerts
+        function renderAlerts(alerts) {
+            const container = document.getElementById('smartAlertsContent');
+            if (!alerts || alerts.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="bi bi-bell-slash"></i><div>No alerts at the moment</div></div>';
+                return;
+            }
+
+            const iconMap = {
+                'INFO': 'bi-info-circle',
+                'WARNING': 'bi-exclamation-triangle',
+                'SUCCESS': 'bi-check-circle',
+                'ERROR': 'bi-x-circle'
+            };
+
+            let html = '';
+            alerts.forEach(alert => {
+                const icon = iconMap[alert.type] || 'bi-bell';
+                html += `
+                    <div class="alert-item">
+                        <div class="alert-icon"><i class="bi ${icon}"></i></div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; margin-bottom: 0.25rem;">${safeText(alert.message)}</div>
+                            ${alert.createdAt ? `<div style="font-size: 0.75rem; color: var(--ob-text-soft);">${formatDate(alert.createdAt)}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // Form Handlers
+        function setupForms() {
+            document.getElementById('investForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+                const statusEl = document.getElementById('investStatus');
+                statusEl.textContent = 'Submitting...';
+                statusEl.style.color = 'var(--ob-text-soft)';
+                
+                try {
+                    await apiPost(`${API_BASE_GENERIC}/investments/request`, {
+                        userId: currentUserId,
+                        fundName: document.getElementById('investFundName').value,
+                        amount: Number(document.getElementById('investAmount').value)
+                    });
+                    statusEl.textContent = 'Investment request submitted!';
+                    statusEl.style.color = 'var(--ob-accent-green)';
+                bootstrap.Modal.getInstance(document.getElementById('investModal')).hide();
+                    document.getElementById('investForm').reset();
+                    setTimeout(loadDashboard, 500);
+                } catch (error) {
+                    statusEl.textContent = 'Failed: ' + error.message;
+                    statusEl.style.color = 'var(--ob-accent-red)';
+                }
+            });
+
+            document.getElementById('redeemForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+                const statusEl = document.getElementById('redeemStatus');
+                statusEl.textContent = 'Submitting...';
+                statusEl.style.color = 'var(--ob-text-soft)';
+                
+                try {
+                    await apiPost(`${API_BASE_GENERIC}/redeem/request`, {
+                        userId: currentUserId,
+                        fundName: document.getElementById('redeemFundName').value,
+                        amount: Number(document.getElementById('redeemAmount').value)
+                    });
+                    statusEl.textContent = 'Redemption request submitted!';
+                    statusEl.style.color = 'var(--ob-accent-green)';
+                bootstrap.Modal.getInstance(document.getElementById('redeemModal')).hide();
+                    document.getElementById('redeemForm').reset();
+                    setTimeout(loadDashboard, 500);
+                } catch (error) {
+                    statusEl.textContent = 'Failed: ' + error.message;
+                    statusEl.style.color = 'var(--ob-accent-red)';
+                }
+            });
+
+            document.getElementById('sipForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+                const statusEl = document.getElementById('sipStatus');
+                statusEl.textContent = 'Creating SIP...';
+                statusEl.style.color = 'var(--ob-text-soft)';
+                
+                try {
+                    await apiPost(`${API_BASE_GENERIC}/sip/request`, {
+                userId: currentUserId,
+                        fundName: document.getElementById('sipFundName').value,
+                amount: Number(document.getElementById('sipAmount').value),
+                startDate: document.getElementById('sipStartDate').value,
+                        frequency: document.getElementById('sipFrequency').value
+                    });
+                    statusEl.textContent = 'SIP created successfully!';
+                    statusEl.style.color = 'var(--ob-accent-green)';
+                bootstrap.Modal.getInstance(document.getElementById('sipModal')).hide();
+                    document.getElementById('sipForm').reset();
+                    setTimeout(loadDashboard, 500);
+                } catch (error) {
+                    statusEl.textContent = 'Failed: ' + error.message;
+                    statusEl.style.color = 'var(--ob-accent-red)';
+                }
+            });
+
+            document.getElementById('nomineeForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const statusEl = document.getElementById('nomineeStatus');
+                statusEl.textContent = 'Saving...';
+                statusEl.style.color = 'var(--ob-text-soft)';
+                
+                try {
+                    await apiPost(`${API_BASE_GENERIC}/nominee`, {
+                        userId: currentUserId,
+                        nomineeName: document.getElementById('nomineeName').value,
+                        relationship: document.getElementById('nomineeRelation').value,
+                        dateOfBirth: document.getElementById('nomineeDob').value,
+                        allocationPercentage: Number(document.getElementById('nomineeAllocation').value)
+                    });
+                    statusEl.textContent = 'Nominee saved successfully!';
+                    statusEl.style.color = 'var(--ob-accent-green)';
+                    bootstrap.Modal.getInstance(document.getElementById('nomineeModal')).hide();
+                    document.getElementById('nomineeForm').reset();
+                } catch (error) {
+                    statusEl.textContent = 'Failed: ' + error.message;
+                    statusEl.style.color = 'var(--ob-accent-red)';
+                }
+            });
+        }
+
+        // Helper Functions
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('show');
+        }
+
+        function downloadStatements() {
+            alert('Statement download feature coming soon!');
+        }
+
+        function viewAllFunds() {
+            alert('View all funds feature coming soon!');
+        }
+
+        function showLearnContent(type) {
+            alert(`Learn content for ${type} coming soon!`);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default SIP start date
+            const today = new Date();
+            const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+            document.getElementById('sipStartDate').value = nextMonth.toISOString().split('T')[0];
+            
+            // Load dashboard
+            loadDashboard();
+            setupForms();
+        });
+    </script>
 </body>
 </html>

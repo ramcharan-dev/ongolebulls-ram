@@ -1722,3 +1722,455 @@ async function admindashboardLoadSettings() {
         console.error(err);
     }
 }
+// ---------- Services: List + Form + Sections ----------
+
+// Helper: render services list view
+async function admindashboardLoadServices() {
+    showLoadingCard("Loading Services...");
+    try {
+        // NOTE: leading "/" and ADMINDASHBOARD_API constant
+        const services = await admindashboardGet("/services", []);
+        const container = document.getElementById("admindashboardView");
+        if (!container) return;
+        container.innerHTML = "";
+
+        // Use template if available
+        const tpl = document.getElementById("servicesContainerTemplate");
+        if (!tpl) {
+            // Fallback simple list
+            const card = document.createElement("div");
+            card.className = "admindashboard-card";
+            const h2 = document.createElement("h2");
+            h2.textContent = "Services";
+            card.appendChild(h2);
+
+            if (!Array.isArray(services) || services.length === 0) {
+                const p = document.createElement("p");
+                p.textContent = "No services found. Click Add Service to create your first one.";
+                p.style.color = "var(--muted)";
+                card.appendChild(p);
+            } else {
+                const list = document.createElement("div");
+                list.className = "admindashboard-list";
+                services.forEach(s => {
+                    const row = document.createElement("div");
+                    row.className = "admindashboard-list-item";
+                    row.innerHTML = `
+                        <div><strong>${s.title || "Untitled"}</strong></div>
+                        <div class="muted">${s.subtitle || ""}</div>
+                        <div class="muted">${s.slug || ""}</div>
+                    `;
+                    list.appendChild(row);
+                });
+                card.appendChild(list);
+            }
+
+            container.appendChild(card);
+            return;
+        }
+
+        // Render header + grid via template
+        const clone = tpl.content.cloneNode(true);
+        container.appendChild(clone);
+
+        const addBtn = document.getElementById("addServiceBtn");
+        const grid = document.getElementById("servicesGrid");
+
+        if (addBtn) {
+            addBtn.onclick = () => {
+                showServiceForm(); // open create form
+            };
+        }
+
+        if (!grid) return;
+
+        grid.innerHTML = "";
+
+        if (!Array.isArray(services) || services.length === 0) {
+            const empty = document.createElement("p");
+            empty.textContent = "No services found. Click Add Service to create your first service.";
+            empty.style.color = "var(--muted)";
+            empty.style.padding = "20px";
+            grid.appendChild(empty);
+            return;
+        }
+
+        const cardTpl = document.getElementById("serviceCardTemplate");
+        services.forEach(service => {
+            if (cardTpl) {
+                const cardClone = cardTpl.content.cloneNode(true);
+
+                const titleEl = cardClone.querySelector("[data-title]");
+                const subtitleEl = cardClone.querySelector("[data-subtitle]");
+                const slugEl = cardClone.querySelector("[data-slug]");
+
+                if (titleEl) titleEl.textContent = service.title || "Untitled";
+                if (subtitleEl) subtitleEl.textContent = service.subtitle || "";
+                if (slugEl) slugEl.textContent = service.slug || "";
+
+                // Buttons
+                const viewBtn = cardClone.querySelector("[data-view]");
+                const manageSectionsBtn = cardClone.querySelector("[data-manage-sections]");
+                const editBtn = cardClone.querySelector("[data-edit]");
+                const deleteBtn = cardClone.querySelector("[data-delete]");
+
+                if (viewBtn) {
+                    viewBtn.removeAttribute("data-view");
+                    viewBtn.onclick = () => {
+                        alert("View service preview not implemented yet.");
+                    };
+                }
+
+                if (manageSectionsBtn) {
+                    manageSectionsBtn.removeAttribute("data-manage-sections");
+                    manageSectionsBtn.onclick = () => {
+                        loadSectionsForService(service);
+                    };
+                }
+
+                if (editBtn) {
+                    editBtn.removeAttribute("data-edit");
+                    editBtn.onclick = () => {
+                        showServiceForm(service);
+                    };
+                }
+
+                if (deleteBtn) {
+                    deleteBtn.removeAttribute("data-delete");
+                    deleteBtn.onclick = async () => {
+                        if (!confirm("Are you sure you want to delete this service?")) return;
+                        try {
+                            const res = await fetch(`${ADMINDASHBOARD_API}/services/${service.id}`, {
+                                method: "DELETE",
+                                headers: {
+                                    ...admindashboardAuthHeaders()
+                                }
+                            });
+                            if (!res.ok) throw new Error("Failed to delete service");
+                            alert("Service deleted successfully");
+                            admindashboardLoadServices();
+                        } catch (err) {
+                            alert("Error deleting service: " + err.message);
+                        }
+                    };
+                }
+
+                grid.appendChild(cardClone);
+            }
+        });
+    } catch (err) {
+        showErrorCard("Services", "Error loading services: " + err.message);
+        console.error(err);
+    }
+}
+
+// Helper: show service create/edit form
+async function showServiceForm(service = null) {
+    const container = document.getElementById("admindashboardView");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    const tpl = document.getElementById("serviceFormTemplate");
+    if (!tpl) {
+        showErrorCard("Service Form", "Service form template is missing.");
+        return;
+    }
+
+    const clone = tpl.content.cloneNode(true);
+    container.appendChild(clone);
+
+    const form = document.getElementById("serviceForm");
+    const messageDiv = document.getElementById("serviceFormMessage");
+    const formTitleSpan = container.querySelector("[data-form-title]");
+    const submitTextSpan = container.querySelector("[data-submit-text]");
+    const backBtn = document.getElementById("backToServicesBtn");
+    const cancelBtn = document.getElementById("cancelServiceBtn");
+
+    if (backBtn) backBtn.onclick = () => admindashboardLoadServices();
+    if (cancelBtn) cancelBtn.onclick = () => admindashboardLoadServices();
+
+    if (!form) {
+        showErrorCard("Service Form", "Form element not found.");
+        return;
+    }
+
+    // If editing, prefill
+    if (service) {
+        if (formTitleSpan) formTitleSpan.textContent = "Edit Service";
+        if (submitTextSpan) submitTextSpan.textContent = "Update Service";
+
+        form.dataset.editingId = service.id;
+
+        const setValue = (name, value) => {
+            const field = form.querySelector(`[name="${name}"]`);
+            if (field) {
+                if (field.type === "checkbox") {
+                    field.checked = !!value;
+                } else {
+                    field.value = value ?? "";
+                }
+            }
+        };
+
+        setValue("title", service.title);
+        setValue("subtitle", service.subtitle);
+        setValue("slug", service.slug);
+        setValue("bannerImage", service.bannerImage);
+        setValue("isActive", service.isActive);
+        setValue("metaTitle", service.metaTitle);
+        setValue("metaKeywords", service.metaKeywords);
+        setValue("metaDescription", service.metaDescription);
+    } else {
+        if (formTitleSpan) formTitleSpan.textContent = "Add New Service";
+        if (submitTextSpan) submitTextSpan.textContent = "Create Service";
+        form.reset();
+        delete form.dataset.editingId;
+    }
+
+    // Submit handler
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        if (messageDiv) {
+            messageDiv.textContent = "";
+            messageDiv.style.color = "";
+        }
+
+        const formData = new FormData(form);
+        const payload = {};
+
+        formData.forEach((value, key) => {
+            if (key === "isActive") {
+                const chk = form.querySelector('[name="isActive"]');
+                payload[key] = chk ? chk.checked : false;
+            } else {
+                payload[key] = value != null && value.trim ? value.trim() : value;
+            }
+        });
+
+        const editingId = form.dataset.editingId;
+        const url = editingId
+            ? `${ADMINDASHBOARD_API}/services/${editingId}`
+            : `${ADMINDASHBOARD_API}/services`;
+        const method = editingId ? "PUT" : "POST";
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn ? submitBtn.textContent : "";
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Saving...";
+        }
+
+        try {
+            const res = await fetch(url, {
+                method,
+                headers: {
+                    "Content-Type": "application/json",
+                    ...admindashboardAuthHeaders()
+                },
+                body: JSON.stringify(payload)
+            });
+            if (!res.ok) {
+                let msg = "Failed to save service";
+                try {
+                    const errJson = await res.json();
+                    if (errJson.message) msg = errJson.message;
+                } catch (_) {}
+                throw new Error(msg);
+            }
+
+            if (messageDiv) {
+                messageDiv.style.color = "#22c55e";
+                messageDiv.textContent = editingId
+                    ? "Service updated successfully!"
+                    : "Service created successfully!";
+            }
+
+            setTimeout(() => {
+                admindashboardLoadServices();
+            }, 1000);
+        } catch (err) {
+            if (messageDiv) {
+                messageDiv.style.color = "#ef4444";
+                messageDiv.textContent = "Error saving service: " + err.message;
+            } else {
+                alert("Error saving service: " + err.message);
+            }
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        }
+    };
+}
+function loadSectionsForService(service) {
+    alert(`Sections management for "${service.title || "Service"}" not fully implemented yet.`);
+}
+function loadSectionsForService(service) {
+    // Non-blocking navigation (fixes click violation)
+    requestAnimationFrame(() => {
+        renderSectionsManagement(service);
+    });
+}
+
+async function renderSectionsManagement(service) {
+    showLoadingCard(`Loading Sections – ${service.title}`);
+
+    try {
+        const sections = await admindashboardGet(
+            `/services/${service.id}/sections`,
+            []
+        );
+
+        const container = document.getElementById('admindashboardView');
+        container.innerHTML = '';
+
+        const tpl = document.getElementById('sectionsManagementTemplate');
+        if (!tpl) {
+            showErrorCard('Sections', 'Sections template missing');
+            return;
+        }
+
+        const clone = tpl.content.cloneNode(true);
+        container.appendChild(clone);
+
+        // Header title
+        const titleEl = container.querySelector('[data-service-title]');
+        if (titleEl) titleEl.textContent = service.title || '';
+
+        // Back button
+        const backBtn = document.getElementById('backToServicesFromSections');
+        if (backBtn) backBtn.onclick = () => admindashboardLoadServices();
+
+        // Add section
+        const addBtn = document.getElementById('addSectionBtn');
+        if (addBtn) addBtn.onclick = () => showSectionForm(service.id);
+
+        const list = document.getElementById('sectionsList');
+        list.innerHTML = '';
+
+        if (!Array.isArray(sections) || sections.length === 0) {
+            const p = document.createElement('p');
+            p.textContent = 'No sections found. Click "Add Section" to create one.';
+            p.style.color = 'var(--muted)';
+            list.appendChild(p);
+            return;
+        }
+
+        const cardTpl = document.getElementById('sectionCardTemplate');
+
+        sections.forEach(section => {
+            const card = cardTpl.content.cloneNode(true);
+
+            card.querySelector('[data-title]').textContent = section.title || 'Untitled';
+            card.querySelector('[data-subtitle]').textContent = section.subtitle || '';
+            card.querySelector('[data-type]').textContent = section.sectionType || '';
+
+            const iconEl = card.querySelector('[data-type-icon]');
+            if (iconEl) {
+                iconEl.className = 'bi bi-layers';
+            }
+
+            // Manage items
+            card.querySelector('[data-manage-items]').onclick = () => {
+                loadItemsForSection(section);
+            };
+
+            // Edit
+            card.querySelector('[data-edit]').onclick = () => {
+                showSectionForm(service.id, section);
+            };
+
+            // Delete
+            card.querySelector('[data-delete]').onclick = async () => {
+                if (!confirm('Delete this section?')) return;
+
+                await fetch(`${ADMINDASHBOARD_API}/sections/${section.id}`, {
+                    method: 'DELETE',
+                    headers: admindashboardAuthHeaders()
+                });
+
+                renderSectionsManagement(service);
+            };
+
+            list.appendChild(card);
+        });
+
+    } catch (err) {
+        showErrorCard('Sections', err.message);
+    }
+}
+
+function showSectionForm(serviceId, section = null) {
+    const container = document.getElementById('admindashboardView');
+    container.innerHTML = '';
+
+    const tpl = document.getElementById('sectionFormTemplate');
+    if (!tpl) {
+        showErrorCard('Section', 'Section form template missing');
+        return;
+    }
+
+    const clone = tpl.content.cloneNode(true);
+    container.appendChild(clone);
+
+    const form = document.getElementById('sectionForm');
+    const messageDiv = document.getElementById('sectionFormMessage');
+
+    // back / cancel
+    document.getElementById('backToSectionsBtn').onclick =
+    document.getElementById('cancelSectionBtn').onclick =
+        () => renderSectionsManagement({ id: serviceId, title: '' });
+
+    // set service id
+    form.querySelector('[name="serviceId"]').value = serviceId;
+
+    // edit mode
+    if (section) {
+        form.dataset.editingId = section.id;
+        form.querySelector('[name="sectionType"]').value = section.sectionType;
+        form.querySelector('[name="title"]').value = section.title || '';
+        form.querySelector('[name="subtitle"]').value = section.subtitle || '';
+        form.querySelector('[name="orderIndex"]').value = section.orderIndex ?? 0;
+    }
+
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+
+        const payload = Object.fromEntries(new FormData(form));
+        const editingId = form.dataset.editingId;
+
+        const url = editingId
+            ? `${ADMINDASHBOARD_API}/sections/${editingId}`
+            : `${ADMINDASHBOARD_API}/sections`;
+
+        const method = editingId ? 'PUT' : 'POST';
+
+        try {
+            const res = await fetch(url, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...admindashboardAuthHeaders()
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) throw new Error('Failed to save section');
+
+            messageDiv.style.color = '#22c55e';
+            messageDiv.textContent = 'Section saved successfully';
+
+            setTimeout(() => {
+                renderSectionsManagement({ id: serviceId, title: '' });
+            }, 800);
+
+        } catch (err) {
+            messageDiv.style.color = '#ef4444';
+            messageDiv.textContent = err.message;
+        }
+    };
+}
+
+

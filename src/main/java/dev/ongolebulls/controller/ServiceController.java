@@ -34,7 +34,8 @@ public class ServiceController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Service> update(@PathVariable String id, @RequestBody Service s) {
+    public ResponseEntity<Service> update(@PathVariable String id,
+                                          @RequestBody Service s) {
         return ResponseEntity.ok(service.update(id, s));
     }
 
@@ -50,6 +51,4 @@ public class ServiceController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
-
 }

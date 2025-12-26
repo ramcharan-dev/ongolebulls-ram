@@ -73,6 +73,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.Objects;
 
 
 @RestController
@@ -137,6 +138,7 @@ public class AuthController {
 
             // Handle RiskProfile safely
             if (data.get("riskProfile") instanceof Map<?, ?> riskMapRaw) {
+                @SuppressWarnings("unchecked")
                 Map<String, Object> riskMap = (Map<String, Object>) riskMapRaw;
                 String riskCatStr = ((String) riskMap.getOrDefault("riskCategory", "CONSERVATIVE")).toUpperCase();
                 RiskProfile.RiskCategory category;
@@ -233,10 +235,10 @@ public class AuthController {
                 </div>
                 """.formatted(resetLink);
 
-            helper.setFrom("info@ongolebullsinvest.com"); // ✅ Fix sender
-            helper.setTo(email);
+            helper.setFrom(Objects.requireNonNull("info@ongolebullsinvest.com", "Sender email cannot be null"));
+            helper.setTo(Objects.requireNonNull(email, "Recipient email cannot be null"));
             helper.setSubject("Password Reset Request");
-            helper.setText(html, true);
+            helper.setText(Objects.requireNonNull(html, "Email content cannot be null"), true);
 
             mailSender.send(message);
 

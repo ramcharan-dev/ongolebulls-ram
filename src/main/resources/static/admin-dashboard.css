@@ -70,7 +70,7 @@ html, body {
 }
 .admindashboard-nav{
     display:flex;align-items:center;gap:12px;
-    color:#e0e7ff;text-decoration:none;
+    color:#010719;text-decoration:none;
     padding:12px 14px;border-radius:10px;
     transition:all .3s ease;
     outline:0;

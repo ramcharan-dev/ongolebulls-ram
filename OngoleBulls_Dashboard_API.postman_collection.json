@@ -1,0 +1,271 @@
+{
+	"info": {
+		"_postman_id": "ongolebulls-dashboard-2025",
+		"name": "OngoleBulls Dashboard API",
+		"description": "Complete API collection for OngoleBulls Dashboard endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Dashboard Endpoints",
+			"item": [
+				{
+					"name": "Get Dashboard Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/dashboard/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "dashboard", "{{userId}}"]
+						}
+					}
+				},
+				{
+					"name": "Get Asset Allocation",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/dashboard/{{userId}}/asset-allocation",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "dashboard", "{{userId}}", "asset-allocation"]
+						}
+					}
+				},
+				{
+					"name": "Get User Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/dashboard/{{userId}}/profile",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "dashboard", "{{userId}}", "profile"]
+						}
+					}
+				},
+				{
+					"name": "Update User Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fullName\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"mobile\": \"9876543210\",\n  \"address\": \"123 Main Street\",\n  \"city\": \"Mumbai\",\n  \"state\": \"Maharashtra\",\n  \"pincode\": \"400001\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/dashboard/{{userId}}/profile",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "dashboard", "{{userId}}", "profile"]
+						}
+					}
+				},
+				{
+					"name": "Get Transactions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/dashboard/{{userId}}/transactions?page=0&size=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "dashboard", "{{userId}}", "transactions"],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Dashboard Metrics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/dashboard/{{userId}}/metrics",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "dashboard", "{{userId}}", "metrics"]
+						}
+					}
+				},
+				{
+					"name": "Get Recent Activity",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/dashboard/{{userId}}/recent-activity?limit=5",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "dashboard", "{{userId}}", "recent-activity"],
+							"query": [
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"currentPassword\": \"oldPassword123\",\n  \"newPassword\": \"newPassword123\",\n  \"confirmPassword\": \"newPassword123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/dashboard/{{userId}}/change-password",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "dashboard", "{{userId}}", "change-password"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Action Endpoints",
+			"item": [
+				{
+					"name": "Create Investment Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": {{userId}},\n  \"fundName\": \"Axis Bluechip Fund\",\n  \"amount\": 10000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/investments/request",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "investments", "request"]
+						}
+					}
+				},
+				{
+					"name": "Create Redemption Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": {{userId}},\n  \"fundName\": \"HDFC Liquid Fund\",\n  \"amount\": 5000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/redeem/request",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "redeem", "request"]
+						}
+					}
+				},
+				{
+					"name": "Start SIP Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": {{userId}},\n  \"fundName\": \"ICICI Value Fund\",\n  \"amount\": 2500,\n  \"frequency\": \"MONTHLY\",\n  \"startDate\": \"2025-01-01\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/sip/request",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "sip", "request"]
+						}
+					}
+				},
+				{
+					"name": "Save Nominee",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": {{userId}},\n  \"nomineeName\": \"Jane Doe\",\n  \"relationship\": \"Spouse\",\n  \"dateOfBirth\": \"1990-05-15\",\n  \"allocationPercentage\": 100\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/nominee",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "nominee"]
+						}
+					}
+				},
+				{
+					"name": "Get All Requests",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/dashboard/requests/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "dashboard", "requests", "{{userId}}"]
+						}
+					}
+				},
+				{
+					"name": "Get User Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/user/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "user", "{{userId}}"]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "1",
+			"type": "string"
+		}
+	]
+}
+
