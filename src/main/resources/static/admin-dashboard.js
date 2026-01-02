@@ -1628,62 +1628,6 @@ function showPlaceholderPage(text) {
     container.appendChild(card);
 }
 
-// Minimal Services loader (safe, won't break if API or templates missing)
-async function admindashboardLoadServices() {
-    showLoadingCard('Loading Services...');
-    try {
-        const services = await admindashboardGet('/services', []);
-        const container = document.getElementById('admindashboardView');
-        if (!container) return;
-        container.innerHTML = '';
-
-        // If you have a template, use it; otherwise render a simple list
-        const tpl = document.getElementById('servicesContainerTemplate');
-        if (tpl) {
-            container.appendChild(tpl.content.cloneNode(true));
-            const listEl = document.getElementById('servicesList');
-            if (listEl && Array.isArray(services)) {
-                listEl.innerHTML = '';
-                services.forEach(s => {
-                    const li = document.createElement('div');
-                    li.className = 'admindashboard-list-item';
-                    li.innerHTML = `<strong>${s.title || s.name || 'Untitled'}</strong><div class="muted">${s.description || ''}</div>`;
-                    listEl.appendChild(li);
-                });
-            }
-            return;
-        }
-
-        // Fallback rendering
-        const card = document.createElement('div');
-        card.className = 'admindashboard-card';
-        const h2 = document.createElement('h2');
-        h2.textContent = 'Services';
-        card.appendChild(h2);
-
-        if (!Array.isArray(services) || services.length === 0) {
-            const p = document.createElement('p');
-            p.textContent = 'No services found.';
-            p.style.color = 'var(--muted)';
-            card.appendChild(p);
-        } else {
-            const ul = document.createElement('div');
-            ul.className = 'admindashboard-list';
-            services.forEach(s => {
-                const row = document.createElement('div');
-                row.className = 'admindashboard-list-item';
-                row.innerHTML = `<div><strong>${s.title || s.name}</strong></div><div class="muted">${s.description || ''}</div>`;
-                ul.appendChild(row);
-            });
-            card.appendChild(ul);
-        }
-
-        container.appendChild(card);
-    } catch (err) {
-        showErrorCard('Services', 'Error loading services: ' + (err.message || err));
-        console.error(err);
-    }
-}
 
 // Minimal Settings loader (safe)
 async function admindashboardLoadSettings() {
@@ -1817,7 +1761,7 @@ async function admindashboardLoadServices() {
                 if (viewBtn) {
                     viewBtn.removeAttribute("data-view");
                     viewBtn.onclick = () => {
-                        alert("View service preview not implemented yet.");
+                        renderServicePreview(service);
                     };
                 }
 
@@ -1863,6 +1807,107 @@ async function admindashboardLoadServices() {
         console.error(err);
     }
 }
+//view
+async function renderServicePreview(service) {
+    showLoadingCard(`Viewing Service – ${service.title}`);
+
+    try {
+        // 1️⃣ Fetch sections
+        const sections = await admindashboardGet(
+            `/services/${service.id}/sections`,
+            []
+        );
+
+        const container = document.getElementById("admindashboardView");
+        container.innerHTML = "";
+
+        /* ===============================
+           HEADER
+        =============================== */
+        const headerCard = document.createElement("div");
+        headerCard.className = "admindashboard-card";
+
+        headerCard.innerHTML = `
+            <button class="admindashboard-btn-small secondary" id="backToServicesBtn">
+                ← Back to Services
+            </button>
+
+            <h2 style="margin-top:12px">${service.title}</h2>
+            <p class="muted">${service.subtitle || ""}</p>
+        `;
+
+        container.appendChild(headerCard);
+
+        document.getElementById("backToServicesBtn").onclick =
+            () => admindashboardLoadServices();
+
+        /* ===============================
+           SECTIONS
+        =============================== */
+        if (!Array.isArray(sections) || sections.length === 0) {
+            const empty = document.createElement("p");
+            empty.textContent = "No sections available for this service.";
+            empty.className = "muted";
+            container.appendChild(empty);
+            return;
+        }
+
+        for (const section of sections) {
+            const sectionCard = document.createElement("div");
+            sectionCard.className = "admindashboard-card";
+
+            sectionCard.innerHTML = `
+                <h3>${section.title || "Untitled Section"}</h3>
+                <p class="muted">${section.subtitle || ""}</p>
+
+                <span class="badge">
+                    ${section.sectionType?.toUpperCase() || ""}
+                </span>
+
+                <div class="preview-items" style="margin-top:12px"></div>
+            `;
+
+            const itemsContainer =
+                sectionCard.querySelector(".preview-items");
+
+            /* ===============================
+               ITEMS
+            =============================== */
+            const items = await admindashboardGet(
+                `/section-items/section/${section.id}`,
+                []
+            );
+
+            if (!Array.isArray(items) || items.length === 0) {
+                itemsContainer.innerHTML =
+                    `<p class="muted">No items in this section.</p>`;
+            } else {
+                items
+                    .sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0))
+                    .forEach(item => {
+                        const itemDiv = document.createElement("div");
+                        itemDiv.className = "preview-item";
+
+                        itemDiv.innerHTML = `
+                            <div style="margin-bottom:8px">
+                                ${item.icon ? `<i class="${item.icon}"></i>` : ""}
+                                <strong>${item.title || ""}</strong>
+                            </div>
+                            <p class="muted">${item.description || ""}</p>
+                        `;
+
+                        itemsContainer.appendChild(itemDiv);
+                    });
+            }
+
+            container.appendChild(sectionCard);
+        }
+
+    } catch (err) {
+        showErrorCard("Service Preview", err.message);
+    }
+}
+
 
 // Helper: show service create/edit form
 async function showServiceForm(service = null) {
@@ -1921,6 +1966,17 @@ async function showServiceForm(service = null) {
         setValue("metaTitle", service.metaTitle);
         setValue("metaKeywords", service.metaKeywords);
         setValue("metaDescription", service.metaDescription);
+
+        // prefill allowed section types
+        if (Array.isArray(service.allowedSectionTypes)) {
+            service.allowedSectionTypes.forEach(type => {
+                const checkbox = form.querySelector(
+                    `input[name="allowedSectionTypes"][value="${type}"]`
+                );
+                if (checkbox) checkbox.checked = true;
+            });
+        }
+
     } else {
         if (formTitleSpan) formTitleSpan.textContent = "Add New Service";
         if (submitTextSpan) submitTextSpan.textContent = "Create Service";
@@ -1937,16 +1993,34 @@ async function showServiceForm(service = null) {
         }
 
         const formData = new FormData(form);
+
+        // modified payload with allowedsectiontypes.
         const payload = {};
+        const allowedSectionTypes = [];
 
         formData.forEach((value, key) => {
-            if (key === "isActive") {
-                const chk = form.querySelector('[name="isActive"]');
-                payload[key] = chk ? chk.checked : false;
+            if (key === "allowedSectionTypes") {
+                allowedSectionTypes.push(value);
+            } else if (key === "isActive") {
+                payload[key] = form.querySelector('[name="isActive"]').checked;
             } else {
-                payload[key] = value != null && value.trim ? value.trim() : value;
+                payload[key] = value?.trim ? value.trim() : value;
             }
         });
+
+      //  payload.allowedSectionTypes = allowedSectionTypes;
+        payload.allowedSectionTypes = allowedSectionTypes.length
+            ? allowedSectionTypes
+            : [];
+
+        // slug sanitize
+            if (payload.slug) {
+                payload.slug = payload.slug
+                    .toLowerCase()
+                    .trim()
+                    .replace(/\s+/g, '-')
+                    .replace(/[^a-z0-9-]/g, '');
+            }
 
         const editingId = form.dataset.editingId;
         const url = editingId
@@ -2004,9 +2078,8 @@ async function showServiceForm(service = null) {
         }
     };
 }
-function loadSectionsForService(service) {
-    alert(`Sections management for "${service.title || "Service"}" not fully implemented yet.`);
-}
+
+
 function loadSectionsForService(service) {
     // Non-blocking navigation (fixes click violation)
     requestAnimationFrame(() => {
@@ -2015,6 +2088,7 @@ function loadSectionsForService(service) {
 }
 
 async function renderSectionsManagement(service) {
+   // const serviceId = service.id;
     showLoadingCard(`Loading Sections – ${service.title}`);
 
     try {
@@ -2045,7 +2119,8 @@ async function renderSectionsManagement(service) {
 
         // Add section
         const addBtn = document.getElementById('addSectionBtn');
-        if (addBtn) addBtn.onclick = () => showSectionForm(service.id);
+  //      if (addBtn) addBtn.onclick = () => showSectionForm(service.id);
+        if (addBtn) addBtn.onclick = () => showSectionForm(service);
 
         const list = document.getElementById('sectionsList');
         list.innerHTML = '';
@@ -2074,19 +2149,20 @@ async function renderSectionsManagement(service) {
 
             // Manage items
             card.querySelector('[data-manage-items]').onclick = () => {
-                loadItemsForSection(section);
+                loadItemsForSection(service.id,section);
             };
 
             // Edit
             card.querySelector('[data-edit]').onclick = () => {
-                showSectionForm(service.id, section);
+               // showSectionForm(service.id, section);
+               showSectionForm(service, section);
             };
 
             // Delete
             card.querySelector('[data-delete]').onclick = async () => {
                 if (!confirm('Delete this section?')) return;
 
-                await fetch(`${ADMINDASHBOARD_API}/sections/${section.id}`, {
+                await fetch(`${ADMINDASHBOARD_API}/services/${service.id}/sections/${section.id}`, {
                     method: 'DELETE',
                     headers: admindashboardAuthHeaders()
                 });
@@ -2102,75 +2178,490 @@ async function renderSectionsManagement(service) {
     }
 }
 
-function showSectionForm(serviceId, section = null) {
-    const container = document.getElementById('admindashboardView');
-    container.innerHTML = '';
 
-    const tpl = document.getElementById('sectionFormTemplate');
-    if (!tpl) {
-        showErrorCard('Section', 'Section form template missing');
+function showSectionForm(service, section = null) {
+
+    const container = document.getElementById('admindashboardView');
+    if (!container) {
+        alert("admindashboardView not found");
         return;
     }
 
-    const clone = tpl.content.cloneNode(true);
-    container.appendChild(clone);
+    container.innerHTML = '';
 
-    const form = document.getElementById('sectionForm');
-    const messageDiv = document.getElementById('sectionFormMessage');
+    // ✅ DEFINE tpl FIRST
+    const tpl = document.getElementById('sectionFormTemplate');
+    if (!tpl) {
+        showErrorCard('Section', 'sectionFormTemplate missing');
+        return;
+    }
 
-    // back / cancel
-    document.getElementById('backToSectionsBtn').onclick =
-    document.getElementById('cancelSectionBtn').onclick =
-        () => renderSectionsManagement({ id: serviceId, title: '' });
+    // ✅ THEN USE tpl
+    container.appendChild(tpl.content.cloneNode(true));
 
-    // set service id
-    form.querySelector('[name="serviceId"]').value = serviceId;
+    const form = container.querySelector('#sectionForm');
+    const messageDiv = container.querySelector('#sectionFormMessage');
+    const sectionTypeSelect = container.querySelector('#sectionTypeSelect');
 
-    // edit mode
+    if (!sectionTypeSelect) {
+        alert("sectionTypeSelect not found");
+        return;
+    }
+
+      if (!section) {
+          sectionTypeSelect.onchange = () => {
+              handleSectionTypeChange(sectionTypeSelect.value);
+          };
+      }
+
+
+    // Back / Cancel
+    container.querySelector('#backToSectionsBtn').onclick =
+    container.querySelector('#cancelSectionBtn').onclick =
+        () => renderSectionsManagement(service);
+
+    // Set serviceId
+    form.querySelector('[name="serviceId"]').value = service.id;
+
+    // Populate section types
+    sectionTypeSelect.innerHTML = '<option value="">-- Select Type --</option>';
+    if (Array.isArray(service.allowedSectionTypes)) {
+        service.allowedSectionTypes.forEach(type => {
+            const opt = document.createElement('option');
+            opt.value = type;
+            opt.textContent = type.replace(/_/g, ' ').toUpperCase();
+            sectionTypeSelect.appendChild(opt);
+        });
+    }
+
+    // Edit mode
     if (section) {
         form.dataset.editingId = section.id;
-        form.querySelector('[name="sectionType"]').value = section.sectionType;
+        sectionTypeSelect.value = section.sectionType;
+      //  handleSectionTypeChange(section.sectionType);
+       sectionTypeSelect.disabled = true;
+
         form.querySelector('[name="title"]').value = section.title || '';
         form.querySelector('[name="subtitle"]').value = section.subtitle || '';
         form.querySelector('[name="orderIndex"]').value = section.orderIndex ?? 0;
     }
+    if (section) {
+        const dynamicFields =
+            document.getElementById('sectionDynamicFields');
+        if (dynamicFields) dynamicFields.innerHTML = '';
+    }
 
+
+
+      //onsubmit
+      form.onsubmit = async (e) => {
+          e.preventDefault();
+          const orderIndexRaw =
+              form.querySelector('[name="orderIndex"]')?.value ?? '';
+
+
+          const editingId = form.dataset.editingId;
+
+          const payload = {
+              title: form.querySelector('[name="title"]').value || null,
+              subtitle: form.querySelector('[name="subtitle"]').value || null,
+              orderIndex: orderIndexRaw !== '' ? Number(orderIndexRaw) : null,
+              metaTitle: form.querySelector('[name="metaTitle"]').value || null,
+              metaKeywords: form.querySelector('[name="metaKeywords"]').value || null,
+              metaDescription: form.querySelector('[name="metaDescription"]').value || null
+          };
+
+          // ONLY on CREATE
+          if (!editingId) {
+              payload.sectionType =
+                  form.querySelector('[name="sectionType"]').value;
+          }
+
+
+
+          if (!editingId && !payload.sectionType) {
+              messageDiv.style.color = '#ef4444';
+              messageDiv.textContent = 'Please select a section type';
+              return;
+          }
+
+          // HERO extra field
+          if (payload.sectionType === 'hero') {
+              payload.bannerImageUrl =
+                  form.querySelector('[name="bannerImage"]')?.value || null;
+          }
+
+
+          const url = editingId
+              ? `${ADMINDASHBOARD_API}/services/${service.id}/sections/${editingId}`
+              : `${ADMINDASHBOARD_API}/services/${service.id}/sections`;
+
+          const method = editingId ? 'PUT' : 'POST';
+
+          try {
+              const res = await fetch(url, {
+                  method,
+                  headers: {
+                      'Content-Type': 'application/json',
+                      ...admindashboardAuthHeaders()
+                  },
+                  body: JSON.stringify(payload)
+              });
+
+              if (!res.ok) throw new Error('Failed to save section');
+
+              messageDiv.style.color = '#22c55e';
+              messageDiv.textContent = 'Section saved successfully';
+
+              setTimeout(() => {
+                  renderSectionsManagement(service);
+              }, 800);
+
+          } catch (err) {
+              messageDiv.style.color = '#ef4444';
+              messageDiv.textContent = err.message;
+          }
+      };
+
+}
+
+function handleSectionTypeChange(type) {
+
+//    initRepeatableGroup(container);
+    const container = document.getElementById('sectionDynamicFields');
+    container.innerHTML = '';
+
+    // HERO
+    if (type === 'hero') {
+        container.innerHTML = `
+            <div class="form-row">
+                <label>Banner Image URL</label>
+                <input type="text" name="bannerImage"
+                       class="admindashboard-input"
+                       placeholder="https://example.com/banner.jpg"/>
+            </div>
+        `;
+        return;
+    }
+
+    // CTA (nothing extra for now)
+    if (type === 'cta') {
+        return;
+    }
+
+       // ALL OTHER TYPES (generic & future-proof) with ui
+       container.innerHTML = `
+           <div class="repeatable-group" data-group="${type}">
+               <div class="repeatable-header">
+                   <h4 class="repeatable-title">
+                       ${type.replace(/_/g, ' ').toUpperCase()} Items
+                   </h4>
+
+                   <button type="button"
+                           class="admindashboard-btn-small primary"
+                           data-add>
+                       <i class="bi bi-plus-circle"></i> Add Item
+                   </button>
+               </div>
+
+               <div class="repeatable-items"></div>
+           </div>
+       `;
+
+    initRepeatableGroup(container);
+
+}
+
+function initRepeatableGroup(root) {
+    const group = root.querySelector('.repeatable-group');
+    if (!group) return;
+
+    const itemsContainer = group.querySelector('.repeatable-items');
+    const addBtn = group.querySelector('[data-add]');
+
+
+     const createItem = () => {
+         const div = document.createElement('div');
+         div.className = 'repeatable-item';
+
+         // FAQ → Question & Answer
+         if (group.dataset.group === 'faq') {
+             div.innerHTML = `
+                 <div class="repeatable-item-header">
+                     <span class="item-index">FAQ Item</span>
+                     <button type="button" class="remove-item">
+                         <i class="bi bi-trash"></i>
+                     </button>
+                 </div>
+
+                 <div class="form-row">
+                     <label>Question</label>
+                     <input
+                         name="itemTitle"
+                         class="admindashboard-input"
+                         placeholder="Enter question"/>
+                 </div>
+
+                 <div class="form-row">
+                     <label>Answer</label>
+                     <textarea
+                         name="itemDescription"
+                         class="admindashboard-textarea"
+                         rows="3"
+                         placeholder="Enter answer"></textarea>
+                 </div>
+             `;
+         }
+         // ALL OTHER TYPES → Title & Description (+ optional icon)
+         else {
+             div.innerHTML = `
+                 <div class="repeatable-item-header">
+                     <span class="item-index">Item</span>
+                     <button type="button" class="remove-item">
+                         <i class="bi bi-trash"></i>
+                     </button>
+                 </div>
+
+                 <div class="form-row">
+                     <label>Title</label>
+                     <input
+                         name="itemTitle"
+                         class="admindashboard-input"
+                         placeholder="Enter title"/>
+                 </div>
+
+                 <div class="form-row">
+                     <label>Description</label>
+                     <textarea
+                         name="itemDescription"
+                         class="admindashboard-textarea"
+                         rows="3"
+                         placeholder="Enter description"></textarea>
+                 </div>
+
+                 <div class="form-row">
+                     <label>Icon (optional)</label>
+                     <input
+                         name="itemIcon"
+                         class="admindashboard-input"
+                         placeholder="bi bi-star / fa fa-check"/>
+                 </div>
+             `;
+         }
+
+         // Delete item
+         div.querySelector('.remove-item').onclick = () => div.remove();
+
+         itemsContainer.appendChild(div);
+     };
+
+    addBtn.onclick = createItem;
+    createItem(); // add first by default
+}
+
+//loading Items For Section
+function loadItemsForSection(serviceId,section) {
+    requestAnimationFrame(() => {
+        renderSectionItems(serviceId, section);
+    });
+}
+
+//Rendering section items
+async function renderSectionItems(serviceId, section) {
+    showLoadingCard(`Loading Items – ${section.title || "Section"}`);
+
+    try {
+        const items = await admindashboardGet(
+            `/section-items/section/${section.id}`,
+            []
+        );
+
+        const container = document.getElementById("admindashboardView");
+        container.innerHTML = "";
+
+        const tpl = document.getElementById("sectionItemsManagementTemplate");
+        container.appendChild(tpl.content.cloneNode(true));
+
+        container.querySelector("[data-section-title]").textContent =
+            section.title || "";
+
+        document.getElementById("backToSectionsFromItems").onclick =
+            () => renderSectionsManagement({ id: serviceId });
+
+        const addBtn = document.getElementById("addItemBtn");
+        const grid = document.getElementById("sectionItemsGrid");
+
+        if (section.sectionType === "cta" && items.length >= 1) {
+            addBtn.style.display = "none";
+        } else {
+            addBtn.onclick = () => showItemForm(serviceId,section);
+        }
+
+        if (!items.length) {
+            grid.innerHTML = `<p>No items found. Click Add Item.</p>`;
+            return;
+        }
+
+        const cardTpl = document.getElementById("sectionItemCardTemplate");
+
+        items.forEach(item => {
+            const card = cardTpl.content.cloneNode(true);
+
+            card.querySelector("[data-title]").textContent = item.title || "";
+            card.querySelector("[data-description]").textContent =
+                item.description || "";
+
+            card.querySelector("[data-edit]").onclick =
+                () => showItemForm(serviceId,section, item);
+
+            card.querySelector("[data-delete]").onclick = async () => {
+                if (!confirm("Delete this item?")) return;
+
+                await fetch(
+                    `${ADMINDASHBOARD_API}/section-items/${item.id}`,
+                    {
+                        method: "DELETE",
+                        headers: admindashboardAuthHeaders()
+                    }
+                );
+
+                renderSectionItems(serviceId, section);
+            };
+
+            grid.appendChild(card);
+        });
+
+    } catch (err) {
+        showErrorCard("Section Items", err.message);
+    }
+}
+
+
+//add/edit item form
+function showItemForm(serviceId, section, item = null) {
+    const container = document.getElementById("admindashboardView");
+    container.innerHTML = "";
+
+    const tpl = document.getElementById("sectionItemFormTemplate");
+    if (!tpl) {
+        showErrorCard("Item", "Item form template missing");
+        return;
+    }
+
+    container.appendChild(tpl.content.cloneNode(true));
+
+    const form = document.getElementById("itemForm");
+    const messageDiv = document.getElementById("itemFormMessage");
+
+    // Back / Cancel
+    document.getElementById("backToItemsBtn").onclick =
+    document.getElementById("cancelItemBtn").onclick =
+        () => renderSectionItems(serviceId, section);
+
+    // Set sectionId (hidden field)
+    form.querySelector('[name="sectionId"]').value = section.id;
+
+    // Dynamic fields
+    handleItemFieldsBySectionType(section.sectionType);
+
+    // Edit mode
+    if (item) {
+        form.dataset.editingId = item.id;
+
+        const set = (name, value) => {
+            const el = form.querySelector(`[name="${name}"]`);
+            if (el) el.value = value ?? "";
+        };
+
+        set("icon", item.icon);
+        set("title", item.title);
+        set("description", item.description);
+        set("orderIndex", item.orderIndex);
+        set("metaTitle", item.metaTitle);
+        set("metaKeywords", item.metaKeywords);
+        set("metaDescription", item.metaDescription);
+    }
+
+    // Submit
     form.onsubmit = async (e) => {
         e.preventDefault();
 
         const payload = Object.fromEntries(new FormData(form));
         const editingId = form.dataset.editingId;
 
-        const url = editingId
-            ? `${ADMINDASHBOARD_API}/sections/${editingId}`
-            : `${ADMINDASHBOARD_API}/sections`;
 
-        const method = editingId ? 'PUT' : 'POST';
+         const url = editingId
+             ? `${ADMINDASHBOARD_API}/section-items/${editingId}`
+             : `${ADMINDASHBOARD_API}/section-items/section/${section.id}`;
+
+        const method = editingId ? "PUT" : "POST";
 
         try {
             const res = await fetch(url, {
                 method,
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                     ...admindashboardAuthHeaders()
                 },
                 body: JSON.stringify(payload)
             });
 
-            if (!res.ok) throw new Error('Failed to save section');
+            if (!res.ok) throw new Error("Failed to save item");
 
-            messageDiv.style.color = '#22c55e';
-            messageDiv.textContent = 'Section saved successfully';
+            messageDiv.style.color = "#22c55e";
+            messageDiv.textContent = "Item saved successfully";
 
             setTimeout(() => {
-                renderSectionsManagement({ id: serviceId, title: '' });
+                renderSectionItems(serviceId, section);
             }, 800);
 
         } catch (err) {
-            messageDiv.style.color = '#ef4444';
+            messageDiv.style.color = "#ef4444";
             messageDiv.textContent = err.message;
         }
     };
 }
+
+
+//Dynamic Item Fields by Section Type
+function handleItemFieldsBySectionType(type) {
+    const iconRow = document.querySelector('[name="icon"]')?.closest(".form-row");
+    const descRow = document.querySelector('[name="description"]')?.closest(".form-row");
+
+    if (!iconRow || !descRow) return;
+
+    // default
+    iconRow.style.display = "";
+    descRow.style.display = "";
+
+    switch (type) {
+        case "faq":
+            iconRow.style.display = "none";
+            break;
+
+        case "steps":
+            iconRow.style.display = "";
+            break;
+
+        case "features":
+            iconRow.style.display = "";
+            break;
+
+        case "cta":
+            descRow.style.display = "";
+            break;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
