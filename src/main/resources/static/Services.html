@@ -3,70 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Services - Ongole Bulls</title>
-    <div id="header-container"></div>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <title>Our Services - Ongole Bulls Invest</title>
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Common Scripts -->
     <script src="/common.js" defer></script>
-    <link rel="stylesheet" href="/css/style.css">
-
+    
     <style>
+        /* ===== CSS Variables - Brand Colors ===== */
+        :root {
+            --primary-accent: rgb(189, 42, 31);
+            --secondary-accent: rgb(187, 146, 54);
+            --base-bg: rgb(13, 38, 58);
+            --white: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #6b7280;
+            --card-bg: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.16);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== Reset & Base Styles ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        :root {
-            --primary: rgb(189, 42, 31);
-            --accent: rgb(187, 146, 54);
-            --dark-bg: rgb(13, 38, 58);
-            --text-dark: #2d2d2d;
-            --text-gray: #797e85;
-            --bg-light: #f8f9fa;
-            --white: #ffffff;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Helvetica Neue', Arial, sans-serif;
-            background: var(--bg-light);
-            color: var(--text-dark);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--base-bg);
+            color: var(--text-primary);
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
         }
 
-        /* Loading State */
-        .loading-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 60vh;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(187, 146, 54, 0.2);
-            border-top: 4px solid var(--accent);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            color: var(--text-gray);
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        /* Hero Header */
+        /* ===== Hero Section ===== */
         .services-hero {
-            background: linear-gradient(135deg, var(--dark-bg) 0%, #1a4d6f 100%);
-            padding: 120px 24px 80px;
+            background: var(--base-bg);
+            padding: 140px 24px 100px;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -79,20 +65,23 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(circle at 20% 50%, rgba(187, 146, 54, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(189, 42, 31, 0.1) 0%, transparent 50%);
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(189, 42, 31, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(187, 146, 54, 0.08) 0%, transparent 50%);
+            pointer-events: none;
         }
 
-        .services-badge {
-            display: inline-block;
-            background: rgba(187, 146, 54, 0.2);
-            color: var(--accent);
-            padding: 8px 20px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            border: 1px solid rgba(187, 146, 54, 0.3);
+        .services-hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(187, 146, 54, 0.3) 50%, 
+                transparent 100%);
         }
 
         .services-hero-content {
@@ -103,331 +92,928 @@
         }
 
         .services-hero h1 {
-            font-size: 52px;
+            font-size: clamp(2.5rem, 5vw, 4rem);
             font-weight: 800;
-            margin-bottom: 20px;
             color: var(--white);
-            letter-spacing: -1px;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
         }
 
-        .services-hero p {
-            font-size: 18px;
-            color: rgba(255, 255, 255, 0.9);
+        .services-hero .subtitle {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: rgba(255, 255, 255, 0.85);
             max-width: 700px;
             margin: 0 auto;
             line-height: 1.7;
+            font-weight: 400;
         }
 
-        /* Container */
-        .container {
+        /* ===== Main Container ===== */
+        .main-container {
             max-width: 1400px;
-            margin: -40px auto 0;
-            padding: 0 24px 80px;
+            margin: 0 auto;
+            padding: 0 24px 100px;
             position: relative;
             z-index: 2;
-            margin-top:80px;
-
+            margin-top: 60px;
         }
 
-        /* Services Grid */
+        /* ===== Services Grid ===== */
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 32px;
-            margin-top:70px;
-            margin-bottom:80px;
+            margin-top: 60px;
         }
 
-        .service-card {
-            background: var(--white);
-            border-radius: 16px;
-            overflow: hidden;
+        /* ===== Pagination ===== */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-top: 60px;
+            padding: 32px 0;
+        }
+
+        .pagination-info {
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 500;
+            margin: 0 16px;
+        }
+
+        .pagination-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            background: var(--primary-accent);
+            color: var(--white);
+            font-weight: 600;
+            font-size: 15px;
+            border: none;
+            border-radius: 10px;
             cursor: pointer;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            text-decoration: none;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pagination-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .pagination-button:hover::before {
+            left: 100%;
+        }
+
+        .pagination-button:hover {
+            background: rgb(160, 36, 26);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(189, 42, 31, 0.3);
+        }
+
+        .pagination-button:disabled {
+            background: rgba(189, 42, 31, 0.5);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .pagination-button:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .pagination-button i {
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .pagination-button:hover:not(:disabled) i {
+            transform: translateX(2px);
+        }
+
+        .pagination-button.prev i {
+            transform: translateX(-2px);
+        }
+
+        .pagination-button.prev:hover:not(:disabled) i {
+            transform: translateX(-4px);
+        }
+
+        /* Desktop: 3-4 cards per row */
+        @media (min-width: 1200px) {
+            .services-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 1600px) {
+            .services-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* Tablet: 2 cards per row */
+        @media (min-width: 768px) and (max-width: 1199px) {
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Mobile: 1 card per row */
+        @media (max-width: 767px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+
+        /* ===== Service Card ===== */
+        .service-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px 32px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 380px;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: transparent;
+            transition: var(--transition);
+        }
+
+        .service-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(189, 42, 31, 0.03) 0%, transparent 70%);
+            opacity: 0;
+            transition: var(--transition);
+            pointer-events: none;
         }
 
         .service-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(189, 42, 31, 0.2);
         }
 
-        .service-image-wrapper {
+        .service-card:hover::before {
+            background: var(--primary-accent);
+        }
+
+        .service-card:hover::after {
+            opacity: 1;
+        }
+
+        /* ===== Service Banner Image ===== */
+        .service-banner-wrapper {
             width: 100%;
-            height: 240px;
+            aspect-ratio: 16 / 9;
+            border-radius: 16px;
             overflow: hidden;
-            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+            margin-bottom: 24px;
             position: relative;
+            background: linear-gradient(135deg, rgba(189, 42, 31, 0.1) 0%, rgba(187, 146, 54, 0.1) 100%);
         }
 
-        .service-image {
+        .service-banner-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.4s ease;
+            object-position: center center;
+            transition: var(--transition);
+            display: block;
         }
 
-        .service-card:hover .service-image {
+        .service-card:hover .service-banner-img {
             transform: scale(1.05);
         }
 
-        .service-badge-card {
+        .service-banner-wrapper::after {
+            content: '';
             position: absolute;
-            top: 16px;
-            right: 16px;
-            background: var(--accent);
-            color: var(--white);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.05) 100%);
+            opacity: 0;
+            transition: var(--transition);
+            pointer-events: none;
         }
 
-        .service-content {
-            padding: 28px 24px;
+        .service-card:hover .service-banner-wrapper::after {
+            opacity: 1;
         }
 
+        /* ===== Service Content ===== */
         .service-title {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 700;
-            color: var(--text-dark);
+            color: var(--text-primary);
             margin-bottom: 12px;
             line-height: 1.3;
+            letter-spacing: -0.01em;
         }
 
         .service-description {
             font-size: 15px;
-            color: var(--text-gray);
+            color: var(--text-secondary);
             line-height: 1.7;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
+            flex-grow: 1;
         }
 
-        .learn-more-btn {
+        /* ===== CTA Button ===== */
+        .service-cta {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 12px 24px;
-            background: var(--primary);
+            padding: 14px 28px;
+            background: var(--primary-accent);
             color: var(--white);
             font-weight: 600;
-            font-size: 14px;
+            font-size: 15px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            width: fit-content;
+            margin-top: auto;
+            position: relative;
+            overflow: hidden;
         }
 
-        .learn-more-btn:hover {
-            background: #a02d24;
+        .service-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .service-cta:hover::before {
+            left: 100%;
+        }
+
+        .service-cta:hover {
+            background: rgb(160, 36, 26);
             transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(189, 42, 31, 0.3);
         }
 
-        /* Service Detail Page */
-        .service-detail {
-            background: var(--white);
-            border-radius: 16px;
-            padding: 48px;
-            margin-bottom: 32px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        .service-cta i {
+            transition: var(--transition);
         }
 
+        .service-cta:hover i {
+            transform: translateX(2px);
+        }
+
+        /* ===== Loading State ===== */
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            gap: 24px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(187, 146, 54, 0.2);
+            border-top: 4px solid var(--secondary-accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        /* ===== Empty State ===== */
+        .empty-state {
+            text-align: center;
+            padding: 100px 24px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            margin-top: 60px;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            opacity: 0.4;
+        }
+
+        .empty-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .empty-description {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        /* ===== Service Detail Page Styles ===== */
         .back-button {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            color: var(--text-gray);
+            color: var(--text-secondary);
             text-decoration: none;
             margin-bottom: 32px;
             font-weight: 600;
-            padding: 10px 16px;
-            border-radius: 8px;
-            transition: all 0.3s;
+            padding: 12px 20px;
+            border-radius: 10px;
+            transition: var(--transition);
+            background: rgba(0, 0, 0, 0.02);
         }
 
         .back-button:hover {
-            color: var(--primary);
-            background: rgba(189, 42, 31, 0.05);
+            color: var(--primary-accent);
+            background: rgba(189, 42, 31, 0.08);
+            transform: translateX(-4px);
+        }
+
+        .service-banner-wrapper {
+            margin-bottom: 32px;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: var(--shadow-md);
+            background: linear-gradient(135deg, rgba(189, 42, 31, 0.1) 0%, rgba(187, 146, 54, 0.1) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .service-banner {
             width: 100%;
-            height: 400px;
-            object-fit: cover;
-            border-radius: 12px;
-            margin-bottom: 48px;
+            height: 100%;
+            object-fit: contain;
+            object-position: center center;
+            display: block;
         }
 
-        /* Sections */
+
+        /* ===== Section with ID for Navigation ===== */
         .section {
-            margin-bottom: 80px;
+            margin-bottom: 32px;
+            scroll-margin-top: 120px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 48px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            transition: var(--transition);
+        }
+
+        .section:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .section[id] {
+            position: relative;
+        }
+
+        .section[id]::before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: -120px;
+            left: 0;
+            width: 100%;
+            height: 1px;
         }
 
         .section-title {
-            font-size: 36px;
+            font-size: clamp(1.75rem, 3vw, 2.5rem);
             font-weight: 700;
-            color: var(--text-dark);
+            color: var(--text-primary);
             margin-bottom: 16px;
             text-align: center;
+            letter-spacing: -0.02em;
+            position: relative;
+            padding-bottom: 16px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-accent), var(--secondary-accent));
+            border-radius: 2px;
         }
 
         .section-subtitle {
             font-size: 17px;
-            color: var(--text-gray);
+            color: var(--text-secondary);
             margin-bottom: 48px;
             text-align: center;
-          <!--  max-width: 700px;-->
+            max-width: 700px;
             margin-left: auto;
             margin-right: auto;
         }
+        .service-detail .service-banner-wrapper {
+            min-height: 400px;
+            max-height: 600px;
+            aspect-ratio: unset;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
 
-        /* Hero Section */
+        .service-detail .service-banner-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            z-index: 0;
+        }
+
+        .service-detail .service-banner {
+            width: 100%;
+            height: auto;
+            max-height: 600px;
+            max-width: 100%;
+            object-fit: contain;
+            object-position: center center;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+
+
+        /* Hero Section in Detail */
+        .section:has(.hero-section) {
+            background: transparent;
+            padding: 0;
+            box-shadow: none;
+            border: none;
+        }
+
+        .section:has(.hero-section):hover,
+        .section:has(.cta-section):hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .section:has(.cta-section) {
+            background: transparent;
+            padding: 0;
+            box-shadow: none;
+            border: none;
+        }
+
         .hero-section {
-            background: linear-gradient(135deg, var(--dark-bg) 0%, #1a4d6f 100%);
+            background: linear-gradient(135deg, var(--base-bg) 0%, rgb(20, 50, 75) 100%);
             color: var(--white);
             padding: 64px 48px;
-            border-radius: 16px;
+            border-radius: 20px;
             text-align: center;
-            margin-bottom: 32px;
         }
+
 
         /* Features Grid */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 28px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 32px;
         }
 
         .feature-item {
-            background: var(--white);
-            padding: 36px 28px;
-            border-radius: 12px;
-            border: 1px solid #e9ecef;
+            background: var(--card-bg);
+            padding: 40px 32px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
             text-align: center;
-            transition: all 0.3s;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .feature-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-accent), var(--secondary-accent));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-item::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(187, 146, 54, 0.05) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
         }
 
         .feature-item:hover {
-            border-color: var(--accent);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            transform: translateY(-4px);
+            border-color: rgba(187, 146, 54, 0.3);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+            transform: translateY(-8px);
+        }
+
+        .feature-item:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-item:hover::after {
+            opacity: 1;
+        }
+
+        .feature-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(189, 42, 31, 0.1) 0%, rgba(187, 146, 54, 0.1) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-icon-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--primary-accent) 0%, var(--secondary-accent) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
 
         .feature-icon {
-            font-size: 48px;
-            color: var(--accent);
-            margin-bottom: 20px;
+            font-size: 40px;
+            color: var(--primary-accent);
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-item:hover .feature-icon-wrapper {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .feature-item:hover .feature-icon-wrapper::before {
+            opacity: 1;
+        }
+
+        .feature-item:hover .feature-icon {
+            color: var(--white);
+            transform: scale(1.1);
         }
 
         .feature-title {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 12px;
+            color: var(--text-primary);
+            margin-bottom: 14px;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-item:hover .feature-title {
+            color: var(--primary-accent);
         }
 
         .feature-description {
             font-size: 15px;
-            color: var(--text-gray);
-            line-height: 1.7;
+            color: var(--text-primary);
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
         }
 
         /* Steps Timeline */
         .steps-container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
+            position: relative;
         }
 
         .step-item {
             display: flex;
-            gap: 24px;
-            margin-bottom: 40px;
+            gap: 32px;
+            margin-bottom: 48px;
             position: relative;
+            padding: 32px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .step-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--primary-accent) 0%, var(--secondary-accent) 100%);
+            border-radius: 20px 0 0 20px;
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .step-item:hover {
+            transform: translateX(8px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            border-color: rgba(187, 146, 54, 0.3);
+        }
+
+        .step-item:hover::before {
+            transform: scaleY(1);
         }
 
         .step-item:not(:last-child)::after {
             content: '';
             position: absolute;
-            left: 24px;
-            top: 56px;
+            left: 56px;
+            top: 100%;
             width: 2px;
-            height: calc(100% - 32px);
-            background: var(--accent);
-            opacity: 0.3;
+            height: 48px;
+            background: linear-gradient(180deg, var(--secondary-accent) 0%, rgba(187, 146, 54, 0.3) 100%);
+            z-index: 0;
+        }
+
+        .step-number-wrapper {
+            position: relative;
+            flex-shrink: 0;
+            z-index: 2;
         }
 
         .step-number {
-            width: 48px;
-            height: 48px;
-            background: var(--accent);
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--primary-accent) 0%, var(--secondary-accent) 100%);
             color: var(--white);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
-            font-weight: 700;
-            flex-shrink: 0;
+            font-size: 24px;
+            font-weight: 800;
+            box-shadow: 0 4px 16px rgba(189, 42, 31, 0.25);
+            transition: var(--transition);
+            position: relative;
+            border: 4px solid var(--white);
+        }
+
+        .step-number::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-accent) 0%, var(--secondary-accent) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+
+        .step-item:hover .step-number {
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 0 8px 24px rgba(189, 42, 31, 0.35);
+        }
+
+        .step-item:hover .step-number::before {
+            opacity: 0.3;
         }
 
         .step-content {
             flex: 1;
-            padding-top: 4px;
+            padding-top: 8px;
+            position: relative;
+            z-index: 1;
         }
 
         .step-title {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 8px;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+            transition: var(--transition);
+        }
+
+        .step-item:hover .step-title {
+            color: var(--primary-accent);
         }
 
         .step-description {
             font-size: 15px;
-            color: var(--text-gray);
-            line-height: 1.7;
+            color: var(--text-primary);
+            line-height: 1.8;
         }
 
         /* Why Choose Us */
         .why-choose-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 28px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 32px;
         }
 
         .why-item {
-            background: var(--white);
-            padding: 32px 28px;
-            border-radius: 12px;
-            border: 1px solid #e9ecef;
-            border-left: 4px solid var(--accent);
-            transition: all 0.3s;
+            background: var(--card-bg);
+            padding: 40px 32px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .why-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: linear-gradient(180deg, var(--primary-accent) 0%, var(--secondary-accent) 100%);
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .why-item::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(187, 146, 54, 0.08) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
         }
 
         .why-item:hover {
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+            transform: translateY(-8px);
+            border-color: rgba(187, 146, 54, 0.3);
+        }
+
+        .why-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .why-item:hover::after {
+            opacity: 1;
+        }
+
+        .why-icon-wrapper {
+            width: 72px;
+            height: 72px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(187, 146, 54, 0.15) 0%, rgba(189, 42, 31, 0.15) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+        }
+
+        .why-icon-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 18px;
+            background: linear-gradient(135deg, var(--secondary-accent) 0%, var(--primary-accent) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
 
         .why-icon {
-            font-size: 40px;
-            color: var(--accent);
-            margin-bottom: 20px;
+            font-size: 36px;
+            color: var(--secondary-accent);
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+        }
+
+        .why-item:hover .why-icon-wrapper {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .why-item:hover .why-icon-wrapper::before {
+            opacity: 1;
+        }
+
+        .why-item:hover .why-icon {
+            color: var(--white);
+            transform: scale(1.1);
         }
 
         .why-title {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 12px;
+            color: var(--text-primary);
+            margin-bottom: 14px;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+            position: relative;
+            z-index: 1;
+            transition: var(--transition);
+        }
+
+        .why-item:hover .why-title {
+            color: var(--primary-accent);
         }
 
         .why-description {
             font-size: 15px;
-            color: var(--text-gray);
-            line-height: 1.7;
+            color: var(--text-primary);
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
         }
 
         /* FAQ */
@@ -437,17 +1023,18 @@
         }
 
         .faq-item {
-            background: var(--white);
-            border: 1px solid #e9ecef;
-            border-radius: 12px;
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 16px;
             margin-bottom: 16px;
             overflow: hidden;
-            transition: all 0.3s;
+            transition: var(--transition);
         }
 
         .faq-item:hover,
         .faq-item.active {
-            border-color: var(--accent);
+            border-color: var(--secondary-accent);
+            box-shadow: var(--shadow-sm);
         }
 
         .faq-question {
@@ -462,18 +1049,23 @@
             text-align: left;
             font-size: 17px;
             font-weight: 600;
-            color: var(--text-dark);
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .faq-question:hover {
+            color: var(--primary-accent);
         }
 
         .faq-icon {
             font-size: 20px;
-            color: var(--text-gray);
-            transition: transform 0.3s;
+            color: var(--text-secondary);
+            transition: var(--transition);
         }
 
         .faq-item.active .faq-icon {
             transform: rotate(180deg);
-            color: var(--accent);
+            color: var(--secondary-accent);
         }
 
         .faq-answer {
@@ -488,463 +1080,987 @@
 
         .faq-answer-content {
             padding: 0 24px 20px;
-            color: var(--text-gray);
+            color: var(--text-primary);
             line-height: 1.7;
         }
 
         /* CTA Section */
         .cta-section {
-            background: linear-gradient(135deg, var(--primary) 0%, #a02d24 100%);
-            color: var(--white);
-            padding: 72px 48px;
-            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(187, 146, 54, 0.1) 0%, rgba(189, 42, 31, 0.1) 50%, rgba(187, 146, 54, 0.08) 100%);
+            color: var(--text-primary);
+            padding: 100px 48px;
+            border-radius: 28px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+            border: 1px solid rgba(187, 146, 54, 0.3);
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+            animation: pulse 6s ease-in-out infinite;
+        }
+
+        .cta-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 15px,
+                    rgba(255, 255, 255, 0.02) 15px,
+                    rgba(255, 255, 255, 0.02) 30px
+                );
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 0.6;
+            }
+            50% {
+                transform: scale(1.15) rotate(5deg);
+                opacity: 0.9;
+            }
+        }
+
+        /* Decorative elements */
+        .cta-section {
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(189, 42, 31, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(187, 146, 54, 0.1) 0%, transparent 40%);
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
         }
 
         .cta-title {
-            font-size: 38px;
-            font-weight: 700;
-            margin-bottom: 16px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            position: relative;
+        }
+
+        .cta-title::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-accent), var(--secondary-accent));
+            border-radius: 2px;
         }
 
         .cta-description {
-            font-size: 17px;
-            margin-bottom: 32px;
-            opacity: 0.95;
+            font-size: 19px;
+            margin-bottom: 48px;
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-weight: 400;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .cta-button {
-            display: inline-block;
-            padding: 16px 36px;
-            background: var(--accent);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 48px;
+            background: linear-gradient(135deg, var(--primary-accent) 0%, rgb(160, 36, 26) 100%);
             color: var(--white);
-            font-weight: 600;
-            font-size: 16px;
+            font-weight: 700;
+            font-size: 18px;
             text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s;
+            border-radius: 14px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(189, 42, 31, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-button::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            padding: 2px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover::after {
+            opacity: 1;
         }
 
         .cta-button:hover {
-            background: #a07835;
-            transform: translateY(-2px);
+            background: linear-gradient(135deg, rgb(200, 45, 35) 0%, var(--primary-accent) 100%);
+            transform: translateY(-6px) scale(1.08);
+            box-shadow: 0 16px 40px rgba(189, 42, 31, 0.5);
+            border-color: rgba(255, 255, 255, 0.4);
         }
 
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 100px 24px;
-            background: var(--white);
-            border-radius: 16px;
+        .cta-button:active {
+            transform: translateY(-2px) scale(1.02);
         }
 
-        .empty-icon {
-            font-size: 64px;
-            color: var(--text-gray);
-            margin-bottom: 20px;
-            opacity: 0.3;
+        .cta-button-icon {
+            font-size: 20px;
+            transition: var(--transition);
         }
 
-        .empty-title {
-            font-size: 26px;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 12px;
+        .cta-button:hover .cta-button-icon {
+            transform: translateX(4px);
         }
 
-        .empty-description {
-            font-size: 16px;
-            color: var(--text-gray);
-        }
-
-        /* Responsive */
+        /* ===== Responsive Adjustments ===== */
         @media (max-width: 768px) {
             .services-hero {
-                padding: 80px 20px 60px;
+                padding: 100px 20px 60px;
             }
 
-            .services-hero h1 {
-                font-size: 36px;
-            }
-
-            .container {
+            .main-container {
                 padding: 0 16px 60px;
+                margin-top: 40px;
             }
 
-            .services-grid {
+            .service-card {
+                padding: 24px 20px;
+                min-height: auto;
+            }
+
+            .service-banner-wrapper {
+                aspect-ratio: 16 / 9;
+                margin-bottom: 20px;
+            }
+
+            .section {
+                padding: 32px 24px;
+            }
+
+            .service-banner-wrapper {
+                aspect-ratio: 16 / 9;
+            }
+
+            .hero-section {
+                padding: 48px 24px;
+            }
+
+
+            .features-grid {
                 grid-template-columns: 1fr;
                 gap: 24px;
             }
 
-            .service-detail {
-                padding: 32px 20px;
+            .feature-item {
+                padding: 32px 24px;
             }
 
-            .features-grid,
+            .feature-icon-wrapper {
+                width: 70px;
+                height: 70px;
+            }
+
+            .feature-icon {
+                font-size: 36px;
+            }
+
             .why-choose-grid {
                 grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .why-item {
+                padding: 32px 24px;
+            }
+
+            .why-icon-wrapper {
+                width: 64px;
+                height: 64px;
+            }
+
+            .why-icon {
+                font-size: 32px;
+            }
+
+            .step-item {
+                flex-direction: column;
+                gap: 20px;
+                padding: 24px 20px;
+                margin-bottom: 32px;
+            }
+
+            .step-item::before {
+                width: 100%;
+                height: 4px;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: auto;
+                border-radius: 20px 20px 0 0;
+                transform: scaleX(0);
+                transform-origin: left;
+            }
+
+            .step-item:hover {
+                transform: translateY(-4px);
+            }
+
+            .step-item:not(:last-child)::after {
+                left: 50%;
+                top: 100%;
+                width: 2px;
+                height: 32px;
+                transform: translateX(-50%);
+            }
+
+            .step-number-wrapper {
+                align-self: center;
+            }
+
+            .step-number {
+                width: 56px;
+                height: 56px;
+                font-size: 22px;
+            }
+
+            .step-content {
+                text-align: center;
+                padding-top: 0;
             }
 
             .section-title {
                 font-size: 28px;
             }
+
+            .hero-section {
+                padding: 48px 24px;
+            }
+
+            .cta-section {
+                padding: 60px 24px;
+            }
+
+            .cta-section {
+                padding: 70px 24px;
+            }
+
+            .cta-title {
+                font-size: clamp(1.75rem, 5vw, 2.5rem);
+            }
+
+            .cta-title::after {
+                width: 60px;
+            }
+
+            .cta-description {
+                font-size: 17px;
+                margin-bottom: 40px;
+            }
+
+            .cta-button {
+                padding: 18px 36px;
+                font-size: 16px;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .pagination-container {
+                flex-direction: column;
+                gap: 16px;
+                margin-top: 40px;
+            }
+
+            .pagination-info {
+                margin: 0;
+                text-align: center;
+            }
+
+            .pagination-button {
+                width: 100%;
+                justify-content: center;
+                max-width: 300px;
+            }
         }
+
+        /* ===== Smooth Scroll ===== */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* ===== Focus States for Accessibility ===== */
+        .service-card:focus-visible,
+        .service-cta:focus-visible,
+        .back-button:focus-visible {
+            outline: 2px solid var(--primary-accent);
+            outline-offset: 4px;
+        }
+
+        /* ===== Premium Fintech Touch ===== */
+        .service-card {
+            backdrop-filter: blur(10px);
+        }
+
+        /* Subtle animation on page load */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .service-card {
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        .service-card:nth-child(1) { animation-delay: 0.1s; }
+        .service-card:nth-child(2) { animation-delay: 0.2s; }
+        .service-card:nth-child(3) { animation-delay: 0.3s; }
+        .service-card:nth-child(4) { animation-delay: 0.4s; }
+        .service-card:nth-child(5) { animation-delay: 0.5s; }
+        .service-card:nth-child(6) { animation-delay: 0.6s; }
+        .service-card:nth-child(n+7) { animation-delay: 0.7s; }
     </style>
 </head>
 <body>
+    <!-- Header Container -->
+    <div id="header-container"></div>
 
-<div id="servicesContainer"></div>
+    <!-- Services Container -->
+    <div id="servicesContainer"></div>
 
-<script>
-    const API_BASE = 'http://localhost:8080/api';
-    const urlParams = new URLSearchParams(window.location.search);
-    const serviceSlug = urlParams.get('service');
+    <!-- Footer Container -->
+    <div id="footer-container"></div>
 
-    if (serviceSlug) {
-        loadServiceDetail(serviceSlug);
-    } else {
-        loadAllServices();
-    }
+    <script>
+        const API_BASE = 'http://localhost:8080/api';
+        const urlParams = new URLSearchParams(window.location.search);
+        const serviceSlug = urlParams.get('service');
 
-    async function loadAllServices() {
-        const container = document.getElementById('servicesContainer');
-        container.innerHTML = `
-            <div class="loading-container">
-                <div class="spinner"></div>
-                <p class="loading-text">Loading services...</p>
-            </div>
-        `;
+        if (serviceSlug) {
+            loadServiceDetail(serviceSlug);
+        } else {
+            loadAllServices();
+        }
 
-        try {
-            const response = await fetch(`${API_BASE}/services`);
-            if (!response.ok) throw new Error('Failed to load services');
+        // Pagination state
+        let currentPage = 1;
+        const itemsPerPage = 8;
+        let allServices = [];
 
-            const services = await response.json();
-            const activeServices = services.filter(s => s.active);
+        function renderServices(services, page = 1) {
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const servicesToShow = services.slice(startIndex, endIndex);
+            const totalPages = Math.ceil(services.length / itemsPerPage);
 
-            if (activeServices.length === 0) {
-                container.innerHTML = `
-                    <div class="services-hero">
-                        <div class="services-hero-content">
-                            <span class="services-badge"><i class="bi bi-briefcase"></i> Investment Insights</span>
-                            <h1>Our Financial Services</h1>
-                            <p>Comprehensive solutions designed to help you achieve your financial goals</p>
-                        </div>
-                    </div>
-                    <div class="container">
-                        <div class="empty-state">
-                            <i class="bi bi-briefcase empty-icon"></i>
-                            <h2 class="empty-title">No Services Available</h2>
-                            <p class="empty-description">We're working on bringing you amazing services.</p>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
+            // Service icons mapping
+            const serviceIcons = {
+                'mutual-fund': 'bi-graph-up-arrow',
+                'pms': 'bi-briefcase',
+                'investment-banking': 'bi-building',
+                'tax-optimization': 'bi-calculator',
+                'wealth-management': 'bi-piggy-bank',
+                'portfolio-diversification': 'bi-pie-chart',
+                'sip': 'bi-calendar-check',
+                'default': 'bi-star'
+            };
 
-            let html = `
-                <div class="services-hero">
-                    <div class="services-hero-content">
-                        <span class="services-badge"><i class="bi bi-briefcase"></i> Investment Insights</span>
-                        <h1>Our Financial Services</h1>
-                        <p>Explore our comprehensive range of investment services designed to help you build wealth, minimize risks, and achieve financial security through expert guidance and strategic planning.</p>
-                    </div>
-                </div>
-                <div class="container">
-                    <div class="services-grid">
-            `;
+            let html = '<div class="services-grid">';
 
-            activeServices.forEach((service, index) => {
+            servicesToShow.forEach((service) => {
                 html += `
                     <div class="service-card" onclick="navigateToService('${service.slug}')">
-                        <div class="service-image-wrapper">
-                            ${service.bannerImage ?
-                                `<img src="${service.bannerImage}" alt="${service.title}" class="service-image">` :
-                                `<div class="service-image"></div>`
-                            }
-                            ${index === 0 ? '<span class="service-badge-card">Popular</span>' : ''}
-                        </div>
-                        <div class="service-content">
-                            <h3 class="service-title">${service.title}</h3>
-                            <p class="service-description">${service.subtitle || 'Comprehensive solutions tailored to your financial goals'}</p>
-                            <button class="learn-more-btn">
-                                Learn More <i class="bi bi-arrow-right"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            html += '</div></div>';
-            container.innerHTML = html;
-
-        } catch (error) {
-            console.error('Error:', error);
-            container.innerHTML = `
-                <div class="services-hero">
-                    <div class="services-hero-content">
-                        <span class="services-badge"><i class="bi bi-briefcase"></i> Investment Insights</span>
-                        <h1>Our Financial Services</h1>
-                    </div>
-                </div>
-                <div class="container">
-                    <div class="empty-state">
-                        <i class="bi bi-exclamation-triangle empty-icon"></i>
-                        <h2 class="empty-title">Error Loading Services</h2>
-                        <p class="empty-description">${error.message}</p>
-                    </div>
-                </div>
-            `;
-        }
-    }
-
-    async function loadServiceDetail(slug) {
-        const container = document.getElementById('servicesContainer');
-        container.innerHTML = `
-            <div class="loading-container">
-                <div class="spinner"></div>
-                <p class="loading-text">Loading service details...</p>
-            </div>
-        `;
-
-        try {
-            const decodedSlug = decodeURIComponent(slug).trim();
-            const allServicesResponse = await fetch(`${API_BASE}/services`);
-            if (!allServicesResponse.ok) throw new Error('Failed to load services');
-
-            const allServices = await allServicesResponse.json();
-
-            let service = allServices.find(s => {
-                const serviceSlug = (s.slug || '').trim();
-                const cleanServiceSlug = serviceSlug.startsWith('/') ? serviceSlug.substring(1) : serviceSlug;
-                const cleanSearchSlug = decodedSlug.startsWith('/') ? decodedSlug.substring(1) : decodedSlug;
-                return cleanServiceSlug.toLowerCase() === cleanSearchSlug.toLowerCase();
-            });
-
-            if (!service) {
-                service = allServices.find(s =>
-                    s.title && s.title.toLowerCase().trim() === decodedSlug.toLowerCase().trim()
-                );
-            }
-
-            if (!service) throw new Error('Service not found');
-
-            const sectionsResponse = await fetch(`${API_BASE}/service-sections/service/${service.id}`);
-            if (!sectionsResponse.ok) throw new Error('Failed to load sections');
-
-            const sections = await sectionsResponse.json();
-            sections.sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));
-
-            let html = `
-                <div class="services-hero">
-                    <div class="services-hero-content">
-                        <span class="services-badge"><i class="bi bi-briefcase"></i> Investment Insights</span>
-                        <h1>${service.title}</h1>
-                        <p>${service.subtitle || 'Comprehensive solutions tailored to your goals'}</p>
-                    </div>
-                </div>
-                <div class="container">
-                    <div class="service-detail">
-                        <a href="services.html" class="back-button">
-                            <i class="bi bi-arrow-left"></i> Back to Services
+                        ${service.bannerImage ? `
+                            <div class="service-banner-wrapper">
+                                <img src="${service.bannerImage}" alt="${service.title}" class="service-banner-img">
+                            </div>
+                        ` : `
+                            <div class="service-banner-wrapper" style="background: linear-gradient(135deg, rgba(189, 42, 31, 0.15) 0%, rgba(187, 146, 54, 0.15) 100%); display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-image" style="font-size: 48px; color: var(--primary-accent); opacity: 0.5;"></i>
+                            </div>
+                        `}
+                        <h3 class="service-title">${service.title}</h3>
+                        <p class="service-description">${service.subtitle || 'Comprehensive solutions tailored to your financial goals'}</p>
+                        <a href="#" class="service-cta" onclick="event.preventDefault(); navigateToService('${service.slug}')">
+                            Explore <i class="bi bi-arrow-right"></i>
                         </a>
-                        ${service.bannerImage ? `<img src="${service.bannerImage}" alt="${service.title}" class="service-banner">` : ''}
-            `;
-
-            for (const section of sections) {
-                html += await renderSection(section);
-            }
-
-            html += '</div></div>';
-            container.innerHTML = html;
-            initializeFAQs();
-
-        } catch (error) {
-            console.error('Error:', error);
-            container.innerHTML = `
-                <div class="services-hero">
-                    <div class="services-hero-content">
-                        <span class="services-badge"><i class="bi bi-briefcase"></i> Investment Insights</span>
-                        <h1>Service Details</h1>
-                    </div>
-                </div>
-                <div class="container">
-                    <div class="empty-state">
-                        <i class="bi bi-exclamation-triangle empty-icon"></i>
-                        <h2 class="empty-title">Error Loading Service</h2>
-                        <p class="empty-description">${error.message}</p>
-                        <br><br>
-                        <a href="services.html" class="cta-button">Back to Services</a>
-                    </div>
-                </div>
-            `;
-        }
-    }
-
-    async function renderSection(section) {
-        const itemsResponse = await fetch(`${API_BASE}/section-items/section/${section.id}`);
-        const items = itemsResponse.ok ? await itemsResponse.json() : [];
-        items.sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));
-
-        let html = '<div class="section">';
-
-        switch (section.sectionType) {
-            case 'hero':
-                html += `
-                    <div class="hero-section">
-                        <h2 class="section-title" style="color: white;">${section.title || 'Welcome'}</h2>
-                        ${section.subtitle ? `<p class="section-subtitle" style="color: rgba(255,255,255,0.9);">${section.subtitle}</p>` : ''}
-                        ${items.map(item => `
-                            <div style="margin-top: 20px;">
-                                <h3 style="font-size: 20px; margin-bottom: 10px; font-weight: 700; color: white;">${item.title}</h3>
-                                ${item.description ? `<p style="opacity: 0.9; font-size: 16px; color: rgba(255,255,255,0.9);">${item.description}</p>` : ''}
-                            </div>
-                        `).join('')}
                     </div>
                 `;
-                break;
+            });
 
-            case 'features':
-                html += `
-                    <h2 class="section-title">${section.title || 'Our Features'}</h2>
-                    ${section.subtitle ? `<p class="section-subtitle">${section.subtitle}</p>` : ''}
-                    <div class="features-grid">
-                `;
-                items.forEach(item => {
-                    html += `
-                        <div class="feature-item">
-                            <i class="${item.icon || 'bi bi-star'} feature-icon"></i>
-                            <h3 class="feature-title">${item.title}</h3>
-                            ${item.description ? `<p class="feature-description">${item.description}</p>` : ''}
-                        </div>
-                    `;
-                });
-                html += '</div>';
-                break;
+            html += '</div>';
 
-            case 'steps':
+            // Pagination controls
+            if (totalPages > 1) {
                 html += `
-                    <h2 class="section-title">${section.title || 'How It Works'}</h2>
-                    ${section.subtitle ? `<p class="section-subtitle">${section.subtitle}</p>` : ''}
-                    <div class="steps-container">
-                `;
-                items.forEach((item, index) => {
-                    html += `
-                        <div class="step-item">
-                            <div class="step-number">${index + 1}</div>
-                            <div class="step-content">
-                                <h3 class="step-title">${item.title}</h3>
-                                ${item.description ? `<p class="step-description">${item.description}</p>` : ''}
-                            </div>
-                        </div>
-                    `;
-                });
-                html += '</div>';
-                break;
-
-            case 'why_choose_us':
-                html += `
-                    <h2 class="section-title">${section.title || 'Why Choose Us'}</h2>
-                    ${section.subtitle ? `<p class="section-subtitle">${section.subtitle}</p>` : ''}
-                    <div class="why-choose-grid">
-                `;
-                items.forEach(item => {
-                    html += `
-                        <div class="why-item">
-                            <i class="${item.icon || 'bi bi-check-circle'} why-icon"></i>
-                            <h3 class="why-title">${item.title}</h3>
-                            ${item.description ? `<p class="why-description">${item.description}</p>` : ''}
-                        </div>
-                    `;
-                });
-                html += '</div>';
-                break;
-
-            case 'faq':
-                html += `
-                    <h2 class="section-title">${section.title || 'Frequently Asked Questions'}</h2>
-                    ${section.subtitle ? `<p class="section-subtitle">${section.subtitle}</p>` : ''}
-                    <div class="faq-container">
-                `;
-                items.forEach(item => {
-                    html += `
-                        <div class="faq-item">
-                            <button class="faq-question">
-                                <span>${item.title}</span>
-                                <i class="bi bi-chevron-down faq-icon"></i>
+                    <div class="pagination-container">
+                        ${page > 1 ? `
+                            <button class="pagination-button prev" onclick="changePage(${page - 1})">
+                                <i class="bi bi-arrow-left"></i> Previous
                             </button>
-                            <div class="faq-answer">
-                                ${item.description ? `<div class="faq-answer-content">${item.description}</div>` : ''}
-                            </div>
-                        </div>
-                    `;
-                });
-                html += '</div>';
-                break;
-
-            case 'cta':
-                html += `
-                    <div class="cta-section">
-                        <h2 class="cta-title">${section.title || 'Ready to Get Started?'}</h2>
-                        <p class="cta-description">${section.subtitle || 'Contact us today to learn more'}</p>
-                        ${items.length > 0 && items[0].description ? `<p style="margin-bottom: 32px; opacity: 0.95;">${items[0].description}</p>` : ''}
-                        <a href="contact.html" class="cta-button">Get Started Now</a>
-                    </div>
-                `;
-                break;
-
-            default:
-                html += `
-                    <div style="background: white; padding: 48px 40px; border-radius: 16px; border: 1px solid #e9ecef;">
-                        <h2 class="section-title">${section.title || ''}</h2>
-                        ${section.subtitle ? `<p class="section-subtitle">${section.subtitle}</p>` : ''}
-                        ${items.length > 0 ? `
-                            <div style="display: grid; gap: 24px;">
-                                ${items.map(item => `
-                                    <div style="padding: 28px; border-left: 4px solid var(--accent); background: #f8f9fa; border-radius: 12px;">
-                                        <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 12px; color: var(--text-dark);">${item.title}</h3>
-                                        ${item.description ? `<p style="color: var(--text-gray); font-size: 15px; line-height: 1.7;">${item.description}</p>` : ''}
-                                    </div>
-                                `).join('')}
-                            </div>
+                        ` : ''}
+                        <span class="pagination-info">
+                            Showing ${startIndex + 1}-${Math.min(endIndex, services.length)} of ${services.length} services
+                        </span>
+                        ${page < totalPages ? `
+                            <button class="pagination-button next" onclick="changePage(${page + 1})">
+                                Next <i class="bi bi-arrow-right"></i>
+                            </button>
                         ` : ''}
                     </div>
                 `;
-                break;
+            }
+
+            return html;
         }
 
-        html += '</div>';
-        return html;
-    }
+        function changePage(page) {
+            currentPage = page;
+            const container = document.getElementById('servicesContainer');
+            const gridContainer = container.querySelector('.main-container .services-grid')?.parentElement;
+            
+            if (gridContainer) {
+                const newContent = renderServices(allServices, page);
+                gridContainer.innerHTML = newContent;
+                
+                // Smooth scroll to top of services grid
+                gridContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
 
-    function initializeFAQs() {
-        const faqQuestions = document.querySelectorAll('.faq-question');
-        faqQuestions.forEach(question => {
-            question.addEventListener('click', function() {
-                const faqItem = this.parentElement;
-                const wasActive = faqItem.classList.contains('active');
+        async function loadAllServices() {
+            const container = document.getElementById('servicesContainer');
+            container.innerHTML = `
+                <div class="loading-container">
+                    <div class="spinner"></div>
+                    <p class="loading-text">Loading services...</p>
+                </div>
+            `;
 
-                document.querySelectorAll('.faq-item').forEach(item => {
-                    item.classList.remove('active');
+            try {
+                const response = await fetch(`${API_BASE}/services`);
+                if (!response.ok) throw new Error('Failed to load services');
+
+                const services = await response.json();
+                allServices = services.filter(s => s.active);
+                currentPage = 1;
+
+                if (allServices.length === 0) {
+                    container.innerHTML = `
+                        <div class="services-hero">
+                            <div class="services-hero-content">
+                                <h1>Our Services</h1>
+                                <p class="subtitle">Comprehensive solutions designed to help you achieve your financial goals</p>
+                            </div>
+                        </div>
+                        <div class="main-container">
+                            <div class="empty-state">
+                                <i class="bi bi-briefcase empty-icon"></i>
+                                <h2 class="empty-title">No Services Available</h2>
+                                <p class="empty-description">We're working on bringing you amazing services.</p>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = `
+                    <div class="services-hero">
+                        <div class="services-hero-content">
+                            <h1>Our Services</h1>
+                            <p class="subtitle">Explore our comprehensive range of investment services designed to help you build wealth, minimize risks, and achieve financial security through expert guidance and strategic planning.</p>
+                        </div>
+                    </div>
+                    <div class="main-container">
+                        ${renderServices(allServices, 1)}
+                    </div>
+                `;
+
+                container.innerHTML = html;
+
+            } catch (error) {
+                console.error('Error:', error);
+                container.innerHTML = `
+                    <div class="services-hero">
+                        <div class="services-hero-content">
+                            <h1>Our Services</h1>
+                            <p class="subtitle">Comprehensive solutions designed to help you achieve your financial goals</p>
+                        </div>
+                    </div>
+                    <div class="main-container">
+                        <div class="empty-state">
+                            <i class="bi bi-exclamation-triangle empty-icon"></i>
+                            <h2 class="empty-title">Error Loading Services</h2>
+                            <p class="empty-description">${error.message}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadServiceDetail(slug) {
+            const container = document.getElementById('servicesContainer');
+            container.innerHTML = `
+                <div class="loading-container">
+                    <div class="spinner"></div>
+                    <p class="loading-text">Loading service details...</p>
+                </div>
+            `;
+
+            try {
+                const decodedSlug = decodeURIComponent(slug).trim();
+                const allServicesResponse = await fetch(`${API_BASE}/services`);
+                if (!allServicesResponse.ok) throw new Error('Failed to load services');
+
+                const allServices = await allServicesResponse.json();
+
+                let service = allServices.find(s => {
+                    const serviceSlug = (s.slug || '').trim();
+                    const cleanServiceSlug = serviceSlug.startsWith('/') ? serviceSlug.substring(1) : serviceSlug;
+                    const cleanSearchSlug = decodedSlug.startsWith('/') ? decodedSlug.substring(1) : decodedSlug;
+                    return cleanServiceSlug.toLowerCase() === cleanSearchSlug.toLowerCase();
                 });
 
-                if (!wasActive) {
-                    faqItem.classList.add('active');
+                if (!service) {
+                    service = allServices.find(s =>
+                        s.title && s.title.toLowerCase().trim() === decodedSlug.toLowerCase().trim()
+                    );
                 }
-            });
-        });
-    }
 
-    function navigateToService(slug) {
-        let cleanSlug = slug;
-        if (cleanSlug.startsWith('/')) {
-            cleanSlug = cleanSlug.substring(1);
+                if (!service) throw new Error('Service not found');
+                const serviceId = service.id;
+
+                const sectionsResponse = await fetch(`${API_BASE}/services/${serviceId}/sections`);
+                if (!sectionsResponse.ok) throw new Error('Failed to load sections');
+
+                const sections = await sectionsResponse.json();
+                sections.sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));
+
+                let html = `
+                    <div class="services-hero">
+                        <div class="services-hero-content">
+                            <h1>${service.title}</h1>
+                            <p class="subtitle">${service.subtitle || 'Comprehensive solutions tailored to your goals'}</p>
+                        </div>
+                    </div>
+<!--                    <div class="main-container">-->
+                        <div class="main-container service-detail">
+<!--                        ${service.bannerImage ? `-->
+<!--                            <div class="service-banner-wrapper" style="background-image: url('${service.bannerImage}');">-->
+<!--                                <img src="${service.bannerImage}" alt="${service.title}" class="service-banner">-->
+<!--                            </div>-->
+<!--                        ` : ''}-->
+                `;
+
+                for (const section of sections) {
+                    html += await renderSection(section);
+                }
+
+                html += `
+                        <div class="section" style="text-align: center; padding: 40px;">
+                            <a href="Services.html" class="back-button" style="margin-bottom: 0;">
+                                <i class="bi bi-arrow-left"></i> Back to Services
+                            </a>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML = html;
+                initializeFAQs();
+
+            } catch (error) {
+                console.error('Error:', error);
+                container.innerHTML = `
+                    <div class="services-hero">
+                        <div class="services-hero-content">
+                            <h1>Service Details</h1>
+                            <p class="subtitle">Comprehensive solutions tailored to your goals</p>
+                        </div>
+                    </div>
+                    <div class="main-container">
+                        <div class="empty-state">
+                            <i class="bi bi-exclamation-triangle empty-icon"></i>
+                            <h2 class="empty-title">Error Loading Service</h2>
+                            <p class="empty-description">${error.message}</p>
+                            <br><br>
+                            <a href="Services.html" class="cta-button">Back to Services</a>
+                        </div>
+                    </div>
+                `;
+            }
         }
-        const encodedSlug = encodeURIComponent(cleanSlug);
-        window.location.href = `services.html?service=${encodedSlug}`;
-    }
-</script>
 
-<div id="footer-container"></div>
+        // Function to get dynamic icon based on content
+        function getDynamicIcon(title, description, sectionType) {
+            // If icon is provided in database, use it
+            // Otherwise, determine icon based on keywords
+            
+            const text = `${title || ''} ${description || ''}`.toLowerCase();
+            
+            // Icon mapping based on keywords
+            const iconMap = {
+                // Security & Trust
+                'security': 'bi-shield-check',
+                'secure': 'bi-shield-check',
+                'safe': 'bi-shield-check',
+                'trust': 'bi-shield-check',
+                'protected': 'bi-shield-check',
+                'protection': 'bi-shield-check',
+                
+                // Growth & Success
+                'growth': 'bi-graph-up-arrow',
+                'grow': 'bi-graph-up-arrow',
+                'profit': 'bi-graph-up-arrow',
+                'return': 'bi-graph-up-arrow',
+                'returns': 'bi-graph-up-arrow',
+                'success': 'bi-trophy',
+                'achievement': 'bi-trophy',
+                'win': 'bi-trophy',
+                
+                // Money & Finance
+                'money': 'bi-cash-stack',
+                'cash': 'bi-cash-stack',
+                'wealth': 'bi-piggy-bank',
+                'investment': 'bi-briefcase',
+                'invest': 'bi-briefcase',
+                'portfolio': 'bi-pie-chart',
+                'diversification': 'bi-pie-chart',
+                
+                // Planning & Strategy
+                'plan': 'bi-calendar-check',
+                'planning': 'bi-calendar-check',
+                'strategy': 'bi-diagram-3',
+                'strategic': 'bi-diagram-3',
+                'roadmap': 'bi-map',
+                
+                // Expert & Professional
+                'expert': 'bi-person-badge',
+                'professional': 'bi-person-badge',
+                'advisor': 'bi-person-badge',
+                'consultant': 'bi-person-badge',
+                'guidance': 'bi-compass',
+                'support': 'bi-headset',
+                
+                // Speed & Efficiency
+                'fast': 'bi-lightning-charge',
+                'quick': 'bi-lightning-charge',
+                'efficient': 'bi-speedometer2',
+                'efficiency': 'bi-speedometer2',
+                'speed': 'bi-speedometer2',
+                
+                // Technology & Innovation
+                'technology': 'bi-cpu',
+                'tech': 'bi-cpu',
+                'digital': 'bi-laptop',
+                'online': 'bi-globe',
+                'platform': 'bi-window',
+                'app': 'bi-phone',
+                
+                // Analysis & Data
+                'analysis': 'bi-bar-chart',
+                'analytics': 'bi-bar-chart',
+                'data': 'bi-database',
+                'report': 'bi-file-earmark-text',
+                'insight': 'bi-lightbulb',
+                
+                // Tax & Compliance
+                'tax': 'bi-calculator',
+                'taxation': 'bi-calculator',
+                'compliance': 'bi-check-circle',
+                'legal': 'bi-file-earmark-check',
+                
+                // Risk & Safety
+                'risk': 'bi-exclamation-triangle',
+                'safety': 'bi-shield',
+                'insurance': 'bi-shield-fill',
+                
+                // Education & Learning
+                'learn': 'bi-book',
+                'education': 'bi-book',
+                'knowledge': 'bi-book',
+                'training': 'bi-mortarboard',
+                
+                // Communication
+                'communication': 'bi-chat-dots',
+                'contact': 'bi-telephone',
+                'call': 'bi-telephone',
+                'email': 'bi-envelope',
+                
+                // Time & Schedule
+                'time': 'bi-clock',
+                'schedule': 'bi-calendar',
+                'deadline': 'bi-calendar-event',
+                
+                // Quality & Excellence
+                'quality': 'bi-star-fill',
+                'excellence': 'bi-star-fill',
+                'premium': 'bi-gem',
+                'best': 'bi-award',
+                
+                // Flexibility
+                'flexible': 'bi-arrows-angle-contract',
+                'flexibility': 'bi-arrows-angle-contract',
+                'custom': 'bi-sliders',
+                'customize': 'bi-sliders',
+                
+                // Transparency
+                'transparent': 'bi-eye',
+                'transparency': 'bi-eye',
+                'clear': 'bi-eye',
+                
+                // Experience
+                'experience': 'bi-clock-history',
+                'years': 'bi-clock-history',
+                'veteran': 'bi-clock-history',
+            };
+            
+            // Check for matches in order of priority
+            for (const [keyword, icon] of Object.entries(iconMap)) {
+                if (text.includes(keyword)) {
+                    return `bi ${icon}`;
+                }
+            }
+            
+            // Default icons based on section type
+            const defaultIcons = {
+                'features': 'bi-star',
+                'why_choose_us': 'bi-check-circle',
+                'steps': 'bi-list-ol',
+                'faq': 'bi-question-circle',
+                'hero': 'bi-image',
+                'cta': 'bi-arrow-right-circle'
+            };
+            
+            return `bi ${defaultIcons[sectionType] || 'bi-star'}`;
+        }
+
+        async function renderSection(section) {
+            const itemsResponse = await fetch(`${API_BASE}/section-items/section/${section.id}`);
+            const items = itemsResponse.ok ? await itemsResponse.json() : [];
+            items.sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));
+
+            let html = '<div class="section">';
+
+            switch (section.sectionType) {
+                case 'hero':
+                    html += `
+                        <div class="hero-section">
+                            <h2 class="section-title" style="color: white;">${section.title || 'Welcome'}</h2>
+                            ${section.subtitle ? `<p class="section-subtitle" style="color: rgba(255,255,255,0.9);">${section.subtitle}</p>` : ''}
+                            ${items.map(item => `
+                                <div style="margin-top: 20px;">
+                                    <h3 style="font-size: 20px; margin-bottom: 10px; font-weight: 700; color: white;">${item.title}</h3>
+                                    ${item.description ? `<p style="opacity: 0.9; font-size: 16px; color: rgba(255,255,255,0.9);">${item.description}</p>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                    break;
+
+                case 'features':
+                    html += `
+                        <h2 class="section-title">${section.title || 'Our Features'}</h2>
+                        ${section.subtitle ? `<p class="section-subtitle">${section.subtitle}</p>` : ''}
+                        <div class="features-grid">
+                    `;
+                    items.forEach((item, index) => {
+                        const dynamicIcon = getDynamicIcon(item.title, item.description, 'features');
+                        html += `
+                            <div class="feature-item" style="animation: fadeInUp 0.6s ease-out ${index * 0.1}s backwards;">
+                                <div class="feature-icon-wrapper">
+                                    <i class="${item.icon || dynamicIcon} feature-icon"></i>
+                                </div>
+                                <h3 class="feature-title">${item.title}</h3>
+                                ${item.description ? `<p class="feature-description">${item.description}</p>` : ''}
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    break;
+
+                case 'steps':
+                    html += `
+                        <h2 class="section-title">${section.title || 'How It Works'}</h2>
+                        ${section.subtitle ? `<p class="section-subtitle">${section.subtitle}</p>` : ''}
+                        <div class="steps-container">
+                    `;
+                    items.forEach((item, index) => {
+                        html += `
+                            <div class="step-item" style="animation: fadeInUp 0.6s ease-out ${index * 0.15}s backwards;">
+                                <div class="step-number-wrapper">
+                                    <div class="step-number">${index + 1}</div>
+                                </div>
+                                <div class="step-content">
+                                    <h3 class="step-title">${item.title}</h3>
+                                    ${item.description ? `<p class="step-description">${item.description}</p>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    break;
+
+                case 'why_choose_us':
+                    html += `
+                        <h2 class="section-title">${section.title || 'Why Choose Us'}</h2>
+                        ${section.subtitle ? `<p class="section-subtitle">${section.subtitle}</p>` : ''}
+                        <div class="why-choose-grid">
+                    `;
+                    items.forEach((item, index) => {
+                        const dynamicIcon = getDynamicIcon(item.title, item.description, 'why_choose_us');
+                        html += `
+                            <div class="why-item" style="animation: fadeInUp 0.6s ease-out ${index * 0.1}s backwards;">
+                                <div class="why-icon-wrapper">
+                                    <i class="${item.icon || dynamicIcon} why-icon"></i>
+                                </div>
+                                <h3 class="why-title">${item.title}</h3>
+                                ${item.description ? `<p class="why-description">${item.description}</p>` : ''}
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    break;
+
+                case 'faq':
+                    html += `
+                        <h2 class="section-title">${section.title || 'Frequently Asked Questions'}</h2>
+                        ${section.subtitle ? `<p class="section-subtitle">${section.subtitle}</p>` : ''}
+                        <div class="faq-container">
+                    `;
+                    items.forEach(item => {
+                        html += `
+                            <div class="faq-item">
+                                <button class="faq-question">
+                                    <span>${item.title}</span>
+                                    <i class="bi bi-chevron-down faq-icon"></i>
+                                </button>
+                                <div class="faq-answer">
+                                    ${item.description ? `<div class="faq-answer-content">${item.description}</div>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    break;
+
+                case 'cta':
+                    html += `
+                        <div class="cta-section">
+                            <div class="cta-content">
+                                <h2 class="cta-title">${section.title || 'Ready to Get Started?'}</h2>
+                                <p class="cta-description">${section.subtitle || 'Contact us today to learn more'}</p>
+                                ${items.length > 0 && items[0].description ? `<p class="cta-description" style="margin-bottom: 40px;">${items[0].description}</p>` : ''}
+                                <a href="contact.html" class="cta-button">
+                                    Get Started Now
+                                    <i class="bi bi-arrow-right cta-button-icon"></i>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                default:
+                    html += `
+                        <div style="background: white; padding: 48px 40px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.06);">
+                            <h2 class="section-title">${section.title || ''}</h2>
+                            ${section.subtitle ? `<p class="section-subtitle">${section.subtitle}</p>` : ''}
+                            ${items.length > 0 ? `
+                                <div style="display: grid; gap: 24px;">
+                                    ${items.map(item => `
+                                        <div style="padding: 28px; border-left: 4px solid var(--secondary-accent); background: rgba(0,0,0,0.02); border-radius: 12px;">
+                                            <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 12px; color: var(--text-primary);">${item.title}</h3>
+                                            ${item.description ? `<p style="color: var(--text-primary); font-size: 15px; line-height: 1.7;">${item.description}</p>` : ''}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                    break;
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        function initializeFAQs() {
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    const faqItem = this.parentElement;
+                    const wasActive = faqItem.classList.contains('active');
+
+                    document.querySelectorAll('.faq-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+
+                    if (!wasActive) {
+                        faqItem.classList.add('active');
+                    }
+                });
+            });
+        }
+
+
+        function navigateToService(slug) {
+            let cleanSlug = slug;
+            if (cleanSlug.startsWith('/')) {
+                cleanSlug = cleanSlug.substring(1);
+            }
+            const encodedSlug = encodeURIComponent(cleanSlug);
+            window.location.href = `Services.html?service=${encodedSlug}`;
+        }
+    </script>
 </body>
 </html>

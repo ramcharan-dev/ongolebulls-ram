@@ -1217,6 +1217,25 @@ html, body {
 .checkbox-label span {
     font-weight: 500;
 }
+/*service view page*/
+.preview-item {
+    padding: 10px 0;
+    border-bottom: 1px dashed #e5e7eb;
+}
+
+.preview-item:last-child {
+    border-bottom: none;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 12px;
+    border-radius: 12px;
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
 
 /* ========== SECTIONS MANAGEMENT ========== */
 
@@ -1293,6 +1312,39 @@ html, body {
     color: #1e293b;
     font-size: 14px;
 }
+
+.repeatable-item {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 16px;
+    margin:20px;
+}
+
+.repeatable-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.item-index {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.remove-item {
+    background: none;
+    border: none;
+    color: #dc2626;
+    cursor: pointer;
+}
+
+.remove-item:hover {
+    color: #b91c1c;
+}
+
 
 /* ========== SECTION ITEMS ========== */
 
