@@ -15,11 +15,11 @@ import java.lang.reflect.Field;
 @RequestMapping("/api")
 public class DashboardActionsController {
 
-    private final InvestmentRequestRepo investRepo;
-    private final RedemptionRequestRepo redeemRepo;
-    private final SIPRequestRepo sipRepo;
-    private final NomineeRepo nomineeRepo;
-    private final UserRepository userRepository;
+        private final InvestmentRequestRepo investRepo;
+        private final RedemptionRequestRepo redeemRepo;
+        private final SIPRequestRepo sipRepo;
+        private final NomineeRepo nomineeRepo;
+        private final UserRepository userRepository;
 
     // Explicit constructor for dependency injection
     public DashboardActionsController(
@@ -151,7 +151,7 @@ public class DashboardActionsController {
         @ResponseBody
         public ResponseEntity<?> getUser(@PathVariable Long userId) {
             try {
-                return userRepository.findById(userId)
+            return userRepository.findById(userId)
                         .map(user -> {
                             // Create a safe response object using reflection
                             Map<String, Object> response = new HashMap<>();

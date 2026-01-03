@@ -184,11 +184,38 @@ public class AuthController {
         }
 
         return userService.login(email, password)
-                .map(user -> ResponseEntity.ok(Map.of(
-                        "id", user.getId(),
-                        "email", user.getEmail(),
-                        "fullName", user.getFullName()
-                )))
+                .map(user -> {
+                    // Use reflection to get fields (Lombok IDE issue workaround)
+                    java.lang.reflect.Field idField, emailField, fullNameField, mobileField;
+                    try {
+                        idField = user.getClass().getDeclaredField("id");
+                        emailField = user.getClass().getDeclaredField("email");
+                        fullNameField = user.getClass().getDeclaredField("fullName");
+                        mobileField = user.getClass().getDeclaredField("mobileNumber");
+                        idField.setAccessible(true);
+                        emailField.setAccessible(true);
+                        fullNameField.setAccessible(true);
+                        mobileField.setAccessible(true);
+                        
+                        Map<String, Object> response = new HashMap<>();
+                        response.put("id", idField.get(user));
+                        response.put("email", emailField.get(user));
+                        response.put("fullName", fullNameField.get(user));
+                        Object mobile = mobileField.get(user);
+                        response.put("mobileNumber", mobile != null ? mobile.toString() : "");
+                        response.put("username", emailField.get(user));
+                        return ResponseEntity.ok(response);
+                    } catch (Exception e) {
+                        // Fallback to basic response
+                        Map<String, Object> response = new HashMap<>();
+                        response.put("id", 0);
+                        response.put("email", email);
+                        response.put("fullName", "");
+                        response.put("mobileNumber", "");
+                        response.put("username", email);
+                        return ResponseEntity.ok(response);
+                    }
+                })
                 .orElseGet(() -> ResponseEntity.status(401).body(Map.of("error", "Invalid credentials")));
     }
 
