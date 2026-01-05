@@ -430,4 +430,7 @@ public class User implements UserDetails {
     public void setPassword(String encode) {
 
     }
+
+    public void setMobile(@Pattern(regexp = "^[0-9]{10}$", message = "Mobile number must be 10 digits") String mobile) {
+    }
 }
