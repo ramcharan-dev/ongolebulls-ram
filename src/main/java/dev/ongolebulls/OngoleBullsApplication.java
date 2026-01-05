@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(basePackages = "dev.ongolebulls.repository")
 public class OngoleBullsApplication {
 	public static void main(String[] args) {
-		System.out.println("application started=======");
 		SpringApplication.run(OngoleBullsApplication.class, args);
 	}
 }
