@@ -19,6 +19,8 @@ public class SubscriberController {
 
     @PostMapping("/subscribe")
     public ResponseEntity<Map<String, Object>> subscribe(@RequestBody Map<String, String> request) {
+        System.out.println("SUBSCRIBE API HIT");
+        System.out.println("REQUEST BODY: " + request);
         Map<String, Object> response = new HashMap<>();
 
         try {

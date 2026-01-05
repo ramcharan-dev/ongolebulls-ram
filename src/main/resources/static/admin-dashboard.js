@@ -1630,42 +1630,371 @@ function showPlaceholderPage(text) {
 
 
 // Minimal Settings loader (safe)
+//async function admindashboardLoadSettings() {
+//    showLoadingCard('Loading Settings...');
+//    try {
+//        const settings = await admindashboardGet('/settings', {});
+//        const container = document.getElementById('admindashboardView');
+//        if (!container) return;
+//        container.innerHTML = '';
+//
+//        const tpl = document.getElementById('settingsContainerTemplate');
+//        if (!tpl) {
+//                    showErrorCard('Settings', 'Settings template not found');
+//                    return;
+//                }
+//        if (tpl) {
+//            container.appendChild(tpl.content.cloneNode(true));
+//            // optional: populate known fields if template contains them
+//            const siteTitle = settings.siteTitle || settings.appName || '';
+//            const siteTitleEl = document.getElementById('settingsSiteTitle');
+//            if (siteTitleEl) siteTitleEl.value = siteTitle;
+//            // Bind Add Settings button
+//             bindSettingsListEvents();
+//            return;
+//        }
+//
+//
+////        const card = document.createElement('div');
+////        card.className = 'admindashboard-card';
+////        const h2 = document.createElement('h2');
+////        h2.textContent = 'Settings';
+////        card.appendChild(h2);
+////
+////        const pre = document.createElement('pre');
+////        pre.style.whiteSpace = 'pre-wrap';
+////        pre.textContent = typeof settings === 'object' ? JSON.stringify(settings, null, 2) : String(settings);
+////        card.appendChild(pre);
+////
+////        container.appendChild(card);
+//
+//         const grid = document.getElementById('settingsGrid');
+//           if (!grid) return;
+//
+//           grid.innerHTML = '';
+//
+//           if (!Array.isArray(settingsList) || settingsList.length === 0) {
+//               const empty = document.createElement('p');
+//               empty.textContent = 'No settings found. Click "Add Settings" to create.';
+//               empty.style.color = 'var(--muted)';
+//               empty.style.padding = '20px';
+//               grid.appendChild(empty);
+//               return;
+//           }
+//
+//           const cardTpl = document.getElementById('settingCardTemplate');
+//
+//           settingsList.forEach(settings => {
+//               if (!cardTpl) return;
+//
+//               const card = cardTpl.content.cloneNode(true);
+//
+//               // Populate fields
+//               setElementContent(card, '[data-site-name]', settings.siteName || '—');
+//               setElementContent(card, '[data-contact-email]', settings.contactEmail || '—');
+//               setElementContent(card, '[data-contact-phone]', settings.contactPhone || '—');
+//               setElementContent(card, '[data-address]', settings.address || '—');
+//               setElementContent(card, '[data-seo-title]', settings.seoTitle || '—');
+//
+//               // Edit button
+//               const editBtn = card.querySelector('[data-edit]');
+//               if (editBtn) {
+//                   editBtn.removeAttribute('data-edit');
+//                   editBtn.onclick = () => {
+//                       openSettingsForm(settings);
+//                   };
+//               }
+//
+//               // Delete button
+//               const deleteBtn = card.querySelector('[data-delete]');
+//               if (deleteBtn) {
+//                   deleteBtn.removeAttribute('data-delete');
+//                   deleteBtn.onclick = async () => {
+//                       if (!confirm('Delete these settings?')) return;
+//
+//                       try {
+//                           const res = await fetch(
+//                               `${ADMINDASHBOARD_API}/settings/${settings.id}`,
+//                               {
+//                                   method: 'DELETE',
+//                                   headers: admindashboardAuthHeaders()
+//                               }
+//                           );
+//
+//                           if (!res.ok) throw new Error('Failed to delete settings');
+//
+//                           alert('Settings deleted successfully');
+//                           admindashboardLoadSettings();
+//
+//                       } catch (err) {
+//                           alert('Error deleting settings: ' + err.message);
+//                       }
+//                   };
+//               }
+//
+//               grid.appendChild(card);
+//           });
+//
+//    } catch (err) {
+//        showErrorCard('Settings', 'Error loading settings: ' + (err.message || err));
+//        console.error(err);
+//    }
+//}
 async function admindashboardLoadSettings() {
     showLoadingCard('Loading Settings...');
+
     try {
-        const settings = await admindashboardGet('/settings', {});
+        let settingsList = await admindashboardGet('/settings', []);
+
+        // 🔥 Normalize backend response
+        if (settingsList && !Array.isArray(settingsList)) {
+            settingsList = [settingsList];
+        }
+
         const container = document.getElementById('admindashboardView');
         if (!container) return;
+
         container.innerHTML = '';
 
         const tpl = document.getElementById('settingsContainerTemplate');
-        if (tpl) {
-            container.appendChild(tpl.content.cloneNode(true));
-            // optional: populate known fields if template contains them
-            const siteTitle = settings.siteTitle || settings.appName || '';
-            const siteTitleEl = document.getElementById('settingsSiteTitle');
-            if (siteTitleEl) siteTitleEl.value = siteTitle;
+        if (!tpl) {
+            showErrorCard('Settings', 'Settings template not found');
             return;
         }
 
-        const card = document.createElement('div');
-        card.className = 'admindashboard-card';
-        const h2 = document.createElement('h2');
-        h2.textContent = 'Settings';
-        card.appendChild(h2);
+        // ✅ Render container template
+        container.appendChild(tpl.content.cloneNode(true));
 
-        const pre = document.createElement('pre');
-        pre.style.whiteSpace = 'pre-wrap';
-        pre.textContent = typeof settings === 'object' ? JSON.stringify(settings, null, 2) : String(settings);
-        card.appendChild(pre);
+        // ✅ Bind Add Settings button
+        bindSettingsListEvents();
 
-        container.appendChild(card);
+        // ✅ NOW grid exists
+        const grid = document.getElementById('settingsGrid');
+        if (!grid) return;
+
+        grid.innerHTML = '';
+
+        // ✅ Empty state
+        if (!settingsList.length) {
+            const empty = document.createElement('p');
+            empty.textContent = 'No settings found. Click "Add Settings" to create.';
+            empty.style.color = 'var(--muted)';
+            empty.style.padding = '20px';
+            grid.appendChild(empty);
+            return;
+        }
+
+        const cardTpl = document.getElementById('settingCardTemplate');
+        if (!cardTpl) return;
+
+        // ✅ Render cards
+        settingsList.forEach(settings => {
+            const card = cardTpl.content.cloneNode(true);
+
+            setElementContent(card, '[data-site-name]', settings.siteName || '—');
+            setElementContent(card, '[data-contact-email]', settings.contactEmail || '—');
+            setElementContent(card, '[data-contact-phone]', settings.contactPhone || '—');
+            setElementContent(card, '[data-address]', settings.address || '—');
+            setElementContent(card, '[data-seo-title]', settings.seoTitle || '—');
+
+            // Edit
+            const editBtn = card.querySelector('[data-edit]');
+            if (editBtn) {
+                editBtn.removeAttribute('data-edit');
+                editBtn.onclick = () => openSettingsForm(settings);
+            }
+
+            // Delete
+            const deleteBtn = card.querySelector('[data-delete]');
+            if (deleteBtn) {
+                deleteBtn.removeAttribute('data-delete');
+                deleteBtn.onclick = async () => {
+                    if (!confirm('Delete these settings?')) return;
+
+                    try {
+                        const res = await fetch(
+                            `${ADMINDASHBOARD_API}/settings/${settings.id}`,
+                            {
+                                method: 'DELETE',
+                                headers: admindashboardAuthHeaders()
+                            }
+                        );
+
+                        if (!res.ok) throw new Error('Failed to delete settings');
+
+                        alert('Settings deleted successfully');
+                        admindashboardLoadSettings();
+
+                    } catch (err) {
+                        alert('Error deleting settings: ' + err.message);
+                    }
+                };
+            }
+
+            grid.appendChild(card);
+        });
 
     } catch (err) {
         showErrorCard('Settings', 'Error loading settings: ' + (err.message || err));
         console.error(err);
     }
 }
+
+
+function bindSettingsListEvents() {
+    const addBtn = document.getElementById('addSettingBtn');
+
+    if (!addBtn) {
+        console.warn('Add Settings button not found');
+        return;
+    }
+
+    addBtn.onclick = () => {
+        openSettingsForm();
+    };
+}
+//open settings form
+function openSettingsForm(settings = null) {
+    const container = document.getElementById('admindashboardView');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    const tpl = document.getElementById('settingsFormTemplate');
+    if (!tpl) {
+        showErrorCard('Settings', 'Settings form template not found');
+        return;
+    }
+
+    container.appendChild(tpl.content.cloneNode(true));
+
+    const formTitle = container.querySelector('[data-form-title]');
+    const submitText = container.querySelector('[data-submit-text]');
+    const form = document.getElementById('settingsForm');
+
+    // ---- ADD vs EDIT MODE ----
+    if (settings) {
+        if (formTitle) formTitle.textContent = 'Edit Settings';
+            if (submitText) submitText.textContent = 'Update Settings';
+
+            form.dataset.editingId = settings.id;
+
+            // ✅ PREFILL FORM FIELDS
+            const setValue = (name, value) => {
+                const field = form.querySelector(`[name="${name}"]`);
+                if (field) field.value = value ?? '';
+            };
+
+            setValue('siteName', settings.siteName);
+            setValue('logoUrl', settings.logoUrl);
+            setValue('faviconUrl', settings.faviconUrl);
+            setValue('contactEmail', settings.contactEmail);
+            setValue('contactPhone', settings.contactPhone);
+            setValue('address', settings.address);
+
+            setValue('facebookUrl', settings.facebookUrl);
+            setValue('instagramUrl', settings.instagramUrl);
+            setValue('linkedInUrl', settings.linkedInUrl);
+            setValue('twitterUrl', settings.twitterUrl);
+
+            setValue('seoTitle', settings.seoTitle);
+            setValue('seoKeywords', settings.seoKeywords);
+            setValue('seoDescription', settings.seoDescription);
+    }
+    else {
+        if (formTitle) formTitle.textContent = 'Add New Settings';
+        if (submitText) submitText.textContent = 'Create Settings';
+        delete form.dataset.editingId;
+        form.reset();
+    }
+
+    // ---- BACK & CANCEL ----
+    const backBtn = document.getElementById('backToSettingsBtn');
+    const cancelBtn = document.getElementById('cancelSettingsBtn');
+
+    if (backBtn) backBtn.onclick = () => admindashboardLoadSettings();
+    if (cancelBtn) cancelBtn.onclick = () => admindashboardLoadSettings();
+
+        // ---- FORM SUBMIT ----
+        if (form) {
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+
+                const messageDiv = document.getElementById('settingsFormMessage');
+                if (messageDiv) {
+                    messageDiv.textContent = '';
+                    messageDiv.style.color = '';
+                }
+
+                const formData = new FormData(form);
+                const payload = {};
+
+                formData.forEach((value, key) => {
+                    payload[key] = value?.trim ? value.trim() : value;
+                });
+
+                const editingId = form.dataset.editingId;
+
+                const url = editingId
+                    ? `${ADMINDASHBOARD_API}/settings/${editingId}`
+                    : `${ADMINDASHBOARD_API}/settings`;
+
+                const method = editingId ? 'PUT' : 'POST';
+
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn ? submitBtn.textContent : '';
+
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Saving...';
+                }
+
+                try {
+                    const res = await fetch(url, {
+                        method,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            ...admindashboardAuthHeaders()
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!res.ok) {
+                        const errJson = await res.json().catch(() => ({}));
+                        throw new Error(errJson.message || `HTTP ${res.status}`);
+                    }
+
+                    await res.json().catch(() => ({}));
+
+                    if (messageDiv) {
+                        messageDiv.style.color = '#22c55e';
+                        messageDiv.textContent = editingId
+                            ? 'Settings updated successfully!'
+                            : 'Settings created successfully!';
+                    }
+
+                    // Step 6 will improve this (reload list)
+                    setTimeout(() => {
+                        admindashboardLoadSettings();
+                    }, 1000);
+
+                } catch (err) {
+                    if (messageDiv) {
+                        messageDiv.style.color = '#ef4444';
+                        messageDiv.textContent = 'Failed to save settings: ' + err.message;
+                    }
+                } finally {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalText;
+                    }
+                }
+            };
+        }
+}
+
+
+
 // ---------- Services: List + Form + Sections ----------
 
 // Helper: render services list view
