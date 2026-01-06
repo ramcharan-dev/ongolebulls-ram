@@ -23,7 +23,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/signup", "/api/auth/login", "/api/contact").permitAll() // Allow these endpoints
+                        .requestMatchers("/api/auth/signup", "/api/auth/login", "/api/contact","/api/subscribers/**").permitAll() // Allow these endpoints
                         .requestMatchers("/**").permitAll() // Allow all static resources (HTML, CSS, JS, images)
                         .anyRequest().authenticated() // Require authentication for other requests
                 )

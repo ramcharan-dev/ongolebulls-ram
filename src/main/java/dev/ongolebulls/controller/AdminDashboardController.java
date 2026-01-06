@@ -1,7 +1,6 @@
 package dev.ongolebulls.controller;
 
 import dev.ongolebulls.dto.AdminDashboardDTO;
-import dev.ongolebulls.model.Client;
 import dev.ongolebulls.model.RMPerformance;
 import dev.ongolebulls.service.AdminDashboardService;
 import org.springframework.http.ResponseEntity;

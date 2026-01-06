@@ -1,10 +1,16 @@
+
+
 package dev.ongolebulls.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -15,8 +21,11 @@ public class ServiceSection {
     @Column(length = 36, nullable = false, unique = true)
     private String id = UUID.randomUUID().toString();
 
-    @Column(name = "service_id", length = 36, nullable = false)
-    private String serviceId;
+    // ---------------- Relation to Service ----------------
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "service_id", nullable = false)
+    @JsonBackReference("service-sections")
+    private Service service;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "section_type", nullable = false)
@@ -53,31 +62,23 @@ public class ServiceSection {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    // ======== Getters & Setters =========
+    // ---------------- Relation to SectionItem ----------------
+    @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("section-items")
+    private List<SectionItem> items = new ArrayList<>();
 
-    public String getMetaTitle() {
-        return metaTitle;
+    //if section type is hero, then we need banner image
+    @Lob
+    @Column(name = "banner_image", columnDefinition = "LONGTEXT")
+    private String bannerImage;
+
+
+    // ===== Enum SectionType =====
+    public enum SectionType {
+        hero, features, steps, why_choose_us, faq, cta
     }
 
-    public void setMetaTitle(String metaTitle) {
-        this.metaTitle = metaTitle;
-    }
-
-    public String getMetaKeywords() {
-        return metaKeywords;
-    }
-
-    public void setMetaKeywords(String metaKeywords) {
-        this.metaKeywords = metaKeywords;
-    }
-
-    public String getMetaDescription() {
-        return metaDescription;
-    }
-
-    public void setMetaDescription(String metaDescription) {
-        this.metaDescription = metaDescription;
-    }
+    // ===== Getters & Setters =====
 
     public String getId() {
         return id;
@@ -87,12 +88,12 @@ public class ServiceSection {
         this.id = id;
     }
 
-    public String getServiceId() {
-        return serviceId;
+    public Service getService() {
+        return service;
     }
 
-    public void setServiceId(String serviceId) {
-        this.serviceId = serviceId;
+    public void setService(Service service) {
+        this.service = service;
     }
 
     public SectionType getSectionType() {
@@ -127,6 +128,30 @@ public class ServiceSection {
         this.orderIndex = orderIndex;
     }
 
+    public String getMetaTitle() {
+        return metaTitle;
+    }
+
+    public void setMetaTitle(String metaTitle) {
+        this.metaTitle = metaTitle;
+    }
+
+    public String getMetaKeywords() {
+        return metaKeywords;
+    }
+
+    public void setMetaKeywords(String metaKeywords) {
+        this.metaKeywords = metaKeywords;
+    }
+
+    public String getMetaDescription() {
+        return metaDescription;
+    }
+
+    public void setMetaDescription(String metaDescription) {
+        this.metaDescription = metaDescription;
+    }
+
     public Timestamp getCreatedAt() {
         return createdAt;
     }
@@ -143,9 +168,19 @@ public class ServiceSection {
         this.updatedAt = updatedAt;
     }
 
-    // ======== Enum =========
+    public List<SectionItem> getItems() {
+        return items;
+    }
 
-    public enum SectionType {
-        hero, features, steps, why_choose_us, faq, cta
+    public void setItems(List<SectionItem> items) {
+        this.items = items;
+    }
+
+    public String getBannerImage() {
+        return bannerImage;
+    }
+
+    public void setBannerImage(String bannerImage) {
+        this.bannerImage = bannerImage;
     }
 }
