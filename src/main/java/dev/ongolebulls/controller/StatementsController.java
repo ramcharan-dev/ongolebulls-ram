@@ -12,6 +12,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/statements")
+@CrossOrigin(origins = "*")
 public class StatementsController {
 
     private final UserRepository userRepository;
@@ -21,25 +22,46 @@ public class StatementsController {
     }
 
     @GetMapping("/{userId}")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<List<StatementDto>> getStatements(
             @PathVariable Long userId,
             @RequestParam(required = false) String statementType,
-            @RequestParam(required = false) String financialYear) {
+            @RequestParam(required = false) String financialYear,
+            @RequestParam(required = false) String fromDate,
+            @RequestParam(required = false) String toDate) {
         try {
             // Generate sample statements (in production, fetch from database)
             List<StatementDto> statements = new ArrayList<>();
             
-            String[] types = statementType != null ? new String[]{statementType} : 
+            String[] types = statementType != null && !statementType.isEmpty() ? new String[]{statementType} : 
                 new String[]{"PORTFOLIO", "CAPITAL_GAINS", "TRANSACTIONS", "TAX"};
             
-            String fy = financialYear != null ? financialYear : getCurrentFinancialYear();
+            String fy = financialYear != null && !financialYear.isEmpty() ? financialYear : getCurrentFinancialYear();
+            
+            LocalDate from = null;
+            LocalDate to = null;
+            
+            if (fromDate != null && !fromDate.isEmpty()) {
+                from = LocalDate.parse(fromDate);
+            }
+            if (toDate != null && !toDate.isEmpty()) {
+                to = LocalDate.parse(toDate);
+            }
+            
+            // If no date range specified, use financial year dates
+            if (from == null) {
+                from = LocalDate.parse(fy + "-04-01");
+            }
+            if (to == null) {
+                to = LocalDate.parse((Integer.parseInt(fy) + 1) + "-03-31");
+            }
             
             for (String type : types) {
                 StatementDto stmt = new StatementDto();
                 setField(stmt, "id", (long) statements.size() + 1);
                 setField(stmt, "statementType", type);
-                setField(stmt, "fromDate", LocalDate.parse(fy + "-04-01"));
-                setField(stmt, "toDate", LocalDate.parse((Integer.parseInt(fy) + 1) + "-03-31"));
+                setField(stmt, "fromDate", from);
+                setField(stmt, "toDate", to);
                 setField(stmt, "financialYear", fy);
                 setField(stmt, "fileName", generateFileName(type, fy));
                 setField(stmt, "downloadUrl", "/api/statements/" + userId + "/download/" + type + "?fy=" + fy);
@@ -54,20 +76,26 @@ public class StatementsController {
     }
 
     @GetMapping("/{userId}/download/{type}")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<Map<String, String>> downloadStatement(
             @PathVariable Long userId,
             @PathVariable String type,
             @RequestParam(required = false) String fy) {
         try {
+            String financialYear = fy != null && !fy.isEmpty() ? fy : getCurrentFinancialYear();
+            String fileName = generateFileName(type, financialYear);
+            String downloadUrl = "/api/statements/" + userId + "/download/" + type + "?fy=" + financialYear;
+            
             Map<String, String> response = new HashMap<>();
             response.put("message", "Statement download initiated");
-            response.put("fileName", generateFileName(type, fy != null ? fy : getCurrentFinancialYear()));
+            response.put("fileName", fileName);
+            response.put("downloadUrl", downloadUrl);
             response.put("status", "SUCCESS");
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
             response.put("status", "ERROR");
-            response.put("message", "Failed to generate statement");
+            response.put("message", "Failed to generate statement: " + e.getMessage());
             return ResponseEntity.ok(response);
         }
     }
