@@ -82,12 +82,7 @@ public class HomeController {
 
     @GetMapping("/sign-in")
     public String signinPage() {
-        return "sign-in"; // Loads sign-in.html from src/main/resources/templates/
-    }
-
-    @GetMapping("/login")
-    public String loginPage() {
-        return "login"; // Loads login.html from src/main/resources/templates/
+        return "sign-in"; // Loads login.html from src/main/resources/templates/
     }
 
     @GetMapping("/customer-document-upload")

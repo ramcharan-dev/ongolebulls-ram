@@ -29,8 +29,4 @@ public class SmartAlert {
     public void setMessage(String message) { this.message = message; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-
-    public boolean isRead() {
-        return false;
-    }
 }

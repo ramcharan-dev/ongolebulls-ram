@@ -62,7 +62,7 @@
                 >
                     Subscribe
                 </button>
-                <div id="subscribeMessage" style="margin-top: 10px; font-size: 0.9rem; display: none; min-height: 20px;"></div>
+                <div id="subscribeMessage" style="margin-top: 10px; font-size: 0.9rem; display: none;"></div>
             </form>
         </div>
     </div>
@@ -79,6 +79,7 @@
     </div>
 </footer>
 
+
 <!--Start of Tawk.to Script-->
 <script type="text/javascript">
     var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
@@ -93,371 +94,359 @@
 </script>
 <!--End of Tawk.to Script-->
 
-
-
 <!-- Subscribe Functionality Script - UPDATED -->
-<!--<script>-->
-<!--    document.addEventListener('DOMContentLoaded', function() {-->
-<!--        // Dynamically set API base URL based on hostname-->
-<!--&lt;!&ndash;        const API_BASE_URL =&ndash;&gt;-->
-<!--&lt;!&ndash;            window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'&ndash;&gt;-->
-<!--&lt;!&ndash;                ? 'http://localhost:8080'&ndash;&gt;-->
-<!--&lt;!&ndash;                : 'https://ongolebullsinvest.com';&ndash;&gt;-->
-<!--         const response = await fetch('/api/subscribers/subscribe', {-->
-<!--               method: 'POST',-->
-<!--               headers: { 'Content-Type': 'application/json' },-->
-<!--               body: JSON.stringify({ email })-->
-<!--         });-->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Dynamically set API base URL based on hostname
+        const API_BASE_URL =
+            window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                ? 'http://localhost:8080'
+                : 'https://ongolebullsinvest.com';
 
+        const subscribeForm = document.getElementById('subscribeForm');
+        const emailInput = document.getElementById('emailInput');
+        const subscribeBtn = document.getElementById('subscribeBtn');
+        const messageDiv = document.getElementById('subscribeMessage');
 
+        // Helper: Validate email format
+        function isValidEmail(email) {
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return regex.test(email);
+        }
 
+        // Helper: Show message in UI
+        function showMessage(message, isSuccess) {
+            messageDiv.textContent = message;
+            messageDiv.style.display = 'block';
+            messageDiv.style.color = isSuccess ? '#28a745' : '#dc3545';
+            messageDiv.style.fontWeight = 'bold';
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
 
-<!--        const subscribeForm = document.getElementById('subscribeForm');-->
-<!--        const emailInput = document.getElementById('emailInput');-->
-<!--        const subscribeBtn = document.getElementById('subscribeBtn');-->
-<!--        const messageDiv = document.getElementById('subscribeMessage');-->
+        // Submit handler
+        if (subscribeForm && emailInput && subscribeBtn && messageDiv) {
+            subscribeForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
 
-<!--        // Helper: Validate email format-->
-<!--        function isValidEmail(email) {-->
-<!--            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;-->
-<!--            return regex.test(email);-->
-<!--        }-->
+                const email = emailInput.value.trim();
 
-<!--        // Helper: Show message in UI-->
-<!--        function showMessage(message, isSuccess) {-->
-<!--            messageDiv.textContent = message;-->
-<!--            messageDiv.style.display = 'block';-->
-<!--            messageDiv.style.color = isSuccess ? '#28a745' : '#dc3545';-->
-<!--            messageDiv.style.fontWeight = 'bold';-->
-<!--            setTimeout(() => {-->
-<!--                messageDiv.style.display = 'none';-->
-<!--            }, 5000);-->
-<!--        }-->
+                // Validate
+                if (!email) {
+                    showMessage('Please enter your email address', false);
+                    return;
+                }
+                if (!isValidEmail(email)) {
+                    showMessage('Please enter a valid email address', false);
+                    return;
+                }
 
-<!--        // Submit handler-->
-<!--        if (subscribeForm && emailInput && subscribeBtn && messageDiv) {-->
-<!--            subscribeForm.addEventListener('submit', async function(event) {-->
-<!--                event.preventDefault();-->
+                // Button loading state
+                subscribeBtn.disabled = true;
+                subscribeBtn.style.backgroundColor = '#ccc';
+                subscribeBtn.style.cursor = 'not-allowed';
+                subscribeBtn.textContent = 'Subscribing...';
 
-<!--                const email = emailInput.value.trim();-->
+                try {
+                    const response = await fetch(`${API_BASE_URL}/api/subscribers/subscribe`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: email })
+                    });
+                    const data = await response.json();
 
-<!--                // Validate-->
-<!--                if (!email) {-->
-<!--                    showMessage('Please enter your email address', false);-->
-<!--                    return;-->
-<!--                }-->
-<!--                if (!isValidEmail(email)) {-->
-<!--                    showMessage('Please enter a valid email address', false);-->
-<!--                    return;-->
-<!--                }-->
+                    if (data.success) {
+                        showMessage(data.message || 'Subscription successful!', true);
+                        emailInput.value = '';
+                    } else {
+                        showMessage(data.message || 'Subscription failed', false);
+                    }
+                } catch (error) {
+                    console.error('Subscription error:', error);
+                    showMessage('Network error. Please try again later.', false);
+                } finally {
+                    subscribeBtn.disabled = false;
+                    subscribeBtn.style.backgroundColor = '#ff5e5e';
+                    subscribeBtn.style.cursor = 'pointer';
+                    subscribeBtn.textContent = 'Subscribe';
+                }
+            });
 
-<!--                // Button loading state-->
-<!--                subscribeBtn.disabled = true;-->
-<!--                subscribeBtn.style.backgroundColor = '#ccc';-->
-<!--                subscribeBtn.style.cursor = 'not-allowed';-->
-<!--                subscribeBtn.textContent = 'Subscribing...';-->
-
-<!--                try {-->
-<!--                    const response = await fetch(`${API_BASE_URL}/api/subscribers/subscribe`, {-->
-<!--                        method: 'POST',-->
-<!--                        headers: { 'Content-Type': 'application/json' },-->
-<!--                        body: JSON.stringify({ email: email })-->
-<!--                    });-->
-<!--                    const data = await response.json();-->
-
-<!--                    if (data.success) {-->
-<!--                        showMessage(data.message || 'Subscription successful!', true);-->
-<!--                        emailInput.value = '';-->
-<!--                    } else {-->
-<!--                        showMessage(data.message || 'Subscription failed', false);-->
-<!--                    }-->
-<!--                } catch (error) {-->
-<!--                    console.error('Subscription error:', error);-->
-<!--                    showMessage('Network error. Please try again later.', false);-->
-<!--                } finally {-->
-<!--                    subscribeBtn.disabled = false;-->
-<!--                    subscribeBtn.style.backgroundColor = '#ff5e5e';-->
-<!--                    subscribeBtn.style.cursor = 'pointer';-->
-<!--                    subscribeBtn.textContent = 'Subscribe';-->
-<!--                }-->
-<!--            });-->
-
-<!--            // Hide message when user edits email-->
-<!--            emailInput.addEventListener('input', function() {-->
-<!--                if (messageDiv.style.display !== 'none') {-->
-<!--                    messageDiv.style.display = 'none';-->
-<!--                }-->
-<!--            });-->
-<!--        }-->
-<!--    });-->
-<!--</script>-->
+            // Hide message when user edits email
+            emailInput.addEventListener('input', function() {
+                if (messageDiv.style.display !== 'none') {
+                    messageDiv.style.display = 'none';
+                }
+            });
+        }
+    });
+</script>
 
 
 
 <script src="/js/contact.js"></script>
 <script src="/common.js" defer></script>
-
-
+</body>
+</html>
 <style>
-:root {
---primary-color: #1a73e8;
---secondary-color: #34a853;
---text-color: #333;
---background-color: #f8f9fa;
-}
+    :root {
+        --primary-color: #1a73e8;
+        --secondary-color: #34a853;
+        --text-color: #333;
+        --background-color: #f8f9fa;
+    }
 
-* {
-margin: 0;
-padding: 0;
-box-sizing: border-box;
-}
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-body {
-font-family: 'Manrope', sans-serif;
-line-height: 1.6;
-color: var(--text-color);
-background-color: var(--background-color);
-}
+    body {
+        font-family: 'Manrope', sans-serif;
+        line-height: 1.6;
+        color: var(--text-color);
+        background-color: var(--background-color);
+    }
 
-.contact-container {
-max-width: 1200px;
-margin: 0 auto;
-padding: 2rem;
-}
+    .contact-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
 
-.header {
-text-align: center;
-margin-bottom: 3rem;
-}
+    .header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
 
-.animate-text {
-opacity: 0;
-transform: translateY(-20px);
-animation: fadeInDown 0.8s forwards;
-}
+    .animate-text {
+        opacity: 0;
+        transform: translateY(-20px);
+        animation: fadeInDown 0.8s forwards;
+    }
 
-.intro-text {
-max-width: 800px;
-margin: 1rem auto;
-opacity: 0;
-animation: fadeIn 1s 0.5s forwards;
-}
+    .intro-text {
+        max-width: 800px;
+        margin: 1rem auto;
+        opacity: 0;
+        animation: fadeIn 1s 0.5s forwards;
+    }
 
-.contact-content {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 2rem;
-opacity: 0;
-animation: fadeIn 1s 0.8s forwards;
-}
+    .contact-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        opacity: 0;
+        animation: fadeIn 1s 0.8s forwards;
+    }
 
-.contact-info, .contact-form {
-background: white;
-padding: 2rem;
-border-radius: 10px;
-box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-transition: transform 0.3s ease;
-}
+    .contact-info, .contact-form {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
 
-.contact-info:hover, .contact-form:hover {
-transform: translateY(-5px);
-}
+    .contact-info:hover, .contact-form:hover {
+        transform: translateY(-5px);
+    }
 
-.info-section {
-margin-bottom: 2rem;
-}
+    .info-section {
+        margin-bottom: 2rem;
+    }
 
-.contact-details p {
-margin: 0.5rem 0;
-display: flex;
-align-items: left !important;
-gap: 0.5rem;
-}
+    .contact-details p {
+        margin: 0.5rem 0;
+        display: flex;
+        align-items: left !important;
+        gap: 0.5rem;
+    }
 
-.social-media {
-display: flex;
-gap: 1rem;
-margin-top: 1rem;
-}
+    .social-media {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
 
-.social-icon {
-color: gray;
-font-size: 1.5rem;
-transition: transform 0.3s ease;
-}
+    .social-icon {
+        color: gray;
+        font-size: 1.5rem;
+        transition: transform 0.3s ease;
+    }
 
-.social-icon:hover {
-transform: scale(1.2);
-}
+    .social-icon:hover {
+        transform: scale(1.2);
+    }
 
-.form-group {
-margin-bottom: 1.5rem;
-}
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
 
-input, textarea {
-width: 100%;
-padding: 0.8rem;
-border: 1px solid #ddd;
-border-radius: 5px;
-font-size: 1rem;
-transition: border-color 0.3s ease;
-}
+    input, textarea {
+        width: 100%;
+        padding: 0.8rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
 
-input:focus, textarea:focus {
-outline: none;
-border-color: var(--primary-color);
-}
+    input:focus, textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
 
-textarea {
-height: 150px;
-resize: vertical;
-}
+    textarea {
+        height: 150px;
+        resize: vertical;
+    }
 
-.submit-btn {
-background: gray;
-color: white;
-border: none;
-padding: 1rem 2rem;
-border-radius: 5px;
-cursor: pointer;
-width: 100%;
-font-size: 1rem;
-transition: background-color 0.3s ease;
-}
+    .submit-btn {
+        background: gray;
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+    }
 
-.submit-btn:hover {
-background: #1557b0;
-}
+    .submit-btn:hover {
+        background: #1557b0;
+    }
 
-.footer {
-text-align: center;
-margin-top: 3rem;
-opacity: 0;
-animation: fadeIn 1s 1s forwards;
-}
+    .footer {
+        text-align: center;
+        margin-top: 3rem;
+        opacity: 0;
+        animation: fadeIn 1s 1s forwards;
+    }
 
-.tagline {
-font-weight: bold;
-color: var(--secondary-color);
-margin-top: 1rem;
-}
+    .tagline {
+        font-weight: bold;
+        color: var(--secondary-color);
+        margin-top: 1rem;
+    }
 
-@keyframes fadeIn {
-from {
-opacity: 0;
-}
-to {
-opacity: 1;
-}
-}
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
 
-@keyframes fadeInDown {
-from {
-opacity: 0;
-transform: translateY(-20px);
-}
-to {
-opacity: 1;
-transform: translateY(0);
-}
-}
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 
-@media (max-width: 768px) {
-.contact-content {
-grid-template-columns: 1fr;
-}
-}
+    @media (max-width: 768px) {
+        .contact-content {
+            grid-template-columns: 1fr;
+        }
+    }
 
-/* Mobile Responsive Styles (max-width: 768px) */
-@media (max-width: 768px) {
-/* Footer flex container */
-footer > div:first-child {
-flex-direction: column !important;
-align-items: center !important;
-text-align: center !important;
-gap: 25px !important;
-}
+    /* Mobile Responsive Styles (max-width: 768px) */
+    @media (max-width: 768px) {
+        /* Footer flex container */
+        footer > div:first-child {
+            flex-direction: column !important;
+            align-items: center !important;
+            text-align: center !important;
+            gap: 25px !important;
+        }
 
-/* Footer columns */
-footer div[style*="flex: 1 1"] {
-flex: 1 1 100% !important;
-margin-bottom: 20px !important;
-}
+        /* Footer columns */
+        footer div[style*="flex: 1 1"] {
+            flex: 1 1 100% !important;
+            margin-bottom: 20px !important;
+        }
 
-/* Logo */
-footer img {
-margin: 0 auto 15px !important;
-width: 100px !important;
-}
+        /* Logo */
+        footer img {
+            margin: 0 auto 15px !important;
+            width: 100px !important;
+        }
 
-/* Footer headings */
-footer h4 {
-font-size: 1.2rem !important;
-}
+        /* Footer headings */
+        footer h4 {
+            font-size: 1.2rem !important;
+        }
 
-/* Footer links and text */
-footer p, footer a, footer li a {
-font-size: 0.9rem !important;
-}
+        /* Footer links and text */
+        footer p, footer a, footer li a {
+            font-size: 0.9rem !important;
+        }
 
-/* Social icons */
-footer .social-icon {
-font-size: 1.3rem !important;
-margin: 0 5px !important;
-}
+        /* Social icons */
+        footer .social-icon {
+            font-size: 1.3rem !important;
+            margin: 0 5px !important;
+        }
 
-/* Subscribe input/button */
-footer input, footer .submit-btn {
-width: 100% !important;
-font-size: 0.9rem !important;
-padding: 10px !important;
-}
+        /* Subscribe input/button */
+        footer input, footer .submit-btn {
+            width: 100% !important;
+            font-size: 0.9rem !important;
+            padding: 10px !important;
+        }
 
-/* Contact content grid */
-.contact-content {
-grid-template-columns: 1fr !important;
-gap: 1.5rem !important;
-}
+        /* Contact content grid */
+        .contact-content {
+            grid-template-columns: 1fr !important;
+            gap: 1.5rem !important;
+        }
 
-/* Contact form & info */
-.contact-info, .contact-form {
-padding: 1.5rem !important;
-}
+        /* Contact form & info */
+        .contact-info, .contact-form {
+            padding: 1.5rem !important;
+        }
 
-/* Bottom section */
-footer > div:last-child {
-text-align: center !important;
-padding: 15px 10px !important;
-}
-}
+        /* Bottom section */
+        footer > div:last-child {
+            text-align: center !important;
+            padding: 15px 10px !important;
+        }
+    }
 
-/* Extra small screens (phones <480px) */
-@media (max-width: 480px) {
-footer img {
-width: 80px !important;
-}
+    /* Extra small screens (phones <480px) */
+    @media (max-width: 480px) {
+        footer img {
+            width: 80px !important;
+        }
 
-footer h4 {
-font-size: 1rem !important;
-}
+        footer h4 {
+            font-size: 1rem !important;
+        }
 
-footer p, footer a, footer li a {
-font-size: 0.85rem !important;
-}
+        footer p, footer a, footer li a {
+            font-size: 0.85rem !important;
+        }
 
-footer .social-icon {
-font-size: 1.1rem !important;
-}
+        footer .social-icon {
+            font-size: 1.1rem !important;
+        }
 
-footer input, footer .submit-btn {
-font-size: 0.85rem !important;
-padding: 8px !important;
-}
+        footer input, footer .submit-btn {
+            font-size: 0.85rem !important;
+            padding: 8px !important;
+        }
 
-.contact-info, .contact-form {
-padding: 1rem !important;
-}
-}
+        .contact-info, .contact-form {
+            padding: 1rem !important;
+        }
+    }
 </style>
-
-

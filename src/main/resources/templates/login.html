@@ -156,47 +156,35 @@
 
     // Basic validation
     if (!username || !password) {
-        alert("Please enter both username/email and password.");
+        alert("Please enter both username and password.");
         return;
     }
-
-    // Use email field (username can be email)
-    const email = username.includes('@') ? username : username + '@ongolebulls.com';
 
     fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email, password: password })
+        body: JSON.stringify({ username, password })
     })
     .then(response => {
         if (!response.ok) {
-            return response.json().then(err => {
-                throw new Error(err.error || 'Login failed');
-            });
+            throw new Error('Network response was not ok');
         }
-        return response.json();
+        return response.text();
     })
     .then(data => {
-        if (data.id && data.fullName) {
-            // Store user data in localStorage for dashboard
-            localStorage.setItem('loggedInUser', JSON.stringify({
-                id: data.id,
-                fullName: data.fullName,
-                email: data.email,
-                mobileNumber: data.mobileNumber || '',
-                username: data.email
-            }));
-            
+        if (data === "Login successful!") {
             alert("Login successful!");
+            sessionStorage.setItem("username", username); // Save username
+
             // Redirect to dashboard page
-            window.location.href = '/user-db.html';
+            window.location.href = "dashboard.html";
         } else {
-            alert('Login failed: Invalid response');
+            alert(data); // Show any error messages like "Invalid credentials"
         }
     })
     .catch(error => {
         console.error('Error during login:', error);
-        alert("Login failed: " + error.message);
+        alert("An error occurred. Please try again later.");
     });
 }
 
@@ -547,48 +535,12 @@ function showRegister() {
     function loginUser() {
       const username = document.getElementById('login-username').value;
       const password = document.getElementById('login-password').value;
-      
-      if (!username || !password) {
-        alert('Please enter both username/email and password');
-        return;
-      }
-      
-      // Use email field (username can be email)
-      const email = username.includes('@') ? username : username + '@ongolebulls.com';
-      
       fetch('/api/auth/login', {
-        method: 'POST', 
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({email: email, password: password})
-      })
-      .then(response => {
-        if (!response.ok) {
-          return response.json().then(err => {
-            throw new Error(err.error || 'Login failed');
-          });
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (data.id && data.fullName) {
-          // Store user data in localStorage for dashboard
-          localStorage.setItem('loggedInUser', JSON.stringify({
-            id: data.id,
-            fullName: data.fullName,
-            email: data.email,
-            mobileNumber: data.mobileNumber || '',
-            username: data.email
-          }));
-          
-          // Redirect to dashboard
-          window.location.href = '/user-db.html';
-        } else {
-          alert('Login failed: Invalid response');
-        }
-      })
-      .catch(error => {
-        console.error('Login error:', error);
-        alert('Login failed: ' + error.message);
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({username, password})
+      }).then(r => r.text()).then(data => {
+        if(data.includes("successful")) { window.location.href="dashboard.html"; }
+        else alert(data);
       });
     }
 
@@ -998,48 +950,12 @@ function showRegister() {
     function loginUser() {
       const username = document.getElementById('login-username').value;
       const password = document.getElementById('login-password').value;
-      
-      if (!username || !password) {
-        alert('Please enter both username/email and password');
-        return;
-      }
-      
-      // Use email field (username can be email)
-      const email = username.includes('@') ? username : username + '@ongolebulls.com';
-      
       fetch('/api/auth/login', {
-        method: 'POST', 
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({email: email, password: password})
-      })
-      .then(response => {
-        if (!response.ok) {
-          return response.json().then(err => {
-            throw new Error(err.error || 'Login failed');
-          });
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (data.id && data.fullName) {
-          // Store user data in localStorage for dashboard
-          localStorage.setItem('loggedInUser', JSON.stringify({
-            id: data.id,
-            fullName: data.fullName,
-            email: data.email,
-            mobileNumber: data.mobileNumber || '',
-            username: data.email
-          }));
-          
-          // Redirect to dashboard
-          window.location.href = '/user-db.html';
-        } else {
-          alert('Login failed: Invalid response');
-        }
-      })
-      .catch(error => {
-        console.error('Login error:', error);
-        alert('Login failed: ' + error.message);
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({username, password})
+      }).then(r => r.text()).then(data => {
+        if(data.includes("successful")) { window.location.href="user-db.html"; }
+        else alert(data);
       });
     }
 

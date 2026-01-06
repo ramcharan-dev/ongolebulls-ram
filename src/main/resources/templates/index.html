@@ -2,12 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="aa">
 <head>
   <link rel="stylesheet" th:href="@{style.css}">
-<!--  <title>Demo OngoleBulls Invest - Your Partner in Wealth Creation</title>-->
-<!--  <link rel="icon" id="dynamicFavicon" href="/favicon.ico">-->
-  <title id="dynamicTitle">OngoleBulls Invest - Your Partner in Wealth Creation</title>
-  <link id="dynamicFavicon" rel="icon" href="/favicon.ico" type="image/x-icon">
-
-
+  <title>OngoleBulls Invest - Your Partner in Wealth Creation</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -23,6 +18,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 
 
 
@@ -69,7 +65,7 @@
       <div class="col text-center animate-up" style="animation-delay:0.5s;">
         <div class="d-flex flex-column flex-md-row justify-content-center gap-3 stats">
           <span><i class="bi bi-shield-check"></i> Trusted by 5,000+ Investors</span>
-          <span><i class="bi bi-lock"></i> AMFI Registered</span>
+          <span><i class="bi bi-lock"></i> SEBI Registered</span>
           <span><i class="bi bi-bar-chart-line"></i> 95% Client Retention</span>
         </div>
       </div>
@@ -1985,7 +1981,7 @@ body {
         <p>
           At <span class="fw-bold text-danger">OngoleBulls Invest Pvt Ltd</span>,
           we are committed to empowering investors with personalized, transparent, and
-          AMFI Registered Mutual Fund Distributor. Our mission is to create long-term value while building
+          SEBI-compliant wealth strategies. Our mission is to create long-term value while building
           financial confidence for every client.
         </p>
 
@@ -2031,8 +2027,8 @@ body {
             <p>Client Retention</p>
           </div>
           <div>
-            <h4>AMFI</h4>
-            <p>Registered</p>
+            <h4>SEBI</h4>
+            <p>Compliant</p>
           </div>
           <div>
             <h4>2021</h4>
@@ -2667,136 +2663,135 @@ body {
 
 <script>
   // Load Lucide icons
-<!--  lucide.createIcons();-->
+  lucide.createIcons();
 </script>
 <script src="https://unpkg.com/lucide@latest"></script>
 
-<!--<script>-->
-<!--  const features = document.querySelectorAll('.feature');-->
-<!--  const itemsPerPage = 4;-->
-<!--  const totalPages = Math.ceil(features.length / itemsPerPage);-->
-<!--  let currentPage = 1;-->
+<script>
+  const features = document.querySelectorAll('.feature');
+  const itemsPerPage = 4;
+  const totalPages = Math.ceil(features.length / itemsPerPage);
+  let currentPage = 1;
 
-<!--  const dotsContainer = document.getElementById('dotsContainer');-->
+  const dotsContainer = document.getElementById('dotsContainer');
 
-<!--  function showPage(page) {-->
-<!--    features.forEach((feature, index) => {-->
-<!--      feature.style.display = 'none';-->
-<!--    });-->
+  function showPage(page) {
+    features.forEach((feature, index) => {
+      feature.style.display = 'none';
+    });
 
-<!--    const start = (page - 1) * itemsPerPage;-->
-<!--    const end = start + itemsPerPage;-->
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
 
-<!--    for (let i = start; i < end && i < features.length; i++) {-->
-<!--      features[i].style.display = 'block';-->
-<!--    }-->
+    for (let i = start; i < end && i < features.length; i++) {
+      features[i].style.display = 'block';
+    }
 
-<!--    updateDots(page);-->
-<!--    currentPage = page;-->
-<!--  }-->
+    updateDots(page);
+    currentPage = page;
+  }
 
-<!--  function createDots() {-->
-<!--    dotsContainer.innerHTML = '';-->
-<!--    for (let i = 1; i <= totalPages; i++) {-->
-<!--      const dot = document.createElement('span');-->
-<!--      dot.classList.add('dot');-->
-<!--      if (i === currentPage) dot.classList.add('active');-->
-<!--      dotsContainer.appendChild(dot);-->
-<!--    }-->
+  function createDots() {
+    dotsContainer.innerHTML = '';
+    for (let i = 1; i <= totalPages; i++) {
+      const dot = document.createElement('span');
+      dot.classList.add('dot');
+      if (i === currentPage) dot.classList.add('active');
+      dotsContainer.appendChild(dot);
+    }
 
-<!--    document.querySelectorAll('.dot').forEach((dot, index) => {-->
-<!--      dot.addEventListener('click', () => showPage(index + 1));-->
-<!--    });-->
-<!--  }-->
+    document.querySelectorAll('.dot').forEach((dot, index) => {
+      dot.addEventListener('click', () => showPage(index + 1));
+    });
+  }
 
-<!--  function updateDots(page) {-->
-<!--    document.querySelectorAll('.dot').forEach((dot, index) => {-->
-<!--      dot.classList.toggle('active', index + 1 === page);-->
-<!--    });-->
-<!--  }-->
+  function updateDots(page) {
+    document.querySelectorAll('.dot').forEach((dot, index) => {
+      dot.classList.toggle('active', index + 1 === page);
+    });
+  }
 
-<!--  document.getElementById('prevBtn').addEventListener('click', () => {-->
-<!--    if (currentPage > 1) showPage(currentPage - 1);-->
-<!--  });-->
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if (currentPage > 1) showPage(currentPage - 1);
+  });
 
-<!--  document.getElementById('nextBtn').addEventListener('click', () => {-->
-<!--    if (currentPage < totalPages) showPage(currentPage + 1);-->
-<!--  });-->
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    if (currentPage < totalPages) showPage(currentPage + 1);
+  });
 
-<!--  createDots();-->
-<!--  showPage(currentPage);-->
-<!--</script>-->
+  createDots();
+  showPage(currentPage);
+</script>
 
-<!--<script>-->
-<!--  const faqData = [-->
-<!--    {-->
-<!--      question: "How safe is my data? What level of encryption do you use?",-->
-<!--      answer: "We use bank-level AES-256 encryption to secure your data in transit and at rest."-->
-<!--    },-->
-<!--    {-->
-<!--      question: "Your financial information is stored safely",-->
-<!--      answer: "All financial information is stored in secure, encrypted databases with restricted access."-->
-<!--    },-->
-<!--    {-->
-<!--      question: "Only you can access your financial information",-->
-<!--      answer: "We use multi-factor authentication and role-based access to ensure only you can view your data."-->
-<!--    },-->
-<!--    {-->
-<!--      question: "Only you can review your financial information",-->
-<!--      answer: "Your data is never shared without your consent and is reviewed only through secure sessions."-->
-<!--    },-->
-<!--    {-->
-<!--      question: "Only you can make important financial transactions",-->
-<!--      answer: "Transactions require user confirmation and OTP-based verification to proceed."-->
-<!--    },-->
-<!--    {-->
-<!--      question: "Here are a few tips to help keep you safe online:",-->
-<!--      answer: "Never share your password. Always log out after use. Use trusted devices and secure networks."-->
-<!--    },-->
-<!--    {-->
-<!--      question: "What if I lose my mobile device or someone steals it?",-->
-<!--      answer: "Your account is protected by 2FA. You can also remotely log out from your profile settings."-->
-<!--    },-->
-<!--    {-->
-<!--      question: "What is OngoleBulls' privacy policy?",-->
-<!--      answer: "We follow strict privacy norms. Your data is never sold or shared with third parties."-->
-<!--    },-->
-<!--    {-->
-<!--      question: "Can my data be misused?",-->
-<!--      answer: "No. We comply with global data protection regulations like GDPR and store minimal personal data."-->
-<!--    }-->
-<!--  ];-->
+<script>
+  const faqData = [
+    {
+      question: "How safe is my data? What level of encryption do you use?",
+      answer: "We use bank-level AES-256 encryption to secure your data in transit and at rest."
+    },
+    {
+      question: "Your financial information is stored safely",
+      answer: "All financial information is stored in secure, encrypted databases with restricted access."
+    },
+    {
+      question: "Only you can access your financial information",
+      answer: "We use multi-factor authentication and role-based access to ensure only you can view your data."
+    },
+    {
+      question: "Only you can review your financial information",
+      answer: "Your data is never shared without your consent and is reviewed only through secure sessions."
+    },
+    {
+      question: "Only you can make important financial transactions",
+      answer: "Transactions require user confirmation and OTP-based verification to proceed."
+    },
+    {
+      question: "Here are a few tips to help keep you safe online:",
+      answer: "Never share your password. Always log out after use. Use trusted devices and secure networks."
+    },
+    {
+      question: "What if I lose my mobile device or someone steals it?",
+      answer: "Your account is protected by 2FA. You can also remotely log out from your profile settings."
+    },
+    {
+      question: "What is OngoleBulls' privacy policy?",
+      answer: "We follow strict privacy norms. Your data is never sold or shared with third parties."
+    },
+    {
+      question: "Can my data be misused?",
+      answer: "No. We comply with global data protection regulations like GDPR and store minimal personal data."
+    }
+  ];
 
-<!--  const accordionContainer = document.getElementById("securityFAQ");-->
+  const accordionContainer = document.getElementById("securityFAQ");
 
-<!--  faqData.forEach((item, index) => {-->
-<!--    const faqItem = document.createElement("div");-->
-<!--    faqItem.className = "accordion-item";-->
-<!--    faqItem.innerHTML = `-->
-<!--      <h2 class="accordion-header" id="heading${index}">-->
-<!--        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"-->
-<!--          data-bs-target="#collapse${index}" aria-expanded="false" aria-controls="collapse${index}">-->
-<!--          ${item.question}-->
-<!--        </button>-->
-<!--      </h2>-->
-<!--      <div id="collapse${index}" class="accordion-collapse collapse" aria-labelledby="heading${index}"-->
-<!--        data-bs-parent="#securityFAQ">-->
-<!--        <div class="accordion-body">-->
-<!--          ${item.answer}-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    `;-->
-<!--    accordionContainer.appendChild(faqItem);-->
-<!--  });-->
+  faqData.forEach((item, index) => {
+    const faqItem = document.createElement("div");
+    faqItem.className = "accordion-item";
+    faqItem.innerHTML = `
+      <h2 class="accordion-header" id="heading${index}">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#collapse${index}" aria-expanded="false" aria-controls="collapse${index}">
+          ${item.question}
+        </button>
+      </h2>
+      <div id="collapse${index}" class="accordion-collapse collapse" aria-labelledby="heading${index}"
+        data-bs-parent="#securityFAQ">
+        <div class="accordion-body">
+          ${item.answer}
+        </div>
+      </div>
+    `;
+    accordionContainer.appendChild(faqItem);
+  });
 
-<!--  document.getElementById("readMoreBtn").addEventListener("click", function () {-->
-<!--    const faqSection = document.getElementById("faqSection");-->
-<!--    faqSection.style.display = "block";-->
-<!--    faqSection.scrollIntoView({ behavior: "smooth" });-->
-<!--    this.style.display = "none";-->
-<!--  });-->
-<!--</script>-->
-
+  document.getElementById("readMoreBtn").addEventListener("click", function () {
+    const faqSection = document.getElementById("faqSection");
+    faqSection.style.display = "block";
+    faqSection.scrollIntoView({ behavior: "smooth" });
+    this.style.display = "none";
+  });
+</script>
 
 
 <!-- Common Footer -->

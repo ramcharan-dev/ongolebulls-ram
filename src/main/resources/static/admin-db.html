@@ -4,7 +4,6 @@
     <meta charset="utf-8"/>
     <title>Admin Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link id="Favicon" rel="icon" href="/assets/logo 3.png" type="image/x-icon">
 
     <!-- Bootstrap Icons CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
@@ -39,6 +38,9 @@
             </a>
 
             <a href="#/seo" class="admindashboard-nav" data-route="#/seo"><i class="bi bi-search"></i> <span>SEO</span></a>
+            <a href="#/services" class="admindashboard-nav" data-route="#/services">
+                <i class="bi bi-grid-fill"></i> <span>Services</span>
+            </a>
             <a href="#/settings" class="admindashboard-nav" data-route="#/settings"><i class="bi bi-gear-fill"></i> <span>Settings</span></a>
             <a href="#/documents" class="admindashboard-nav" data-route="#/documents"><i class="bi bi-file-earmark-fill"></i> <span>Documents</span></a>
             <a href="#/careers" class="admindashboard-nav" data-route="#/careers"><i class="bi bi-briefcase-fill"></i> <span>Careers</span></a>
@@ -634,6 +636,8 @@
 
 
 
+
+
 <!-- Add these templates to your admin-dashboard.html file -->
 
 <!-- Services Container Template -->
@@ -675,9 +679,7 @@
     </div>
 </template>
 
-
-
-<!-- Modified Service Form Template with sections check list(allowed section types) -->
+<!-- Service Form Template -->
 <template id="serviceFormTemplate">
     <div class="admindashboard-card">
         <div class="admindashboard-card-head">
@@ -718,48 +720,6 @@
                     <span>Active (visible on website)</span>
                 </label>
             </div>
-
-            <!-- Allowed Section Types -->
-            <div class="form-row">
-                <label>Allowed Section Types:</label>
-
-                <div class="checkbox-group">
-                    <label>
-                        <input type="checkbox" name="allowedSectionTypes" value="hero">
-                        Hero
-                    </label>
-
-                    <label>
-                        <input type="checkbox" name="allowedSectionTypes" value="features">
-                        Features
-                    </label>
-
-                    <label>
-                        <input type="checkbox" name="allowedSectionTypes" value="steps">
-                        Steps / Process
-                    </label>
-
-                    <label>
-                        <input type="checkbox" name="allowedSectionTypes" value="faq">
-                        FAQ
-                    </label>
-
-                    <label>
-                        <input type="checkbox" name="allowedSectionTypes" value="why_choose_us">
-                        Why Choose Us
-                    </label>
-
-                    <label>
-                        <input type="checkbox" name="allowedSectionTypes" value="cta">
-                        Call To Action
-                    </label>
-                </div>
-
-                <small class="form-help">
-                    These section types will be available while creating sections for this service.
-                </small>
-            </div>
-
 
             <!-- SEO Section -->
             <div class="seo-section">
@@ -852,12 +812,15 @@
 
             <div class="form-row">
                 <label>Section Type: <span class="required">*</span><br/>
-
-<!--          section type dropdown will be empty by default, and JS will inject options based on the service.-->
-                    <select name="sectionType" required class="admindashboard-input" id="sectionTypeSelect">
+                    <select name="sectionType" required class="admindashboard-input">
                         <option value="">-- Select Type --</option>
+                        <option value="hero">Hero Banner</option>
+                        <option value="features">Features</option>
+                        <option value="steps">Steps/Process</option>
+                        <option value="why_choose_us">Why Choose Us</option>
+                        <option value="faq">FAQ</option>
+                        <option value="cta">Call to Action</option>
                     </select>
-
                 </label>
             </div>
 
@@ -872,9 +835,6 @@
                     <input type="text" name="subtitle" class="admindashboard-input" placeholder="Brief description"/>
                 </label>
             </div>
-
-            <!-- Dynamic Fields Container -->
-            <div id="sectionDynamicFields"></div>
 
             <div class="form-row">
                 <label>Display Order:<br/>
@@ -918,65 +878,6 @@
         <div id="sectionFormMessage" class="admindashboard-form-message"></div>
     </div>
 </template>
-
-<!-- section form templates for each type of section-->
-<!-- HERO -->
-<template id="heroFieldsTemplate">
-    <div class="form-row">
-        <label>Banner Image URL:<br/>
-            <input type="text" name="bannerImage" class="admindashboard-input"
-                   placeholder="https://example.com/banner.jpg"/>
-        </label>
-    </div>
-</template>
-
-<!-- FEATURES -->
-<template id="featuresFieldsTemplate">
-    <div class="repeatable-group" data-group="features">
-        <h4>Features</h4>
-        <div class="repeatable-items"></div>
-        <button type="button" class="admindashboard-btn-small" data-add>
-            + Add Feature
-        </button>
-    </div>
-</template>
-
-<!-- STEPS -->
-<template id="stepsFieldsTemplate">
-    <div class="repeatable-group" data-group="steps">
-        <h4>Steps / Process</h4>
-        <div class="repeatable-items"></div>
-        <button type="button" class="admindashboard-btn-small" data-add>
-            + Add Step
-        </button>
-    </div>
-</template>
-
-<!-- FAQ -->
-<template id="faqFieldsTemplate">
-    <div class="repeatable-group" data-group="faq">
-        <h4>FAQs</h4>
-        <div class="repeatable-items"></div>
-        <button type="button" class="admindashboard-btn-small" data-add>
-            + Add FAQ
-        </button>
-    </div>
-</template>
-
-<!-- CTA -->
-<template id="ctaFieldsTemplate">
-    <div class="form-row">
-        <label>Button Text:<br/>
-            <input type="text" name="ctaText" class="admindashboard-input"/>
-        </label>
-    </div>
-    <div class="form-row">
-        <label>Button URL:<br/>
-            <input type="text" name="ctaUrl" class="admindashboard-input"/>
-        </label>
-    </div>
-</template>
-
 
 <!-- Section Items Management Template -->
 <template id="sectionItemsManagementTemplate">
@@ -1029,24 +930,11 @@
         <form id="itemForm" class="admindashboard-item-form">
             <input type="hidden" name="sectionId"/>
 
-            <!-- Dynamic Fields (Injected by JS) -->
-            <div id="dynamicItemFields"></div>
-
-
             <div class="form-row">
-
-                <label>
-                    Icon (Bootstrap Icon class) <span class="muted">(optional)</span><br/>
-                    <input type="text"
-                           name="icon"
-                           class="admindashboard-input"
-                           placeholder="e.g., bi-shield-check"/>
-                    <small class="form-help">
-                        Visit <a href="https://icons.getbootstrap.com/" target="_blank">Bootstrap Icons</a>
-                        for icon names
-                    </small>
+                <label>Icon (Bootstrap Icon class): <span class="required">*</span><br/>
+                    <input type="text" name="icon" required class="admindashboard-input" placeholder="e.g., bi-shield-check"/>
+                    <small class="form-help">Visit <a href="https://icons.getbootstrap.com/" target="_blank">Bootstrap Icons</a> for icon names</small>
                 </label>
-
             </div>
 
             <div class="form-row">
@@ -1266,4 +1154,3 @@
 
 </body>
 </html>
-

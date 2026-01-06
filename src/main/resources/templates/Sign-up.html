@@ -664,17 +664,13 @@ async function verifyMobileOtp(mobile, otp) {
 
       try {
         const res = await fetch(API.register, { method: 'POST', body: fd });
-        if (!res.ok) {
-          const errorText = await res.text();
-          throw new Error(errorText || 'Registration failed');
-        }
-        const result = await res.json().catch(() => ({}));
-        qs('#submitStatus').innerHTML = '<div class="text-success">Signup complete! Redirecting to login…</div>';
-        // Redirect to login page after successful registration
-        setTimeout(() => window.location.href = '/sign-in', 1200);
+        if (!res.ok) throw new Error('Registration failed');
+        qs('#submitStatus').innerHTML = '<div class="text-success">Signup complete! Redirecting to dashboard…</div>';
+        // Redirect (adjust as needed)
+        setTimeout(() => window.location.href = '/dashboard', 1200);
       } catch (e) {
         console.error(e);
-        qs('#submitStatus').innerHTML = '<div class="text-danger">Error: ' + e.message + '</div>';
+        qs('#submitStatus').innerHTML = '<div class="text-danger">Error submitting form. Please try again.</div>';
         qs('#btnSubmit').disabled = false;
       }
     });

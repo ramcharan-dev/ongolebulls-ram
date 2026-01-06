@@ -8,5 +8,3 @@ import java.util.List;
 public interface SectionItemRepository extends JpaRepository<SectionItem, String> {
     List<SectionItem> findBySectionIdOrderByOrderIndexAsc(String sectionId);
 }
-
-

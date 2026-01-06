@@ -228,20 +228,10 @@
 
       if (response.ok) {
           const user = await response.json();
-          // Store as 'loggedInUser' to match dashboard expectations
-          // Ensure all required fields are present
-          const userData = {
-            id: user.id,
-            fullName: user.fullName || user.email,
-            email: user.email,
-            mobileNumber: user.mobileNumber || '',
-            username: user.email
-          };
-          localStorage.setItem("loggedInUser", JSON.stringify(userData));
+          localStorage.setItem("user", JSON.stringify(user));
           window.location.href = "/user-db.html";
         } else {
-          const errorData = await response.json().catch(() => ({}));
-          alert(errorData.error || "Invalid login credentials!");
+          alert("Invalid login credentials!");
         }
     });
 

@@ -1,32 +1,34 @@
-// InvestmentTransaction.java
 package dev.ongolebulls.model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "investment_transactions")
 public class InvestmentTransaction {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "investor_id", nullable = false)
-    private InvestorAccount investor;
+    @ManyToOne(optional=false) private InvestorAccount investor;
 
-    private String transactionId;
-    private LocalDateTime transactionDate;
-    private String type;
-    private String schemeName;
-    private String schemeCode;
-    private BigDecimal amount;
-    private BigDecimal units;
-    private BigDecimal nav;
-    private String status;
-    private String transactionMode;
+    private LocalDate txnDate;
 
-    // Getters and Setters
-    // ...
+    @Enumerated(EnumType.STRING)
+    private TxnType type;
+
+    private String fundName;
+    private BigDecimal amount; // can be null for SIP_MISSED
+
+    // getters/setters
+    public Long getId() { return id; }
+    public InvestorAccount getInvestor() { return investor; }
+    public void setInvestor(InvestorAccount investor) { this.investor = investor; }
+    public LocalDate getTxnDate() { return txnDate; }
+    public void setTxnDate(LocalDate txnDate) { this.txnDate = txnDate; }
+    public TxnType getType() { return type; }
+    public void setType(TxnType type) { this.type = type; }
+    public String getFundName() { return fundName; }
+    public void setFundName(String fundName) { this.fundName = fundName; }
+    public BigDecimal getAmount() { return amount; }
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
 }

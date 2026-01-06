@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -39,42 +38,14 @@ public class SubscriberService {
             throw new IllegalArgumentException("Invalid email format");
         }
 
-        // Check if email exists and handle resubscription
-        Optional<Subscriber> existingSubscriber = subscriberRepository.findByEmail(email);
-        if (existingSubscriber.isPresent()) {
-            Subscriber existing = existingSubscriber.get();
-            if (existing.getStatus() == Subscriber.Status.ACTIVE) {
-                throw new IllegalArgumentException("Email is already subscribed!");
-            }
-            // If UNSUBSCRIBED, reactivate the subscription
-            existing.setStatus(Subscriber.Status.ACTIVE);
-            existing.setUnsubscribeToken(UUID.randomUUID().toString());
-            existing.setSubscribedAt(java.time.LocalDateTime.now());
-            Subscriber savedSubscriber = subscriberRepository.save(existing);
-            
-            // Send emails in separate thread
-            final String finalEmail = savedSubscriber.getEmail();
-            final String finalToken = savedSubscriber.getUnsubscribeToken();
-
-            new Thread(() -> {
-                try {
-                    sendConfirmationEmailToSubscriber(finalEmail, finalToken);
-                    sendEmailNotificationToAdmin(finalEmail);
-                } catch (Exception e) {
-                    System.err.println("Error sending emails: " + e.getMessage());
-                    e.printStackTrace();
-                }
-            }).start();
-
-            return "Subscription reactivated! Please check your email for confirmation.";
+        if (subscriberRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException("Email is already subscribed!");
         }
 
         try {
             Subscriber subscriber = new Subscriber();
             subscriber.setEmail(email);
             subscriber.setUnsubscribeToken(UUID.randomUUID().toString());
-            subscriber.setStatus(Subscriber.Status.ACTIVE);
-            subscriber.setSubscribedAt(java.time.LocalDateTime.now());
 
             Subscriber savedSubscriber = subscriberRepository.save(subscriber);
             System.out.println("✓ Subscriber saved: " + savedSubscriber.getEmail());
@@ -176,8 +147,7 @@ public class SubscriberService {
         return subscriberRepository.findByUnsubscribeToken(token)
                 .map(subscriber -> {
                     String email = subscriber.getEmail();
-                    subscriber.setStatus(Subscriber.Status.UNSUBSCRIBED);
-                    subscriberRepository.save(subscriber);
+                    subscriberRepository.delete(subscriber);
 
                     try {
                         sendUnsubscribeConfirmation(email);
@@ -224,14 +194,14 @@ public class SubscriberService {
     }
 
     public void notifySubscribersAboutBlog(Blog blog) {
-        List<Subscriber> subscribers = subscriberRepository.findByStatus(Subscriber.Status.ACTIVE);
+        List<Subscriber> subscribers = subscriberRepository.findAll();
 
         if (subscribers.isEmpty()) {
-            System.out.println("No active subscribers to notify");
+            System.out.println("No subscribers to notify");
             return;
         }
 
-        System.out.println("📧 Sending blog notifications to " + subscribers.size() + " active subscribers...");
+        System.out.println("📧 Sending blog notifications to " + subscribers.size() + " subscribers...");
 
         int successCount = 0;
         int failureCount = 0;

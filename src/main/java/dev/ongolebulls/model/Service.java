@@ -1,15 +1,10 @@
-
-
 package dev.ongolebulls.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -58,21 +53,15 @@ public class Service {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    // ---------------- Hierarchy ----------------
-    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("service-sections")
-    private List<ServiceSection> sections = new ArrayList<>();
+    // ========= Getters and Setters ==========
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-            name = "service_allowed_section_types",
-            joinColumns = @JoinColumn(name = "service_id")
-    )
-    @Column(name = "section_type")
-    private List<String> allowedSectionTypes = new ArrayList<>();
+    public String getMetaKeywords() {
+        return metaKeywords;
+    }
 
-
-    // ===== Getters & Setters =====
+    public void setMetaKeywords(String metaKeywords) {
+        this.metaKeywords = metaKeywords;
+    }
 
     public String getId() {
         return id;
@@ -122,14 +111,6 @@ public class Service {
         this.metaTitle = metaTitle;
     }
 
-    public String getMetaKeywords() {
-        return metaKeywords;
-    }
-
-    public void setMetaKeywords(String metaKeywords) {
-        this.metaKeywords = metaKeywords;
-    }
-
     public String getMetaDescription() {
         return metaDescription;
     }
@@ -161,22 +142,4 @@ public class Service {
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
     }
-
-    public List<ServiceSection> getSections() {
-        return sections;
-    }
-
-    public void setSections(List<ServiceSection> sections) {
-        this.sections = sections;
-    }
-
-    public List<String> getAllowedSectionTypes() {
-        return allowedSectionTypes;
-    }
-
-    public void setAllowedSectionTypes(List<String> allowedSectionTypes) {
-        this.allowedSectionTypes = allowedSectionTypes;
-    }
-
 }
-

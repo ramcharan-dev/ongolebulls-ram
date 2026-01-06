@@ -1,7 +1,5 @@
-
 package dev.ongolebulls.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -17,11 +15,8 @@ public class SectionItem {
     @Column(length = 36, nullable = false, unique = true)
     private String id = UUID.randomUUID().toString();
 
-    // ---------------- Relation to ServiceSection ----------------
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "section_id", nullable = false)
-    @JsonBackReference("section-items")
-    private ServiceSection section;
+    @Column(name = "section_id", length = 36, nullable = false)
+    private String sectionId;
 
     @Lob
     @Column(columnDefinition = "LONGTEXT")
@@ -62,63 +57,7 @@ public class SectionItem {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    // ===== Getters & Setters =====
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public ServiceSection getSection() {
-        return section;
-    }
-
-    public void setSection(ServiceSection section) {
-        this.section = section;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getSubtitle() {
-        return subtitle;
-    }
-
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
-    }
-
-    public Integer getOrderIndex() {
-        return orderIndex;
-    }
-
-    public void setOrderIndex(Integer orderIndex) {
-        this.orderIndex = orderIndex;
-    }
+    // ======== Getters & Setters =========
 
     public String getMetaTitle() {
         return metaTitle;
@@ -144,6 +83,62 @@ public class SectionItem {
         this.metaDescription = metaDescription;
     }
 
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getSectionId() {
+        return sectionId;
+    }
+
+    public void setSectionId(String sectionId) {
+        this.sectionId = sectionId;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Integer getOrderIndex() {
+        return orderIndex;
+    }
+
+    public void setOrderIndex(Integer orderIndex) {
+        this.orderIndex = orderIndex;
+    }
+
     public Timestamp getCreatedAt() {
         return createdAt;
     }
@@ -160,4 +155,3 @@ public class SectionItem {
         this.updatedAt = updatedAt;
     }
 }
-

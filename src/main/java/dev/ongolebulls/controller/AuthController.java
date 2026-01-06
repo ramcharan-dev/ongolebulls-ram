@@ -73,7 +73,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.Objects;
 
 
 @RestController
@@ -138,7 +137,6 @@ public class AuthController {
 
             // Handle RiskProfile safely
             if (data.get("riskProfile") instanceof Map<?, ?> riskMapRaw) {
-                @SuppressWarnings("unchecked")
                 Map<String, Object> riskMap = (Map<String, Object>) riskMapRaw;
                 String riskCatStr = ((String) riskMap.getOrDefault("riskCategory", "CONSERVATIVE")).toUpperCase();
                 RiskProfile.RiskCategory category;
@@ -184,38 +182,11 @@ public class AuthController {
         }
 
         return userService.login(email, password)
-                .map(user -> {
-                    // Use reflection to get fields (Lombok IDE issue workaround)
-                    java.lang.reflect.Field idField, emailField, fullNameField, mobileField;
-                    try {
-                        idField = user.getClass().getDeclaredField("id");
-                        emailField = user.getClass().getDeclaredField("email");
-                        fullNameField = user.getClass().getDeclaredField("fullName");
-                        mobileField = user.getClass().getDeclaredField("mobileNumber");
-                        idField.setAccessible(true);
-                        emailField.setAccessible(true);
-                        fullNameField.setAccessible(true);
-                        mobileField.setAccessible(true);
-                        
-                        Map<String, Object> response = new HashMap<>();
-                        response.put("id", idField.get(user));
-                        response.put("email", emailField.get(user));
-                        response.put("fullName", fullNameField.get(user));
-                        Object mobile = mobileField.get(user);
-                        response.put("mobileNumber", mobile != null ? mobile.toString() : "");
-                        response.put("username", emailField.get(user));
-                        return ResponseEntity.ok(response);
-                    } catch (Exception e) {
-                        // Fallback to basic response
-                        Map<String, Object> response = new HashMap<>();
-                        response.put("id", 0);
-                        response.put("email", email);
-                        response.put("fullName", "");
-                        response.put("mobileNumber", "");
-                        response.put("username", email);
-                        return ResponseEntity.ok(response);
-                    }
-                })
+                .map(user -> ResponseEntity.ok(Map.of(
+                        "id", user.getId(),
+                        "email", user.getEmail(),
+                        "fullName", user.getFullName()
+                )))
                 .orElseGet(() -> ResponseEntity.status(401).body(Map.of("error", "Invalid credentials")));
     }
 
@@ -262,10 +233,10 @@ public class AuthController {
                 </div>
                 """.formatted(resetLink);
 
-            helper.setFrom(Objects.requireNonNull("info@ongolebullsinvest.com", "Sender email cannot be null"));
-            helper.setTo(Objects.requireNonNull(email, "Recipient email cannot be null"));
+            helper.setFrom("info@ongolebullsinvest.com"); // ✅ Fix sender
+            helper.setTo(email);
             helper.setSubject("Password Reset Request");
-            helper.setText(Objects.requireNonNull(html, "Email content cannot be null"), true);
+            helper.setText(html, true);
 
             mailSender.send(message);
 

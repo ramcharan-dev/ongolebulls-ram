@@ -1,4 +1,3 @@
-/*
 package dev.ongolebulls.service;
 
 import dev.ongolebulls.dto.*;
@@ -206,34 +205,5 @@ public class DashboardService {
         return PortfolioPositionRepo.findAssetAllocationByInvestorId(investorId);
     }
 
-
-}
-*/
-package dev.ongolebulls.service;
-
-import dev.ongolebulls.dto.*;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
-
-@Service
-public interface DashboardService {
-    //DashboardPayload load(Long userId);
-    List<Map<String, Object>> getAssetAllocation(Long userId);
-    UserProfileDto getUserProfile(Long userId);
-    UserProfileDto updateUserProfile(Long userId, UserProfileUpdateDto profileUpdateDto);
-    Page<TransactionDto> getUserTransactions(Long userId, int page, int size);
-    DashboardMetricsDto getDashboardMetrics(Long userId);
-    List<ActivityDto> getRecentActivity(Long userId, int limit);
-    void changePassword(Long userId, ChangePasswordDto changePasswordDto);
-
-    public default DashboardPayload load(Long userId) {
-
-        DashboardPayload payload = new DashboardPayload();
-
-        return payload; // NEVER null
-    }
 
 }
