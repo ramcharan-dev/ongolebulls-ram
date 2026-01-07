@@ -7,12 +7,12 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://awseb-e-f2hq7tiesh-stack-awsebrdsdatabase-dnw6qusnl0mz.cfywsmks4rlh.ap-south-1.rds.amazonaws.com:3306/ongolebulls
-    username: ongole_user
-    password: StrongPassword@123
+    username: root
+    password: root1234
 
   jpa:
     hibernate:
-      ddl-auto: ${HIBERNATE_DDL_AUTO:none}
+      ddl-auto: ${HIBERNATE_DDL_AUTO:update}
     show-sql: true
     open-in-view: true
 
