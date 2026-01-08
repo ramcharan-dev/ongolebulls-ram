@@ -41,6 +41,13 @@ spring:
   main:
     allow-circular-references: true # Fixed key syntax
 
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 50MB
+      file-size-threshold: 2KB
+
   mvc:
     view:
       prefix: /WEB-INF/views/

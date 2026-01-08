@@ -29,3 +29,4 @@ public class NomineeUpdateDto {
     public void setNomineeDob(LocalDate nomineeDob) { this.nomineeDob = nomineeDob; }
 }
 
+

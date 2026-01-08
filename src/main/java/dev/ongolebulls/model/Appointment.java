@@ -32,12 +32,24 @@ public class Appointment {
     private String mobile;
 
 
-    @Column(nullable = false)
-    private LocalDate preferredDate;
+    @Column(nullable = false, length = 20)
+    private String employmentType;
 
 
-    @Column(nullable = false)
-    private LocalTime preferredTime;
+    @Column(nullable = false, length = 50)
+    private String employmentSector;
+
+
+    @Column(nullable = false, length = 50)
+    private String country;
+
+
+    @Column(nullable = false, length = 50)
+    private String state;
+
+
+    @Column(nullable = false, length = 50)
+    private String city;
 
 
     @Enumerated(EnumType.STRING)
@@ -48,6 +60,11 @@ public class Appointment {
     @Column(columnDefinition = "TEXT")
     private String notes;
 
+    @Column(name = "preferred_date", nullable = true)
+    private LocalDate preferredDate;
+
+    @Column(name = "preferred_time", nullable = true)
+    private LocalTime preferredTime;
 
     @Column(nullable = false)
     private OffsetDateTime createdAt;
