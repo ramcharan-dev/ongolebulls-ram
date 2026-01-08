@@ -235,5 +235,102 @@ public class EmailService {
             System.err.println("❌ Failed to send ticket status update email: " + e.getMessage());
         }
     }
+
+    /**
+     * Send document submission confirmation email to user
+     */
+    public void sendDocumentSubmissionConfirmation(String to, String investorName, Long submissionId) {
+        try {
+            String subject = "Document Submission Confirmation - Reference ID: " + submissionId;
+            String htmlBody = String.format(
+                "<!DOCTYPE html>" +
+                "<html>" +
+                "<head><meta charset='UTF-8'></head>" +
+                "<body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;'>" +
+                "<div style='background: linear-gradient(135deg, #bd2a1f 0%%, #bb9236 100%%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;'>" +
+                "<h1 style='color: white; margin: 0;'>OngoleBulls Invest</h1>" +
+                "</div>" +
+                "<div style='background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #e5e7eb;'>" +
+                "<h2 style='color: #bd2a1f;'>Document Submission Received</h2>" +
+                "<p>Dear %s,</p>" +
+                "<p>Thank you for submitting your investment documents. We have successfully received your submission and our team will review it shortly.</p>" +
+                "<div style='background: white; border: 2px solid #bd2a1f; border-radius: 8px; padding: 20px; margin: 20px 0;'>" +
+                "<p style='margin: 0;'><strong>Reference ID:</strong> <span style='color: #bd2a1f; font-size: 18px; font-weight: bold;'>%d</span></p>" +
+                "<p style='margin: 10px 0 0 0;'><strong>Status:</strong> <span style='color: #f59e0b; font-weight: bold;'>Pending Review</span></p>" +
+                "</div>" +
+                "<p><strong>What happens next?</strong></p>" +
+                "<ul style='color: #4b5563; line-height: 1.8;'>" +
+                "<li>Our team will review your documents within 2-3 business days</li>" +
+                "<li>You will receive an email notification once the review is complete</li>" +
+                "<li>If any additional documents are required, we will contact you</li>" +
+                "</ul>" +
+                "<p style='margin-top: 20px;'>If you have any questions or need assistance, please feel free to contact us.</p>" +
+                "<div style='background: #f3f4f6; padding: 15px; border-radius: 5px; margin: 20px 0;'>" +
+                "<p style='margin: 5px 0;'><strong>Contact Information:</strong></p>" +
+                "<p style='margin: 5px 0;'>📧 Email: invest@ongolebullsinvest.com</p>" +
+                "<p style='margin: 5px 0;'>📞 Phone: +91-9281111730</p>" +
+                "<p style='margin: 5px 0;'>🌐 Website: <a href='https://www.ongolebullsinvest.com' style='color: #bd2a1f;'>www.ongolebullsinvest.com</a></p>" +
+                "</div>" +
+                "<hr style='border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;'>" +
+                "<p style='color: #6b7280; font-size: 12px; text-align: center;'>© OngoleBulls Invest. All rights reserved.</p>" +
+                "</div>" +
+                "</body>" +
+                "</html>",
+                investorName, submissionId
+            );
+            sendHtmlMail(to, subject, htmlBody);
+            System.out.println("✓ Document submission confirmation email sent to: " + to);
+        } catch (Exception e) {
+            System.err.println("❌ Failed to send document submission confirmation email: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Send document submission notification email to admin
+     */
+    public void sendDocumentSubmissionNotificationToAdmin(String adminEmail, String investorName, String investorEmail, 
+                                                          String investorPhone, String panNumber, Long submissionId) {
+        try {
+            String subject = "New Document Submission - Reference ID: " + submissionId;
+            String htmlBody = String.format(
+                "<!DOCTYPE html>" +
+                "<html>" +
+                "<head><meta charset='UTF-8'></head>" +
+                "<body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;'>" +
+                "<div style='background: linear-gradient(135deg, #bd2a1f 0%%, #bb9236 100%%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;'>" +
+                "<h1 style='color: white; margin: 0;'>New Document Submission</h1>" +
+                "</div>" +
+                "<div style='background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #e5e7eb;'>" +
+                "<h2 style='color: #bd2a1f;'>Document Submission Details</h2>" +
+                "<p>A new investment document submission has been received and requires your review.</p>" +
+                "<div style='background: white; border: 2px solid #bd2a1f; border-radius: 8px; padding: 20px; margin: 20px 0;'>" +
+                "<p style='margin: 5px 0;'><strong>Reference ID:</strong> <span style='color: #bd2a1f; font-weight: bold;'>%d</span></p>" +
+                "<p style='margin: 5px 0;'><strong>Investor Name:</strong> %s</p>" +
+                "<p style='margin: 5px 0;'><strong>Email:</strong> %s</p>" +
+                "<p style='margin: 5px 0;'><strong>Phone:</strong> %s</p>" +
+                "<p style='margin: 5px 0;'><strong>PAN Number:</strong> %s</p>" +
+                "<p style='margin: 5px 0;'><strong>Status:</strong> <span style='color: #f59e0b; font-weight: bold;'>Pending Review</span></p>" +
+                "<p style='margin: 5px 0;'><strong>Submitted Date:</strong> %s</p>" +
+                "</div>" +
+                "<p style='color: #6b7280; font-size: 14px;'>Please log into the admin dashboard to review and process this submission.</p>" +
+                "<div style='background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0; border-radius: 5px;'>" +
+                "<p style='margin: 0; color: #92400e;'><strong>⚠️ Action Required:</strong> This document submission is pending review and approval.</p>" +
+                "</div>" +
+                "<hr style='border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;'>" +
+                "<p style='color: #6b7280; font-size: 12px; text-align: center;'>© OngoleBulls Invest. All rights reserved.</p>" +
+                "</div>" +
+                "</body>" +
+                "</html>",
+                submissionId, investorName, investorEmail, investorPhone, panNumber,
+                java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a"))
+            );
+            sendHtmlMail(adminEmail, subject, htmlBody);
+            System.out.println("✓ Document submission notification email sent to admin: " + adminEmail);
+        } catch (Exception e) {
+            System.err.println("❌ Failed to send document submission notification to admin: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }
 

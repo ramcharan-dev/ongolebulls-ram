@@ -34,8 +34,14 @@ public class DocumentService {
     @Autowired
     private NomineeRepo nomineeRepo;
 
+    @Autowired
+    private EmailService emailService;
+
     @Value("${file.upload.directory:uploads/documents}")
     private String uploadDirectory;
+
+    @Value("${admin.email:invest@ongolebullsinvest.com}")
+    private String adminEmail;
 
     // ADD THIS METHOD - Check if PAN exists
     public boolean panNumberExists(String panNumber) {
@@ -71,6 +77,7 @@ public class DocumentService {
         if (nominees != null && !nominees.isEmpty()) {
             for (Nominee nominee : nominees) {
                 nominee.setDocumentSubmission(savedSubmission);
+                nominee.setUserId(null); // Explicitly set to null for document submissions
 
                 // Check if minor
                 LocalDate dob = nominee.getDateOfBirth();
@@ -80,6 +87,30 @@ public class DocumentService {
 
                 nomineeRepo.save(nominee);
             }
+        }
+
+        // Send email notifications (async to not block the response)
+        try {
+            // Send confirmation email to user
+            emailService.sendDocumentSubmissionConfirmation(
+                savedSubmission.getInvestorEmail(),
+                savedSubmission.getInvestorName(),
+                savedSubmission.getId()
+            );
+
+            // Send notification email to admin
+            emailService.sendDocumentSubmissionNotificationToAdmin(
+                adminEmail,
+                savedSubmission.getInvestorName(),
+                savedSubmission.getInvestorEmail(),
+                savedSubmission.getInvestorPhone(),
+                savedSubmission.getPanNumber(),
+                savedSubmission.getId()
+            );
+        } catch (Exception e) {
+            // Log error but don't fail the submission
+            System.err.println("❌ Failed to send email notifications: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return savedSubmission;
@@ -98,7 +129,12 @@ public class DocumentService {
 
         // Generate unique filename
         String originalFilename = file.getOriginalFilename();
-        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        if (originalFilename == null || originalFilename.isEmpty()) {
+            originalFilename = "file";
+        }
+        String extension = originalFilename.contains(".") 
+            ? originalFilename.substring(originalFilename.lastIndexOf(".")) 
+            : ".bin";
         String filename = UUID.randomUUID().toString() + extension;
 
         // Save file

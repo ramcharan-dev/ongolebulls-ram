@@ -23,7 +23,7 @@ public class TicketReply {
     @Column(name = "replied_by")
     private String repliedBy; // Support agent name or user name
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = true, updatable = false)
     private LocalDateTime createdAt;
 
     @PrePersist

@@ -8,16 +8,17 @@ import java.time.LocalDate;
 public class Nominee {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  // ✅ ADD THIS LINE
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     // For User Dashboard (existing relationship)
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = true)
     private Long userId;
 
     // For Document Submissions (new relationship)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "submission_id")
+    @JoinColumn(name = "submission_id", nullable = true)
     private DocumentSubmission documentSubmission;
 
     @Column(nullable = false)
