@@ -61,4 +61,3 @@ public class PersonalDetailsUpdateDto {
     public void setRelativeRelation(String relativeRelation) { this.relativeRelation = relativeRelation; }
 }
 
-

@@ -3,7 +3,6 @@ package dev.ongolebulls.controller;
 import dev.ongolebulls.dto.*;
 import dev.ongolebulls.model.*;
 import dev.ongolebulls.repository.UserRepository;
-import java.util.HashMap;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -417,76 +416,6 @@ public class ProfileController {
         if (understoodMarketRisk != null) dto.setUnderstoodMarketRisk((Boolean) understoodMarketRisk);
         
         return dto;
-    }
-
-    @PutMapping("/{userId}/risk-profile")
-    @CrossOrigin(origins = "*")
-    public ResponseEntity<Map<String, Object>> updateRiskProfile(
-            @PathVariable Long userId,
-            @RequestBody Map<String, Object> request) {
-        try {
-            Optional<User> userOpt = userRepository.findById(userId);
-            if (userOpt.isEmpty()) {
-                Map<String, Object> response = new HashMap<>();
-                response.put("success", false);
-                response.put("error", "User not found");
-                return ResponseEntity.badRequest().body(response);
-            }
-
-            User user = userOpt.get();
-            
-            // Get or create risk profile
-            RiskProfile riskProfile = (RiskProfile) getField(user, "riskProfile");
-            if (riskProfile == null) {
-                riskProfile = new RiskProfile();
-                setField(riskProfile, "id", null);
-            }
-
-            // Update risk profile fields
-            if (request.containsKey("riskScore")) {
-                setField(riskProfile, "score", Integer.valueOf(request.get("riskScore").toString()));
-            }
-            
-            if (request.containsKey("riskCategory")) {
-                String categoryStr = request.get("riskCategory").toString().toUpperCase();
-                try {
-                    RiskProfile.RiskCategory category = RiskProfile.RiskCategory.valueOf(categoryStr);
-                    setField(riskProfile, "category", category);
-                } catch (IllegalArgumentException e) {
-                    setField(riskProfile, "category", RiskProfile.RiskCategory.MODERATE);
-                }
-            }
-            
-            if (request.containsKey("answersJson")) {
-                setField(riskProfile, "answersJson", request.get("answersJson").toString());
-            }
-
-            // Save risk profile
-            setField(user, "riskProfile", riskProfile);
-            
-            // Update investor account risk category if exists
-            Object investorAccount = getField(user, "investorAccount");
-            if (investorAccount != null) {
-                Object category = getField(riskProfile, "category");
-                if (category != null) {
-                    setField(investorAccount, "riskCategory", category);
-                }
-            }
-
-            userRepository.save(user);
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", true);
-            response.put("message", "Risk profile updated successfully");
-            response.put("riskCategory", getField(riskProfile, "category"));
-            response.put("riskScore", getField(riskProfile, "score"));
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", false);
-            response.put("error", "Failed to update risk profile: " + e.getMessage());
-            return ResponseEntity.ok(response);
-        }
     }
 }
 
