@@ -26,4 +26,3 @@ public class TicketReplyDto {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }
 
-

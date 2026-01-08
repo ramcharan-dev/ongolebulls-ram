@@ -5,110 +5,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Book an Appointment – Ongolebulls Invest</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body class="bg-light">
-<!-- Success Notification -->
-<div id="successNotification" class="success-notification">
-  <div class="success-content">
-    <svg class="success-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <span class="success-message">Submitted Successfully!</span>
-  </div>
-</div>
-
-<div class="container py-4 py-md-5">
+<div class="container py-5">
   <div class="row justify-content-center">
-    <div class="col-lg-7 col-xl-6">
-      <div class="card shadow-lg">
-        <div class="card-body p-4 p-md-5">
+    <div class="col-lg-6">
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
           <!-- Company Logo -->
-          <div class="text-center mb-4 mb-md-5">
-            <img src="assets/logo%203.png" alt="OngoleBulls Logo" class="logo-img" />
+          <div class="text-center mb-4">
+            <img src="assets/logo%203.png" alt="OngoleBulls Logo" style="max-width: 180px; height: auto;" />
           </div>
 
-          <h1 class="form-title mb-4">Book Your Appointment</h1>
-          <p class="form-subtitle text-center mb-4 mb-md-5">Fill in your details and we'll get back to you shortly</p>
+          <h1 class="h4 mb-3">Book Your Appointment</h1>
           <form id="appointmentForm" class="needs-validation" novalidate>
-            <div class="mb-4">
-              <label class="form-label">
-                <i class="fas fa-user me-2"></i>Full Name *
-              </label>
-              <input type="text" class="form-control" name="fullName" placeholder="Enter your full name" required />
+            <div class="mb-3">
+              <label class="form-label">Full Name *</label>
+              <input type="text" class="form-control" name="fullName" required />
               <div class="invalid-feedback">Full name is required.</div>
             </div>
 
-            <div class="mb-4">
-              <label class="form-label">
-                <i class="fas fa-envelope me-2"></i>Email Address *
-              </label>
-              <input type="email" class="form-control" name="email" placeholder="your.email@example.com" required />
+            <div class="mb-3">
+              <label class="form-label">Email Address *</label>
+              <input type="email" class="form-control" name="email" required />
               <div class="invalid-feedback">Valid email is required.</div>
             </div>
 
-            <div class="mb-4">
-              <label class="form-label">
-                <i class="fas fa-phone me-2"></i>Mobile Number *
-              </label>
-              <input type="tel" pattern="^[0-9]{10}$" class="form-control" name="mobile" placeholder="10 digit mobile number" required />
+            <div class="mb-3">
+              <label class="form-label">Mobile Number (10 digits) *</label>
+              <input type="tel" pattern="^[0-9]{10}$" class="form-control" name="mobile" required />
               <div class="invalid-feedback">Enter 10 digit mobile number.</div>
             </div>
 
-            <div class="mb-4">
-              <label class="form-label">
-                <i class="fas fa-briefcase me-2"></i>Employment Type *
-              </label>
-              <div class="radio-group">
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="employmentType" id="employmentSalaried" value="SALARIED" required />
-                  <label class="form-check-label" for="employmentSalaried">
-                    <i class="fas fa-building me-1"></i>Salaried
-                  </label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="employmentType" id="employmentSelfEmployed" value="SELF_EMPLOYED" required />
-                  <label class="form-check-label" for="employmentSelfEmployed">
-                    <i class="fas fa-user-tie me-1"></i>Self-Employed
-                  </label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="employmentType" id="employmentOthers" value="OTHERS" required />
-                  <label class="form-check-label" for="employmentOthers">
-                    <i class="fas fa-ellipsis-h me-1"></i>Others
-                  </label>
-                </div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Preferred Date *</label>
+                <input type="date" class="form-control" name="preferredDate" required />
+                <div class="invalid-feedback">Select date.</div>
               </div>
-              <div class="invalid-feedback">Select employment type.</div>
+              <div class="col-md-6">
+                <label class="form-label">Preferred Time *</label>
+                <input type="time" class="form-control" name="preferredTime" required />
+                <div class="invalid-feedback">Select time.</div>
+              </div>
             </div>
 
-            <div class="mb-4">
-              <label class="form-label">
-                <i class="fas fa-industry me-2"></i>Employment Sector *
-              </label>
-              <select class="form-select" name="employmentSector" required>
-                <option value="">Select Sector</option>
-                <option value="IT_SOFTWARE">IT / Software</option>
-                <option value="BANKING_FINANCE">Banking / Finance</option>
-                <option value="HEALTHCARE">Healthcare</option>
-                <option value="EDUCATION">Education</option>
-                <option value="MANUFACTURING">Manufacturing</option>
-                <option value="RETAIL">Retail</option>
-                <option value="GOVERNMENT">Government</option>
-                <option value="BUSINESS_ENTREPRENEUR">Business / Entrepreneur</option>
-                <option value="CONSULTING">Consulting</option>
-                <option value="REAL_ESTATE">Real Estate</option>
-                <option value="OTHER">Other</option>
-              </select>
-              <div class="invalid-feedback">Select employment sector.</div>
-            </div>
-
-            <div class="mb-4">
-              <label class="form-label">
-                <i class="fas fa-calendar-check me-2"></i>Type of Appointment *
-              </label>
+            <div class="mb-3 mt-3">
+              <label class="form-label">Type of Appointment *</label>
               <select class="form-select" name="type" required>
-                <option value="">Select appointment type</option>
+                <option value="">Select</option>
                 <option value="INVESTMENT_CONSULTATION">Investment Consultation</option>
                 <option value="FINANCIAL_PLANNING">Financial Planning</option>
                 <option value="WEALTH_MANAGEMENT">Wealth Management</option>
@@ -117,56 +62,20 @@
               <div class="invalid-feedback">Select appointment type.</div>
             </div>
 
-            <div class="mb-4">
-              <label class="form-label">
-                <i class="fas fa-map-marker-alt me-2"></i>Location *
-              </label>
-              <div class="row g-3">
-                <div class="col-md-4">
-                  <select class="form-select" name="country" id="country" required>
-                    <option value="">Country</option>
-                    <option value="India">India</option>
-                    <option value="USA">United States</option>
-                    <option value="UK">United Kingdom</option>
-                    <option value="Canada">Canada</option>
-                    <option value="Australia">Australia</option>
-                    <option value="Other">Other</option>
-                  </select>
-                  <div class="invalid-feedback">Select country.</div>
-                </div>
-                <div class="col-md-4">
-                  <select class="form-select" name="state" id="state" required>
-                    <option value="">State</option>
-                  </select>
-                  <div class="invalid-feedback">Select state.</div>
-                </div>
-                <div class="col-md-4">
-                  <select class="form-select" name="city" id="city" required>
-                    <option value="">City</option>
-                  </select>
-                  <div class="invalid-feedback">Select city.</div>
-                </div>
-              </div>
+            <div class="mb-3">
+              <label class="form-label">Message / Notes (Optional)</label>
+              <textarea class="form-control" rows="3" name="notes"></textarea>
             </div>
 
-            <div class="mb-4">
-              <label class="form-label">
-                <i class="fas fa-comment-alt me-2"></i>Message / Notes (Optional)
-              </label>
-              <textarea class="form-control" rows="4" name="notes" placeholder="Any additional information you'd like to share..."></textarea>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">Book Appointment</button>
             </div>
-
-            <div class="d-grid mt-4">
-              <button type="submit" class="btn btn-primary btn-submit">
-                <i class="fas fa-paper-plane me-2"></i>Book Appointment
-              </button>
-            </div>
-            <p class="form-footer text-center mt-4">
-              By submitting the form, I agree to the
+            <p class="form-footer">
+              By submitting the form I agree to the
               <a href="terms-and-conditions.html" target="_blank" class="footer-link">Terms and Conditions</a>
               and
               <a href="privacy-policy.html" target="_blank" class="footer-link">Privacy Policy</a>
-              of Ongolebullsinvest Pvt Ltd India.
+              of Ongolebullsinvest pvt ltd India.
             </p>
           </form>
           <div id="status" class="alert mt-3 d-none" role="alert"></div>
@@ -177,270 +86,6 @@
 </div>
 
 <script>
-  // Complete location data with all states
-  const locationData = {
-    'India': {
-      'Andhra Pradesh': ['Hyderabad', 'Visakhapatnam', 'Vijayawada', 'Guntur', 'Nellore', 'Kurnool', 'Rajahmundry', 'Tirupati', 'Kakinada', 'Kadapa'],
-      'Arunachal Pradesh': ['Itanagar', 'Naharlagun', 'Tawang', 'Bomdila', 'Pasighat'],
-      'Assam': ['Guwahati', 'Silchar', 'Dibrugarh', 'Jorhat', 'Nagaon', 'Tinsukia', 'Tezpur'],
-      'Bihar': ['Patna', 'Gaya', 'Bhagalpur', 'Muzaffarpur', 'Purnia', 'Darbhanga', 'Arrah'],
-      'Chhattisgarh': ['Raipur', 'Bilaspur', 'Durg', 'Rajpur', 'Korba', 'Raigarh'],
-      'Goa': ['Panaji', 'Margao', 'Vasco da Gama', 'Mapusa', 'Ponda'],
-      'Gujarat': ['Ahmedabad', 'Surat', 'Vadodara', 'Rajkot', 'Bhavnagar', 'Jamnagar', 'Gandhinagar', 'Anand'],
-      'Haryana': ['Gurgaon', 'Faridabad', 'Panipat', 'Ambala', 'Yamunanagar', 'Karnal', 'Hisar'],
-      'Himachal Pradesh': ['Shimla', 'Mandi', 'Solan', 'Dharamshala', 'Kullu', 'Manali'],
-      'Jharkhand': ['Ranchi', 'Jamshedpur', 'Dhanbad', 'Bokaro', 'Hazaribagh', 'Deoghar'],
-      'Karnataka': ['Bangalore', 'Mysore', 'Hubli', 'Mangalore', 'Belgaum', 'Gulbarga', 'Davangere', 'Shimoga'],
-      'Kerala': ['Thiruvananthapuram', 'Kochi', 'Kozhikode', 'Thrissur', 'Kollam', 'Kannur', 'Alappuzha'],
-      'Madhya Pradesh': ['Bhopal', 'Indore', 'Gwalior', 'Jabalpur', 'Raipur', 'Ujjain', 'Sagar'],
-      'Maharashtra': ['Mumbai', 'Pune', 'Nagpur', 'Aurangabad', 'Nashik', 'Solapur', 'Thane', 'Kalyan'],
-      'Manipur': ['Imphal', 'Thoubal', 'Bishnupur', 'Churachandpur'],
-      'Meghalaya': ['Shillong', 'Tura', 'Jowai', 'Nongpoh'],
-      'Mizoram': ['Aizawl', 'Lunglei', 'Champhai', 'Saiha'],
-      'Nagaland': ['Kohima', 'Dimapur', 'Mokokchung', 'Tuensang'],
-      'Odisha': ['Bhubaneswar', 'Cuttack', 'Rourkela', 'Berhampur', 'Sambalpur', 'Puri'],
-      'Punjab': ['Chandigarh', 'Ludhiana', 'Amritsar', 'Jalandhar', 'Patiala', 'Bathinda'],
-      'Rajasthan': ['Jaipur', 'Jodhpur', 'Kota', 'Bikaner', 'Ajmer', 'Udaipur', 'Bhilwara', 'Alwar'],
-      'Sikkim': ['Gangtok', 'Namchi', 'Mangan', 'Gyalshing'],
-      'Tamil Nadu': ['Chennai', 'Coimbatore', 'Madurai', 'Tiruchirappalli', 'Salem', 'Tirunelveli', 'Erode'],
-      'Telangana': ['Hyderabad', 'Warangal', 'Nizamabad', 'Karimnagar', 'Ramagundam', 'Khammam', 'Mahbubnagar'],
-      'Tripura': ['Agartala', 'Udaipur', 'Dharmanagar', 'Kailasahar'],
-      'Uttar Pradesh': ['Lucknow', 'Kanpur', 'Agra', 'Varanasi', 'Allahabad', 'Meerut', 'Ghaziabad', 'Noida'],
-      'Uttarakhand': ['Dehradun', 'Haridwar', 'Roorkee', 'Haldwani', 'Rishikesh', 'Nainital'],
-      'West Bengal': ['Kolkata', 'Howrah', 'Durgapur', 'Asansol', 'Siliguri', 'Kharagpur', 'Bardhaman'],
-      'Andaman and Nicobar Islands': ['Port Blair', 'Diglipur', 'Mayabunder'],
-      'Chandigarh': ['Chandigarh'],
-      'Dadra and Nagar Haveli and Daman and Diu': ['Daman', 'Diu', 'Silvassa'],
-      'Delhi': ['New Delhi', 'Delhi'],
-      'Jammu and Kashmir': ['Srinagar', 'Jammu', 'Anantnag', 'Baramulla', 'Udhampur'],
-      'Ladakh': ['Leh', 'Kargil'],
-      'Lakshadweep': ['Kavaratti', 'Agatti', 'Minicoy'],
-      'Puducherry': ['Puducherry', 'Karaikal', 'Mahe', 'Yanam']
-    },
-    'USA': {
-      'Alabama': ['Birmingham', 'Montgomery', 'Mobile', 'Huntsville', 'Tuscaloosa'],
-      'Alaska': ['Anchorage', 'Fairbanks', 'Juneau', 'Sitka'],
-      'Arizona': ['Phoenix', 'Tucson', 'Mesa', 'Chandler', 'Scottsdale'],
-      'Arkansas': ['Little Rock', 'Fort Smith', 'Fayetteville', 'Jonesboro'],
-      'California': ['Los Angeles', 'San Francisco', 'San Diego', 'Sacramento', 'San Jose', 'Oakland', 'Fresno'],
-      'Colorado': ['Denver', 'Colorado Springs', 'Aurora', 'Fort Collins'],
-      'Connecticut': ['Hartford', 'New Haven', 'Stamford', 'Bridgeport'],
-      'Delaware': ['Wilmington', 'Dover', 'Newark'],
-      'Florida': ['Miami', 'Tampa', 'Orlando', 'Jacksonville', 'Fort Lauderdale'],
-      'Georgia': ['Atlanta', 'Augusta', 'Columbus', 'Savannah'],
-      'Hawaii': ['Honolulu', 'Hilo', 'Kailua'],
-      'Idaho': ['Boise', 'Nampa', 'Meridian', 'Idaho Falls'],
-      'Illinois': ['Chicago', 'Aurora', 'Rockford', 'Naperville'],
-      'Indiana': ['Indianapolis', 'Fort Wayne', 'Evansville', 'South Bend'],
-      'Iowa': ['Des Moines', 'Cedar Rapids', 'Davenport', 'Sioux City'],
-      'Kansas': ['Wichita', 'Overland Park', 'Kansas City', 'Topeka'],
-      'Kentucky': ['Louisville', 'Lexington', 'Bowling Green', 'Owensboro'],
-      'Louisiana': ['New Orleans', 'Baton Rouge', 'Shreveport', 'Lafayette'],
-      'Maine': ['Portland', 'Lewiston', 'Bangor', 'Auburn'],
-      'Maryland': ['Baltimore', 'Frederick', 'Rockville', 'Gaithersburg'],
-      'Massachusetts': ['Boston', 'Worcester', 'Springfield', 'Cambridge'],
-      'Michigan': ['Detroit', 'Grand Rapids', 'Warren', 'Sterling Heights'],
-      'Minnesota': ['Minneapolis', 'Saint Paul', 'Rochester', 'Duluth'],
-      'Mississippi': ['Jackson', 'Gulfport', 'Southaven', 'Hattiesburg'],
-      'Missouri': ['Kansas City', 'Saint Louis', 'Springfield', 'Columbia'],
-      'Montana': ['Billings', 'Missoula', 'Great Falls', 'Bozeman'],
-      'Nebraska': ['Omaha', 'Lincoln', 'Bellevue', 'Grand Island'],
-      'Nevada': ['Las Vegas', 'Henderson', 'Reno', 'North Las Vegas'],
-      'New Hampshire': ['Manchester', 'Nashua', 'Concord', 'Derry'],
-      'New Jersey': ['Newark', 'Jersey City', 'Paterson', 'Elizabeth'],
-      'New Mexico': ['Albuquerque', 'Las Cruces', 'Rio Rancho', 'Santa Fe'],
-      'New York': ['New York City', 'Buffalo', 'Rochester', 'Albany', 'Syracuse', 'Yonkers'],
-      'North Carolina': ['Charlotte', 'Raleigh', 'Greensboro', 'Durham'],
-      'North Dakota': ['Fargo', 'Bismarck', 'Grand Forks', 'Minot'],
-      'Ohio': ['Columbus', 'Cleveland', 'Cincinnati', 'Toledo'],
-      'Oklahoma': ['Oklahoma City', 'Tulsa', 'Norman', 'Broken Arrow'],
-      'Oregon': ['Portland', 'Eugene', 'Salem', 'Gresham'],
-      'Pennsylvania': ['Philadelphia', 'Pittsburgh', 'Allentown', 'Erie'],
-      'Rhode Island': ['Providence', 'Warwick', 'Cranston', 'Pawtucket'],
-      'South Carolina': ['Charleston', 'Columbia', 'North Charleston', 'Greenville'],
-      'South Dakota': ['Sioux Falls', 'Rapid City', 'Aberdeen', 'Pierre'],
-      'Tennessee': ['Nashville', 'Memphis', 'Knoxville', 'Chattanooga'],
-      'Texas': ['Houston', 'Dallas', 'Austin', 'San Antonio', 'Fort Worth', 'El Paso'],
-      'Utah': ['Salt Lake City', 'West Valley City', 'Provo', 'West Jordan'],
-      'Vermont': ['Burlington', 'Essex', 'South Burlington', 'Colchester'],
-      'Virginia': ['Virginia Beach', 'Norfolk', 'Richmond', 'Chesapeake'],
-      'Washington': ['Seattle', 'Spokane', 'Tacoma', 'Vancouver'],
-      'West Virginia': ['Charleston', 'Huntington', 'Parkersburg', 'Morgantown'],
-      'Wisconsin': ['Milwaukee', 'Madison', 'Green Bay', 'Kenosha'],
-      'Wyoming': ['Cheyenne', 'Casper', 'Laramie', 'Gillette']
-    },
-    'UK': {
-      'England': ['London', 'Manchester', 'Birmingham', 'Liverpool', 'Leeds', 'Sheffield', 'Bristol', 'Leicester'],
-      'Scotland': ['Edinburgh', 'Glasgow', 'Aberdeen', 'Dundee', 'Inverness', 'Perth', 'Stirling'],
-      'Wales': ['Cardiff', 'Swansea', 'Newport', 'Wrexham', 'Barry'],
-      'Northern Ireland': ['Belfast', 'Derry', 'Lisburn', 'Newry', 'Bangor']
-    },
-    'Canada': {
-      'Alberta': ['Calgary', 'Edmonton', 'Red Deer', 'Lethbridge'],
-      'British Columbia': ['Vancouver', 'Victoria', 'Surrey', 'Burnaby'],
-      'Manitoba': ['Winnipeg', 'Brandon', 'Steinbach', 'Thompson'],
-      'New Brunswick': ['Moncton', 'Saint John', 'Fredericton', 'Dieppe'],
-      'Newfoundland and Labrador': ['St. John\'s', 'Mount Pearl', 'Corner Brook', 'Conception Bay South'],
-      'Northwest Territories': ['Yellowknife', 'Hay River', 'Inuvik'],
-      'Nova Scotia': ['Halifax', 'Dartmouth', 'Sydney', 'Truro'],
-      'Nunavut': ['Iqaluit', 'Rankin Inlet', 'Arviat'],
-      'Ontario': ['Toronto', 'Ottawa', 'Mississauga', 'Brampton', 'Hamilton'],
-      'Prince Edward Island': ['Charlottetown', 'Summerside', 'Stratford'],
-      'Quebec': ['Montreal', 'Quebec City', 'Laval', 'Gatineau'],
-      'Saskatchewan': ['Saskatoon', 'Regina', 'Prince Albert', 'Moose Jaw'],
-      'Yukon': ['Whitehorse', 'Dawson City', 'Watson Lake']
-    },
-    'Australia': {
-      'New South Wales': ['Sydney', 'Newcastle', 'Wollongong', 'Albury', 'Wagga Wagga'],
-      'Victoria': ['Melbourne', 'Geelong', 'Ballarat', 'Bendigo'],
-      'Queensland': ['Brisbane', 'Gold Coast', 'Cairns', 'Townsville', 'Toowoomba'],
-      'Western Australia': ['Perth', 'Fremantle', 'Bunbury', 'Geraldton'],
-      'South Australia': ['Adelaide', 'Mount Gambier', 'Whyalla', 'Murray Bridge'],
-      'Tasmania': ['Hobart', 'Launceston', 'Devonport', 'Burnie'],
-      'Australian Capital Territory': ['Canberra'],
-      'Northern Territory': ['Darwin', 'Alice Springs', 'Palmerston']
-    }
-  };
-
-  // Location dependency handlers with event delegation
-  const countrySelect = document.getElementById('country');
-  const stateContainer = document.getElementById('state').parentElement;
-  const cityContainer = document.getElementById('city').parentElement;
-
-  function convertCityToInput() {
-    const cityField = document.getElementById('city');
-    if (cityField && cityField.tagName === 'SELECT') {
-      const currentValue = cityField.value === 'Other' ? '' : cityField.value;
-      const cityInput = document.createElement('input');
-      cityInput.type = 'text';
-      cityInput.className = 'form-control';
-      cityInput.name = 'city';
-      cityInput.id = 'city';
-      cityInput.required = true;
-      cityInput.placeholder = 'Enter city name';
-      cityInput.value = currentValue;
-      cityContainer.replaceChild(cityInput, cityField);
-    }
-  }
-
-  function convertCityToSelect() {
-    const cityField = document.getElementById('city');
-    if (cityField && cityField.tagName === 'INPUT') {
-      const currentValue = cityField.value;
-      const citySelect = document.createElement('select');
-      citySelect.className = 'form-select';
-      citySelect.name = 'city';
-      citySelect.id = 'city';
-      citySelect.required = true;
-      citySelect.innerHTML = '<option value="">City</option>';
-      cityContainer.replaceChild(citySelect, cityField);
-      return currentValue;
-    }
-    return '';
-  }
-
-  // Event delegation for city field changes
-  cityContainer.addEventListener('change', function(e) {
-    if (e.target && e.target.id === 'city' && e.target.tagName === 'SELECT' && e.target.value === 'Other') {
-      convertCityToInput();
-    }
-  });
-
-  if (countrySelect && stateContainer && cityContainer) {
-    countrySelect.addEventListener('change', function() {
-      const country = this.value;
-      const stateField = document.getElementById('state');
-      
-      // Reset state field
-      if (stateField.tagName === 'SELECT') {
-        stateField.innerHTML = '<option value="">State</option>';
-      } else {
-        // Convert state input back to select
-        const stateSelectNew = document.createElement('select');
-        stateSelectNew.className = 'form-select';
-        stateSelectNew.name = 'state';
-        stateSelectNew.id = 'state';
-        stateSelectNew.required = true;
-        stateSelectNew.innerHTML = '<option value="">State</option>';
-        stateContainer.replaceChild(stateSelectNew, stateField);
-      }
-      
-      // Reset city field
-      const cityField = document.getElementById('city');
-      if (cityField && cityField.tagName === 'INPUT') {
-        convertCityToSelect();
-      } else if (cityField && cityField.tagName === 'SELECT') {
-        cityField.innerHTML = '<option value="">City</option>';
-      }
-      
-      if (country && locationData[country]) {
-        // Populate all states for predefined countries
-        const stateField = document.getElementById('state');
-        const states = Object.keys(locationData[country]).sort();
-        states.forEach(state => {
-          const option = document.createElement('option');
-          option.value = state;
-          option.textContent = state;
-          stateField.appendChild(option);
-        });
-      } else if (country && country === 'Other') {
-        // For "Other" country, convert to text inputs
-        const stateField = document.getElementById('state');
-        const stateInput = document.createElement('input');
-        stateInput.type = 'text';
-        stateInput.className = 'form-control';
-        stateInput.name = 'state';
-        stateInput.id = 'state';
-        stateInput.required = true;
-        stateInput.placeholder = 'Enter state/province name';
-        stateContainer.replaceChild(stateInput, stateField);
-        
-        convertCityToInput();
-      }
-    });
-
-    // Event delegation for state field changes
-    stateContainer.addEventListener('change', function(e) {
-      if (e.target && e.target.id === 'state') {
-        const country = countrySelect.value;
-        const state = e.target.value;
-        const cityField = document.getElementById('city');
-        
-        // Convert back to select if it was an input
-        if (cityField && cityField.tagName === 'INPUT') {
-          convertCityToSelect();
-        }
-        
-        const currentCityField = document.getElementById('city');
-        
-        if (country && state && locationData[country] && locationData[country][state]) {
-          // Populate cities for selected state
-          if (currentCityField && currentCityField.tagName === 'SELECT') {
-            currentCityField.innerHTML = '<option value="">City</option>';
-            const cities = locationData[country][state].sort();
-            cities.forEach(city => {
-              const option = document.createElement('option');
-              option.value = city;
-              option.textContent = city;
-              currentCityField.appendChild(option);
-            });
-            
-            // Add "Other" option at the end to allow manual entry
-            const otherOption = document.createElement('option');
-            otherOption.value = 'Other';
-            otherOption.textContent = 'Other (Type manually)';
-            currentCityField.appendChild(otherOption);
-          }
-        } else if (country && state) {
-          // State not in predefined data, allow manual entry
-          if (currentCityField && currentCityField.tagName === 'SELECT') {
-            convertCityToInput();
-          }
-        }
-      }
-    });
-  }
-
   // Bootstrap client-side validation helper
   (() => {
     const forms = document.querySelectorAll('.needs-validation');
@@ -468,11 +113,8 @@
       fullName: fd.get('fullName'),
       email: fd.get('email'),
       mobile: fd.get('mobile'),
-      employmentType: fd.get('employmentType'),
-      employmentSector: fd.get('employmentSector'),
-      country: fd.get('country'),
-      state: fd.get('state'),
-      city: fd.get('city'),
+      preferredDate: fd.get('preferredDate'), // ISO yyyy-MM-dd
+      preferredTime: fd.get('preferredTime'), // HH:mm
       type: fd.get('type'),
       notes: fd.get('notes') || null
     };
@@ -485,28 +127,13 @@
       });
 
       const json = await res.json();
+      statusEl.classList.remove('d-none', 'alert-danger');
       if (json.success) {
-        // Show success notification
-        showSuccessNotification();
+        statusEl.classList.add('alert-success');
+        statusEl.textContent = json.message || 'Your appointment has been successfully booked!';
         form.reset();
         form.classList.remove('was-validated');
-        // Reset location fields
-        const stateField = document.getElementById('state');
-        const cityField = document.getElementById('city');
-        if (stateField && stateField.tagName === 'SELECT') {
-          stateField.innerHTML = '<option value="">State</option>';
-        } else if (stateField && stateField.tagName === 'INPUT') {
-          stateField.value = '';
-        }
-        if (cityField && cityField.tagName === 'SELECT') {
-          cityField.innerHTML = '<option value="">City</option>';
-        } else if (cityField && cityField.tagName === 'INPUT') {
-          cityField.value = '';
-        }
-        // Scroll to top
-        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        statusEl.classList.remove('d-none');
         statusEl.classList.add('alert-danger');
         statusEl.textContent = json.message || 'Something went wrong. Please try again.';
       }
@@ -516,440 +143,160 @@
       statusEl.textContent = 'Unable to book right now. Please try again later.';
     }
   });
-
-  // Success notification function
-  function showSuccessNotification() {
-    const notification = document.getElementById('successNotification');
-    notification.classList.add('show');
-    
-    // Auto-hide after 3 seconds
-    setTimeout(() => {
-      notification.classList.remove('show');
-    }, 3000);
-  }
 </script>
 </body>
 </html>
 <style>
-  /* ===== Global Styles ===== */
-  * {
-    box-sizing: border-box;
-  }
-
   body.bg-light {
-    background: linear-gradient(135deg, #f5f7fa 0%, #e8f4f8 100%);
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-    min-height: 100vh;
-    padding-bottom: 2rem;
-  }
+   background: #eef8fb;
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+ }
 
-  /* ===== Success Notification ===== */
-  .success-notification {
-    position: fixed;
-    top: -100px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-    color: white;
-    padding: 16px 32px;
-    border-radius: 50px;
-    box-shadow: 0 8px 24px rgba(40, 167, 69, 0.4);
-    z-index: 9999;
-    transition: top 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    min-width: 280px;
-    max-width: 90%;
-  }
+ /* Form Card */
+ .card,
+ .card.shadow-sm {
+   background: linear-gradient(
+     to bottom,
+     #ffffff 65%,
+     #bb9346 100%    /* brand gold */
+   );
+   border-radius: 18px;
+   box-shadow: 0 4px 18px rgba(22, 44, 61, 0.10); /* dark blue shade shadow */
+   max-width: 500px;
+   width: 100%;
+   margin: 0 auto;
+   border: none;
+   padding: 0; /* Remove extra card padding */
+ }
 
-  .success-notification.show {
-    top: 20px;
-  }
+ .card-body.p-4 {
+   padding: 36px 32px 28px 32px;
+ }
 
-  .success-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-  }
+ .text-center img {
+   margin-bottom: 18px;
+   max-width: 120px;
+   border-radius: 9px;
+ }
 
-  .success-icon {
-    width: 24px;
-    height: 24px;
-    stroke: white;
-    stroke-width: 2.5;
-    flex-shrink: 0;
-  }
+ /* Title */
+ h1.h4 {
+   color: #162c3d; /* dark blue */
+   font-weight: 700;
+   letter-spacing: 0.01em;
+   text-align: center;
+   margin-bottom: 26px;
+   font-size: 2rem;
+ }
 
-  .success-message {
-    font-weight: 600;
-    font-size: 16px;
-    letter-spacing: 0.3px;
-  }
+ /* Field labels */
+ .form-label {
+   font-weight: 600;
+   color: #bb281e; /* brand red */
+ }
 
-  @media (max-width: 576px) {
-    .success-notification {
-      padding: 14px 24px;
-      min-width: 260px;
-    }
-    .success-message {
-      font-size: 15px;
-    }
-    .success-icon {
-      width: 20px;
-      height: 20px;
-    }
-  }
+ /* Inputs and selects */
+ .form-control,
+ .form-select {
+   background: transparent;
+   color: #162c3d; /* dark blue */
+   border: none;
+   border-bottom: 2px solid #bb281e; /* red underline */
+   border-radius: 0;
+   font-size: 1.07rem;
+   margin-bottom: 4px;
+   transition: border-color 0.23s;
+   box-shadow: none;
+   padding-left: 0;
+   padding-right: 0;
+ }
 
-  /* ===== Form Card ===== */
-  .card,
-  .card.shadow-lg {
-    background: #ffffff;
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
-    border: none;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
+ .form-control:focus,
+ .form-select:focus {
+   border-color: #bb281e; /* red focus */
+   box-shadow: 0 6px 14px -7px rgba(187, 40, 30, 0.5); /* semi-transparent red glow */
+   background: transparent;
+   color: #162c3d;
+   outline: none;
+ }
 
-  .card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
-  }
+ textarea.form-control {
+   resize: none;
+   min-height: 48px;
+ }
 
-  .card-body {
-    padding: 2.5rem 2rem;
-  }
+ /* Button */
+ .btn.btn-primary {
+   background: linear-gradient(to right, #bb281e 0%, #bb9346 100%);
+   border: none;
+   border-radius: 11px;
+   font-size: 1.19rem;
+   font-weight: 700;
+   padding: 13px 0;
+   box-shadow: 0 3px 12px rgba(187, 147, 70, 0.45);
+   letter-spacing: 0.02em;
+   margin-top: 20px;
+   margin-bottom: 4px;
+   transition: background 0.2s;
+ }
 
-  @media (min-width: 768px) {
-    .card-body {
-      padding: 3rem 3.5rem;
-    }
-  }
+ .btn.btn-primary:hover,
+ .btn.btn-primary:focus {
+   background: linear-gradient(to right, #8f1f17, #aa8a49);
+ }
 
-  /* ===== Logo ===== */
-  .logo-img {
-    max-width: 160px;
-    height: auto;
-    border-radius: 8px;
-    transition: transform 0.3s ease;
-  }
+ /* Validation feedback */
+ .invalid-feedback,
+ .alert {
+   color: #bb281e; /* brand red */
+   font-size: 0.90rem;
+   background: transparent;
+   border: none;
+ }
 
-  .logo-img:hover {
-    transform: scale(1.05);
-  }
+ @media (max-width: 576px) {
+   .card-body.p-4 {
+     padding: 17px 7px 21px 7px;
+   }
+   h1.h4 {
+     font-size: 1.3rem;
+   }
+ }
 
-  /* ===== Typography ===== */
-  .form-title {
-    color: #1a365d;
-    font-weight: 700;
-    font-size: 2rem;
-    text-align: center;
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.5px;
-  }
+ /* Optional: to smoothen select arrow for select */
+ .form-select {
+   -webkit-appearance: none;
+   -moz-appearance: none;
+   appearance: none;
+   background-image: url('data:image/svg+xml;utf8,<svg fill="#bb281e" height="16" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+   background-repeat: no-repeat;
+   background-position-x: 99%;
+   background-position-y: 50%;
+ }
 
-  .form-subtitle {
-    color: #64748b;
-    font-size: 0.95rem;
-    margin-bottom: 2rem;
-  }
+ /* Logo optimization */
+ .text-center img {
+   display: inline-block;
+   max-height: 90px;
+   object-fit: contain;
+ }
+.form-footer {
+  color: white;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
 
-  @media (max-width: 576px) {
-    .form-title {
-      font-size: 1.5rem;
-    }
-    .form-subtitle {
-      font-size: 0.85rem;
-    }
-  }
+.form-footer .footer-link {
+  color: #10293a;
+  text-decoration: underline;
+  font-weight: 600;
+}
 
-  /* ===== Form Labels ===== */
-  .form-label {
-    font-weight: 600;
-    color: #1e293b;
-    font-size: 0.95rem;
-    margin-bottom: 0.75rem;
-    display: block;
-  }
+.form-footer .footer-link:hover,
+.form-footer .footer-link:focus {
+  color: #0c2130;
+  text-decoration: none;
+}
 
-  .form-label i {
-    color: #bb281e;
-    width: 18px;
-  }
-
-  /* ===== Inputs and Selects ===== */
-  .form-control,
-  .form-select {
-    background: #f8fafc;
-    color: #1e293b;
-    border: 2px solid #e2e8f0;
-    border-radius: 10px;
-    font-size: 1rem;
-    padding: 12px 16px;
-    transition: all 0.3s ease;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  }
-
-  .form-control:focus,
-  .form-select:focus {
-    border-color: #bb281e;
-    background: #ffffff;
-    color: #1e293b;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(187, 40, 30, 0.1), 0 2px 8px rgba(0, 0, 0, 0.08);
-    transform: translateY(-1px);
-  }
-
-  .form-control::placeholder {
-    color: #94a3b8;
-    font-size: 0.9rem;
-  }
-
-  textarea.form-control {
-    resize: vertical;
-    min-height: 100px;
-  }
-
-  /* ===== Submit Button ===== */
-  .btn-submit {
-    background: linear-gradient(135deg, #bb281e 0%, #d63384 50%, #bb9346 100%);
-    background-size: 200% 200%;
-    border: none;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    padding: 14px 24px;
-    box-shadow: 0 4px 15px rgba(187, 40, 30, 0.3);
-    letter-spacing: 0.3px;
-    color: white;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .btn-submit::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s;
-  }
-
-  .btn-submit:hover::before {
-    left: 100%;
-  }
-
-  .btn-submit:hover,
-  .btn-submit:focus {
-    background-position: right center;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(187, 40, 30, 0.4);
-  }
-
-  .btn-submit:active {
-    transform: translateY(0);
-  }
-
-  .btn-submit i {
-    margin-right: 8px;
-  }
-
-  /* ===== Validation Feedback ===== */
-  .invalid-feedback {
-    color: #dc3545;
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
-    display: block;
-  }
-
-  .was-validated .form-control:invalid,
-  .was-validated .form-select:invalid {
-    border-color: #dc3545;
-  }
-
-  .was-validated .form-control:valid,
-  .was-validated .form-select:valid {
-    border-color: #28a745;
-  }
-
-  .alert {
-    border-radius: 10px;
-    padding: 12px 16px;
-    font-size: 0.9rem;
-  }
-
-  .alert-danger {
-    background-color: #fee;
-    border: 1px solid #fcc;
-    color: #c33;
-  }
-
-  /* ===== Select Dropdown Arrow ===== */
-  .form-select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-image: url('data:image/svg+xml;utf8,<svg fill="%23bb281e" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-    background-repeat: no-repeat;
-    background-position-x: calc(100% - 12px);
-    background-position-y: center;
-    padding-right: 40px;
-  }
-
-  /* ===== Radio Button Styling ===== */
-  .radio-group {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 8px;
-  }
-
-  .form-check {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    align-items: center;
-  }
-
-  .form-check-input[type="radio"] {
-    width: 20px;
-    height: 20px;
-    margin: 0;
-    margin-right: 12px;
-    border: 2.5px solid #cbd5e1;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
-    flex-shrink: 0;
-  }
-
-  .form-check-input[type="radio"]:checked {
-    background-color: #bb281e;
-    border-color: #bb281e;
-    box-shadow: 0 0 0 4px rgba(187, 40, 30, 0.1);
-  }
-
-  .form-check-input[type="radio"]:focus {
-    border-color: #bb281e;
-    box-shadow: 0 0 0 4px rgba(187, 40, 30, 0.15);
-    outline: none;
-  }
-
-  .form-check-input[type="radio"]:hover {
-    border-color: #bb281e;
-  }
-
-  .form-check-label {
-    color: #334155;
-    font-weight: 500;
-    font-size: 0.95rem;
-    cursor: pointer;
-    user-select: none;
-    display: flex;
-    align-items: center;
-    padding: 8px 12px;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-    flex: 1;
-  }
-
-  .form-check-label:hover {
-    background-color: #f1f5f9;
-    color: #1e293b;
-  }
-
-  .form-check-input[type="radio"]:checked + .form-check-label {
-    color: #bb281e;
-    font-weight: 600;
-  }
-
-  .form-check-label i {
-    margin-right: 6px;
-    font-size: 0.9rem;
-    color: #64748b;
-  }
-
-  .form-check-input[type="radio"]:checked + .form-check-label i {
-    color: #bb281e;
-  }
-
-  /* ===== Form Footer ===== */
-  .form-footer {
-    color: #64748b;
-    font-size: 0.85rem;
-    line-height: 1.6;
-    margin-top: 1.5rem;
-  }
-
-  .form-footer .footer-link {
-    color: #bb281e;
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.2s ease;
-  }
-
-  .form-footer .footer-link:hover,
-  .form-footer .footer-link:focus {
-    color: #8f1f17;
-    text-decoration: underline;
-  }
-
-  /* ===== Responsive Design ===== */
-  @media (max-width: 768px) {
-    .card-body {
-      padding: 2rem 1.5rem;
-    }
-
-    .radio-group {
-      gap: 10px;
-    }
-
-    .form-check-label {
-      padding: 6px 10px;
-      font-size: 0.9rem;
-    }
-  }
-
-  @media (max-width: 576px) {
-    .container {
-      padding-left: 1rem;
-      padding-right: 1rem;
-    }
-
-    .card-body {
-      padding: 1.5rem 1.25rem;
-    }
-
-    .form-title {
-      font-size: 1.5rem;
-    }
-
-    .form-label {
-      font-size: 0.9rem;
-    }
-
-    .form-control,
-    .form-select {
-      font-size: 0.95rem;
-      padding: 10px 14px;
-    }
-
-    .btn-submit {
-      font-size: 1rem;
-      padding: 12px 20px;
-    }
-
-    .radio-group {
-      gap: 8px;
-    }
-
-    .form-check-input[type="radio"] {
-      width: 18px;
-      height: 18px;
-      margin-right: 10px;
-    }
-  }
 
 </style>
