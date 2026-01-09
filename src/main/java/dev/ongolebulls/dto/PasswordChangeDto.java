@@ -25,4 +25,3 @@ public class PasswordChangeDto {
     public void setConfirmPassword(String confirmPassword) { this.confirmPassword = confirmPassword; }
 }
 
-

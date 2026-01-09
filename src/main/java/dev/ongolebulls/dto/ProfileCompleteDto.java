@@ -183,4 +183,3 @@ public class ProfileCompleteDto {
     public void setUnderstoodMarketRisk(boolean understoodMarketRisk) { this.understoodMarketRisk = understoodMarketRisk; }
 }
 
-

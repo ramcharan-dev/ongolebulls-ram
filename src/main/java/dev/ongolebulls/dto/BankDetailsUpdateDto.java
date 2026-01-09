@@ -35,4 +35,3 @@ public class BankDetailsUpdateDto {
     public void setIfsc(String ifsc) { this.ifsc = ifsc; }
 }
 
-
