@@ -3,8 +3,6 @@ package dev.ongolebulls.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.OffsetDateTime;
 
 
@@ -31,14 +29,20 @@ public class Appointment {
     @Column(nullable = false, length = 20)
     private String mobile;
 
+    @Column(nullable = false, length = 20)
+    private String employmentType;
 
-    @Column(nullable = false)
-    private LocalDate preferredDate;
+    @Column(nullable = false, length = 50)
+    private String employmentSector;
 
+    @Column(nullable = false, length = 50)
+    private String country;
 
-    @Column(nullable = false)
-    private LocalTime preferredTime;
+    @Column(nullable = false, length = 50)
+    private String state;
 
+    @Column(nullable = false, length = 50)
+    private String city;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 40)

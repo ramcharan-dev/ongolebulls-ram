@@ -3,6 +3,7 @@ package dev.ongolebulls.service;
 import dev.ongolebulls.dto.AppointmentRequest;
 import dev.ongolebulls.model.Appointment;
 import dev.ongolebulls.repository.AppointmentRepository;
+import dev.ongolebulls.service.EmailService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,8 +32,11 @@ public class AppointmentService {
                 .fullName(req.fullName())
                 .email(req.email())
                 .mobile(req.mobile())
-                .preferredDate(req.preferredDate())
-                .preferredTime(req.preferredTime())
+                .employmentType(req.employmentType())
+                .employmentSector(req.employmentSector())
+                .country(req.country())
+                .state(req.state())
+                .city(req.city())
                 .type(req.type())
                 .notes(req.notes())
                 .createdAt(OffsetDateTime.now())

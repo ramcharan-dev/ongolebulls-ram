@@ -133,6 +133,21 @@
         statusEl.textContent = json.message || 'Your appointment has been successfully booked!';
         form.reset();
         form.classList.remove('was-validated');
+        // Reset location dropdowns
+        const stateField = document.getElementById('state');
+        const cityField = document.getElementById('city');
+        if (stateField && stateField.tagName === 'SELECT') {
+          stateField.innerHTML = '<option value="">State</option>';
+        } else if (stateField && stateField.tagName === 'INPUT') {
+          stateField.value = '';
+        }
+        if (cityField && cityField.tagName === 'SELECT') {
+          cityField.innerHTML = '<option value="">City</option>';
+        } else if (cityField && cityField.tagName === 'INPUT') {
+          cityField.value = '';
+        }
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         statusEl.classList.add('alert-danger');
         statusEl.textContent = json.message || 'Something went wrong. Please try again.';
@@ -298,5 +313,412 @@
   text-decoration: none;
 }
 
+  /* ===== Success Notification ===== */
+  .success-notification {
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    padding: 16px 32px;
+    border-radius: 50px;
+    box-shadow: 0 8px 24px rgba(40, 167, 69, 0.4);
+    z-index: 9999;
+    transition: top 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    min-width: 280px;
+    max-width: 90%;
+  }
 
+  .success-notification.show {
+    top: 20px;
+  }
+
+  .success-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .success-icon {
+    width: 24px;
+    height: 24px;
+    stroke: white;
+    stroke-width: 2.5;
+    flex-shrink: 0;
+  }
+
+  .success-message {
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 0.3px;
+  }
+
+  @media (max-width: 576px) {
+    .success-notification {
+      padding: 14px 24px;
+      min-width: 260px;
+    }
+    .success-message {
+      font-size: 15px;
+    }
+    .success-icon {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  /* ===== Form Card ===== */
+  .card,
+  .card.shadow-lg {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: none;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
+  }
+
+  .card-body {
+    padding: 2.5rem 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .card-body {
+      padding: 3rem 3.5rem;
+    }
+  }
+
+  /* ===== Logo ===== */
+  .logo-img {
+    max-width: 160px;
+    height: auto;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+  }
+
+  .logo-img:hover {
+    transform: scale(1.05);
+  }
+
+  /* ===== Typography ===== */
+  .form-title {
+    color: #1a365d;
+    font-weight: 700;
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+  }
+
+  .form-subtitle {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 576px) {
+    .form-title {
+      font-size: 1.5rem;
+    }
+    .form-subtitle {
+      font-size: 0.85rem;
+    }
+  }
+
+  /* ===== Form Labels ===== */
+  .form-label {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  .form-label i {
+    color: #bb281e;
+    width: 18px;
+  }
+
+  /* ===== Inputs and Selects ===== */
+  .form-control,
+  .form-select {
+    background: #f8fafc;
+    color: #1e293b;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    padding: 12px 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+
+  .form-control:focus,
+  .form-select:focus {
+    border-color: #bb281e;
+    background: #ffffff;
+    color: #1e293b;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(187, 40, 30, 0.1), 0 2px 8px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+  }
+
+  .form-control::placeholder {
+    color: #94a3b8;
+    font-size: 0.9rem;
+  }
+
+  textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  /* ===== Submit Button ===== */
+  .btn-submit {
+    background: linear-gradient(135deg, #bb281e 0%, #d63384 50%, #bb9346 100%);
+    background-size: 200% 200%;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 14px 24px;
+    box-shadow: 0 4px 15px rgba(187, 40, 30, 0.3);
+    letter-spacing: 0.3px;
+    color: white;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-submit::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .btn-submit:hover::before {
+    left: 100%;
+  }
+
+  .btn-submit:hover,
+  .btn-submit:focus {
+    background-position: right center;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(187, 40, 30, 0.4);
+  }
+
+  .btn-submit:active {
+    transform: translateY(0);
+  }
+
+  .btn-submit i {
+    margin-right: 8px;
+  }
+
+  /* ===== Validation Feedback ===== */
+  .invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    display: block;
+  }
+
+  .was-validated .form-control:invalid,
+  .was-validated .form-select:invalid {
+    border-color: #dc3545;
+  }
+
+  .was-validated .form-control:valid,
+  .was-validated .form-select:valid {
+    border-color: #28a745;
+  }
+
+  .alert {
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+  }
+
+  .alert-danger {
+    background-color: #fee;
+    border: 1px solid #fcc;
+    color: #c33;
+  }
+
+  /* ===== Select Dropdown Arrow ===== */
+  .form-select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23bb281e" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position-x: calc(100% - 12px);
+    background-position-y: center;
+    padding-right: 40px;
+  }
+
+  /* ===== Radio Button Styling ===== */
+  .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .form-check {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .form-check-input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    margin-right: 12px;
+    border: 2.5px solid #cbd5e1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .form-check-input[type="radio"]:checked {
+    background-color: #bb281e;
+    border-color: #bb281e;
+    box-shadow: 0 0 0 4px rgba(187, 40, 30, 0.1);
+  }
+
+  .form-check-input[type="radio"]:focus {
+    border-color: #bb281e;
+    box-shadow: 0 0 0 4px rgba(187, 40, 30, 0.15);
+    outline: none;
+  }
+
+  .form-check-input[type="radio"]:hover {
+    border-color: #bb281e;
+  }
+
+  .form-check-label {
+    color: #334155;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    flex: 1;
+  }
+
+  .form-check-label:hover {
+    background-color: #f1f5f9;
+    color: #1e293b;
+  }
+
+  .form-check-input[type="radio"]:checked + .form-check-label {
+    color: #bb281e;
+    font-weight: 600;
+  }
+
+  .form-check-label i {
+    margin-right: 6px;
+    font-size: 0.9rem;
+    color: #64748b;
+  }
+
+  .form-check-input[type="radio"]:checked + .form-check-label i {
+    color: #bb281e;
+  }
+
+  /* ===== Form Footer ===== */
+  .form-footer {
+    color: #64748b;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin-top: 1.5rem;
+  }
+
+  .form-footer .footer-link {
+    color: #bb281e;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+
+  .form-footer .footer-link:hover,
+  .form-footer .footer-link:focus {
+    color: #8f1f17;
+    text-decoration: underline;
+  }
+
+  /* ===== Responsive Design ===== */
+  @media (max-width: 768px) {
+    .card-body {
+      padding: 2rem 1.5rem;
+    }
+
+    .radio-group {
+      gap: 10px;
+    }
+
+    .form-check-label {
+      padding: 6px 10px;
+      font-size: 0.9rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .container {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .card-body {
+      padding: 1.5rem 1.25rem;
+    }
+
+    .form-title {
+      font-size: 1.5rem;
+    }
+
+    .form-label {
+      font-size: 0.9rem;
+    }
+
+    .form-control,
+    .form-select {
+      font-size: 0.95rem;
+      padding: 10px 14px;
+    }
+
+    .btn-submit {
+      font-size: 1rem;
+      padding: 12px 20px;
+    }
+
+    .radio-group {
+      gap: 8px;
+    }
+
+    .form-check-input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      margin-right: 10px;
+    }
+  }
 </style>

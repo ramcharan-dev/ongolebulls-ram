@@ -3,8 +3,6 @@ package dev.ongolebulls.dto;
 
 import dev.ongolebulls.model.AppointmentType;
 import jakarta.validation.constraints.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 
 public record AppointmentRequest(
