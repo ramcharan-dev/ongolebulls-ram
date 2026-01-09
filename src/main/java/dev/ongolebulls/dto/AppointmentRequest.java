@@ -3,8 +3,6 @@ package dev.ongolebulls.dto;
 
 import dev.ongolebulls.model.AppointmentType;
 import jakarta.validation.constraints.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 
 public record AppointmentRequest(
@@ -17,7 +15,5 @@ public record AppointmentRequest(
         @NotBlank(message = "State is required") String state,
         @NotBlank(message = "City is required") String city,
         @NotNull AppointmentType type,
-        String notes,
-        LocalDate preferredDate,
-        LocalTime preferredTime
+        String notes
 ) {}

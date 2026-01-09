@@ -34,11 +34,9 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(@org.springframework.lang.NonNull CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOriginPatterns("*") // Use allowedOriginPatterns to allow all origins with credentials
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
-                        .allowedHeaders("*")
-                        .allowCredentials(false) // Set to false since we're using wildcard pattern
-                        .maxAge(3600);
+                        .allowedOrigins("http://localhost:8080", "https://www.ongolebullsinvest.com") // Allow local and production frontend
+                        .allowedMethods("GET", "POST", "PUT", "DELETE")
+                        .allowedHeaders("*");
             }
         };
     }
