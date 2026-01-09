@@ -32,11 +32,11 @@ public class AppointmentService {
                 .fullName(req.fullName())
                 .email(req.email())
                 .mobile(req.mobile())
-                .employmentType(req.employmentType())
-                .employmentSector(req.employmentSector())
-                .country(req.country())
-                .state(req.state())
-                .city(req.city())
+//                .employmentType(req.employmentType())
+//                .employmentSector(req.employmentSector())
+//                .country(req.country())
+//                .state(req.state())
+//                .city(req.city())
                 .type(req.type())
                 .notes(req.notes())
                 .createdAt(OffsetDateTime.now())
@@ -51,8 +51,10 @@ public class AppointmentService {
         String subject = "Ongolebulls Invest – Appointment Confirmation";
         String body = "Hello " + appt.getFullName() + ",\n\n" +
                 "Thank you for booking an appointment with Ongolebulls Invest.\n" +
-                "Your appointment has been successfully scheduled for " + appt.getPreferredDate() +
-                " at " + appt.getPreferredTime() + ".\n\n" +
+                "Your appointment has been successfully scheduled for "
+//                + appt.getPreferredDate() +
+//                " at " + appt.getPreferredTime() + ".\n\n"
+                +
                 "Our team will get back to you shortly with further details.\n\n" +
                 "Best regards,\nTeam Ongolebulls Invest";
 
