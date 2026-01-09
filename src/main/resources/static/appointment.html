@@ -319,6 +319,15 @@
       cityInput.required = true;
       cityInput.placeholder = 'Enter city name';
       cityInput.value = currentValue;
+      // Add validation event listener
+      cityInput.addEventListener('input', function() {
+        this.setCustomValidity('');
+      });
+      cityInput.addEventListener('invalid', function() {
+        if (this.value.trim() === '') {
+          this.setCustomValidity('City is required');
+        }
+      });
       cityContainer.replaceChild(cityInput, cityField);
     }
   }
@@ -343,8 +352,32 @@
   cityContainer.addEventListener('change', function(e) {
     if (e.target && e.target.id === 'city' && e.target.tagName === 'SELECT' && e.target.value === 'Other') {
       convertCityToInput();
+      // Focus on the input field after conversion
+      setTimeout(() => {
+        const cityInput = document.getElementById('city');
+        if (cityInput && cityInput.tagName === 'INPUT') {
+          cityInput.focus();
+        }
+      }, 10);
     }
   });
+  
+  // Add validation to city select dropdown
+  const citySelect = document.getElementById('city');
+  if (citySelect && citySelect.tagName === 'SELECT') {
+    citySelect.addEventListener('invalid', function() {
+      if (this.value === '' || this.value === 'Other') {
+        this.setCustomValidity('Please select a city or enter one manually');
+      } else {
+        this.setCustomValidity('');
+      }
+    });
+    citySelect.addEventListener('change', function() {
+      if (this.value !== '' && this.value !== 'Other') {
+        this.setCustomValidity('');
+      }
+    });
+  }
 
   if (countrySelect && stateContainer && cityContainer) {
     countrySelect.addEventListener('change', function() {
@@ -463,6 +496,18 @@
     if (!form.checkValidity()) return;
 
     const fd = new FormData(form);
+    
+    // Validate city field - ensure it's not empty
+    const cityValue = fd.get('city');
+    if (!cityValue || cityValue.trim() === '') {
+      const cityField = document.getElementById('city');
+      if (cityField) {
+        cityField.setCustomValidity('City is required');
+        cityField.reportValidity();
+        return;
+      }
+    }
+    
     // Build payload matching AppointmentRequest DTO
     const payload = {
       fullName: fd.get('fullName'),
@@ -472,10 +517,20 @@
       employmentSector: fd.get('employmentSector'),
       country: fd.get('country'),
       state: fd.get('state'),
-      city: fd.get('city'),
+      city: cityValue ? cityValue.trim() : '',
       type: fd.get('type'),
       notes: fd.get('notes') || null
     };
+    
+    // Final validation - ensure all required fields are present
+    if (!payload.city || payload.city === '') {
+      const cityField = document.getElementById('city');
+      if (cityField) {
+        cityField.setCustomValidity('City is required');
+        cityField.reportValidity();
+        return;
+      }
+    }
 
     try {
       const res = await fetch('/api/appointments', {
