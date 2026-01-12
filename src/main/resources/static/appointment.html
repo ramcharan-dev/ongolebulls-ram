@@ -57,6 +57,22 @@
 
             <div class="mb-4">
               <label class="form-label">
+                <i class="fas fa-calendar me-2"></i>Preferred Date & Time *
+              </label>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <input type="date" class="form-control" name="preferredDate" id="preferredDate" required />
+                  <div class="invalid-feedback">Select preferred date.</div>
+                </div>
+                <div class="col-md-6">
+                  <input type="time" class="form-control" name="preferredTime" id="preferredTime" required />
+                  <div class="invalid-feedback">Select preferred time.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">
                 <i class="fas fa-briefcase me-2"></i>Employment Type *
               </label>
               <div class="radio-group">
@@ -513,6 +529,8 @@
       fullName: fd.get('fullName'),
       email: fd.get('email'),
       mobile: fd.get('mobile'),
+      preferredDate: fd.get('preferredDate'),
+      preferredTime: fd.get('preferredTime'),
       employmentType: fd.get('employmentType'),
       employmentSector: fd.get('employmentSector'),
       country: fd.get('country'),

@@ -11,6 +11,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
 
 @Service
@@ -36,6 +38,8 @@ public class AppointmentService {
                 .fullName(req.fullName())
                 .email(req.email())
                 .mobile(req.mobile())
+                .preferredDate(req.preferredDate())
+                .preferredTime(req.preferredTime())
                 .employmentType(req.employmentType())
                 .employmentSector(req.employmentSector())
                 .country(req.country())
@@ -56,10 +60,8 @@ public class AppointmentService {
         String subject = "Ongolebulls Invest – Appointment Confirmation";
         String body = "Hello " + appt.getFullName() + ",\n\n" +
                 "Thank you for booking an appointment with Ongolebulls Invest.\n" +
-                "Your appointment has been successfully scheduled for "
-//                + appt.getPreferredDate() +
-//                " at " + appt.getPreferredTime() + ".\n\n"
-                +
+                "Your appointment has been successfully scheduled for " + appt.getPreferredDate() +
+                " at " + appt.getPreferredTime() + ".\n\n" +
                 "Our team will get back to you shortly with further details.\n\n" +
                 "Best regards,\nTeam Ongolebulls Invest";
 
@@ -95,6 +97,8 @@ public class AppointmentService {
                 "<p style='margin: 5px 0;'><strong>Full Name:</strong> %s</p>" +
                 "<p style='margin: 5px 0;'><strong>Email:</strong> %s</p>" +
                 "<p style='margin: 5px 0;'><strong>Mobile:</strong> %s</p>" +
+                "<p style='margin: 5px 0;'><strong>Preferred Date:</strong> %s</p>" +
+                "<p style='margin: 5px 0;'><strong>Preferred Time:</strong> %s</p>" +
                 "<p style='margin: 5px 0;'><strong>Employment Type:</strong> %s</p>" +
                 "<p style='margin: 5px 0;'><strong>Employment Sector:</strong> %s</p>" +
                 "<p style='margin: 5px 0;'><strong>Location:</strong> %s, %s, %s</p>" +
@@ -114,6 +118,8 @@ public class AppointmentService {
                 appt.getFullName(),
                 appt.getEmail(),
                 appt.getMobile(),
+                appt.getPreferredDate().toString(),
+                appt.getPreferredTime().toString(),
                 appt.getEmploymentType(),
                 appt.getEmploymentSector(),
                 appt.getCity(),
