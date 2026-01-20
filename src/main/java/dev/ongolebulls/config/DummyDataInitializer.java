@@ -3,6 +3,7 @@ package dev.ongolebulls.config;
 import dev.ongolebulls.model.*;
 import dev.ongolebulls.model.AlertType;
 import dev.ongolebulls.repository.*;
+import dev.ongolebulls.repository.AdminUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,9 +43,15 @@ public class DummyDataInitializer implements CommandLineRunner {
     
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private AdminUserRepository adminUserRepository;
 
     @Override
     public void run(String... args) {
+        // Create default admin user if it doesn't exist
+        createDefaultAdminUser();
+        
         // Only create if users don't exist
         if (userRepository.count() == 0) {
             System.out.println("Creating dummy users with test data...");
@@ -52,6 +59,21 @@ public class DummyDataInitializer implements CommandLineRunner {
             System.out.println("Dummy users created successfully!");
         } else {
             System.out.println("Users already exist. Skipping dummy data creation.");
+        }
+    }
+    
+    private void createDefaultAdminUser() {
+        // Check if admin user exists
+        if (adminUserRepository.findByEmail("admin@ongolebullsinvest.com").isEmpty()) {
+            System.out.println("Creating default admin user...");
+            AdminUser admin = new AdminUser();
+            admin.setEmail("admin@ongolebullsinvest.com");
+            admin.setPassword("admin123"); // Plain password (as per current implementation)
+            admin.setName("Admin");
+            adminUserRepository.save(admin);
+            System.out.println("Default admin user created: admin@ongolebullsinvest.com / admin123");
+        } else {
+            System.out.println("Default admin user already exists.");
         }
     }
 
