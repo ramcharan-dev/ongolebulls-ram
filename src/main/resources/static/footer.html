@@ -3,17 +3,26 @@
 
         <!-- About Us Section -->
         <div style="flex: 1 1 250px; margin-bottom: 20px; text-align: center;">
-            <!-- Logo -->
-            <img src="assets/logo%203.png" alt="Ongolebulls Logo" style="width: 120px; height: auto; margin-bottom: 15px;">
+            <!--Dynamic Logo -->
+            <img
+                    id="footerAboutLogo"
+                    src=""
+                    alt="OngoleBulls Logo"
+                    style="width: 120px; height: auto; margin-bottom: 15px; display: none;"
+            >
 
             <!-- Short About Us -->
-            <p style="font-size: 1rem; line-height: 1.6; color: #000; margin-bottom: 10px;">
-                Ongolebulls Pvt. Ltd. Established in 2021, the company operates under CIN U65990TG2021PTC154027 and is led by experienced professionals.
+<!--            <p style="font-size: 1rem; line-height: 1.6; color: #000; margin-bottom: 10px;">-->
+<!--                Ongolebulls Pvt. Ltd. Established in 2021, the company operates under CIN U65990TG2021PTC154027 and is led by experienced professionals.-->
+<!--            </p>-->
+            <p id="footerAboutText"
+               style="font-size: 1rem; line-height: 1.6; color: #000; margin-bottom: 10px;">
             </p>
+
         </div>
 
         <!-- Quick Links Section -->
-        <div style="flex: 1 1 200px; margin-bottom: 20px;">
+        <div style="flex: 1 1 200px; margin-bottom: 20px;margin-left:50px">
             <h4 style="font-size: 1.5rem; color: #000; margin-bottom: 15px;">Quick Links</h4>
             <ul style="list-style: none; padding: 0; margin: 0;">
                 <li style="margin-bottom: 10px;"><a href="/" style="color: #000; text-decoration: none; font-size: 1rem;">Home</a></li>
@@ -23,26 +32,59 @@
             </ul>
         </div>
 
-        <!-- Contact Us Section -->
-        <div style="flex: 1 1 250px; margin-bottom: 20px;">
-            <h4 style="font-size: 1.5rem; color: #000; margin-bottom: 15px;">Contact Us</h4>
-            <p style="font-size: 1rem; color: #000; margin-bottom: 10px;">
-                <strong>Email:</strong>
-                <a href="mailto:info@ongolebullsinvest.com" style="color: #bb281e; text-decoration: none;">info@ongolebullsinvest.com</a>
-            </p>
-            <p style="font-size: 1rem; color: #000; margin-bottom: 10px;">
-                <strong>Phone:</strong>
-                <a href="tel:+91-9281111730" style="color: #bb281e; text-decoration: none;">+91-9281111730</a>
-            </p>
-            <p style="font-size: 1rem; color: #000;">Follow Us:</p>
-            <div style="display: flex; gap: 15px; margin-top: 10px;">
-                <a href="https://www.facebook.com/OngoleBullsInvest" style="color: #000; font-size: 1.5rem; text-decoration: none;"><i class="fab fa-facebook"></i></a>
-                <a href="https://www.linkedin.com/company/ongolebulls/?viewAsMember=true" style="color: #000; font-size: 1.5rem; text-decoration: none;"><i class="fab fa-linkedin"></i></a>
-                <a href="https://www.instagram.com/ongolebullsinvest/" style="color: #000; font-size: 1.5rem; text-decoration: none;"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.youtube.com/@Ongolebullsinvest" style="color: #000; font-size: 1.5rem; text-decoration: none;"><i class="fab fa-youtube"></i></a>
-                <a href="https://x.com/home?lang=en" style="color: #000; font-size: 1.5rem; text-decoration: none;"><i class="fab fa-twitter"></i></a>
+<!--        &lt;!&ndash; Contact Us Section &ndash;&gt;-->
+<!--        <div style="flex: 1 1 250px; margin-bottom: 20px;">-->
+<!--            <h4 style="font-size: 1.5rem; color: #000; margin-bottom: 15px;">Contact Us</h4>-->
+<!--            <p style="font-size: 1rem; color: #000; margin-bottom: 10px;">-->
+<!--                <strong>Email:</strong>-->
+<!--                <a href="mailto:info@ongolebullsinvest.com" style="color: #bb281e; text-decoration: none;">info@ongolebullsinvest.com</a>-->
+<!--            </p>-->
+<!--            <p style="font-size: 1rem; color: #000; margin-bottom: 10px;">-->
+<!--                <strong>Phone:</strong>-->
+<!--                <a href="tel:+91-9281111730" style="color: #bb281e; text-decoration: none;">+91-9281111730</a>-->
+<!--            </p>-->
+<!--            <p style="font-size: 1rem; color: #000;">Follow Us:</p>-->
+<!--            <div style="display: flex; gap: 15px; margin-top: 10px;">-->
+<!--                <a href="https://www.facebook.com/OngoleBullsInvest" style="color: #000; font-size: 1.5rem; text-decoration: none;"><i class="fab fa-facebook"></i></a>-->
+<!--                <a href="https://www.linkedin.com/company/ongolebulls/?viewAsMember=true" style="color: #000; font-size: 1.5rem; text-decoration: none;"><i class="fab fa-linkedin"></i></a>-->
+<!--                <a href="https://www.instagram.com/ongolebullsinvest/" style="color: #000; font-size: 1.5rem; text-decoration: none;"><i class="fab fa-instagram"></i></a>-->
+<!--                <a href="https://www.youtube.com/@Ongolebullsinvest" style="color: #000; font-size: 1.5rem; text-decoration: none;"><i class="fab fa-youtube"></i></a>-->
+<!--                <a href="https://x.com/home?lang=en" style="color: #000; font-size: 1.5rem; text-decoration: none;"><i class="fab fa-twitter"></i></a>-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <!-- Contact Us Section (DYNAMIC) -->
+        <div style="flex: 1 1 300px; margin-bottom: 20px;">
+            <div class="footer-col footer-contact">
+                <h4>Contact Us</h4>
+                <p>
+                    <strong>Email:</strong>
+                    <a href="#" id="footerEmail">—</a>
+                </p>
+
+                <p>
+                    <strong>Phone:</strong>
+                    <a href="#" id="footerPhone">—</a>
+                </p>
+
+                <p>
+                    <strong>Address:</strong><br>
+                    <span id="footerAddress">—</span>
+                </p>
+
+                <p class="follow-text">Follow Us:</p>
+
+                <div class="footer-socials">
+                    <a href="#" id="footerFacebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" id="footerLinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" id="footerInstagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" id="footerYouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="#" id="footerTwitter"><i class="fab fa-twitter"></i></a>
+                </div>
             </div>
         </div>
+
+
 
         <!-- Subscribe Section - UPDATED -->
         <div style="flex: 1 1 250px; margin-bottom: 20px;">
@@ -219,76 +261,76 @@ color: var(--text-color);
 background-color: var(--background-color);
 }
 
-.contact-container {
-max-width: 1200px;
-margin: 0 auto;
-padding: 2rem;
-}
+<!--.contact-container {-->
+<!--max-width: 1200px;-->
+<!--margin: 0 auto;-->
+<!--padding: 2rem;-->
+<!--}-->
 
-.header {
-text-align: center;
-margin-bottom: 3rem;
-}
+<!--.header {-->
+<!--text-align: center;-->
+<!--margin-bottom: 3rem;-->
+<!--}-->
 
-.animate-text {
-opacity: 0;
-transform: translateY(-20px);
-animation: fadeInDown 0.8s forwards;
-}
+<!--.animate-text {-->
+<!--opacity: 0;-->
+<!--transform: translateY(-20px);-->
+<!--animation: fadeInDown 0.8s forwards;-->
+<!--}-->
 
-.intro-text {
-max-width: 800px;
-margin: 1rem auto;
-opacity: 0;
-animation: fadeIn 1s 0.5s forwards;
-}
+<!--.intro-text {-->
+<!--max-width: 800px;-->
+<!--margin: 1rem auto;-->
+<!--opacity: 0;-->
+<!--animation: fadeIn 1s 0.5s forwards;-->
+<!--}-->
 
-.contact-content {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 2rem;
-opacity: 0;
-animation: fadeIn 1s 0.8s forwards;
-}
+<!--.contact-content {-->
+<!--display: grid;-->
+<!--grid-template-columns: 1fr 1fr;-->
+<!--gap: 2rem;-->
+<!--opacity: 0;-->
+<!--animation: fadeIn 1s 0.8s forwards;-->
+<!--}-->
 
-.contact-info, .contact-form {
-background: white;
-padding: 2rem;
-border-radius: 10px;
-box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-transition: transform 0.3s ease;
-}
+<!--.contact-info, .contact-form {-->
+<!--background: white;-->
+<!--padding: 2rem;-->
+<!--border-radius: 10px;-->
+<!--box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);-->
+<!--transition: transform 0.3s ease;-->
+<!--}-->
 
-.contact-info:hover, .contact-form:hover {
-transform: translateY(-5px);
-}
+<!--.contact-info:hover, .contact-form:hover {-->
+<!--transform: translateY(-5px);-->
+<!--}-->
 
-.info-section {
-margin-bottom: 2rem;
-}
+<!--.info-section {-->
+<!--margin-bottom: 2rem;-->
+<!--}-->
 
-.contact-details p {
-margin: 0.5rem 0;
-display: flex;
-align-items: left !important;
-gap: 0.5rem;
-}
+<!--.contact-details p {-->
+<!--margin: 0.5rem 0;-->
+<!--display: flex;-->
+<!--align-items: left !important;-->
+<!--gap: 0.5rem;-->
+<!--}-->
 
-.social-media {
-display: flex;
-gap: 1rem;
-margin-top: 1rem;
-}
+<!--.social-media {-->
+<!--display: flex;-->
+<!--gap: 1rem;-->
+<!--margin-top: 1rem;-->
+<!--}-->
 
-.social-icon {
-color: gray;
-font-size: 1.5rem;
-transition: transform 0.3s ease;
-}
+<!--.social-icon {-->
+<!--color: gray;-->
+<!--font-size: 1.5rem;-->
+<!--transition: transform 0.3s ease;-->
+<!--}-->
 
-.social-icon:hover {
-transform: scale(1.2);
-}
+<!--.social-icon:hover {-->
+<!--transform: scale(1.2);-->
+<!--}-->
 
 .form-group {
 margin-bottom: 1.5rem;
@@ -458,6 +500,94 @@ padding: 8px !important;
 padding: 1rem !important;
 }
 }
+
+    /* ===== Contact Us Footer ===== */
+
+.footer-contact h4 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+/* Text rows (Email / Phone / Address) */
+.footer-contact p {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+    color: #000;
+    line-height: 1.6;
+}
+
+/* Labels: Email, Phone, Address */
+.footer-contact p strong {
+    font-weight: 600;
+    color: #000;
+}
+
+/* Links (Email / Phone) */
+.footer-contact a {
+    color: #bb281e;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.footer-contact a:hover {
+    text-decoration: underline;
+}
+
+/* Address text */
+#footerAddress {
+    display: inline-block;
+    margin-top: 4px;
+    max-width: 260px;        /* keeps it neat like image */
+    line-height: 1.6;
+    color: #000;
+}
+
+/* Follow Us text */
+.follow-text {
+    margin-top: 14px;
+    font-weight: 600;
+    color: #000;
+}
+
+/* Social icons row */
+.footer-socials {
+    display: flex;
+    gap: 24px;               /* same spacing as image */
+    margin-top: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Social icons */
+.footer-socials a {
+    font-size: 1.9rem;
+    color: #000;
+    transition: transform 0.25s ease, color 0.25s ease;
+}
+
+/* Hover effect like image */
+.footer-socials a:hover {
+    transform: scale(1.25);
+    color: #bb281e;
+}
+
+    footer {
+  font-weight: 400;
+}
+
+footer h4 {
+  font-weight: 500;
+}
+
+footer p,
+footer a,
+footer span,
+footer strong {
+  font-weight: 400;
+}
+
+
+
 </style>
 
 

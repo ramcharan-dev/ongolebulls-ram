@@ -20,3 +20,4 @@ CREATE INDEX idx_subscriber_status ON subscriber(status);
 
 SELECT 'Done! Restart your Spring Boot application.' AS result;
 
+

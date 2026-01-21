@@ -7,6 +7,10 @@
     
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
     
     <!-- Google Fonts - Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1661,32 +1665,42 @@
 
             try {
                 const decodedSlug = decodeURIComponent(slug).trim();
-                const allServicesResponse = await fetch(`${API_BASE}/services`);
-                if (!allServicesResponse.ok) throw new Error('Failed to load services');
 
-                const allServices = await allServicesResponse.json();
+                const response = await fetch(`${API_BASE}/services/slug/${decodedSlug}`);
+                if (!response.ok) throw new Error('Service not found');
 
-                let service = allServices.find(s => {
-                    const serviceSlug = (s.slug || '').trim();
-                    const cleanServiceSlug = serviceSlug.startsWith('/') ? serviceSlug.substring(1) : serviceSlug;
-                    const cleanSearchSlug = decodedSlug.startsWith('/') ? decodedSlug.substring(1) : decodedSlug;
-                    return cleanServiceSlug.toLowerCase() === cleanSearchSlug.toLowerCase();
-                });
+                const service = await response.json();
+                const sections = (service.sections || []).sort(
+                (a, b) => (a.orderIndex || 0) - (b.orderIndex || 0)
+                 );
 
-                if (!service) {
-                    service = allServices.find(s =>
-                        s.title && s.title.toLowerCase().trim() === decodedSlug.toLowerCase().trim()
-                    );
-                }
+<!--                const allServicesResponse = await fetch(`${API_BASE}/services`);-->
+<!--                if (!allServicesResponse.ok) throw new Error('Failed to load services');-->
 
-                if (!service) throw new Error('Service not found');
-                const serviceId = service.id;
+<!--                const allServices = await allServicesResponse.json();-->
 
-                const sectionsResponse = await fetch(`${API_BASE}/services/${serviceId}/sections`);
-                if (!sectionsResponse.ok) throw new Error('Failed to load sections');
+<!--                let service = allServices.find(s => {-->
+<!--                    const serviceSlug = (s.slug || '').trim();-->
+<!--                    const cleanServiceSlug = serviceSlug.startsWith('/') ? serviceSlug.substring(1) : serviceSlug;-->
+<!--                    const cleanSearchSlug = decodedSlug.startsWith('/') ? decodedSlug.substring(1) : decodedSlug;-->
+<!--                    return cleanServiceSlug.toLowerCase() === cleanSearchSlug.toLowerCase();-->
+<!--                });-->
 
-                const sections = await sectionsResponse.json();
-                sections.sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));
+<!--                if (!service) {-->
+<!--                    service = allServices.find(s =>-->
+<!--                        s.title && s.title.toLowerCase().trim() === decodedSlug.toLowerCase().trim()-->
+<!--                    );-->
+<!--                }-->
+
+<!--                if (!service) throw new Error('Service not found');-->
+<!--                const serviceId = service.id;-->
+
+<!--                const sectionsResponse = await fetch(`${API_BASE}/services/${serviceId}/sections`);-->
+<!--                if (!sectionsResponse.ok) throw new Error('Failed to load sections');-->
+
+<!--                const sections = await sectionsResponse.json();-->
+<!--                sections.sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));-->
+
 
                 let html = `
                     <div class="services-hero">

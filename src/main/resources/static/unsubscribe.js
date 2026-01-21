@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
+
     // Call unsubscribe API
     unsubscribe(token);
 
@@ -56,4 +57,5 @@ document.addEventListener('DOMContentLoaded', function() {
         backLink.style.display = 'inline-block';
     }
 });
+
 
