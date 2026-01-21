@@ -117,6 +117,29 @@ public class DashboardActionsController {
                 setField(req, "startDate", startDate);
                 setField(req, "nextSIPDate", startDate);
             }
+            // Enhanced fields
+            if (requestMap.containsKey("isPerpetual")) {
+                setField(req, "isPerpetual", Boolean.valueOf(requestMap.get("isPerpetual").toString()));
+            } else {
+                setField(req, "isPerpetual", true); // Default to perpetual
+            }
+            if (requestMap.containsKey("tenureMonths") && requestMap.get("tenureMonths") != null) {
+                setField(req, "tenureMonths", Integer.valueOf(requestMap.get("tenureMonths").toString()));
+            }
+            if (requestMap.containsKey("stepUpAmount") && requestMap.get("stepUpAmount") != null) {
+                setField(req, "stepUpAmount", Double.valueOf(requestMap.get("stepUpAmount").toString()));
+            }
+            if (requestMap.containsKey("stepUpFrequencyMonths") && requestMap.get("stepUpFrequencyMonths") != null) {
+                setField(req, "stepUpFrequencyMonths", Integer.valueOf(requestMap.get("stepUpFrequencyMonths").toString()));
+            }
+            if (requestMap.containsKey("goalName") && requestMap.get("goalName") != null) {
+                setField(req, "goalName", requestMap.get("goalName").toString());
+            }
+            // Set default status and mandate
+            setField(req, "status", "ACTIVE");
+            setField(req, "mandateStatus", "PENDING");
+            setField(req, "totalInstallments", 0);
+            setField(req, "missedInstallments", 0);
             return sipRepo.save(req);
         }
 

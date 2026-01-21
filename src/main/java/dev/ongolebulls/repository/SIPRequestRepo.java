@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface SIPRequestRepo extends JpaRepository<SIPRequest, Long> {
     List<SIPRequest> findByUserId(Long userId);
+    List<SIPRequest> findByUserIdAndStatus(Long userId, String status);
 }
 

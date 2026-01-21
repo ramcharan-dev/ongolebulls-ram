@@ -45,5 +45,6 @@ thymeleaf:
   suffix: .html
   enabled: true
 
+
 encryption:
   key: lTB/6CsfDkNm46qjwXf/NuFx09ddhVU0z6rO7VJcyeA=

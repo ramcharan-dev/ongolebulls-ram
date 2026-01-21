@@ -62,6 +62,50 @@
         [data-theme="light"] body {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
         }
+        
+        /* Global Text Visibility Fixes */
+        .modal-content,
+        .modal-body,
+        .modal-header {
+            background: var(--ob-card) !important;
+            color: var(--ob-text-main) !important;
+        }
+        
+        .modal-body *,
+        .modal-body p,
+        .modal-body span,
+        .modal-body div,
+        .modal-body td,
+        .modal-body th,
+        .modal-body label {
+            color: var(--ob-text-main) !important;
+        }
+        
+        .table,
+        .table th,
+        .table td {
+            color: var(--ob-text-main) !important;
+        }
+        
+        .table thead th {
+            background: var(--ob-bg-soft) !important;
+            color: var(--ob-text-main) !important;
+        }
+        
+        .form-control,
+        .form-select {
+            background: var(--ob-bg-soft) !important;
+            color: var(--ob-text-main) !important;
+            border-color: var(--ob-border) !important;
+        }
+        
+        .form-label {
+            color: var(--ob-text-main) !important;
+        }
+        
+        .text-muted {
+            color: var(--ob-text-soft) !important;
+        }
 
         * {
             margin: 0;
@@ -1133,6 +1177,184 @@
             border-color: var(--ob-primary);
         }
 
+        /* Enhanced Fund Cards (NJ Wealth Style) */
+        .fund-card-enhanced {
+            background: var(--ob-card);
+            border: 1px solid var(--ob-border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .fund-card-enhanced:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(189, 42, 31, 0.2);
+            border-color: var(--ob-primary);
+        }
+
+        .fund-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .fund-name-section h6 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            color: var(--ob-text-main);
+        }
+
+        .fund-amc {
+            font-size: 0.85rem;
+            color: var(--ob-text-soft);
+        }
+
+        .fund-rating {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.25rem;
+        }
+
+        .fund-rating .bi-star-fill {
+            color: #fbbf24;
+            font-size: 0.9rem;
+        }
+
+        .fund-score {
+            font-size: 0.75rem;
+            color: var(--ob-text-soft);
+            font-weight: 600;
+        }
+
+        .fund-tagline {
+            font-size: 0.9rem;
+            color: var(--ob-text-soft);
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .fund-metrics {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: var(--ob-bg-soft);
+            border-radius: 0.5rem;
+        }
+
+        .fund-metrics .metric {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .fund-metrics .metric-label {
+            font-size: 0.75rem;
+            color: var(--ob-text-soft);
+        }
+
+        .fund-metrics .metric-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .fund-metrics .metric-value.positive {
+            color: var(--ob-accent-green);
+        }
+
+        .fund-recommendation-reason {
+            font-size: 0.85rem;
+            color: var(--ob-text-soft);
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            background: var(--ob-primary-soft);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .fund-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .fund-actions .btn {
+            flex: 1;
+            font-size: 0.85rem;
+        }
+
+        .recommendation-section {
+            margin-bottom: 2rem;
+        }
+
+        .recommendation-section h5 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Fund Detail Modal Styles */
+        .fund-detail-container {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .fund-detail-header {
+            border-bottom: 2px solid var(--ob-border);
+            padding-bottom: 1rem;
+        }
+
+        .fund-nav-display {
+            text-align: right;
+        }
+
+        .nav-label {
+            font-size: 0.85rem;
+            color: var(--ob-text-soft);
+        }
+
+        .nav-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--ob-text-main);
+        }
+
+        .nav-change {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .nav-change.positive {
+            color: var(--ob-accent-green);
+        }
+
+        .nav-change.negative {
+            color: var(--ob-accent-red);
+        }
+
+        .fund-detail-tabs .nav-tabs {
+            border-bottom: 2px solid var(--ob-border);
+        }
+
+        .fund-detail-tabs .nav-link {
+            color: var(--ob-text-soft);
+            border: none;
+            border-bottom: 2px solid transparent;
+        }
+
+        .fund-detail-tabs .nav-link.active {
+            color: var(--ob-primary);
+            border-bottom-color: var(--ob-primary);
+            background: transparent;
+        }
+
         /* Fund Cards */
         .fund-card {
             background: var(--ob-card);
@@ -1195,6 +1417,29 @@
             color: #fca5a5;
         }
 
+        /* Notification Animations */
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
         /* Risk Profile Badge */
         .risk-badge {
             display: inline-flex;
@@ -1212,6 +1457,36 @@
         .risk-badge.moderate { background: rgba(250, 204, 21, 0.15); border-color: rgba(250, 204, 21, 0.3); color: #fde047; }
         .risk-badge.conservative { background: rgba(187, 146, 54, 0.15); border-color: rgba(187, 146, 54, 0.3); color: rgb(220, 190, 100); }
         .risk-badge.aggressive { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: #fca5a5; }
+
+        /* Risk Quiz Modal Styles */
+        .risk-question {
+            padding: 1rem;
+            background: var(--ob-bg-soft);
+            border-radius: 0.75rem;
+            border-left: 3px solid var(--ob-primary);
+            margin-bottom: 1rem;
+        }
+
+        .risk-question .form-check {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transition: background 0.2s;
+            margin-bottom: 0.5rem;
+        }
+
+        .risk-question .form-check:hover {
+            background: rgba(189, 42, 31, 0.05);
+        }
+
+        .risk-question .form-check-input {
+            margin-top: 0.4rem;
+            cursor: pointer;
+        }
+
+        .risk-question .form-check-label {
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
 
         /* Quick Action Buttons */
         .quick-actions {
@@ -1407,7 +1682,821 @@
         .learn-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 12px 40px rgba(189, 42, 31, 0.2);
+        }
+
+        /* Glossary Modal Styles */
+        .glossary-modal {
+            background: var(--ob-card);
+            border: 1px solid var(--ob-border);
+            border-radius: 1.25rem;
+            color: var(--ob-text-main);
+            max-height: 90vh;
+            overflow: hidden;
+        }
+
+        .glossary-modal-header {
+            background: linear-gradient(135deg, var(--ob-primary), var(--ob-primary-dark));
+            border-bottom: 1px solid var(--ob-border);
+            padding: 1.5rem;
+            color: white;
+        }
+
+        .glossary-modal-header .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .glossary-modal-header .btn-close {
+            filter: invert(1);
+            opacity: 0.8;
+        }
+
+        .glossary-modal-body {
+            padding: 2rem;
+            max-height: calc(90vh - 100px);
+            overflow-y: auto;
+            color: var(--ob-text-main) !important;
+        }
+        
+        .glossary-modal-body * {
+            color: inherit;
+        }
+        
+        .glossary-modal-body p,
+        .glossary-modal-body span,
+        .glossary-modal-body div,
+        .glossary-modal-body td,
+        .glossary-modal-body th,
+        .glossary-modal-body label {
+            color: var(--ob-text-main) !important;
+        }
+        
+        .glossary-modal-body .text-muted,
+        .glossary-modal-body small {
+            color: var(--ob-text-soft) !important;
+        }
+        
+        /* Fund Plans Table and Cart Table Visibility */
+        .fund-plans-table,
+        .cart-table,
+        .fund-plans-table th,
+        .fund-plans-table td,
+        .cart-table th,
+        .cart-table td {
+            color: var(--ob-text-main) !important;
+        }
+        
+        .fund-plans-table thead th,
+        .cart-table thead th {
+            background: var(--ob-bg-soft) !important;
+            color: var(--ob-text-main) !important;
+        }
+        
+        .fund-plans-table tbody tr,
+        .cart-table tbody tr {
+            background: transparent;
+        }
+        
+        .fund-plans-table tbody tr:hover,
+        .cart-table tbody tr:hover {
+            background: var(--ob-card-hover) !important;
+        }
+        
+        .fund-plans-table tbody tr:hover td,
+        .cart-table tbody tr:hover td {
+            color: var(--ob-text-main) !important;
+        }
+
+        .glossary-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .glossary-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .glossary-section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--ob-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .glossary-text {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--ob-text-main);
+            margin: 0;
+        }
+
+        .formula-box {
+            background: rgba(189, 42, 31, 0.1);
+            border: 2px solid var(--ob-primary);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .formula-main {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--ob-primary);
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 1rem;
+        }
+
+        .formula-explanation {
+            font-size: 0.95rem;
+            color: var(--ob-text-soft);
+            line-height: 1.6;
+            margin: 0;
+            text-align: center;
+        }
+
+        .example-box {
+            background: var(--ob-bg-soft);
+            border: 1px solid var(--ob-border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .example-scenario {
+            font-size: 1rem;
+            color: var(--ob-text-main);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--ob-border);
+        }
+
+        .example-calculation {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .example-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: rgba(189, 42, 31, 0.05);
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .example-row span {
+            color: var(--ob-text-soft);
+        }
+
+        .example-row strong {
+            color: var(--ob-text-main);
+            font-weight: 600;
+        }
+
+        .example-divider {
+            height: 2px;
+            background: var(--ob-border);
+            margin: 0.5rem 0;
+        }
+
+        .example-result {
+            background: rgba(189, 42, 31, 0.15);
+            border: 2px solid var(--ob-primary);
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .example-result strong {
+            color: var(--ob-primary);
+            font-size: 1.2rem;
+        }
+
+        .example-explanation {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(187, 146, 54, 0.1);
+            border-left: 3px solid var(--ob-accent-green);
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            color: var(--ob-text-main);
+            line-height: 1.6;
+        }
+
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .faq-item {
+            background: var(--ob-bg-soft);
+            border: 1px solid var(--ob-border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
             border-color: var(--ob-primary);
+            box-shadow: 0 4px 12px rgba(189, 42, 31, 0.1);
+        }
+
+        .faq-question {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--ob-text-main);
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .faq-question strong {
+            color: var(--ob-primary);
+        }
+
+        .faq-answer {
+            font-size: 0.95rem;
+            color: var(--ob-text-soft);
+            line-height: 1.7;
+            padding-left: 1.5rem;
+        }
+
+        .faq-answer strong {
+            color: var(--ob-accent-green);
+        }
+
+        .glossary-footer {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--ob-border);
+            text-align: center;
+        }
+
+        /* Equity vs Debt Glossary Specific Styles */
+        .equity-debt-card {
+            background: var(--ob-card);
+            border: 2px solid var(--ob-border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .equity-card {
+            border-color: rgba(189, 42, 31, 0.3);
+        }
+
+        .equity-card:hover {
+            border-color: var(--ob-primary);
+            box-shadow: 0 4px 16px rgba(189, 42, 31, 0.15);
+        }
+
+        .debt-card {
+            border-color: rgba(34, 139, 34, 0.3);
+        }
+
+        .debt-card:hover {
+            border-color: var(--ob-accent-green);
+            box-shadow: 0 4px 16px rgba(34, 139, 34, 0.15);
+        }
+
+        .equity-debt-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--ob-border);
+        }
+
+        .equity-debt-header i {
+            font-size: 1.5rem;
+            color: var(--ob-primary);
+        }
+
+        .debt-card .equity-debt-header i {
+            color: var(--ob-accent-green);
+        }
+
+        .equity-debt-header h6 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--ob-text-main);
+        }
+
+        .equity-debt-body {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .equity-debt-definition {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--ob-text-soft);
+            margin: 0;
+        }
+
+        .equity-debt-metrics {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: var(--ob-bg-soft);
+            border-radius: 0.75rem;
+        }
+
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .metric-label {
+            color: var(--ob-text-soft);
+            font-weight: 500;
+        }
+
+        .metric-value {
+            font-weight: 700;
+            color: var(--ob-text-main);
+        }
+
+        .risk-high {
+            color: var(--ob-primary);
+        }
+
+        .risk-low {
+            color: var(--ob-accent-green);
+        }
+
+        .returns-high {
+            color: var(--ob-primary);
+        }
+
+        .returns-low {
+            color: var(--ob-accent-green);
+        }
+
+        .pros-cons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .pros, .cons {
+            padding: 1rem;
+            border-radius: 0.75rem;
+        }
+
+        .pros {
+            background: rgba(34, 139, 34, 0.1);
+            border-left: 3px solid var(--ob-accent-green);
+        }
+
+        .cons {
+            background: rgba(189, 42, 31, 0.1);
+            border-left: 3px solid var(--ob-primary);
+        }
+
+        .pros ul, .cons ul {
+            margin: 0.5rem 0 0 1.5rem;
+            padding: 0;
+            list-style-type: disc;
+        }
+
+        .pros li, .cons li {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--ob-text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .comparison-table {
+            margin-top: 1rem;
+            background: var(--ob-card);
+        }
+
+        .comparison-table thead {
+            background: var(--ob-bg-soft);
+        }
+
+        .comparison-table th {
+            font-weight: 700;
+            color: var(--ob-text-main);
+            padding: 1rem;
+            border: 1px solid var(--ob-border);
+        }
+
+        .comparison-table td {
+            padding: 1rem;
+            border: 1px solid var(--ob-border);
+            color: var(--ob-text-main);
+        }
+
+        .equity-col {
+            background: rgba(189, 42, 31, 0.05);
+            color: var(--ob-primary);
+            font-weight: 600;
+        }
+
+        .debt-col {
+            background: rgba(34, 139, 34, 0.05);
+            color: var(--ob-accent-green);
+            font-weight: 600;
+        }
+
+        .when-to-choose-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .when-to-choose-item {
+            background: var(--ob-bg-soft);
+            border: 1px solid var(--ob-border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .when-to-choose-item:hover {
+            border-color: var(--ob-primary);
+            box-shadow: 0 4px 12px rgba(189, 42, 31, 0.1);
+        }
+
+        .equity-item {
+            border-left: 4px solid var(--ob-primary);
+        }
+
+        .debt-item {
+            border-left: 4px solid var(--ob-accent-green);
+        }
+
+        .both-item {
+            border-left: 4px solid var(--ob-accent-yellow);
+        }
+
+        .when-to-choose-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .when-to-choose-header i {
+            font-size: 1.25rem;
+            color: var(--ob-primary);
+        }
+
+        .debt-item .when-to-choose-header i {
+            color: var(--ob-accent-green);
+        }
+
+        .both-item .when-to-choose-header i {
+            color: var(--ob-accent-yellow);
+        }
+
+        .when-to-choose-header strong {
+            font-size: 1.1rem;
+            color: var(--ob-text-main);
+        }
+
+        .scenario {
+            font-size: 1rem;
+            color: var(--ob-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .debt-item .scenario {
+            color: var(--ob-accent-green);
+        }
+
+        .both-item .scenario {
+            color: var(--ob-accent-yellow);
+        }
+
+        .explanation {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--ob-text-soft);
+            margin: 0;
+        }
+
+        .faq-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .faq-item {
+            background: var(--ob-bg-soft);
+            border: 1px solid var(--ob-border);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: var(--ob-primary);
+        }
+
+        .faq-question {
+            padding: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+            color: var(--ob-text-main);
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: rgba(189, 42, 31, 0.05);
+        }
+
+        .faq-question .bi-chevron-right {
+            transition: transform 0.3s ease;
+            color: var(--ob-primary);
+        }
+
+        .faq-answer {
+            padding: 0 1.25rem 1.25rem 1.25rem;
+            color: var(--ob-text-soft);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        /* SIP Glossary Specific Styles */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            background: var(--ob-bg-soft);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Instagram Reel Container */
+        .video-container > div[style*="min-height"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .video-container > div[style*="min-height"] iframe {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 500px;
+        }
+
+        .sip-steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .sip-step-item {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+            background: var(--ob-bg-soft);
+            border: 1px solid var(--ob-border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .sip-step-item:hover {
+            border-color: var(--ob-primary);
+            box-shadow: 0 4px 12px rgba(189, 42, 31, 0.1);
+            transform: translateX(5px);
+        }
+
+        .sip-step-number {
+            flex-shrink: 0;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--ob-primary), var(--ob-primary-dark));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(189, 42, 31, 0.3);
+        }
+
+        .sip-step-content {
+            flex: 1;
+        }
+
+        .sip-step-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            color: var(--ob-text-main);
+        }
+
+        .sip-step-header i {
+            color: var(--ob-primary);
+            font-size: 1.25rem;
+        }
+
+        .sip-step-description {
+            color: var(--ob-text-soft);
+            line-height: 1.6;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .sip-step-connector {
+            text-align: center;
+            color: var(--ob-primary);
+            font-size: 1.5rem;
+            margin: 0.5rem 0;
+            padding: 0 1.5rem;
+        }
+
+        .sip-example-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--ob-bg-soft);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .sip-example-table thead {
+            background: linear-gradient(135deg, var(--ob-primary), var(--ob-primary-dark));
+            color: white;
+        }
+
+        .sip-example-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sip-example-table tbody tr {
+            border-bottom: 1px solid var(--ob-border);
+            transition: background 0.2s;
+        }
+
+        .sip-example-table tbody tr:hover {
+            background: rgba(189, 42, 31, 0.05);
+        }
+
+        .sip-example-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .sip-example-table td {
+            padding: 1rem;
+            color: var(--ob-text-main);
+            font-size: 0.95rem;
+        }
+
+        .sip-example-table td strong {
+            color: var(--ob-primary);
+        }
+
+        .sip-example-summary {
+            margin-top: 1.5rem;
+            padding: 1rem 1.5rem;
+            background: rgba(187, 146, 54, 0.1);
+            border-left: 3px solid var(--ob-accent-green);
+            border-radius: 0.5rem;
+            color: var(--ob-text-main);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .sip-example-summary i {
+            color: var(--ob-accent-green);
+            margin-right: 0.5rem;
+        }
+
+        .sip-cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .sip-cta-btn {
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 180px;
+            justify-content: center;
+        }
+
+        .sip-cta-primary {
+            background: linear-gradient(135deg, var(--ob-primary), var(--ob-primary-dark));
+            color: white;
+            box-shadow: 0 4px 12px rgba(189, 42, 31, 0.3);
+        }
+
+        .sip-cta-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(189, 42, 31, 0.4);
+        }
+
+        .sip-cta-secondary {
+            background: var(--ob-bg-soft);
+            color: var(--ob-text-main);
+            border: 2px solid var(--ob-primary);
+        }
+
+        .sip-cta-secondary:hover {
+            background: rgba(189, 42, 31, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .glossary-modal-body {
+                padding: 1.5rem;
+            }
+
+            .formula-main {
+                font-size: 1.2rem;
+            }
+
+            .example-box {
+                padding: 1rem;
+            }
+
+            .video-container {
+                padding-bottom: 56.25%;
+            }
+
+            .sip-step-item {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .sip-step-number {
+                width: 40px;
+                height: 40px;
+                font-size: 1.25rem;
+            }
+
+            .sip-example-table {
+                font-size: 0.85rem;
+            }
+
+            .sip-example-table th,
+            .sip-example-table td {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .sip-cta-buttons {
+                flex-direction: column;
+            }
+
+            .sip-cta-btn {
+                width: 100%;
+            }
         }
 
         .learn-icon {
@@ -1865,6 +2954,12 @@
                 </div>
             </div>
             
+            <!-- Cart Icon -->
+            <div class="notif-badge" id="cartIcon" onclick="viewCart()" title="View Cart">
+                <i class="bi bi-cart"></i>
+                <span class="notif-badge-count hidden" id="cartBadge">0</span>
+            </div>
+            
             <div class="profile-dropdown-container">
                 <div class="profile-avatar" id="userAvatar" onclick="toggleProfileDropdown(event)">
                     <span id="userAvatarText">U</span>
@@ -2031,7 +3126,7 @@
                     <i class="bi bi-shield-check"></i>
                     <span id="riskProfileText">Moderate Investor</span>
                     <span style="font-size: 0.75rem; opacity: 0.8; margin-left: 0.5rem;">
-                        Suited for a mix of equity and debt. You can <a href="#" style="color: inherit; text-decoration: underline;">Retake Risk Quiz</a>.
+                        Suited for a mix of equity and debt. You can <a href="#" onclick="event.preventDefault(); openRiskQuiz();" style="color: inherit; text-decoration: underline; cursor: pointer;">Retake Risk Quiz</a>.
                     </span>
                             </div>
 
@@ -2359,11 +3454,19 @@
                             </div>
                         </div>
 
+                <!-- Fund Recommendations Section (NJ Wealth Style) -->
+                <div id="fundRecommendations" class="mb-5">
+                    <!-- Recommendations will be loaded dynamically -->
+                </div>
+
                 <!-- Fund Cards Grid -->
-                <div id="fundsGrid" class="row g-3">
-                    <div class="col-12 text-center" style="padding: 3rem;">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading funds...</span>
+                <div class="mb-4">
+                    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">All Funds</h3>
+                    <div id="fundsGrid" class="row g-3">
+                        <div class="col-12 text-center" style="padding: 3rem;">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading funds...</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2432,11 +3535,14 @@
                                 <thead>
                                 <tr>
                                     <th>Fund Name</th>
-                                    <th>Monthly Amount</th>
-                                    <th>Months Completed</th>
+                                    <th>Amount</th>
+                                    <th>Frequency</th>
+                                    <th>Status</th>
                                     <th>Total Invested</th>
                                     <th>Current Value</th>
                                     <th>Returns</th>
+                                    <th>XIRR</th>
+                                    <th>Mandate</th>
                                     <th>Actions</th>
                                 </tr>
                                 </thead>
@@ -2495,23 +3601,31 @@
 
                 <!-- Filters -->
                 <div class="chart-container mb-4">
-            <div class="row g-3">
+                    <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem;">Filters</h3>
+                    <div class="row g-3">
                         <div class="col-md-4">
-                            <label class="form-label">Financial Year</label>
+                            <label class="form-label" style="color: var(--ob-text-main);">Financial Year</label>
                             <select class="form-control" id="statementFY" onchange="loadStatements()" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);">
                                 <option value="">Current FY</option>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Date From</label>
-                            <input type="date" class="form-control" id="statementFromDate" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);">
+                            <label class="form-label" style="color: var(--ob-text-main);">Date From</label>
+                            <input type="date" class="form-control" id="statementFromDate" onchange="loadStatements()" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);">
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Date To</label>
-                            <input type="date" class="form-control" id="statementToDate" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);">
+                            <label class="form-label" style="color: var(--ob-text-main);">Date To</label>
+                            <input type="date" class="form-control" id="statementToDate" onchange="loadStatements()" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);">
                         </div>
-                            </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <button class="btn btn-sm btn-outline-secondary" onclick="clearStatementFilters()" style="border: 1px solid var(--ob-border); color: var(--ob-text-main);">
+                                <i class="bi bi-x-circle"></i> Clear Filters
+                            </button>
                         </div>
+                    </div>
+                </div>
 
                 <!-- Statements List -->
                 <div class="chart-container">
@@ -2943,6 +4057,69 @@
     </main>
 </div>
 
+    <!-- NAV Glossary Modal -->
+    <div class="modal fade" id="navGlossaryModal" tabindex="-1" aria-labelledby="navGlossaryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content glossary-modal">
+                <div class="modal-header glossary-modal-header">
+                    <h5 class="modal-title" id="navGlossaryModalLabel">
+                        <i class="bi bi-book"></i> What is NAV?
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body glossary-modal-body" id="navGlossaryContent">
+                    <div class="text-center" style="padding: 2rem;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIP Glossary Modal -->
+    <div class="modal fade" id="sipGlossaryModal" tabindex="-1" aria-labelledby="sipGlossaryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content glossary-modal">
+                <div class="modal-header glossary-modal-header">
+                    <h5 class="modal-title" id="sipGlossaryModalLabel">
+                        <i class="bi bi-play-circle"></i> How SIPs Work
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body glossary-modal-body" id="sipGlossaryContent">
+                    <div class="text-center" style="padding: 2rem;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Equity vs Debt Glossary Modal -->
+    <div class="modal fade" id="equityDebtGlossaryModal" tabindex="-1" aria-labelledby="equityDebtGlossaryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content glossary-modal">
+                <div class="modal-header glossary-modal-header">
+                    <h5 class="modal-title" id="equityDebtGlossaryModalLabel">
+                        <i class="bi bi-file-text"></i> Equity vs Debt
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body glossary-modal-body" id="equityDebtGlossaryContent">
+                    <div class="text-center" style="padding: 2rem;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bottom Navigation (Mobile) -->
     <nav class="bottom-nav">
         <a href="#dashboard" class="bottom-nav-item active">
@@ -3027,43 +4204,247 @@
 
     <!-- SIP Modal -->
     <div class="modal fade" id="sipModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content" style="background: var(--ob-card); border: 1px solid var(--ob-border); color: var(--ob-text-main);">
                 <div class="modal-header" style="border-bottom: 1px solid var(--ob-border);">
                     <h5 class="modal-title">Start SIP</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
                     <form id="sipForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" style="color: var(--ob-text-main);">Fund Name <span style="color: var(--ob-accent-red);">*</span></label>
+                                <input type="text" class="form-control" id="sipFundName" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" placeholder="Enter fund name" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" style="color: var(--ob-text-main);">Investment Amount (₹) <span style="color: var(--ob-accent-red);">*</span></label>
+                                <input type="number" class="form-control" id="sipAmount" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" min="100" step="100" placeholder="Min ₹100" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" style="color: var(--ob-text-main);">Start Date <span style="color: var(--ob-accent-red);">*</span></label>
+                                <input type="date" class="form-control" id="sipStartDate" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" style="color: var(--ob-text-main);">Frequency <span style="color: var(--ob-accent-red);">*</span></label>
+                                <select class="form-control" id="sipFrequency" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" required>
+                                    <option value="MONTHLY">Monthly</option>
+                                    <option value="QUARTERLY">Quarterly</option>
+                                    <option value="WEEKLY">Weekly</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" style="color: var(--ob-text-main);">SIP Type</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sipType" id="sipPerpetual" value="perpetual" checked>
+                                    <label class="form-check-label" for="sipPerpetual" style="color: var(--ob-text-main);">
+                                        Perpetual (Ongoing)
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sipType" id="sipFixed" value="fixed">
+                                    <label class="form-check-label" for="sipFixed" style="color: var(--ob-text-main);">
+                                        Fixed Tenure
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3" id="tenureMonthsContainer" style="display: none;">
+                                <label class="form-label" style="color: var(--ob-text-main);">Tenure (Months)</label>
+                                <input type="number" class="form-control" id="sipTenureMonths" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" min="6" max="120" step="1" placeholder="e.g., 36">
+                            </div>
+                        </div>
                         <div class="mb-3">
-                            <label class="form-label" style="color: var(--ob-text-main);">Fund Name</label>
-                            <input type="text" class="form-control" id="sipFundName" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" placeholder="Enter fund name" required>
-                    </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="sipStepUp" onchange="toggleStepUpOptions()">
+                                <label class="form-check-label" for="sipStepUp" style="color: var(--ob-text-main);">
+                                    Enable Step-Up (Auto-increase investment)
+                                </label>
+                            </div>
+                        </div>
+                        <div id="stepUpOptions" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" style="color: var(--ob-text-main);">Step-Up Amount (₹)</label>
+                                    <input type="number" class="form-control" id="sipStepUpAmount" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" min="0" step="100" placeholder="e.g., 500">
+                                    <small class="text-muted">Amount to increase each time</small>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" style="color: var(--ob-text-main);">Step-Up Frequency</label>
+                                    <select class="form-control" id="sipStepUpFrequency" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);">
+                                        <option value="12">Every 12 months</option>
+                                        <option value="6">Every 6 months</option>
+                                        <option value="24">Every 24 months</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <div class="mb-3">
-                            <label class="form-label" style="color: var(--ob-text-main);">Monthly Amount (₹)</label>
-                            <input type="number" class="form-control" id="sipAmount" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" min="1" step="0.01" placeholder="Enter monthly amount" required>
-                    </div>
-                        <div class="mb-3">
-                            <label class="form-label" style="color: var(--ob-text-main);">Start Date</label>
-                            <input type="date" class="form-control" id="sipStartDate" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" required>
-                    </div>
-                        <div class="mb-3">
-                            <label class="form-label" style="color: var(--ob-text-main);">Frequency</label>
-                            <select class="form-control" id="sipFrequency" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" required>
-                                <option value="MONTHLY">Monthly</option>
-                                <option value="WEEKLY">Weekly</option>
-                            </select>
-                    </div>
+                            <label class="form-label" style="color: var(--ob-text-main);">Link to Goal (Optional)</label>
+                            <input type="text" class="form-control" id="sipGoalName" style="background: var(--ob-bg-soft); border: 1px solid var(--ob-border); color: var(--ob-text-main);" placeholder="e.g., Retirement, Child Education">
+                            <small class="text-muted">Link this SIP to a financial goal</small>
+                        </div>
                         <div id="sipStatus" style="margin-top: 0.75rem; font-size: 0.85rem;"></div>
                     </form>
                 </div>
                 <div class="modal-footer" style="border-top: 1px solid var(--ob-border);">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" form="sipForm" class="btn btn-primary" style="background: var(--ob-primary); border: none;">Submit</button>
+                    <button type="submit" form="sipForm" class="btn btn-primary" style="background: var(--ob-primary); border: none;">Create SIP</button>
                 </div>
         </div>
     </div>
 </div>
+
+    <!-- Risk Quiz Modal -->
+    <div class="modal fade" id="riskQuizModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="background: var(--ob-card); border: 1px solid var(--ob-border); color: var(--ob-text-main);">
+                <div class="modal-header" style="border-bottom: 1px solid var(--ob-border);">
+                    <h5 class="modal-title">
+                        <i class="bi bi-clipboard-check"></i> Risk Profile Assessment
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                    <p style="color: var(--ob-text-soft); margin-bottom: 1.5rem;">
+                        Answer these 5 questions to determine your risk profile. This will help us recommend suitable investment options.
+                    </p>
+                    <form id="riskQuizForm">
+                        <div class="risk-question mb-4">
+                            <label class="form-label" style="font-weight: 600; color: var(--ob-text-main); margin-bottom: 0.75rem;">
+                                1. How would you react if ₹1,00,000 drops to ₹90,000 in a month?
+                            </label>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="q1" id="q1a" value="1" required>
+                                <label class="form-check-label" for="q1a" style="color: var(--ob-text-main);">
+                                    Withdraw everything
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="q1" id="q1b" value="2" required>
+                                <label class="form-check-label" for="q1b" style="color: var(--ob-text-main);">
+                                    Wait and watch
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="q1" id="q1c" value="3" required>
+                                <label class="form-check-label" for="q1c" style="color: var(--ob-text-main);">
+                                    Invest more
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="risk-question mb-4">
+                            <label class="form-label" style="font-weight: 600; color: var(--ob-text-main); margin-bottom: 0.75rem;">
+                                2. What is your primary investment goal?
+                            </label>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="q2" id="q2a" value="1" required>
+                                <label class="form-check-label" for="q2a" style="color: var(--ob-text-main);">
+                                    Capital protection
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="q2" id="q2b" value="2" required>
+                                <label class="form-check-label" for="q2b" style="color: var(--ob-text-main);">
+                                    Moderate growth
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="q2" id="q2c" value="3" required>
+                                <label class="form-check-label" for="q2c" style="color: var(--ob-text-main);">
+                                    High returns
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="risk-question mb-4">
+                            <label class="form-label" style="font-weight: 600; color: var(--ob-text-main); margin-bottom: 0.75rem;">
+                                3. What is your investment horizon?
+                            </label>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="q3" id="q3a" value="1" required>
+                                <label class="form-check-label" for="q3a" style="color: var(--ob-text-main);">
+                                    Less than 1 year
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="q3" id="q3b" value="2" required>
+                                <label class="form-check-label" for="q3b" style="color: var(--ob-text-main);">
+                                    1–3 years
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="q3" id="q3c" value="3" required>
+                                <label class="form-check-label" for="q3c" style="color: var(--ob-text-main);">
+                                    More than 3 years
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="risk-question mb-4">
+                            <label class="form-label" style="font-weight: 600; color: var(--ob-text-main); margin-bottom: 0.75rem;">
+                                4. What percentage of your income can you invest?
+                            </label>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="q4" id="q4a" value="1" required>
+                                <label class="form-check-label" for="q4a" style="color: var(--ob-text-main);">
+                                    Less than 10%
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="q4" id="q4b" value="2" required>
+                                <label class="form-check-label" for="q4b" style="color: var(--ob-text-main);">
+                                    10–30%
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="q4" id="q4c" value="3" required>
+                                <label class="form-check-label" for="q4c" style="color: var(--ob-text-main);">
+                                    More than 30%
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="risk-question mb-4">
+                            <label class="form-label" style="font-weight: 600; color: var(--ob-text-main); margin-bottom: 0.75rem;">
+                                5. What is your monthly income range?
+                            </label>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="q5" id="q5a" value="1" required>
+                                <label class="form-check-label" for="q5a" style="color: var(--ob-text-main);">
+                                    Less than ₹25,000
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="q5" id="q5b" value="2" required>
+                                <label class="form-check-label" for="q5b" style="color: var(--ob-text-main);">
+                                    ₹25,000–₹75,000
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="q5" id="q5c" value="3" required>
+                                <label class="form-check-label" for="q5c" style="color: var(--ob-text-main);">
+                                    More than ₹75,000
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="riskQuizStatus" style="margin-top: 1rem; font-size: 0.85rem;"></div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="border-top: 1px solid var(--ob-border);">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="submitRiskQuiz()" style="background: var(--ob-primary); border: none;">
+                        <i class="bi bi-check-circle"></i> Submit Quiz
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Nominee Modal -->
     <div class="modal fade" id="nomineeModal" tabindex="-1">
@@ -3578,16 +4959,47 @@
             try {
         const res = await fetch(url, {
             method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
                     body: JSON.stringify(payload)
                 });
+                
+                const contentType = res.headers.get('content-type');
                 if (!res.ok) {
-                    const errorText = await res.text();
-                    throw new Error(`HTTP ${res.status}: ${errorText || res.statusText}`);
+                    let errorMessage = `HTTP ${res.status}: ${res.statusText}`;
+                    try {
+                        if (contentType && contentType.includes('application/json')) {
+                            const errorJson = await res.json();
+                            errorMessage = errorJson.error || errorJson.message || errorMessage;
+                        } else {
+                            const errorText = await res.text();
+                            if (errorText) errorMessage = errorText;
+                        }
+                    } catch (e) {
+                        // If parsing fails, use status text
+                    }
+                    throw new Error(errorMessage);
+                }
+                
+                // Handle empty response or JSON response
+                if (contentType && contentType.includes('application/json')) {
+                    const text = await res.text();
+                    if (text && text.trim()) {
+                        try {
+                            return JSON.parse(text);
+                        } catch (e) {
+                            return {};
+                        }
+                    }
+                    return {};
                 }
                 return await res.json();
             } catch (error) {
                 console.error('API POST Error:', error);
+                console.error('URL:', url);
+                console.error('Payload:', payload);
                 throw error;
             }
         }
@@ -4191,28 +5603,49 @@
             });
 
             document.getElementById('sipForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+                e.preventDefault();
                 const statusEl = document.getElementById('sipStatus');
                 statusEl.textContent = 'Creating SIP...';
                 statusEl.style.color = 'var(--ob-text-soft)';
                 
                 try {
-                    await apiPost(`${API_BASE_GENERIC}/sip/request`, {
-                userId: currentUserId,
+                    const isPerpetual = document.getElementById('sipPerpetual').checked;
+                    const payload = {
+                        userId: currentUserId,
                         fundName: document.getElementById('sipFundName').value,
-                amount: Number(document.getElementById('sipAmount').value),
-                startDate: document.getElementById('sipStartDate').value,
-                        frequency: document.getElementById('sipFrequency').value
-                    });
-                    statusEl.textContent = 'SIP created successfully!';
+                        amount: Number(document.getElementById('sipAmount').value),
+                        startDate: document.getElementById('sipStartDate').value,
+                        frequency: document.getElementById('sipFrequency').value,
+                        isPerpetual: isPerpetual,
+                        tenureMonths: isPerpetual ? null : Number(document.getElementById('sipTenureMonths').value),
+                        stepUpAmount: document.getElementById('sipStepUp').checked ? 
+                            Number(document.getElementById('sipStepUpAmount').value) : null,
+                        stepUpFrequencyMonths: document.getElementById('sipStepUp').checked ? 
+                            Number(document.getElementById('sipStepUpFrequency').value) : null,
+                        goalName: document.getElementById('sipGoalName').value || null
+                    };
+                    
+                    await apiPost(`${API_BASE_GENERIC}/sip/request`, payload);
+                    statusEl.textContent = 'SIP created successfully! Mandate registration in progress.';
                     statusEl.style.color = 'var(--ob-accent-green)';
-                bootstrap.Modal.getInstance(document.getElementById('sipModal')).hide();
+                    bootstrap.Modal.getInstance(document.getElementById('sipModal')).hide();
                     document.getElementById('sipForm').reset();
-                    setTimeout(loadDashboard, 500);
+                    setTimeout(() => {
+                        loadSipsData();
+                        loadDashboard();
+                    }, 500);
                 } catch (error) {
                     statusEl.textContent = 'Failed: ' + error.message;
                     statusEl.style.color = 'var(--ob-accent-red)';
                 }
+            });
+            
+            // Toggle tenure months field based on SIP type
+            document.getElementById('sipPerpetual').addEventListener('change', function() {
+                document.getElementById('tenureMonthsContainer').style.display = 'none';
+            });
+            document.getElementById('sipFixed').addEventListener('change', function() {
+                document.getElementById('tenureMonthsContainer').style.display = 'block';
             });
 
             document.getElementById('nomineeForm').addEventListener('submit', async function(e) {
@@ -4253,8 +5686,620 @@
             alert('View all funds feature coming soon!');
         }
 
-        function showLearnContent(type) {
-            alert(`Learn content for ${type} coming soon!`);
+        async function showLearnContent(type) {
+            if (type === 'nav') {
+                await loadNavGlossary();
+            } else if (type === 'sip') {
+                await loadSipGlossary();
+            } else if (type === 'equity') {
+                await loadEquityDebtGlossary();
+            } else {
+                alert(`Learn content for ${type} coming soon!`);
+            }
+        }
+
+        async function loadNavGlossary() {
+            const modal = document.getElementById('navGlossaryModal');
+            const content = document.getElementById('navGlossaryContent');
+            
+            if (!modal || !content) return;
+
+            // Show loading state
+            content.innerHTML = `
+                <div class="text-center" style="padding: 2rem;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `;
+
+            // Open modal
+            const bsModal = new bootstrap.Modal(modal);
+            bsModal.show();
+
+            try {
+                // Fetch glossary data from API
+                const data = await apiGet('/api/glossary/nav');
+                renderNavGlossary(data);
+            } catch (error) {
+                console.error('Error loading NAV glossary:', error);
+                content.innerHTML = `
+                    <div class="alert alert-danger" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: var(--ob-accent-red); padding: 1rem; border-radius: 0.75rem;">
+                        <i class="bi bi-exclamation-triangle"></i> Failed to load glossary content. Please try again later.
+                    </div>
+                `;
+            }
+        }
+
+        function renderNavGlossary(data) {
+            const content = document.getElementById('navGlossaryContent');
+            if (!content || !data) return;
+
+            const lastUpdated = data.lastUpdated ? new Date(data.lastUpdated).toLocaleDateString('en-IN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            }) : 'N/A';
+
+            let html = `
+                <!-- Definition -->
+                <div class="glossary-section">
+                    <h6 class="glossary-section-title">
+                        <i class="bi bi-info-circle"></i> Definition
+                    </h6>
+                    <p class="glossary-text">${data.definition || ''}</p>
+                </div>
+
+                <!-- Formula -->
+                <div class="glossary-section">
+                    <h6 class="glossary-section-title">
+                        <i class="bi bi-calculator"></i> Formula
+                    </h6>
+                    <div class="formula-box">
+                        <div class="formula-main">${data.formula || ''}</div>
+                        ${data.formulaExplanation ? `<p class="formula-explanation">${data.formulaExplanation}</p>` : ''}
+                    </div>
+                </div>
+
+                <!-- Example -->
+                ${data.example ? `
+                <div class="glossary-section">
+                    <h6 class="glossary-section-title">
+                        <i class="bi bi-lightbulb"></i> Example
+                    </h6>
+                    <div class="example-box">
+                        <p class="example-scenario"><strong>${data.example.scenario || ''}</strong></p>
+                        <div class="example-calculation">
+                            <div class="example-row">
+                                <span>Total Assets:</span>
+                                <strong>${formatCurrency(data.example.totalAssets || 0)}</strong>
+                            </div>
+                            <div class="example-row">
+                                <span>Total Liabilities:</span>
+                                <strong>${formatCurrency(data.example.totalLiabilities || 0)}</strong>
+                            </div>
+                            <div class="example-row">
+                                <span>Total Units:</span>
+                                <strong>${(data.example.totalUnits || 0).toLocaleString('en-IN')}</strong>
+                            </div>
+                            <div class="example-divider"></div>
+                            <div class="example-row example-result">
+                                <span>NAV:</span>
+                                <strong>₹${(data.example.calculatedNav || 0).toFixed(2)}</strong>
+                            </div>
+                        </div>
+                        ${data.example.explanation ? `<p class="example-explanation">${data.example.explanation}</p>` : ''}
+                    </div>
+                </div>
+                ` : ''}
+
+                <!-- FAQs -->
+                ${data.faqs && data.faqs.length > 0 ? `
+                <div class="glossary-section">
+                    <h6 class="glossary-section-title">
+                        <i class="bi bi-question-circle"></i> Frequently Asked Questions
+                    </h6>
+                    <div class="faq-list">
+                        ${data.faqs.map((faq, index) => `
+                            <div class="faq-item">
+                                <div class="faq-question">
+                                    <strong>Q${index + 1}:</strong> ${faq.question || ''}
+                                </div>
+                                <div class="faq-answer">
+                                    <strong>A:</strong> ${faq.answer || ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+
+                <!-- Last Updated -->
+                <div class="glossary-footer">
+                    <small style="color: var(--ob-text-soft);">
+                        <i class="bi bi-clock"></i> Last Updated: ${lastUpdated}
+                    </small>
+                </div>
+            `;
+
+            content.innerHTML = html;
+        }
+
+        async function loadSipGlossary() {
+            const modal = document.getElementById('sipGlossaryModal');
+            const content = document.getElementById('sipGlossaryContent');
+            
+            if (!modal || !content) return;
+
+            // Show loading state
+            content.innerHTML = `
+                <div class="text-center" style="padding: 2rem;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `;
+
+            // Open modal
+            const bsModal = new bootstrap.Modal(modal);
+            bsModal.show();
+
+            try {
+                // Fetch glossary data from API
+                const data = await apiGet('/api/glossary/sip');
+                renderSipGlossary(data);
+            } catch (error) {
+                console.error('Error loading SIP glossary:', error);
+                content.innerHTML = `
+                    <div class="alert alert-danger" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: var(--ob-accent-red); padding: 1rem; border-radius: 0.75rem;">
+                        <i class="bi bi-exclamation-triangle"></i> Failed to load glossary content. Please try again later.
+                    </div>
+                `;
+            }
+        }
+
+        function renderSipGlossary(data) {
+            const content = document.getElementById('sipGlossaryContent');
+            if (!content || !data) return;
+
+            const lastUpdated = data.lastUpdated ? new Date(data.lastUpdated).toLocaleDateString('en-IN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            }) : 'N/A';
+
+            let html = `
+                <!-- Description -->
+                <div class="glossary-section">
+                    <p class="glossary-text" style="font-size: 1.1rem; margin-bottom: 1.5rem;">${data.description || ''}</p>
+                </div>
+
+                <!-- Video -->
+                <div class="glossary-section">
+                    <h6 class="glossary-section-title">
+                        <i class="bi bi-play-circle"></i> 1-Minute Explainer Video
+                    </h6>
+                    <div class="video-container">
+                        ${data.videoUrl && typeof data.videoUrl === 'string' && data.videoUrl.trim() !== '' && data.videoUrl !== 'null' ? (
+                            data.videoUrl.includes('instagram.com/reel') ? `
+                            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; min-height: 500px;">
+                                ${data.videoThumbnail ? `
+                                <iframe 
+                                    src="${data.videoThumbnail}" 
+                                    width="100%" 
+                                    height="100%" 
+                                    style="border:0; border-radius: 0.75rem;"
+                                    scrolling="no" 
+                                    allowtransparency="true" 
+                                    allow="encrypted-media"
+                                    loading="lazy">
+                                </iframe>
+                                ` : `
+                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 90%;">
+                                    <div style="background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); padding: 2rem; border-radius: 1rem; margin-bottom: 1rem;">
+                                        <i class="bi bi-instagram" style="font-size: 3rem; color: white; margin-bottom: 1rem;"></i>
+                                        <p style="color: white; font-weight: 600; margin-bottom: 0.5rem;">Watch the SIP Explainer Video</p>
+                                    </div>
+                                    <a href="${data.videoUrl}" target="_blank" rel="noopener noreferrer" 
+                                       style="background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; padding: 0.75rem 1.5rem; border-radius: 0.5rem; text-decoration: none; font-size: 1rem; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                                        <i class="bi bi-play-fill"></i> Watch on Instagram
+                                    </a>
+                                </div>
+                                `}
+                            </div>
+                            ` : data.videoUrl.includes('youtube.com/embed') || data.videoUrl.includes('youtu.be') ? `
+                            <iframe 
+                                width="100%" 
+                                height="100%" 
+                                src="${data.videoUrl}" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                            </iframe>
+                            ` : `
+                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: var(--ob-text-soft); padding: 2rem; width: 90%;">
+                                <i class="bi bi-play-circle" style="font-size: 4rem; margin-bottom: 1rem; display: block; color: var(--ob-primary);"></i>
+                                <p style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--ob-text-main); font-weight: 600;">Video Available</p>
+                                <a href="${data.videoUrl}" target="_blank" rel="noopener noreferrer" 
+                                   style="background: var(--ob-primary); color: white; padding: 0.75rem 1.5rem; border-radius: 0.5rem; text-decoration: none; display: inline-block; margin-top: 1rem;">
+                                    <i class="bi bi-play-fill"></i> Watch Video
+                                </a>
+                            </div>
+                            `
+                        ) : `
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: var(--ob-text-soft); padding: 2rem; width: 90%;">
+                            <i class="bi bi-play-circle" style="font-size: 4rem; margin-bottom: 1rem; display: block; color: var(--ob-primary);"></i>
+                            <p style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--ob-text-main); font-weight: 600;">Video Coming Soon</p>
+                            <small style="color: var(--ob-text-soft); line-height: 1.6;">We're working on adding an explainer video. In the meantime, check out the step-by-step guide below!</small>
+                        </div>
+                        `}
+                    </div>
+                </div>
+
+                <!-- Step-by-Step Flow -->
+                ${data.steps && data.steps.length > 0 ? `
+                <div class="glossary-section">
+                    <h6 class="glossary-section-title">
+                        <i class="bi bi-list-ol"></i> Step-by-Step SIP Flow
+                    </h6>
+                    <div class="sip-steps-container">
+                        ${data.steps.map((step, index) => `
+                            <div class="sip-step-item">
+                                <div class="sip-step-number">${step.stepNumber || index + 1}</div>
+                                <div class="sip-step-content">
+                                    <div class="sip-step-header">
+                                        <i class="bi ${step.icon || 'bi-circle'}"></i>
+                                        <strong>${step.title || ''}</strong>
+                                    </div>
+                                    <p class="sip-step-description">${step.description || ''}</p>
+                                </div>
+                            </div>
+                            ${index < data.steps.length - 1 ? '<div class="sip-step-connector"><i class="bi bi-arrow-down"></i></div>' : ''}
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+
+                <!-- SIP Example Table -->
+                ${data.exampleTable ? `
+                <div class="glossary-section">
+                    <h6 class="glossary-section-title">
+                        <i class="bi bi-table"></i> SIP Example
+                    </h6>
+                    <p class="example-scenario" style="margin-bottom: 1rem;"><strong>${data.exampleTable.scenario || ''}</strong></p>
+                    <div class="table-responsive">
+                        <table class="sip-example-table">
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <th>Investment</th>
+                                    <th>NAV</th>
+                                    <th>Units</th>
+                                    <th>Total Units</th>
+                                    <th>Total Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.exampleTable.rows ? data.exampleTable.rows.map(row => `
+                                    <tr>
+                                        <td><strong>${row.month || ''}</strong></td>
+                                        <td>${formatCurrency(row.investment || 0)}</td>
+                                        <td>${formatCurrency(row.nav || 0)}</td>
+                                        <td>${(row.units || 0).toFixed(2)}</td>
+                                        <td>${(row.totalUnits || 0).toFixed(2)}</td>
+                                        <td><strong>${formatCurrency(row.totalValue || 0)}</strong></td>
+                                    </tr>
+                                `).join('') : ''}
+                            </tbody>
+                        </table>
+                    </div>
+                    ${data.exampleTable.summary ? `
+                    <div class="sip-example-summary">
+                        <i class="bi bi-info-circle"></i> ${data.exampleTable.summary}
+                    </div>
+                    ` : ''}
+                </div>
+                ` : ''}
+
+                <!-- FAQs -->
+                ${data.faqs && data.faqs.length > 0 ? `
+                <div class="glossary-section">
+                    <h6 class="glossary-section-title">
+                        <i class="bi bi-question-circle"></i> Frequently Asked Questions
+                    </h6>
+                    <div class="faq-list">
+                        ${data.faqs.map((faq, index) => `
+                            <div class="faq-item">
+                                <div class="faq-question">
+                                    <strong>Q${index + 1}:</strong> ${faq.question || ''}
+                                </div>
+                                <div class="faq-answer">
+                                    <strong>A:</strong> ${faq.answer || ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+
+                <!-- CTA Buttons -->
+                <div class="glossary-section" style="margin-top: 2.5rem;">
+                    <div class="sip-cta-buttons">
+                        <button class="sip-cta-btn sip-cta-primary" onclick="openSipModal()">
+                            <i class="bi bi-arrow-repeat"></i> Start SIP
+                        </button>
+                        <button class="sip-cta-btn sip-cta-secondary" onclick="window.location.hash='#explore'; bootstrap.Modal.getInstance(document.getElementById('sipGlossaryModal')).hide();">
+                            <i class="bi bi-compass"></i> Explore Funds
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Last Updated -->
+                <div class="glossary-footer">
+                    <small style="color: var(--ob-text-soft);">
+                        <i class="bi bi-clock"></i> Last Updated: ${lastUpdated}
+                    </small>
+                </div>
+            `;
+
+            content.innerHTML = html;
+        }
+
+        function openSipModal() {
+            const sipModal = document.getElementById('sipModal');
+            if (sipModal) {
+                bootstrap.Modal.getInstance(document.getElementById('sipGlossaryModal')).hide();
+                setTimeout(() => {
+                    const bsModal = new bootstrap.Modal(sipModal);
+                    bsModal.show();
+                }, 300);
+            } else {
+                window.location.hash = '#sips';
+                bootstrap.Modal.getInstance(document.getElementById('sipGlossaryModal')).hide();
+            }
+        }
+
+        async function loadEquityDebtGlossary() {
+            const modal = document.getElementById('equityDebtGlossaryModal');
+            const content = document.getElementById('equityDebtGlossaryContent');
+            
+            if (!modal || !content) return;
+
+            // Show loading state
+            content.innerHTML = `
+                <div class="text-center" style="padding: 2rem;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `;
+
+            // Open modal
+            const bsModal = new bootstrap.Modal(modal);
+            bsModal.show();
+
+            try {
+                // Fetch glossary data from API
+                const data = await apiGet('/api/glossary/equity-debt');
+                renderEquityDebtGlossary(data);
+            } catch (error) {
+                console.error('Error loading Equity vs Debt glossary:', error);
+                content.innerHTML = `
+                    <div class="text-center" style="padding: 2rem; color: var(--ob-accent-red);">
+                        <i class="bi bi-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                        <p>Failed to load content. Please try again later.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function renderEquityDebtGlossary(data) {
+            const content = document.getElementById('equityDebtGlossaryContent');
+            if (!content || !data) return;
+
+            const lastUpdated = data.lastUpdated ? new Date(data.lastUpdated).toLocaleDateString('en-IN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            }) : 'N/A';
+
+            const comparison = data.comparison;
+            const equity = comparison.equity;
+            const debt = comparison.debt;
+
+            let html = `
+                <!-- Description -->
+                <div class="glossary-section">
+                    <p class="glossary-text" style="font-size: 1.1rem; margin-bottom: 1.5rem;">${data.description || ''}</p>
+                </div>
+
+                <!-- Side-by-Side Comparison -->
+                <div class="glossary-section">
+                    <h6 class="glossary-section-title">
+                        <i class="bi bi-arrow-left-right"></i> Quick Comparison
+                    </h6>
+                    <div class="row" style="margin-top: 1.5rem;">
+                        <!-- Equity Card -->
+                        <div class="col-md-6 mb-3">
+                            <div class="equity-debt-card equity-card">
+                                <div class="equity-debt-header">
+                                    <i class="bi bi-graph-up-arrow"></i>
+                                    <h6>Equity Funds</h6>
+                                </div>
+                                <div class="equity-debt-body">
+                                    <p class="equity-debt-definition">${equity.definition || ''}</p>
+                                    <div class="equity-debt-metrics">
+                                        <div class="metric-item">
+                                            <span class="metric-label">Risk Level:</span>
+                                            <span class="metric-value risk-high">${equity.riskLevel || ''}</span>
+                                        </div>
+                                        <div class="metric-item">
+                                            <span class="metric-label">Returns:</span>
+                                            <span class="metric-value returns-high">${equity.returns || ''}</span>
+                                        </div>
+                                        <div class="metric-item">
+                                            <span class="metric-label">Time Horizon:</span>
+                                            <span class="metric-value">${equity.timeHorizon || ''}</span>
+                                        </div>
+                                    </div>
+                                    <div class="pros-cons">
+                                        <div class="pros">
+                                            <strong><i class="bi bi-check-circle-fill text-success"></i> Pros:</strong>
+                                            <ul>
+                                                ${equity.pros ? equity.pros.map(pro => `<li>${pro}</li>`).join('') : ''}
+                                            </ul>
+                                        </div>
+                                        <div class="cons">
+                                            <strong><i class="bi bi-x-circle-fill text-danger"></i> Cons:</strong>
+                                            <ul>
+                                                ${equity.cons ? equity.cons.map(con => `<li>${con}</li>`).join('') : ''}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Debt Card -->
+                        <div class="col-md-6 mb-3">
+                            <div class="equity-debt-card debt-card">
+                                <div class="equity-debt-header">
+                                    <i class="bi bi-shield-check"></i>
+                                    <h6>Debt Funds</h6>
+                                </div>
+                                <div class="equity-debt-body">
+                                    <p class="equity-debt-definition">${debt.definition || ''}</p>
+                                    <div class="equity-debt-metrics">
+                                        <div class="metric-item">
+                                            <span class="metric-label">Risk Level:</span>
+                                            <span class="metric-value risk-low">${debt.riskLevel || ''}</span>
+                                        </div>
+                                        <div class="metric-item">
+                                            <span class="metric-label">Returns:</span>
+                                            <span class="metric-value returns-low">${debt.returns || ''}</span>
+                                        </div>
+                                        <div class="metric-item">
+                                            <span class="metric-label">Time Horizon:</span>
+                                            <span class="metric-value">${debt.timeHorizon || ''}</span>
+                                        </div>
+                                    </div>
+                                    <div class="pros-cons">
+                                        <div class="pros">
+                                            <strong><i class="bi bi-check-circle-fill text-success"></i> Pros:</strong>
+                                            <ul>
+                                                ${debt.pros ? debt.pros.map(pro => `<li>${pro}</li>`).join('') : ''}
+                                            </ul>
+                                        </div>
+                                        <div class="cons">
+                                            <strong><i class="bi bi-x-circle-fill text-danger"></i> Cons:</strong>
+                                            <ul>
+                                                ${debt.cons ? debt.cons.map(con => `<li>${con}</li>`).join('') : ''}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Comparison Table -->
+                ${comparison.comparisonTable && comparison.comparisonTable.rows ? `
+                <div class="glossary-section">
+                    <h6 class="glossary-section-title">
+                        <i class="bi bi-table"></i> Detailed Comparison
+                    </h6>
+                    <div class="table-responsive" style="margin-top: 1rem;">
+                        <table class="table table-bordered comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Aspect</th>
+                                    <th class="equity-col">Equity</th>
+                                    <th class="debt-col">Debt</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${comparison.comparisonTable.rows.map(row => `
+                                    <tr>
+                                        <td><strong>${row.aspect || ''}</strong></td>
+                                        <td class="equity-col">${row.equity || ''}</td>
+                                        <td class="debt-col">${row.debt || ''}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                ` : ''}
+
+                <!-- When to Choose -->
+                ${data.whenToChoose && data.whenToChoose.length > 0 ? `
+                <div class="glossary-section">
+                    <h6 class="glossary-section-title">
+                        <i class="bi bi-lightbulb"></i> When to Choose What?
+                    </h6>
+                    <div class="when-to-choose-container" style="margin-top: 1rem;">
+                        ${data.whenToChoose.map(item => `
+                            <div class="when-to-choose-item ${item.type.toLowerCase()}-item">
+                                <div class="when-to-choose-header">
+                                    <i class="bi ${item.type === 'EQUITY' ? 'bi-graph-up-arrow' : item.type === 'DEBT' ? 'bi-shield-check' : 'bi-balance'}"></i>
+                                    <strong>${item.type === 'BOTH' ? 'Balanced Approach' : item.type}</strong>
+                                </div>
+                                <div class="when-to-choose-body">
+                                    <p class="scenario"><strong>${item.scenario || ''}</strong></p>
+                                    <p class="explanation">${item.explanation || ''}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+
+                <!-- FAQs -->
+                ${data.faqs && data.faqs.length > 0 ? `
+                <div class="glossary-section">
+                    <h6 class="glossary-section-title">
+                        <i class="bi bi-question-circle"></i> Frequently Asked Questions
+                    </h6>
+                    <div class="faq-container" style="margin-top: 1rem;">
+                        ${data.faqs.map((faq, index) => `
+                            <div class="faq-item">
+                                <div class="faq-question" data-bs-toggle="collapse" data-bs-target="#faq-${index}" aria-expanded="false">
+                                    <i class="bi bi-chevron-right"></i>
+                                    <span>${faq.question || ''}</span>
+                                </div>
+                                <div class="collapse" id="faq-${index}">
+                                    <div class="faq-answer">
+                                        ${faq.answer || ''}
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+
+                <!-- Footer -->
+                <div class="glossary-footer">
+                    <small class="text-muted">
+                        <i class="bi bi-info-circle"></i> Last updated: ${lastUpdated}
+                    </small>
+                </div>
+            `;
+
+            content.innerHTML = html;
+
+            // Initialize Bootstrap collapse for FAQs
+            const faqQuestions = content.querySelectorAll('.faq-question');
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    const icon = this.querySelector('.bi-chevron-right');
+                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                    if (icon) {
+                        icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(90deg)';
+                    }
+                });
+            });
         }
 
         // Initialize
@@ -4370,6 +6415,7 @@
                 } else if (hash === 'sips') {
                     loadSipsData();
                 } else if (hash === 'statements') {
+                    initializeStatements();
                     loadStatements();
                 } else if (hash === 'help') {
                     loadHelpData();
@@ -4571,19 +6617,737 @@
             });
         }
 
-        // ========== EXPLORE FUNDS ==========
+        // ========== EXPLORE FUNDS (Enhanced NJ Wealth Style) ==========
         let currentFundGoal = null;
         let sipProjectionChart = null;
+        let allFunds = []; // Store all funds for client-side filtering
+        let allAMCs = []; // Store all AMCs for filtering
+        let fundRecommendations = []; // Store recommendations
+        let cartData = null; // Store cart data
+        let fundHierarchy = null; // Store AMC → Fund → Plan hierarchy
 
         async function loadExploreFunds() {
             if (!currentUserId) return;
             try {
+                // Load recommendations first (always show, no empty states)
+                await loadFundRecommendations();
+                
+                // Load funds
                 const funds = await apiGet(`/api/explore/funds/${currentUserId}`);
-                renderFunds(funds || []);
+                allFunds = funds || [];
+                
+                // If no funds, show recommendations only
+                if (allFunds.length === 0) {
+                    document.getElementById('fundsGrid').innerHTML = 
+                        '<div class="col-12 text-center" style="padding: 2rem; color: var(--ob-text-soft);">' +
+                        '<p>No funds found. Check out our recommendations below!</p>' +
+                        '</div>';
+                } else {
+                    renderFunds(allFunds);
+                }
+                
+                // Load AMCs for filter dropdown
+                await loadAMCs();
+                
+                // Load cart
+                await loadCart();
             } catch (error) {
                 console.error('Error loading funds:', error);
+                // Show recommendations even on error
+                await loadFundRecommendations();
                 document.getElementById('fundsGrid').innerHTML = 
-                    '<div class="col-12 text-center" style="padding: 3rem; color: var(--ob-text-soft);">Error loading funds. Please try again.</div>';
+                    '<div class="col-12 text-center" style="padding: 3rem; color: var(--ob-text-soft);">Error loading funds. Check out our recommendations below!</div>';
+            }
+        }
+
+        // Load fund recommendations (goal-based, risk-based, popular, top performers)
+        async function loadFundRecommendations() {
+            if (!currentUserId) return;
+            try {
+                const recommendations = await apiGet(`/api/explore/recommendations/${currentUserId}`);
+                fundRecommendations = recommendations || [];
+                renderRecommendations(fundRecommendations);
+            } catch (error) {
+                console.error('Error loading recommendations:', error);
+                // Show fallback recommendations
+                renderFallbackRecommendations();
+            }
+        }
+
+        // Render recommendations section
+        function renderRecommendations(recommendations) {
+            const container = document.getElementById('fundRecommendations');
+            if (!container) return;
+
+            if (!recommendations || recommendations.length === 0) {
+                renderFallbackRecommendations();
+                return;
+            }
+
+            let html = '';
+            recommendations.forEach(rec => {
+                // Ensure we always have funds to show
+                const fundsToShow = (rec.funds && rec.funds.length > 0) ? rec.funds : getDefaultFunds();
+                
+                html += `
+                    <div class="recommendation-section mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h5 class="mb-1">${rec.title || 'Recommended Funds'}</h5>
+                                <p class="text-muted small mb-0">${rec.description || ''}</p>
+                            </div>
+                        </div>
+                        <div class="row g-3">
+                            ${fundsToShow.map(fund => `
+                                <div class="col-md-4 col-sm-6">
+                                    <div class="fund-card-enhanced">
+                                        <div class="fund-card-header">
+                                            <div class="fund-name-section">
+                                                <h6 class="fund-name">${safeText(fund.fundName || 'Fund')}</h6>
+                                                <span class="fund-amc">${safeText(fund.amcName || 'N/A')}</span>
+                                            </div>
+                                            <div class="fund-rating">
+                                                ${renderStarRating(fund.starRating || 3)}
+                                                <span class="fund-score">${(fund.fundScore || 0).toFixed(0)}</span>
+                                            </div>
+                                        </div>
+                                        <p class="fund-tagline">${safeText(fund.tagline || 'Build wealth systematically')}</p>
+                                        <div class="fund-metrics">
+                                            <div class="metric">
+                                                <span class="metric-label">1Y Returns</span>
+                                                <span class="metric-value positive">${(fund.oneYearReturn || 0).toFixed(2)}%</span>
+                                            </div>
+                                            <div class="metric">
+                                                <span class="metric-label">Risk</span>
+                                                <span class="risk-badge-small ${(fund.risk || 'MEDIUM').toLowerCase()}">${fund.risk || 'MEDIUM'}</span>
+                                            </div>
+                                        </div>
+                                        <div class="fund-recommendation-reason">
+                                            <i class="bi bi-info-circle"></i> ${safeText(fund.recommendationReason || 'Recommended for you')}
+                                        </div>
+                                        <div class="fund-actions">
+                                            <button class="btn btn-sm btn-outline-primary" onclick="viewFundDetail(${fund.fundId})">
+                                                <i class="bi bi-eye"></i> View Details
+                                            </button>
+                                            <button class="btn btn-sm btn-primary" onclick="addToCartFromRecommendation(${fund.fundId})">
+                                                <i class="bi bi-cart-plus"></i> Add to Cart
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+        
+        // Get default funds for fallback
+        function getDefaultFunds() {
+            return [
+                {
+                    fundId: 1,
+                    fundName: 'HDFC Equity Fund - Direct Growth',
+                    amcName: 'HDFC Asset Management Company Limited',
+                    type: 'Equity',
+                    risk: 'HIGH',
+                    fundScore: 85,
+                    starRating: 5,
+                    oneYearReturn: 18.5,
+                    nav: 105.50,
+                    tagline: 'Long-term wealth creation through equity',
+                    recommendationReason: 'Top performing fund with consistent returns',
+                    isRecommended: true,
+                    isPopular: true
+                },
+                {
+                    fundId: 2,
+                    fundName: 'ICICI Prudential Bluechip Fund - Direct Growth',
+                    amcName: 'ICICI Prudential Asset Management Company Limited',
+                    type: 'Equity',
+                    risk: 'MEDIUM',
+                    fundScore: 78,
+                    starRating: 4,
+                    oneYearReturn: 16.2,
+                    nav: 98.75,
+                    tagline: 'Invest in India\'s leading companies',
+                    recommendationReason: 'Top performing fund with consistent returns',
+                    isRecommended: true,
+                    isPopular: true
+                },
+                {
+                    fundId: 3,
+                    fundName: 'SBI Large & Midcap Fund - Direct Growth',
+                    amcName: 'SBI Funds Management Private Limited',
+                    type: 'Equity',
+                    risk: 'HIGH',
+                    fundScore: 82,
+                    starRating: 5,
+                    oneYearReturn: 17.8,
+                    nav: 112.30,
+                    tagline: 'Balance of large and mid-cap opportunities',
+                    recommendationReason: 'Top performing fund with consistent returns',
+                    isRecommended: true,
+                    isPopular: true
+                }
+            ];
+        }
+
+        // Fallback recommendations if API fails
+        function renderFallbackRecommendations() {
+            const container = document.getElementById('fundRecommendations');
+            if (!container) return;
+
+            container.innerHTML = `
+                <div class="recommendation-section mb-4">
+                    <h5 class="mb-3">Recommended Funds</h5>
+                    <div class="row g-3">
+                        <div class="col-md-4 col-sm-6">
+                            <div class="fund-card-enhanced">
+                                <div class="fund-card-header">
+                                    <div class="fund-name-section">
+                                        <h6 class="fund-name">HDFC Equity Fund</h6>
+                                        <span class="fund-amc">HDFC AMC</span>
+                                    </div>
+                                    <div class="fund-rating">
+                                        ${renderStarRating(5)}
+                                        <span class="fund-score">85</span>
+                                    </div>
+                                </div>
+                                <p class="fund-tagline">Long-term wealth creation</p>
+                                <div class="fund-metrics">
+                                    <div class="metric">
+                                        <span class="metric-label">1Y Returns</span>
+                                        <span class="metric-value positive">18.5%</span>
+                                    </div>
+                                    <div class="metric">
+                                        <span class="metric-label">Risk</span>
+                                        <span class="risk-badge-small high">HIGH</span>
+                                    </div>
+                                </div>
+                                <div class="fund-recommendation-reason">
+                                    <i class="bi bi-info-circle"></i> Top performer with consistent returns
+                                </div>
+                                <div class="fund-actions">
+                                    <button class="btn btn-sm btn-outline-primary" onclick="alert('Fund details coming soon')">
+                                        <i class="bi bi-eye"></i> View Details
+                                    </button>
+                                    <button class="btn btn-sm btn-primary" onclick="alert('Add to cart coming soon')">
+                                        <i class="bi bi-cart-plus"></i> Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render star rating
+        function renderStarRating(rating) {
+            const fullStars = Math.floor(rating || 0);
+            const hasHalfStar = (rating || 0) % 1 >= 0.5;
+            let html = '';
+            for (let i = 0; i < 5; i++) {
+                if (i < fullStars) {
+                    html += '<i class="bi bi-star-fill text-warning"></i>';
+                } else if (i === fullStars && hasHalfStar) {
+                    html += '<i class="bi bi-star-half text-warning"></i>';
+                } else {
+                    html += '<i class="bi bi-star text-muted"></i>';
+                }
+            }
+            return html;
+        }
+
+        // View fund detail
+        async function viewFundDetail(fundId) {
+            try {
+                const fundDetail = await apiGet(`/api/explore/fund/${fundId}`);
+                if (fundDetail) {
+                    renderFundDetailModal(fundDetail);
+                }
+            } catch (error) {
+                console.error('Error loading fund detail:', error);
+                alert('Failed to load fund details. Please try again.');
+            }
+        }
+
+        // Render fund detail modal
+        function renderFundDetailModal(fundDetail) {
+            // Create or get modal
+            let modal = document.getElementById('fundDetailModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'fundDetailModal';
+                modal.className = 'modal fade';
+                modal.innerHTML = `
+                    <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Fund Details</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body" id="fundDetailContent">
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+
+            const content = document.getElementById('fundDetailContent');
+            if (!content) return;
+
+            const plans = fundDetail.plans || [];
+            const performance = fundDetail.performance || {};
+            const riskMetrics = fundDetail.riskMetrics || {};
+
+            let html = `
+                <div class="fund-detail-container">
+                    <div class="fund-detail-header mb-4">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h4>${safeText(fundDetail.name || 'Fund')}</h4>
+                                <p class="text-muted mb-2">${safeText(fundDetail.amcName || 'N/A')}</p>
+                                <div class="d-flex gap-2 align-items-center">
+                                    ${renderStarRating(fundDetail.starRating || 3)}
+                                    <span class="badge bg-primary">Score: ${(fundDetail.fundScore || 0).toFixed(0)}</span>
+                                    <span class="risk-badge-small ${(fundDetail.risk || 'MEDIUM').toLowerCase()}">${fundDetail.risk || 'MEDIUM'} Risk</span>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <div class="fund-nav-display">
+                                    <div class="nav-label">Current NAV</div>
+                                    <div class="nav-value">₹${(plans[0]?.nav || 0).toFixed(4)}</div>
+                                    <div class="nav-change ${(plans[0]?.navChange || 0) >= 0 ? 'positive' : 'negative'}">
+                                        ${(plans[0]?.navChange || 0) >= 0 ? '↑' : '↓'} ${Math.abs(plans[0]?.navChange || 0).toFixed(2)}%
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fund-detail-tabs mb-4">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#fundOverview">Overview</a></li>
+                            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#fundPlans">Plans</a></li>
+                            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#fundPerformance">Performance</a></li>
+                            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#fundRisk">Risk Metrics</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="tab-content">
+                        <div id="fundOverview" class="tab-pane fade show active">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Description</h6>
+                                    <p>${safeText(fundDetail.description || 'No description available')}</p>
+                                    <h6 class="mt-3">Investment Objective</h6>
+                                    <p>${safeText(fundDetail.investmentObjective || 'N/A')}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Fund Manager</h6>
+                                    <p>${safeText(fundDetail.fundManager || 'N/A')}</p>
+                                    <h6 class="mt-3">Launch Date</h6>
+                                    <p>${fundDetail.launchDate || 'N/A'}</p>
+                                    <h6 class="mt-3">Fund Age</h6>
+                                    <p>${fundDetail.fundAge || 0} years</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="fundPlans" class="tab-pane fade">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Plan Type</th>
+                                            <th>Option</th>
+                                            <th>NAV</th>
+                                            <th>1Y Return</th>
+                                            <th>3Y Return</th>
+                                            <th>5Y Return</th>
+                                            <th>Expense Ratio</th>
+                                            <th>Min Investment</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${plans.map(plan => `
+                                            <tr>
+                                                <td><span class="badge ${plan.planType === 'DIRECT' ? 'bg-success' : 'bg-info'}">${plan.planType}</span></td>
+                                                <td>${plan.optionType}</td>
+                                                <td>₹${(plan.nav || 0).toFixed(4)}</td>
+                                                <td class="text-success">${(plan.oneYearReturn || 0).toFixed(2)}%</td>
+                                                <td class="text-success">${(plan.threeYearReturn || 0).toFixed(2)}%</td>
+                                                <td class="text-success">${(plan.fiveYearReturn || 0).toFixed(2)}%</td>
+                                                <td>${(plan.expenseRatio || 0).toFixed(2)}%</td>
+                                                <td>₹${(plan.minimumInvestment || 0).toLocaleString()}</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-primary" onclick="addPlanToCart(${plan.planId}, 'LUMPSUM')">
+                                                        <i class="bi bi-cart-plus"></i> Add
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div id="fundPerformance" class="tab-pane fade">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Returns</h6>
+                                    <table class="table">
+                                        <tr><td>1 Year</td><td class="text-success">${(performance.oneYearReturn || 0).toFixed(2)}%</td></tr>
+                                        <tr><td>3 Years</td><td class="text-success">${(performance.threeYearReturn || 0).toFixed(2)}%</td></tr>
+                                        <tr><td>5 Years</td><td class="text-success">${(performance.fiveYearReturn || 0).toFixed(2)}%</td></tr>
+                                        <tr><td>Since Inception</td><td class="text-success">${(performance.sinceInceptionReturn || 0).toFixed(2)}%</td></tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Risk-Adjusted Metrics</h6>
+                                    <table class="table">
+                                        <tr><td>Volatility</td><td>${(performance.volatility || 0).toFixed(2)}%</td></tr>
+                                        <tr><td>Sharpe Ratio</td><td>${(performance.sharpeRatio || 0).toFixed(2)}</td></tr>
+                                        <tr><td>Alpha</td><td>${(performance.alpha || 0).toFixed(2)}</td></tr>
+                                        <tr><td>Beta</td><td>${(performance.beta || 0).toFixed(2)}</td></tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="fundRisk" class="tab-pane fade">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Risk Level</h6>
+                                    <p><span class="risk-badge-small ${(riskMetrics.riskLevel || 'MEDIUM').toLowerCase()}">${riskMetrics.riskLevel || 'MEDIUM'}</span></p>
+                                    <h6 class="mt-3">Risk Metrics</h6>
+                                    <table class="table">
+                                        <tr><td>Standard Deviation</td><td>${(riskMetrics.standardDeviation || 0).toFixed(2)}%</td></tr>
+                                        <tr><td>Downside Deviation</td><td>${(riskMetrics.downsideDeviation || 0).toFixed(2)}%</td></tr>
+                                        <tr><td>Max Drawdown</td><td class="text-danger">${(riskMetrics.maxDrawdown || 0).toFixed(2)}%</td></tr>
+                                        <tr><td>Value at Risk (VaR)</td><td class="text-danger">${(riskMetrics.var || 0).toFixed(2)}%</td></tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            content.innerHTML = html;
+            const bsModal = new bootstrap.Modal(modal);
+            bsModal.show();
+        }
+
+        // Add plan to cart
+        async function addPlanToCart(planId, investmentType, amount = null, sipAmount = null, sipDuration = null) {
+            if (!currentUserId) {
+                alert('Please login to add items to cart');
+                return;
+            }
+
+            try {
+                // For mock plans (planId > 1000), use default amounts
+                if (!amount && investmentType === 'LUMPSUM') {
+                    amount = 5000; // Default lumpsum amount
+                }
+                if (!sipAmount && investmentType === 'SIP') {
+                    sipAmount = 500; // Default SIP amount
+                    sipDuration = 12; // Default 12 months
+                }
+
+                // Use POST with body instead of query params
+                const payload = {
+                    planId: planId,
+                    investmentType: investmentType,
+                    amount: amount,
+                    sipAmount: sipAmount,
+                    sipDuration: sipDuration
+                };
+
+                const response = await apiPost(`/api/explore/cart/${currentUserId}/add`, payload);
+                
+                if (response && (response.items || response.totalItems !== undefined)) {
+                    // Success - update cart data
+                    cartData = response;
+                    updateCartUI();
+                    showNotification('Fund added to cart successfully!', 'success');
+                    
+                    // Close modal if open
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('fundDetailModal'));
+                    if (modal) modal.hide();
+                } else {
+                    throw new Error('Invalid response from server');
+                }
+            } catch (error) {
+                console.error('Error adding to cart:', error);
+                console.error('Error details:', error.message);
+                
+                // Try to reload cart to check if it was actually added
+                try {
+                    await loadCart();
+                    if (cartData && cartData.items && cartData.items.length > 0) {
+                        // Cart has items, so it might have been added
+                        showNotification('Fund added to cart successfully!', 'success');
+                    } else {
+                        showNotification('Failed to add to cart: ' + (error.message || 'Please try again.'), 'error');
+                    }
+                } catch (reloadError) {
+                    showNotification('Failed to add to cart. Please try again.', 'error');
+                }
+            }
+        }
+
+        // Add to cart from recommendation
+        async function addToCartFromRecommendation(fundId) {
+            if (!currentUserId) {
+                alert('Please login to add items to cart');
+                return;
+            }
+
+            // Get first plan for the fund
+            try {
+                const plans = await apiGet(`/api/explore/fund/${fundId}/plans`);
+                if (plans && plans.length > 0) {
+                    // Use Direct plan if available, otherwise Regular
+                    const directPlan = plans.find(p => p.planType === 'DIRECT');
+                    const planToUse = directPlan || plans[0];
+                    await addPlanToCart(planToUse.id, 'LUMPSUM', 5000);
+                } else {
+                    // Create a mock plan ID for mock funds
+                    const mockPlanId = 2000 + fundId; // Direct plan ID
+                    await addPlanToCart(mockPlanId, 'LUMPSUM', 5000);
+                }
+            } catch (error) {
+                console.error('Error adding to cart:', error);
+                // For mock funds, create a mock plan ID
+                const mockPlanId = 2000 + fundId;
+                await addPlanToCart(mockPlanId, 'LUMPSUM', 5000);
+            }
+        }
+
+        // Load cart
+        async function loadCart() {
+            if (!currentUserId) return;
+            try {
+                const cart = await apiGet(`/api/explore/cart/${currentUserId}`);
+                cartData = cart;
+                updateCartUI();
+            } catch (error) {
+                console.error('Error loading cart:', error);
+            }
+        }
+
+        // Update cart UI
+        function updateCartUI() {
+            // Update cart badge
+            const cartBadge = document.getElementById('cartBadge');
+            const cartCount = document.getElementById('cartCount');
+            
+            if (cartData) {
+                const itemCount = cartData.totalItems || (cartData.items ? cartData.items.length : 0);
+                
+                if (cartBadge) {
+                    cartBadge.textContent = itemCount;
+                    cartBadge.style.display = itemCount > 0 ? 'inline-block' : 'none';
+                    cartBadge.classList.toggle('hidden', itemCount === 0);
+                }
+                
+                if (cartCount) {
+                    cartCount.textContent = itemCount;
+                    cartCount.classList.toggle('hidden', itemCount === 0);
+                }
+            } else {
+                if (cartBadge) {
+                    cartBadge.style.display = 'none';
+                    cartBadge.classList.add('hidden');
+                }
+                if (cartCount) {
+                    cartCount.classList.add('hidden');
+                }
+            }
+        }
+
+        // View cart
+        async function viewCart() {
+            // Always reload cart to get latest data
+            await loadCart();
+            
+            if (!cartData || !cartData.items || cartData.items.length === 0) {
+                showNotification('Your cart is empty. Add funds to your cart first!', 'info');
+                return;
+            }
+            
+            // Show cart modal
+            openCartModal();
+        }
+        
+        // Open cart modal
+        async function openCartModal() {
+            // Reload cart first
+            await loadCart();
+            
+            // Create or get cart modal
+            let modal = document.getElementById('cartModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'cartModal';
+                modal.className = 'modal fade';
+                modal.innerHTML = `
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content glossary-modal">
+                            <div class="modal-header glossary-modal-header">
+                                <h5 class="modal-title">Your Investment Cart</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body glossary-modal-body" id="cartModalContent">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="processInvestment()">Invest Now</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+
+            const content = document.getElementById('cartModalContent');
+            if (!content) return;
+
+            if (!cartData || !cartData.items || cartData.items.length === 0) {
+                content.innerHTML = `
+                    <div class="text-center" style="padding: 3rem;">
+                        <i class="bi bi-cart-x" style="font-size: 3rem; color: var(--ob-text-soft); margin-bottom: 1rem;"></i>
+                        <p style="color: var(--ob-text-soft);">Your cart is empty</p>
+                        <button class="btn btn-primary mt-3" onclick="window.location.hash='#explore'; bootstrap.Modal.getInstance(document.getElementById('cartModal')).hide();">Explore Funds</button>
+                    </div>
+                `;
+            } else {
+                let html = `
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Fund Name</th>
+                                    <th>Plan</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                cartData.items.forEach(item => {
+                    html += `
+                        <tr>
+                            <td>${safeText(item.fundName || 'N/A')}</td>
+                            <td><span class="badge ${item.planType === 'DIRECT' ? 'bg-success' : 'bg-info'}">${item.planType || 'N/A'}</span></td>
+                            <td>${item.investmentType || 'N/A'}</td>
+                            <td>₹${((item.amount || item.sipAmount || 0)).toLocaleString()}</td>
+                            <td>
+                                <button class="btn btn-sm btn-danger" onclick="removeFromCart(${item.itemId})">
+                                    <i class="bi bi-trash"></i> Remove
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-3 text-end">
+                        <h5>Total: ₹${(cartData.totalAmount || 0).toLocaleString()}</h5>
+                    </div>
+                `;
+                content.innerHTML = html;
+            }
+
+            const bsModal = new bootstrap.Modal(modal);
+            bsModal.show();
+        }
+        
+        // Remove from cart
+        async function removeFromCart(itemId) {
+            if (!currentUserId) return;
+            try {
+                await apiPost(`/api/explore/cart/${currentUserId}/remove/${itemId}`, {});
+                showNotification('Item removed from cart', 'info');
+                await loadCart();
+                // Refresh cart modal if open
+                const modal = bootstrap.Modal.getInstance(document.getElementById('cartModal'));
+                if (modal) {
+                    await openCartModal();
+                }
+            } catch (error) {
+                console.error('Error removing from cart:', error);
+                showNotification('Failed to remove item from cart', 'error');
+            }
+        }
+        
+        // Process investment
+        async function processInvestment() {
+            if (!currentUserId) return;
+            try {
+                await apiPost(`/api/explore/cart/${currentUserId}/invest`, {});
+                showNotification('Investment request submitted successfully!', 'success');
+                bootstrap.Modal.getInstance(document.getElementById('cartModal')).hide();
+                await loadCart();
+                // Optionally navigate to dashboard
+                // window.location.hash = '#dashboard';
+            } catch (error) {
+                console.error('Error processing investment:', error);
+                showNotification('Investment failed. Please try again.', 'error');
+            }
+        }
+
+        async function loadAMCs() {
+            try {
+                const amcs = await apiGet('/api/explore/amcs');
+                allAMCs = amcs || [];
+                const filterAMC = document.getElementById('filterAMC');
+                if (filterAMC && allAMCs.length > 0) {
+                    // Clear existing options except "All AMCs"
+                    filterAMC.innerHTML = '<option value="">All AMCs</option>';
+                    // Add AMC options
+                    allAMCs.forEach(amc => {
+                        const option = document.createElement('option');
+                        option.value = amc.id || amc.name;
+                        option.textContent = amc.name;
+                        filterAMC.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading AMCs:', error);
+                // Fallback: Add popular AMCs directly
+                const filterAMC = document.getElementById('filterAMC');
+                if (filterAMC) {
+                    const popularAMCs = [
+                        'HDFC Mutual Fund',
+                        'ICICI Prudential Mutual Fund',
+                        'SBI Mutual Fund',
+                        'Axis Mutual Fund',
+                        'Kotak Mahindra Mutual Fund',
+                        'Aditya Birla Sun Life Mutual Fund',
+                        'Nippon India Mutual Fund',
+                        'UTI Mutual Fund'
+                    ];
+                    popularAMCs.forEach(amcName => {
+                        const option = document.createElement('option');
+                        option.value = amcName;
+                        option.textContent = amcName;
+                        filterAMC.appendChild(option);
+                    });
+                }
             }
         }
 
@@ -4591,17 +7355,47 @@
             currentFundGoal = goal;
             document.querySelectorAll('.goal-tile').forEach(tile => tile.classList.remove('active'));
             if (element) element.classList.add('active');
-            loadExploreFunds();
+            // Reload funds with new goal filter
+            applyFundFilters();
         }
 
         async function applyFundFilters() {
             if (!currentUserId) return;
             const risk = document.getElementById('filterRisk')?.value || '';
             const category = document.getElementById('filterCategory')?.value || '';
+            const amc = document.getElementById('filterAMC')?.value || '';
             const goal = currentFundGoal || '';
             
             try {
-                const funds = await apiGet(`/api/explore/funds/${currentUserId}?goal=${goal}&risk=${risk}&assetType=${category}`);
+                // First get funds from backend with risk, category, goal filters
+                let funds = await apiGet(`/api/explore/funds/${currentUserId}?goal=${goal}&risk=${risk}&assetType=${category}`);
+                allFunds = funds || [];
+                
+                // Apply AMC filter on client side (since Fund model doesn't have AMC field)
+                if (amc && amc !== '') {
+                    // Find AMC name by ID or use the value directly if it's a name
+                    let amcName = '';
+                    if (allAMCs && allAMCs.length > 0) {
+                        const selectedAMC = allAMCs.find(a => {
+                            const amcId = a.id ? a.id.toString() : '';
+                            const amcNameVal = a.name || '';
+                            return amcId === amc || amcNameVal === amc;
+                        });
+                        amcName = selectedAMC ? selectedAMC.name : amc;
+                    } else {
+                        amcName = amc;
+                    }
+                    
+                    if (amcName) {
+                        const amcKeyword = amcName.toLowerCase().split(' ')[0]; // Get first word (e.g., "HDFC" from "HDFC Mutual Fund")
+                        // Filter funds whose name contains AMC keyword
+                        funds = allFunds.filter(fund => {
+                            const fundName = (fund.name || '').toLowerCase();
+                            return fundName.includes(amcKeyword);
+                        });
+                    }
+                }
+                
                 renderFunds(funds || []);
             } catch (error) {
                 console.error('Error filtering funds:', error);
@@ -4645,9 +7439,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <button class="btn btn-primary w-100" onclick="investInFund('${safeText(fund.name || '')}')" style="background: var(--ob-primary); border: none;">
-                                <i class="bi bi-graph-up-arrow"></i> Start with ₹500
-                            </button>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-outline-primary flex-fill" onclick="viewFundDetail(${fund.id || fund.fundId || 1})" style="border-color: var(--ob-primary); color: var(--ob-primary);">
+                                    <i class="bi bi-eye"></i> View Details
+                                </button>
+                                <button class="btn btn-primary flex-fill" onclick="quickAddToCart(${fund.id || fund.fundId || 1})" style="background: var(--ob-primary); border: none;">
+                                    <i class="bi bi-cart-plus"></i> Add to Cart
+                                </button>
+                            </div>
                     </div>
                 </div>
             `;
@@ -4655,10 +7454,46 @@
             grid.innerHTML = html;
         }
 
+        // Quick add to cart (for All Funds section)
+        async function quickAddToCart(fundId) {
+            if (!currentUserId) {
+                alert('Please login to add items to cart');
+                return;
+            }
+
+            try {
+                // Get plans for the fund
+                const plans = await apiGet(`/api/explore/fund/${fundId}/plans`);
+                if (plans && plans.length > 0) {
+                    // Use Direct plan if available, otherwise Regular
+                    const directPlan = plans.find(p => p.planType === 'DIRECT');
+                    const planToUse = directPlan || plans[0];
+                    await addPlanToCart(planToUse.id, 'LUMPSUM', 5000);
+                } else {
+                    // For mock funds, create a mock plan ID
+                    const mockPlanId = 2000 + fundId;
+                    await addPlanToCart(mockPlanId, 'LUMPSUM', 5000);
+                }
+            } catch (error) {
+                console.error('Error adding to cart:', error);
+                // For mock funds, create a mock plan ID
+                const mockPlanId = 2000 + fundId;
+                await addPlanToCart(mockPlanId, 'LUMPSUM', 5000);
+            }
+        }
+
+        // Legacy function - kept for backward compatibility
         function investInFund(fundName) {
-            document.getElementById('investFundName').value = fundName;
-            const modal = new bootstrap.Modal(document.getElementById('investModal'));
-            modal.show();
+            // Try to find fund by name and add to cart
+            const fund = allFunds.find(f => f.name === fundName);
+            if (fund && fund.id) {
+                quickAddToCart(fund.id);
+            } else {
+                // Fallback to old modal
+                document.getElementById('investFundName').value = fundName;
+                const modal = new bootstrap.Modal(document.getElementById('investModal'));
+                modal.show();
+            }
         }
 
         // ========== SIPs ==========
@@ -4684,13 +7519,14 @@
 
         function renderSips(sips) {
             const tbody = document.getElementById('sipsTableBody');
-            document.getElementById('sipsActiveCount').textContent = sips.length;
+            const activeSips = sips.filter(s => s.status === 'ACTIVE' || s.active);
+            document.getElementById('sipsActiveCount').textContent = activeSips.length;
             
             let monthlyTotal = 0;
             let nextDebit = null;
             
             if (!sips || sips.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="text-center" style="padding: 2rem; color: var(--ob-text-soft);">No active SIPs. Start a new SIP to begin investing regularly.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="10" class="text-center" style="padding: 2rem; color: var(--ob-text-soft);">No active SIPs. Start a new SIP to begin investing regularly.</td></tr>';
                 document.getElementById('sipsMonthlyTotal').textContent = '₹0';
                 document.getElementById('sipsNextDebit').textContent = '—';
                 return;
@@ -4698,26 +7534,65 @@
 
             let html = '';
             sips.forEach(sip => {
-                monthlyTotal += parseFloat(sip.monthlyAmount || 0);
+                const amount = parseFloat(sip.monthlyAmount || sip.amount || 0);
+                monthlyTotal += amount;
                 if (!nextDebit || (sip.nextSIPDate && new Date(sip.nextSIPDate) < new Date(nextDebit))) {
                     nextDebit = sip.nextSIPDate;
                 }
                 
+                const status = sip.status || (sip.active ? 'ACTIVE' : 'INACTIVE');
+                const statusBadge = getStatusBadge(status);
+                const mandateBadge = getMandateBadge(sip.mandateStatus || 'PENDING');
                 const returnsColor = (sip.returnsPercentage || 0) >= 0 ? 'var(--ob-accent-green)' : 'var(--ob-accent-red)';
+                const xirrColor = (sip.xirr || 0) >= 0 ? 'var(--ob-accent-green)' : 'var(--ob-accent-red)';
+                const frequency = sip.frequency || 'MONTHLY';
+                const frequencyText = frequency === 'MONTHLY' ? 'Monthly' : frequency === 'QUARTERLY' ? 'Quarterly' : 'Weekly';
+                
                 html += `
                     <tr>
-                        <td><strong>${safeText(sip.fundName || '—')}</strong></td>
-                        <td>${formatCurrency(sip.monthlyAmount || 0)}</td>
-                        <td>${sip.monthsCompleted || 0}</td>
+                        <td>
+                            <strong>${safeText(sip.fundName || '—')}</strong>
+                            ${sip.goalName ? `<br><small style="color: var(--ob-text-soft);"><i class="bi bi-bullseye"></i> ${sip.goalName}</small>` : ''}
+                        </td>
+                        <td>${formatCurrency(amount)}</td>
+                        <td>${frequencyText}</td>
+                        <td>${statusBadge}</td>
                         <td>${formatCurrency(sip.totalInvested || 0)}</td>
                         <td>${formatCurrency(sip.currentValue || 0)}</td>
                         <td style="color: ${returnsColor};">
-                            ${formatCurrency(sip.currentValue - (sip.totalInvested || 0))}<br>
+                            ${formatCurrency((sip.currentValue || 0) - (sip.totalInvested || 0))}<br>
                             <small>${(sip.returnsPercentage || 0).toFixed(2)}%</small>
                         </td>
+                        <td style="color: ${xirrColor}; font-weight: 600;">
+                            ${(sip.xirr || 0).toFixed(2)}%
+                        </td>
+                        <td>${mandateBadge}</td>
                         <td>
-                            <button class="btn btn-sm btn-outline-primary" onclick="pauseSip(${sip.id})" style="margin-right: 0.5rem;">Pause</button>
-                            <button class="btn btn-sm btn-outline-secondary" onclick="modifySip(${sip.id})">Modify</button>
+                            <div class="btn-group" role="group">
+                                ${status === 'ACTIVE' ? `
+                                    <button class="btn btn-sm btn-outline-warning" onclick="pauseSip(${sip.id})" title="Pause SIP">
+                                        <i class="bi bi-pause-fill"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="modifySip(${sip.id})" title="Modify SIP">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-info" onclick="viewInstallments(${sip.id})" title="View History">
+                                        <i class="bi bi-clock-history"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="stopSip(${sip.id})" title="Stop SIP">
+                                        <i class="bi bi-stop-fill"></i>
+                                    </button>
+                                ` : status === 'PAUSED' ? `
+                                    <button class="btn btn-sm btn-outline-success" onclick="resumeSip(${sip.id})" title="Resume SIP">
+                                        <i class="bi bi-play-fill"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="stopSip(${sip.id})" title="Stop SIP">
+                                        <i class="bi bi-stop-fill"></i>
+                                    </button>
+                                ` : `
+                                    <span class="text-muted">No actions</span>
+                                `}
+                            </div>
                         </td>
                     </tr>
                 `;
@@ -4727,9 +7602,158 @@
             document.getElementById('sipsMonthlyTotal').textContent = formatCurrency(monthlyTotal);
             if (nextDebit) {
                 document.getElementById('sipsNextDebit').textContent = formatDate(nextDebit);
-        } else {
+            } else {
                 document.getElementById('sipsNextDebit').textContent = '—';
             }
+        }
+        
+        function getStatusBadge(status) {
+            const badges = {
+                'ACTIVE': '<span class="badge bg-success">Active</span>',
+                'PAUSED': '<span class="badge bg-warning">Paused</span>',
+                'STOPPED': '<span class="badge bg-danger">Stopped</span>',
+                'COMPLETED': '<span class="badge bg-info">Completed</span>'
+            };
+            return badges[status] || '<span class="badge bg-secondary">' + status + '</span>';
+        }
+        
+        function getMandateBadge(status) {
+            const badges = {
+                'PENDING': '<span class="badge bg-secondary">Pending</span>',
+                'REGISTERED': '<span class="badge bg-info">Registered</span>',
+                'ACTIVE': '<span class="badge bg-success">Active</span>',
+                'FAILED': '<span class="badge bg-danger">Failed</span>',
+                'CANCELLED': '<span class="badge bg-warning">Cancelled</span>'
+            };
+            return badges[status] || '<span class="badge bg-secondary">' + status + '</span>';
+        }
+        
+        function toggleStepUpOptions() {
+            const stepUp = document.getElementById('sipStepUp').checked;
+            document.getElementById('stepUpOptions').style.display = stepUp ? 'block' : 'none';
+        }
+        
+        async function pauseSip(sipId) {
+            if (!confirm('Are you sure you want to pause this SIP?')) return;
+            try {
+                const result = await apiPut(`/api/sips/${currentUserId}/${sipId}/pause`, {});
+                if (result.success) {
+                    alert('SIP paused successfully');
+                    loadSipsData();
+                } else {
+                    alert('Error: ' + (result.error || 'Failed to pause SIP'));
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+        
+        async function resumeSip(sipId) {
+            try {
+                const result = await apiPut(`/api/sips/${currentUserId}/${sipId}/resume`, {});
+                if (result.success) {
+                    alert('SIP resumed successfully');
+                    loadSipsData();
+                } else {
+                    alert('Error: ' + (result.error || 'Failed to resume SIP'));
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+        
+        async function stopSip(sipId) {
+            if (!confirm('Are you sure you want to stop this SIP? This action cannot be undone.')) return;
+            try {
+                const result = await apiPut(`/api/sips/${currentUserId}/${sipId}/stop`, {});
+                if (result.success) {
+                    alert('SIP stopped successfully');
+                    loadSipsData();
+                } else {
+                    alert('Error: ' + (result.error || 'Failed to stop SIP'));
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+        
+        async function modifySip(sipId) {
+            const newAmount = prompt('Enter new monthly amount (₹):');
+            if (!newAmount || isNaN(newAmount)) return;
+            
+            try {
+                const result = await apiPut(`/api/sips/${currentUserId}/${sipId}/modify`, {
+                    amount: Number(newAmount)
+                });
+                if (result.success) {
+                    alert('SIP modified successfully');
+                    loadSipsData();
+                } else {
+                    alert('Error: ' + (result.error || 'Failed to modify SIP'));
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+        
+        async function viewInstallments(sipId) {
+            try {
+                const installments = await apiGet(`/api/sips/${currentUserId}/${sipId}/installments`);
+                showInstallmentsModal(sipId, installments);
+            } catch (error) {
+                alert('Error loading installments: ' + error.message);
+            }
+        }
+        
+        function showInstallmentsModal(sipId, installments) {
+            // Create and show modal with installment history
+            const modalHtml = `
+                <div class="modal fade" id="installmentsModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content" style="background: var(--ob-card); border: 1px solid var(--ob-border);">
+                            <div class="modal-header">
+                                <h5 class="modal-title">SIP Installment History</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Amount</th>
+                                                <th>NAV</th>
+                                                <th>Units</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${installments.map(inst => `
+                                                <tr>
+                                                    <td>${formatDate(inst.executedDate || inst.installmentDate)}</td>
+                                                    <td>${formatCurrency(inst.amount || 0)}</td>
+                                                    <td>${inst.nav ? '₹' + parseFloat(inst.nav).toFixed(2) : '—'}</td>
+                                                    <td>${inst.units ? parseFloat(inst.units).toFixed(4) : '—'}</td>
+                                                    <td>${getStatusBadge(inst.status)}</td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Remove existing modal if any
+            const existing = document.getElementById('installmentsModal');
+            if (existing) existing.remove();
+            
+            // Add new modal
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            const modal = new bootstrap.Modal(document.getElementById('installmentsModal'));
+            modal.show();
         }
 
         function renderSipCalendar(sips) {
@@ -4861,6 +7885,27 @@
         // ========== STATEMENTS ==========
         let currentStatementType = null;
 
+        function initializeStatements() {
+            // Populate Financial Year dropdown
+            const fySelect = document.getElementById('statementFY');
+            if (fySelect) {
+                const currentYear = new Date().getFullYear();
+                const currentMonth = new Date().getMonth() + 1;
+                let startYear = currentMonth < 4 ? currentYear - 1 : currentYear;
+                
+                fySelect.innerHTML = '<option value="">Current FY</option>';
+                // Add last 5 financial years
+                for (let i = 0; i < 5; i++) {
+                    const fy = startYear - i;
+                    const option = document.createElement('option');
+                    option.value = fy;
+                    option.textContent = `${fy}-${(fy + 1).toString().substring(2)}`;
+                    if (i === 0) option.selected = true;
+                    fySelect.appendChild(option);
+                }
+            }
+        }
+
         async function loadStatements(type, element) {
             if (!currentUserId) return;
             
@@ -4871,30 +7916,51 @@
             }
 
             try {
-                const statements = await apiGet(`/api/statements/${currentUserId}?statementType=${currentStatementType || ''}`);
+                const fySelect = document.getElementById('statementFY');
+                const financialYear = fySelect ? fySelect.value : '';
+                const fromDate = document.getElementById('statementFromDate')?.value || '';
+                const toDate = document.getElementById('statementToDate')?.value || '';
+                
+                let url = `/api/statements/${currentUserId}?`;
+                if (currentStatementType) url += `statementType=${currentStatementType}&`;
+                if (financialYear) url += `financialYear=${financialYear}&`;
+                if (fromDate) url += `fromDate=${fromDate}&`;
+                if (toDate) url += `toDate=${toDate}&`;
+                
+                const statements = await apiGet(url);
                 renderStatements(statements || []);
             } catch (error) {
                 console.error('Error loading statements:', error);
+                const tbody = document.getElementById('statementsTableBody');
+                if (tbody) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center" style="padding: 2rem; color: var(--ob-accent-red);">Error loading statements. Please try again.</td></tr>';
+                }
             }
         }
 
         function renderStatements(statements) {
             const tbody = document.getElementById('statementsTableBody');
+            if (!tbody) return;
+            
             if (!statements || statements.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="text-center" style="padding: 2rem; color: var(--ob-text-soft);">No statements available.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center" style="padding: 2rem; color: var(--ob-text-soft);">No statements available for the selected criteria.</td></tr>';
                 return;
             }
 
             let html = '';
             statements.forEach(stmt => {
+                const statementTypeName = getStatementTypeName(stmt.statementType);
                 html += `
                     <tr>
-                        <td><strong>${stmt.statementType || '—'}</strong></td>
+                        <td>
+                            <strong>${statementTypeName}</strong>
+                            <br><small style="color: var(--ob-text-soft);">${stmt.statementType || '—'}</small>
+                        </td>
                         <td>${formatDate(stmt.fromDate)} - ${formatDate(stmt.toDate)}</td>
                         <td>${stmt.financialYear || '—'}</td>
                         <td>${formatDate(stmt.generatedDate)}</td>
                         <td>
-                            <button class="btn btn-sm btn-primary" onclick="downloadStatement('${stmt.statementType}', '${stmt.financialYear}')" style="background: var(--ob-primary); border: none;">
+                            <button class="btn btn-sm btn-primary" onclick="downloadStatement('${stmt.statementType}', '${stmt.financialYear || ''}', '${stmt.fileName || ''}')" style="background: var(--ob-primary); border: none;">
                                 <i class="bi bi-download"></i> Download
                             </button>
                         </td>
@@ -4903,15 +7969,194 @@
             });
             tbody.innerHTML = html;
         }
+        
+        function getStatementTypeName(type) {
+            const names = {
+                'PORTFOLIO': 'Portfolio Statement',
+                'CAPITAL_GAINS': 'Capital Gains Statement',
+                'TRANSACTIONS': 'Transaction Statement',
+                'TAX': 'Tax Statement'
+            };
+            return names[type] || type;
+        }
 
-        async function downloadStatement(type, fy) {
+        async function downloadStatement(type, fy, fileName) {
             if (!currentUserId) return;
             try {
-                const response = await apiGet(`/api/statements/${currentUserId}/download/${type}?fy=${fy}`);
-                alert('Statement download initiated! Check your downloads folder.');
+                const url = `/api/statements/${currentUserId}/download/${type}?fy=${fy || ''}`;
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error('Download failed');
+                }
+                
+                const data = await response.json();
+                
+                if (data.status === 'SUCCESS') {
+                    // Create a download link
+                    const downloadUrl = data.downloadUrl || url;
+                    const link = document.createElement('a');
+                    link.href = downloadUrl;
+                    link.download = data.fileName || fileName || `${type}_statement.pdf`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Show success message
+                    showNotification('Statement download initiated!', 'success');
+                } else {
+                    throw new Error(data.message || 'Download failed');
+                }
             } catch (error) {
-                alert('Error downloading statement. Please try again.');
+                console.error('Download error:', error);
+                showNotification('Error downloading statement. Please try again.', 'error');
             }
+        }
+        
+        function showNotification(message, type) {
+            // Create a simple notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                background: ${type === 'success' ? 'var(--ob-accent-green)' : 'var(--ob-accent-red)'};
+                color: white;
+                border-radius: 0.5rem;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+        
+        function clearStatementFilters() {
+            document.getElementById('statementFY').value = '';
+            document.getElementById('statementFromDate').value = '';
+            document.getElementById('statementToDate').value = '';
+            currentStatementType = null;
+            document.querySelectorAll('.statement-card').forEach(card => card.classList.remove('active'));
+            loadStatements();
+        }
+
+        // ========== RISK QUIZ ==========
+        function openRiskQuiz() {
+            const modal = document.getElementById('riskQuizModal');
+            if (modal) {
+                const bsModal = new bootstrap.Modal(modal);
+                bsModal.show();
+                // Reset form
+                document.getElementById('riskQuizForm').reset();
+                document.getElementById('riskQuizStatus').textContent = '';
+            }
+        }
+
+        async function submitRiskQuiz() {
+            if (!currentUserId) {
+                alert('Please login to take the quiz');
+                return;
+            }
+
+            const form = document.getElementById('riskQuizForm');
+            const statusEl = document.getElementById('riskQuizStatus');
+            
+            // Validate all questions are answered
+            const formData = new FormData(form);
+            let totalScore = 0;
+            let answeredCount = 0;
+            
+            for (let i = 1; i <= 5; i++) {
+                const answer = formData.get(`q${i}`);
+                if (answer) {
+                    totalScore += parseInt(answer, 10);
+                    answeredCount++;
+                }
+            }
+
+            if (answeredCount < 5) {
+                statusEl.textContent = 'Please answer all questions.';
+                statusEl.style.color = 'var(--ob-accent-red)';
+                return;
+            }
+
+            // Calculate risk category
+            let riskCategory;
+            if (totalScore <= 7) {
+                riskCategory = 'CONSERVATIVE';
+            } else if (totalScore <= 10) {
+                riskCategory = 'MODERATE';
+            } else {
+                riskCategory = 'AGGRESSIVE';
+            }
+
+            statusEl.textContent = 'Submitting...';
+            statusEl.style.color = 'var(--ob-text-soft)';
+
+            try {
+                // Collect answers
+                const answers = {};
+                for (let i = 1; i <= 5; i++) {
+                    answers[`q${i}`] = formData.get(`q${i}`);
+                }
+
+                // Update risk profile
+                const response = await apiPut(`/api/profile/${currentUserId}/risk-profile`, {
+                    riskScore: totalScore,
+                    riskCategory: riskCategory,
+                    answersJson: JSON.stringify(answers)
+                });
+
+                if (response.success) {
+                    statusEl.textContent = 'Risk profile updated successfully!';
+                    statusEl.style.color = 'var(--ob-accent-green)';
+                    
+                    // Update UI
+                    updateRiskProfileDisplay(riskCategory);
+                    
+                    // Close modal after 1.5 seconds
+                    setTimeout(() => {
+                        bootstrap.Modal.getInstance(document.getElementById('riskQuizModal')).hide();
+                        // Reload dashboard to reflect changes
+                        setTimeout(() => {
+                            loadDashboard();
+                        }, 500);
+                    }, 1500);
+                } else {
+                    throw new Error(response.error || 'Failed to update risk profile');
+                }
+            } catch (error) {
+                console.error('Error submitting risk quiz:', error);
+                statusEl.textContent = 'Error: ' + (error.message || 'Failed to update risk profile');
+                statusEl.style.color = 'var(--ob-accent-red)';
+            }
+        }
+
+        function updateRiskProfileDisplay(category) {
+            const riskBadge = document.getElementById('riskBadge');
+            const riskProfileText = document.getElementById('riskProfileText');
+            
+            if (!riskBadge || !riskProfileText) return;
+
+            // Remove existing classes
+            riskBadge.classList.remove('conservative', 'moderate', 'aggressive');
+            
+            const categoryLower = category.toLowerCase();
+            riskBadge.classList.add(categoryLower);
+            
+            const categoryNames = {
+                'CONSERVATIVE': 'Conservative Investor',
+                'MODERATE': 'Moderate Investor',
+                'AGGRESSIVE': 'Aggressive Investor'
+            };
+            
+            riskProfileText.textContent = categoryNames[category] || 'Moderate Investor';
         }
 
         // ========== HELP ==========
