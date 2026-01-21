@@ -23,6 +23,10 @@ public class Settings {
 
     @Lob
     @Column(columnDefinition = "LONGTEXT")
+    private String footerDescription;
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String contactEmail;
 
     @Lob
@@ -48,6 +52,10 @@ public class Settings {
     @Lob
     @Column(columnDefinition = "LONGTEXT")
     private String twitterUrl;
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String youtubeUrl;
 
     @Lob
     @Column(columnDefinition = "LONGTEXT")
@@ -174,4 +182,21 @@ public class Settings {
     public void setSeoDescription(String seoDescription) {
         this.seoDescription = seoDescription;
     }
+
+    public String getYoutubeUrl() {
+        return youtubeUrl;
+    }
+
+    public void setYoutubeUrl(String youtubeUrl) {
+        this.youtubeUrl = youtubeUrl;
+    }
+
+    public String getFooterDescription() {
+        return footerDescription;
+    }
+
+    public void setFooterDescription(String footerDescription) {
+        this.footerDescription = footerDescription;
+    }
+
 }

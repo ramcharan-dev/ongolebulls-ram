@@ -33,6 +33,7 @@ public class SettingsService {
         existing.setSiteName(updated.getSiteName());
         existing.setLogoUrl(updated.getLogoUrl());
         existing.setFaviconUrl(updated.getFaviconUrl());
+        existing.setFooterDescription(updated.getFooterDescription());
         existing.setContactEmail(updated.getContactEmail());
         existing.setContactPhone(updated.getContactPhone());
         existing.setAddress(updated.getAddress());
@@ -40,6 +41,10 @@ public class SettingsService {
         existing.setInstagramUrl(updated.getInstagramUrl());
         existing.setLinkedInUrl(updated.getLinkedInUrl());
         existing.setTwitterUrl(updated.getTwitterUrl());
+        existing.setYoutubeUrl(updated.getYoutubeUrl());
+        existing.setSeoTitle(updated.getSeoTitle());
+        existing.setSeoKeywords(updated.getSeoKeywords());
+        existing.setSeoDescription(updated.getSeoDescription());
         return repository.save(existing);
     }
 
