@@ -70,14 +70,33 @@
         successMsg.textContent = "";
 
         try {
-            const response = await fetch('http://localhost:8080/api/admin/login', {
+            // Use relative URL to work on both localhost and production
+            const apiUrl = window.location.origin + '/api/admin/login';
+            console.log('Attempting login to:', apiUrl);
+            
+            const response = await fetch(apiUrl, {
                 method:'POST',
                 headers: { 'Content-Type':'application/json' },
                 body: JSON.stringify({ email, password })
             });
 
+            console.log('Response status:', response.status, response.statusText);
+
+            if (!response.ok) {
+                // Handle HTTP errors (4xx, 5xx)
+                let errorText = 'Server error. Please try again later.';
+                try {
+                    const errorJson = await response.json();
+                    errorText = errorJson.message || `Server error (${response.status}). Please try again later.`;
+                } catch (e) {
+                    errorText = `Server error (${response.status}). Please try again later.`;
+                }
+                errorMsg.textContent = errorText;
+                return;
+            }
+
             const result = await response.json();
-            console.log(result);
+            console.log('Login result:', result);
 
             if(result.success){
                 successMsg.textContent = "Login successful! Redirecting...";
@@ -93,8 +112,13 @@
             }
 
         } catch(err) {
-            console.error(err);
-            errorMsg.textContent = "Server error. Please try again later.";
+            console.error('Login error:', err);
+            // More detailed error message for debugging
+            if (err.message) {
+                errorMsg.textContent = `Connection error: ${err.message}. Please check your internet connection and try again.`;
+            } else {
+                errorMsg.textContent = "Server error. Please try again later.";
+            }
         }
     });
 </script>

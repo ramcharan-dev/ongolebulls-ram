@@ -3,6 +3,9 @@ package dev.ongolebulls.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
 
 
@@ -10,6 +13,7 @@ import java.time.OffsetDateTime;
 @Table(name = "appointments")
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor @Builder
+@DynamicInsert
 public class Appointment {
 
 
@@ -28,6 +32,12 @@ public class Appointment {
 
     @Column(nullable = false, length = 20)
     private String mobile;
+
+    @Column(name = "preferred_date", nullable = false)
+    private LocalDate preferredDate;
+
+    @Column(name = "preferred_time", nullable = false)
+    private LocalTime preferredTime;
 
     @Column(nullable = false, length = 20)
     private String employmentType;
