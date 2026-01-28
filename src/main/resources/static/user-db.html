@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Investor Dashboard | OngoleBulls Invest</title>
+    <link id="dynamicFavicon" rel="icon" href="/favicon.ico" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap 5.3 CSS -->
@@ -9034,6 +9035,57 @@
             setInterval(loadMarketIndices, 30000);
         }
 
-    </script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+    fetch("/api/settings")
+        .then(res => res.json())
+        .then(settingsList => {
+
+            if (!settingsList || settingsList.length === 0) return;
+
+            // Use first settings row
+            const settings = settingsList[0];
+
+            /* ===============================
+               SET PAGE TITLE
+            =============================== */
+<!--            if (settings.siteName) {-->
+<!--                document.title = settings.siteName;-->
+
+<!--                const titleEl = document.getElementById("dynamicTitle");-->
+<!--                if (titleEl) {-->
+<!--                    titleEl.textContent = settings.siteName;-->
+<!--                }-->
+<!--            }-->
+
+            /* ===============================
+               SET FAVICON (ENV SAFE)
+            =============================== */
+            if (settings.faviconUrl) {
+                let favicon = document.getElementById("dynamicFavicon");
+
+                if (!favicon) {
+                    favicon = document.createElement("link");
+                    favicon.rel = "icon";
+                    favicon.id = "dynamicFavicon";
+                    document.head.appendChild(favicon);
+                }
+
+                const finalUrl =
+                    window.location.origin +
+                    settings.faviconUrl +
+                    "?v=" + Date.now(); // cache busting
+
+                favicon.href = finalUrl;
+            }
+        })
+        .catch(err => {
+            console.error("Failed to load site settings", err);
+        });
+
+});
+
+
+</script>
 </body>
 </html>

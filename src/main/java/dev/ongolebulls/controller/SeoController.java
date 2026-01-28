@@ -35,6 +35,17 @@ public class SeoController {
         return ResponseEntity.ok(saved);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSeo(@PathVariable Long id) {
+        SeoSetting seo = seoService.getSeoById(id);
+        if (seo == null) {
+            return ResponseEntity.notFound().build();
+        }
+        seoService.deleteSeo(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 
 
 }

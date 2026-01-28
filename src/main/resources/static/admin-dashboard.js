@@ -1244,12 +1244,13 @@ async function admindashboardLoadAdminDetails() {
                     body: JSON.stringify(payload)
                 });
 
+                const result = await res.json().catch(() => ({}));
                 if (!res.ok) {
                     const errJson = await res.json().catch(() => ({}));
                     throw new Error(errJson.message || `HTTP ${res.status}`);
                 }
 
-                const result = await res.json().catch(() => ({}));
+
                 if (messageDiv) {
                     messageDiv.innerText = result.message || 'Profile updated successfully';
                     messageDiv.style.color = '#22c55e';
@@ -1260,10 +1261,20 @@ async function admindashboardLoadAdminDetails() {
                 localStorage.setItem('adminName', payload.name);
 
                 // reload admin details to reflect any changes
-                setTimeout(() => {
-                    admindashboardLoadAdminDetails();
-                    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = originalText; }
-                }, 900);
+//                setTimeout(() => {
+//                    admindashboardLoadAdminDetails();
+//                    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = originalText; }
+//                }, 900);
+
+                 setTimeout(() => {
+                     admindashboardLoadAdminDetails();
+                 }, 1500);
+
+                 if (submitBtn) {
+                     submitBtn.disabled = false;
+                     submitBtn.textContent = originalText;
+                 }
+
 
             } catch (err) {
                 if (messageDiv) {
@@ -2162,8 +2173,6 @@ function openSettingsForm(settings = null) {
             };
         }
 }
-
-
 
 // ---------- Services: List + Form + Sections ----------
 
