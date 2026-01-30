@@ -188,7 +188,6 @@
 
 <style>
 
-
   body {
         font-family: 'Manrope', sans-serif;
         background-color: #fbf1df;
@@ -225,6 +224,7 @@
         border: none;
         transition: all 0.3s ease;
       }
+
       .btn-red:hover {
         background: linear-gradient(135deg, #cf4d29, #cf4d29);
         transform: translateY(-3px);
@@ -301,7 +301,7 @@
       }
 
 
-      /* === Responsive CSS === */
+/* === Responsive CSS === */
 @media (max-width: 1200px) {
   .stats {
     margin: -25px 50px;
@@ -376,7 +376,6 @@
     margin-bottom: 20px;
   }
 }
-
 
 <!--#financial-goals {
   background: #fafafc;
@@ -783,6 +782,7 @@ body {
   margin-top: 28px;
   text-align: center;
 }
+
 .ay-btn {
   display: inline-block;
   background: linear-gradient(180deg,#ffc107,#ffb300);
@@ -794,6 +794,7 @@ body {
   transition: transform 200ms ease, box-shadow 200ms ease;
   font-size: clamp(0.25rem, 2.2vw, 1rem);
 }
+
 .ay-btn:hover { transform: translateY(-3px); }
 .ay-btn:focus { outline: 3px solid rgba(255,255,255,0.08); outline-offset: 4px; }
 
@@ -802,9 +803,6 @@ body {
   .ay-icon { width: 56px; height: 56px; font-size: 22px; }
   .ay-card { padding: 18px; min-height: 150px; }
 }
-
-
-
 
    .about-section {
       padding: 60px 0;
@@ -1249,7 +1247,7 @@ body {
     .dot.active {
       background: #00b377;
     }
- .core-section {
+   .core-section {
       text-align: center;
       padding: 60px 20px;
     }
@@ -1257,6 +1255,7 @@ body {
       font-weight: 700;
       margin-bottom: 10px;
     }
+
     .core-section p {
       color: #6c757d;
       margin-bottom: 50px;
@@ -1271,24 +1270,23 @@ body {
       transform: translateY(-8px);
     }
    .icon-box {
-  width: 70px;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 15px;
-  margin: 0 auto 20px;
-  color: #fff;
-  font-size: 28px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  transition: transform 0.4s ease, box-shadow 0.3s ease;
-}
+      width: 70px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 15px;
+      margin: 0 auto 20px;
+      color: #fff;
+      font-size: 28px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.4s ease, box-shadow 0.3s ease;
+    }
 
-/* Hover effect */
-.icon-box:hover {
-  transform: rotate(15deg) scale(1.2);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-}
+  .icon-box:hover {
+    transform: rotate(15deg) scale(1.2);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  }
 
     .blue { background: #3b82f6; }
     .yellow { background: #f59e0b; }
@@ -1402,9 +1400,10 @@ body {
       transition: transform 0.3s ease;
     }
 
-    .feature:hover .underline {
+   .feature:hover .underline {
       transform: scaleX(1);
     }
+
   .features {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -1813,7 +1812,15 @@ body {
   }
 
   /* Grid cards: equal height using flex and min-heights */
-  .svc-grid .svc-card{ display:flex; width: 25%; }
+  .svc-grid {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .svc-grid .svc-card {
+    display: flex;
+    width: 100%;
+    margin-bottom: 0;
+  }
   .svc-card .svc-card__inner{
     display:flex; flex-direction:column;
     background:#fff;
@@ -1873,6 +1880,109 @@ body {
   /* Accessibility: reduce motion */
   @media (prefers-reduced-motion: reduce){
     .svc-card .svc-card__inner, .svc-page-btn, .svc-dot{ transition:none!important; }
+  }
+
+  /* ===== RESPONSIVE STYLES FOR OUR FINANCIAL SERVICES SECTION ===== */
+  
+  /* Ensure equal card heights and proper alignment */
+  .svc-grid .svc-card {
+    display: flex;
+    align-items: stretch;
+  }
+  
+  .svc-card .svc-card__inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  /* Mobile (max-width: 767px) - Single column (1×1) */
+  @media (max-width: 767px) {
+    .svc-scope {
+      padding: 2rem 1rem !important;
+    }
+    
+    .svc-grid .svc-card {
+      width: 100% !important;
+      flex: 0 0 100% !important;
+      max-width: 100% !important;
+    }
+    
+    .svc-card .svc-card__inner {
+      min-height: auto;
+    }
+    
+    .svc-title {
+      font-size: 1.5rem !important;
+    }
+    
+    .svc-sub {
+      font-size: 0.85rem !important;
+    }
+    
+    .svc-body {
+      padding: 14px 14px 16px;
+    }
+    
+    .svc-heading {
+      font-size: 1rem !important;
+    }
+    
+    .svc-text {
+      font-size: 0.85rem !important;
+    }
+    
+    .svc-pager {
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+    
+    .svc-page-btn {
+      width: 40px;
+      height: 40px;
+      font-size: 0.9rem;
+    }
+  }
+
+  /* Tablet (768px - 992px) - Two columns (2×2) */
+  @media (min-width: 768px) and (max-width: 992px) {
+    .svc-scope {
+      padding: 2.5rem 1.5rem;
+    }
+    
+    .svc-grid.row-cols-md-2 .svc-card {
+      flex: 0 0 50% !important;
+      max-width: 50% !important;
+    }
+    
+    .svc-title {
+      font-size: 1.75rem !important;
+    }
+    
+    .svc-sub {
+      font-size: 0.9rem !important;
+    }
+    
+    .svc-body {
+      padding: 15px 15px 17px;
+    }
+    
+    .svc-heading {
+      font-size: 1.02rem !important;
+    }
+    
+    .svc-text {
+      font-size: 0.9rem !important;
+    }
+  }
+
+  /* Desktop (993px+) - Four columns (4×4) */
+  @media (min-width: 993px) {
+    .svc-grid.row-cols-md-2 .svc-card {
+      flex: 0 0 25% !important;
+      max-width: 25% !important;
+    }
   }
 </style>
 
@@ -2691,6 +2801,7 @@ body {
         <div class="icon-wrap me-3">
           <i class="bi bi-people"></i>
         </div>
+
         <div>
           <h4 class="feature-title">Personalized Solutions</h4>
           <div class="underline"></div>
@@ -2703,6 +2814,7 @@ body {
         <div class="icon-wrap me-3">
           <i class="bi bi-shield-lock"></i>
         </div>
+
         <div>
           <h4 class="feature-title">Transparency & Integrity</h4>
           <div class="underline"></div>
@@ -2712,26 +2824,32 @@ body {
 
       <!-- Feature Item -->
       <div class="col-md-6 d-flex">
+
         <div class="icon-wrap me-3">
           <i class="bi bi-phone"></i>
         </div>
+
         <div>
           <h4 class="feature-title">Cutting-Edge Technology</h4>
           <div class="underline"></div>
           <p>Our digital investment platforms and tools provide real-time tracking, giving you easy access to your investments anytime, anywhere.</p>
         </div>
+
       </div>
 
       <!-- Feature Item -->
       <div class="col-md-6 d-flex">
+
         <div class="icon-wrap me-3">
           <i class="bi bi-graph-up-arrow"></i>
         </div>
+
         <div>
           <h4 class="feature-title">Focus on Long-Term Success</h4>
           <div class="underline"></div>
           <p>We are committed to helping you build sustainable wealth, focusing on both short-term returns and long-term growth strategies.</p>
         </div>
+
       </div>
 
       <!-- Feature Item -->
@@ -2911,6 +3029,7 @@ body {
       s0.parentNode.insertBefore(s1, s0);
   })();
 </script>
+
 <!--End of Tawk.to Script-->
 
 </section>
@@ -3021,6 +3140,7 @@ body {
 
        .service-card:hover {
            width: 100%;
+
        }
    }
 

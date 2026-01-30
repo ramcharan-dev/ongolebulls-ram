@@ -34,6 +34,12 @@ public class SeoService {
         return seoRepo.save(seo);
     }
 
+    public void deleteSeo(Long id) {
+        seoRepo.deleteById(id);
+    }
+
+
 
 }
+
 

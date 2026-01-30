@@ -321,6 +321,8 @@ public class User implements UserDetails {
     private Instant consentTimestamp;
 
     // --- Relations ---
+
+
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "risk_id")
     private RiskProfile riskProfile;
