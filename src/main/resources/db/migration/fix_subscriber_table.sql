@@ -56,3 +56,4 @@ CREATE INDEX IF NOT EXISTS idx_subscriber_status ON subscriber(status);
 
 SELECT 'Migration completed successfully!' AS result;
 
+

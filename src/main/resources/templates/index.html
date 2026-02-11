@@ -188,7 +188,6 @@
 
 <style>
 
-
   body {
         font-family: 'Manrope', sans-serif;
         background-color: #fbf1df;
@@ -225,6 +224,7 @@
         border: none;
         transition: all 0.3s ease;
       }
+
       .btn-red:hover {
         background: linear-gradient(135deg, #cf4d29, #cf4d29);
         transform: translateY(-3px);
@@ -301,7 +301,7 @@
       }
 
 
-      /* === Responsive CSS === */
+/* === Responsive CSS === */
 @media (max-width: 1200px) {
   .stats {
     margin: -25px 50px;
@@ -376,7 +376,6 @@
     margin-bottom: 20px;
   }
 }
-
 
 <!--#financial-goals {
   background: #fafafc;
@@ -783,6 +782,7 @@ body {
   margin-top: 28px;
   text-align: center;
 }
+
 .ay-btn {
   display: inline-block;
   background: linear-gradient(180deg,#ffc107,#ffb300);
@@ -794,6 +794,7 @@ body {
   transition: transform 200ms ease, box-shadow 200ms ease;
   font-size: clamp(0.25rem, 2.2vw, 1rem);
 }
+
 .ay-btn:hover { transform: translateY(-3px); }
 .ay-btn:focus { outline: 3px solid rgba(255,255,255,0.08); outline-offset: 4px; }
 
@@ -802,9 +803,6 @@ body {
   .ay-icon { width: 56px; height: 56px; font-size: 22px; }
   .ay-card { padding: 18px; min-height: 150px; }
 }
-
-
-
 
    .about-section {
       padding: 60px 0;
@@ -1249,7 +1247,7 @@ body {
     .dot.active {
       background: #00b377;
     }
- .core-section {
+   .core-section {
       text-align: center;
       padding: 60px 20px;
     }
@@ -1257,6 +1255,7 @@ body {
       font-weight: 700;
       margin-bottom: 10px;
     }
+
     .core-section p {
       color: #6c757d;
       margin-bottom: 50px;
@@ -1271,24 +1270,23 @@ body {
       transform: translateY(-8px);
     }
    .icon-box {
-  width: 70px;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 15px;
-  margin: 0 auto 20px;
-  color: #fff;
-  font-size: 28px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  transition: transform 0.4s ease, box-shadow 0.3s ease;
-}
+      width: 70px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 15px;
+      margin: 0 auto 20px;
+      color: #fff;
+      font-size: 28px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.4s ease, box-shadow 0.3s ease;
+    }
 
-/* Hover effect */
-.icon-box:hover {
-  transform: rotate(15deg) scale(1.2);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-}
+  .icon-box:hover {
+    transform: rotate(15deg) scale(1.2);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  }
 
     .blue { background: #3b82f6; }
     .yellow { background: #f59e0b; }
@@ -1402,9 +1400,10 @@ body {
       transition: transform 0.3s ease;
     }
 
-    .feature:hover .underline {
+   .feature:hover .underline {
       transform: scaleX(1);
     }
+
   .features {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -1568,21 +1567,12 @@ body {
     }
 
     .cta-box {
-        background: linear-gradient(135deg, #eb4625, #e4d21e);
-        border-radius: 20px;
-        padding: 40px 140px;
-        color: white;
-        margin: 0 auto;   /* centers horizontally */
-        max-width: fit-content; /* prevents full width stretching */
-      }
-    .cta-box {
       background: linear-gradient(135deg, #eb4625, #e4d21e);
       border-radius: 20px;
       padding: 40px 140px;
       color: white;
       margin: 40px auto;          /* center horizontally */
-      display: table;          /* shrink to content */
-      margin-left: 320px;
+      display: inline-block;
     }
 
     .cta h3 {
@@ -1822,7 +1812,15 @@ body {
   }
 
   /* Grid cards: equal height using flex and min-heights */
-  .svc-grid .svc-card{ display:flex; width: 25%; }
+  .svc-grid {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .svc-grid .svc-card {
+    display: flex;
+    width: 100%;
+    margin-bottom: 0;
+  }
   .svc-card .svc-card__inner{
     display:flex; flex-direction:column;
     background:#fff;
@@ -1882,6 +1880,109 @@ body {
   /* Accessibility: reduce motion */
   @media (prefers-reduced-motion: reduce){
     .svc-card .svc-card__inner, .svc-page-btn, .svc-dot{ transition:none!important; }
+  }
+
+  /* ===== RESPONSIVE STYLES FOR OUR FINANCIAL SERVICES SECTION ===== */
+  
+  /* Ensure equal card heights and proper alignment */
+  .svc-grid .svc-card {
+    display: flex;
+    align-items: stretch;
+  }
+  
+  .svc-card .svc-card__inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  /* Mobile (max-width: 767px) - Single column (1×1) */
+  @media (max-width: 767px) {
+    .svc-scope {
+      padding: 2rem 1rem !important;
+    }
+    
+    .svc-grid .svc-card {
+      width: 100% !important;
+      flex: 0 0 100% !important;
+      max-width: 100% !important;
+    }
+    
+    .svc-card .svc-card__inner {
+      min-height: auto;
+    }
+    
+    .svc-title {
+      font-size: 1.5rem !important;
+    }
+    
+    .svc-sub {
+      font-size: 0.85rem !important;
+    }
+    
+    .svc-body {
+      padding: 14px 14px 16px;
+    }
+    
+    .svc-heading {
+      font-size: 1rem !important;
+    }
+    
+    .svc-text {
+      font-size: 0.85rem !important;
+    }
+    
+    .svc-pager {
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+    
+    .svc-page-btn {
+      width: 40px;
+      height: 40px;
+      font-size: 0.9rem;
+    }
+  }
+
+  /* Tablet (768px - 992px) - Two columns (2×2) */
+  @media (min-width: 768px) and (max-width: 992px) {
+    .svc-scope {
+      padding: 2.5rem 1.5rem;
+    }
+    
+    .svc-grid.row-cols-md-2 .svc-card {
+      flex: 0 0 50% !important;
+      max-width: 50% !important;
+    }
+    
+    .svc-title {
+      font-size: 1.75rem !important;
+    }
+    
+    .svc-sub {
+      font-size: 0.9rem !important;
+    }
+    
+    .svc-body {
+      padding: 15px 15px 17px;
+    }
+    
+    .svc-heading {
+      font-size: 1.02rem !important;
+    }
+    
+    .svc-text {
+      font-size: 0.9rem !important;
+    }
+  }
+
+  /* Desktop (993px+) - Four columns (4×4) */
+  @media (min-width: 993px) {
+    .svc-grid.row-cols-md-2 .svc-card {
+      flex: 0 0 25% !important;
+      max-width: 25% !important;
+    }
   }
 </style>
 
@@ -2056,6 +2157,157 @@ body {
 </section>
 
 
+<!--<section id="services" class="svc-scope py-5">-->
+<!--  <div class="container">-->
+<!--    <div class="text-center mb-4">-->
+<!--      <h2 class="svc-title">Our Financial Services</h2>-->
+<!--      <p class="svc-sub">Goal‑based, research‑driven, and regulation‑first advisory</p>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Grid &ndash;&gt;-->
+<!--    <div class="svc-grid row row-cols-1 row-cols-md-2 g-4" >-->
+<!--      &lt;!&ndash; Card 1 &ndash;&gt;-->
+<!--      <article class="svc-card col">-->
+<!--        <div class="svc-card__inner">-->
+<!--          <div class="svc-media">-->
+<!--            <img src="assets/w-m.jpg" alt="Wealth Management" loading="lazy">-->
+<!--          </div>-->
+<!--          <div class="svc-body">-->
+<!--            <h5 class="svc-heading">Wealth Management</h5>-->
+<!--            <p class="svc-text">-->
+<!--              Personalized strategies for long‑term growth, disciplined asset allocation, and active risk management.-->
+<!--            </p>-->
+<!--            <div class="svc-actions">-->
+<!--              <a href="wealth-management.html" class="svc-link">Read more <i class="bi bi-arrow-right"></i></a>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </article>-->
+
+<!--      &lt;!&ndash; Card 2 &ndash;&gt;-->
+<!--      <article class="svc-card col">-->
+<!--        <div class="svc-card__inner">-->
+<!--          <div class="svc-media">-->
+<!--            <img src="assets/smart investment.jpg" alt="Investment Planning" loading="lazy">-->
+<!--          </div>-->
+<!--          <div class="svc-body">-->
+<!--            <h5 class="svc-heading">Investment Planning</h5>-->
+<!--            <p class="svc-text">-->
+<!--              Active and passive portfolios built to your risk profile to maximize returns while minimizing drawdowns.-->
+<!--            </p>-->
+<!--            <div class="svc-actions">-->
+<!--              <a href="investment-management.html" class="svc-link">Read more <i class="bi bi-arrow-right"></i></a>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </article>-->
+
+<!--      &lt;!&ndash; Card 3 &ndash;&gt;-->
+<!--      <article class="svc-card col">-->
+<!--        <div class="svc-card__inner">-->
+<!--          <div class="svc-media">-->
+<!--            <img src="assets/MF.jpg" alt="Mutual Fund Investment" loading="lazy">-->
+<!--          </div>-->
+<!--          <div class="svc-body">-->
+<!--            <h5 class="svc-heading">Mutual Fund Investment</h5>-->
+<!--            <p class="svc-text">-->
+<!--              Diversify with curated funds, optimize for taxes and horizon, and track seamlessly in your dashboard.-->
+<!--            </p>-->
+<!--            <div class="svc-actions">-->
+<!--              <a href="mutual-fund.html" class="svc-link">Read more <i class="bi bi-arrow-right"></i></a>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </article>-->
+
+<!--      &lt;!&ndash; Card 4 &ndash;&gt;-->
+<!--      <article class="svc-card col">-->
+<!--        <div class="svc-card__inner">-->
+<!--          <div class="svc-media">-->
+<!--            <img src="assets/download (3).jpeg" alt="Portfolio Management Services (PMS)" loading="lazy">-->
+<!--          </div>-->
+<!--          <div class="svc-body">-->
+<!--            <h5 class="svc-heading">PMS (Portfolio Management)</h5>-->
+<!--            <p class="svc-text">-->
+<!--              Bespoke, professionally managed portfolios with direct securities ownership for discerning investors.-->
+<!--            </p>-->
+<!--            <div class="svc-actions">-->
+<!--              <a href="pms.html" class="svc-link">Read more <i class="bi bi-arrow-right"></i></a>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </article>-->
+
+<!--      &lt;!&ndash; Card 5 &ndash;&gt;-->
+<!--      <article class="svc-card col">-->
+<!--        <div class="svc-card__inner">-->
+<!--          <div class="svc-media">-->
+<!--            <img src="assets/invest.jpg" alt="HNI & Family Office Services" loading="lazy">-->
+<!--          </div>-->
+<!--          <div class="svc-body">-->
+<!--            <h5 class="svc-heading">HNI & Family Office</h5>-->
+<!--            <p class="svc-text">-->
+<!--              Estate planning, tax optimization, and succession strategies to protect and grow multi‑gen wealth.-->
+<!--            </p>-->
+<!--            <div class="svc-actions">-->
+<!--              <a href="hni-services.html" class="svc-link">Read more <i class="bi bi-arrow-right"></i></a>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </article>-->
+
+<!--      &lt;!&ndash; Card 6 &ndash;&gt;-->
+<!--      <article class="svc-card col">-->
+<!--        <div class="svc-card__inner">-->
+<!--          <div class="svc-media">-->
+<!--            <img src="assets/stocks.jpg" alt="Stock Market & Bond Investment" loading="lazy">-->
+<!--          </div>-->
+<!--          <div class="svc-body">-->
+<!--            <h5 class="svc-heading">Stocks & Bonds</h5>-->
+<!--            <p class="svc-text">-->
+<!--              Research‑backed equity, IPO, and fixed‑income ideas for diversification and reliable cashflows.-->
+<!--            </p>-->
+<!--            <div class="svc-actions">-->
+<!--              <a href="stock-markets-bonds.html" class="svc-link">Read more <i class="bi bi-arrow-right"></i></a>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </article>-->
+
+<!--      &lt;!&ndash; Card 7 &ndash;&gt;-->
+<!--      <article class="svc-card col">-->
+<!--        <div class="svc-card__inner">-->
+<!--          <div class="svc-media">-->
+<!--            <img src="assets/sma.webp" alt="Tax Optimization & Estate Planning" loading="lazy">-->
+<!--          </div>-->
+<!--          <div class="svc-body">-->
+<!--            <h5 class="svc-heading">Tax & Estate Planning</h5>-->
+<!--            <p class="svc-text">-->
+<!--              Minimize liabilities and structure legacy transfers with compliant, efficient frameworks.-->
+<!--            </p>-->
+<!--            <div class="svc-actions">-->
+<!--              <a href="Tax-Optimization-planning.html" class="svc-link">Read more <i class="bi bi-arrow-right"></i></a>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </article>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Professional pager &ndash;&gt;-->
+<!--    <div class="svc-pager d-flex align-items-center justify-content-center gap-3 mt-4">-->
+<!--      <button class="svc-page-btn svc-prev" type="button" aria-label="Previous">-->
+<!--        <i class="bi bi-chevron-left"></i>-->
+<!--      </button>-->
+<!--      <div class="svc-dots" role="tablist" aria-label="Pages">-->
+<!--        &lt;!&ndash; dots injected by JS &ndash;&gt;-->
+<!--      </div>-->
+<!--      <button class="svc-page-btn svc-next" type="button" aria-label="Next">-->
+<!--        <i class="bi bi-chevron-right"></i>-->
+<!--      </button>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
+
 <section id="services" class="svc-scope py-5">
   <div class="container">
     <div class="text-center mb-4">
@@ -2064,132 +2316,9 @@ body {
     </div>
 
     <!-- Grid -->
-    <div class="svc-grid row row-cols-1 row-cols-md-2 g-4">
-      <!-- Card 1 -->
-      <article class="svc-card col">
-        <div class="svc-card__inner">
-          <div class="svc-media">
-            <img src="assets/w-m.jpg" alt="Wealth Management" loading="lazy">
-          </div>
-          <div class="svc-body">
-            <h5 class="svc-heading">Wealth Management</h5>
-            <p class="svc-text">
-              Personalized strategies for long‑term growth, disciplined asset allocation, and active risk management.
-            </p>
-            <div class="svc-actions">
-              <a href="wealth-management.html" class="svc-link">Read more <i class="bi bi-arrow-right"></i></a>
-            </div>
-          </div>
-        </div>
-      </article>
+    <div class="svc-grid row row-cols-1 row-cols-md-2 g-4" id="servicesGrid">
+      <!-- services will be injected dynamically -->
 
-      <!-- Card 2 -->
-      <article class="svc-card col">
-        <div class="svc-card__inner">
-          <div class="svc-media">
-            <img src="assets/smart investment.jpg" alt="Investment Planning" loading="lazy">
-          </div>
-          <div class="svc-body">
-            <h5 class="svc-heading">Investment Planning</h5>
-            <p class="svc-text">
-              Active and passive portfolios built to your risk profile to maximize returns while minimizing drawdowns.
-            </p>
-            <div class="svc-actions">
-              <a href="investment-management.html" class="svc-link">Read more <i class="bi bi-arrow-right"></i></a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- Card 3 -->
-      <article class="svc-card col">
-        <div class="svc-card__inner">
-          <div class="svc-media">
-            <img src="assets/MF.jpg" alt="Mutual Fund Investment" loading="lazy">
-          </div>
-          <div class="svc-body">
-            <h5 class="svc-heading">Mutual Fund Investment</h5>
-            <p class="svc-text">
-              Diversify with curated funds, optimize for taxes and horizon, and track seamlessly in your dashboard.
-            </p>
-            <div class="svc-actions">
-              <a href="mutual-fund.html" class="svc-link">Read more <i class="bi bi-arrow-right"></i></a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- Card 4 -->
-      <article class="svc-card col">
-        <div class="svc-card__inner">
-          <div class="svc-media">
-            <img src="assets/download (3).jpeg" alt="Portfolio Management Services (PMS)" loading="lazy">
-          </div>
-          <div class="svc-body">
-            <h5 class="svc-heading">PMS (Portfolio Management)</h5>
-            <p class="svc-text">
-              Bespoke, professionally managed portfolios with direct securities ownership for discerning investors.
-            </p>
-            <div class="svc-actions">
-              <a href="pms.html" class="svc-link">Read more <i class="bi bi-arrow-right"></i></a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- Card 5 -->
-      <article class="svc-card col">
-        <div class="svc-card__inner">
-          <div class="svc-media">
-            <img src="assets/invest.jpg" alt="HNI & Family Office Services" loading="lazy">
-          </div>
-          <div class="svc-body">
-            <h5 class="svc-heading">HNI & Family Office</h5>
-            <p class="svc-text">
-              Estate planning, tax optimization, and succession strategies to protect and grow multi‑gen wealth.
-            </p>
-            <div class="svc-actions">
-              <a href="hni-services.html" class="svc-link">Read more <i class="bi bi-arrow-right"></i></a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- Card 6 -->
-      <article class="svc-card col">
-        <div class="svc-card__inner">
-          <div class="svc-media">
-            <img src="assets/stocks.jpg" alt="Stock Market & Bond Investment" loading="lazy">
-          </div>
-          <div class="svc-body">
-            <h5 class="svc-heading">Stocks & Bonds</h5>
-            <p class="svc-text">
-              Research‑backed equity, IPO, and fixed‑income ideas for diversification and reliable cashflows.
-            </p>
-            <div class="svc-actions">
-              <a href="stock-markets-bonds.html" class="svc-link">Read more <i class="bi bi-arrow-right"></i></a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- Card 7 -->
-      <article class="svc-card col">
-        <div class="svc-card__inner">
-          <div class="svc-media">
-            <img src="assets/sma.webp" alt="Tax Optimization & Estate Planning" loading="lazy">
-          </div>
-          <div class="svc-body">
-            <h5 class="svc-heading">Tax & Estate Planning</h5>
-            <p class="svc-text">
-              Minimize liabilities and structure legacy transfers with compliant, efficient frameworks.
-            </p>
-            <div class="svc-actions">
-              <a href="Tax-Optimization-planning.html" class="svc-link">Read more <i class="bi bi-arrow-right"></i></a>
-            </div>
-          </div>
-        </div>
-      </article>
     </div>
 
     <!-- Professional pager -->
@@ -2206,6 +2335,84 @@ body {
     </div>
   </div>
 </section>
+
+<!-- Dynamic services js -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+
+    const grid = document.getElementById("servicesGrid");
+    const prevBtn = document.querySelector(".svc-prev");
+    const nextBtn = document.querySelector(".svc-next");
+
+    const PAGE_SIZE = 4;
+    let services = [];
+    let currentPage = 0;
+
+    function renderPage() {
+      grid.innerHTML = "";
+
+      const start = currentPage * PAGE_SIZE;
+      const end = start + PAGE_SIZE;
+      const pageItems = services.slice(start, end);
+
+      pageItems.forEach(service => {
+        grid.innerHTML += `
+          <article class="svc-card col">
+            <div class="svc-card__inner">
+              <div class="svc-media">
+                <img
+                  src="${service.bannerImage || '/assets/default.jpg'}"
+                  alt="${service.title}"
+                  loading="lazy"
+                >
+              </div>
+
+              <div class="svc-body">
+                <h5 class="svc-heading">${service.title}</h5>
+                <p class="svc-text">${service.subtitle || ""}</p>
+
+                <div class="svc-actions">
+                  <a href="Services.html?service=${encodeURIComponent(service.slug)}" class="svc-link">
+                    Read more <i class="bi bi-arrow-right"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </article>
+        `;
+      });
+
+      // Disable buttons when needed
+      prevBtn.disabled = currentPage === 0;
+      nextBtn.disabled = end >= services.length;
+    }
+
+    fetch("/api/services?active=true")
+      .then(res => res.json())
+      .then(data => {
+        services = data;
+        renderPage();
+      });
+
+    prevBtn.addEventListener("click", () => {
+      if (currentPage > 0) {
+        currentPage--;
+        renderPage();
+      }
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if ((currentPage + 1) * PAGE_SIZE < services.length) {
+        currentPage++;
+        renderPage();
+      }
+    });
+
+  });
+</script>
+
+
+
 
 <!-- Dependencies: Bootstrap Icons for chevrons -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
@@ -2594,6 +2801,7 @@ body {
         <div class="icon-wrap me-3">
           <i class="bi bi-people"></i>
         </div>
+
         <div>
           <h4 class="feature-title">Personalized Solutions</h4>
           <div class="underline"></div>
@@ -2606,6 +2814,7 @@ body {
         <div class="icon-wrap me-3">
           <i class="bi bi-shield-lock"></i>
         </div>
+
         <div>
           <h4 class="feature-title">Transparency & Integrity</h4>
           <div class="underline"></div>
@@ -2615,26 +2824,32 @@ body {
 
       <!-- Feature Item -->
       <div class="col-md-6 d-flex">
+
         <div class="icon-wrap me-3">
           <i class="bi bi-phone"></i>
         </div>
+
         <div>
           <h4 class="feature-title">Cutting-Edge Technology</h4>
           <div class="underline"></div>
           <p>Our digital investment platforms and tools provide real-time tracking, giving you easy access to your investments anytime, anywhere.</p>
         </div>
+
       </div>
 
       <!-- Feature Item -->
       <div class="col-md-6 d-flex">
+
         <div class="icon-wrap me-3">
           <i class="bi bi-graph-up-arrow"></i>
         </div>
+
         <div>
           <h4 class="feature-title">Focus on Long-Term Success</h4>
           <div class="underline"></div>
           <p>We are committed to helping you build sustainable wealth, focusing on both short-term returns and long-term growth strategies.</p>
         </div>
+
       </div>
 
       <!-- Feature Item -->
@@ -2814,6 +3029,7 @@ body {
       s0.parentNode.insertBefore(s1, s0);
   })();
 </script>
+
 <!--End of Tawk.to Script-->
 
 </section>
@@ -2924,6 +3140,7 @@ body {
 
        .service-card:hover {
            width: 100%;
+
        }
    }
 

@@ -17,210 +17,6 @@ public class AdminAuthController {
     @Autowired
     private AdminUserRepository adminUserRepository;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @PostMapping("/login")
     public Map<String, Object> login(@RequestBody Map<String, String> body) {
         Map<String, Object> response = new HashMap<>();
@@ -301,5 +97,61 @@ public class AdminAuthController {
             return response;
         }
     }
+
+
+    @GetMapping("/{adminId}")
+    public Map<String, Object> getAdmin(@PathVariable Long adminId) {
+        Map<String, Object> response = new HashMap<>();
+
+        Optional<AdminUser> optionalUser = adminUserRepository.findById(adminId);
+
+        if (optionalUser.isEmpty()) {
+            response.put("success", false);
+            response.put("message", "Admin not found");
+            return response;
+        }
+
+        AdminUser user = optionalUser.get();
+
+        response.put("success", true);
+        response.put("id", user.getId());
+        response.put("name", user.getName());
+        response.put("email", user.getEmail());
+
+        return response;
+    }
+
+    @PutMapping("/{adminId}")
+    public Map<String, Object> updateAdmin(
+            @PathVariable Long adminId,
+            @RequestBody Map<String, String> body
+    ) {
+        Map<String, Object> response = new HashMap<>();
+
+        Optional<AdminUser> optionalUser = adminUserRepository.findById(adminId);
+
+        if (optionalUser.isEmpty()) {
+            response.put("success", false);
+            response.put("message", "Admin not found");
+            return response;
+        }
+
+        AdminUser user = optionalUser.get();
+
+        if (body.containsKey("name")) user.setName(body.get("name"));
+        if (body.containsKey("email")) user.setEmail(body.get("email"));
+
+        if (body.containsKey("password") && body.get("password") != null && !body.get("password").isBlank()) {
+            user.setPassword(body.get("password")); // later: hash it
+        }
+
+        adminUserRepository.save(user);
+
+        response.put("success", true);
+        response.put("message", "Profile updated successfully");
+        return response;
+    }
+
+
 
 }

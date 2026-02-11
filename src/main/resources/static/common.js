@@ -153,3 +153,81 @@ document.addEventListener('submit', async function (event) {
         }, 5000);
     }
 });
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const res = await fetch('/api/settings');
+        if (!res.ok) return;
+
+        let settings = await res.json();
+
+        // If backend returns array, take first (single-settings rule)
+        if (Array.isArray(settings)) {
+            settings = settings[0];
+        }
+
+        if (!settings) return;
+
+        // Email
+        if (settings.contactEmail) {
+            const emailEl = document.getElementById('footerEmail');
+            emailEl.textContent = settings.contactEmail;
+            emailEl.href = `mailto:${settings.contactEmail}`;
+        }
+
+        // Phone
+        if (settings.contactPhone) {
+            const phoneEl = document.getElementById('footerPhone');
+            phoneEl.textContent = settings.contactPhone;
+            phoneEl.href = `tel:${settings.contactPhone}`;
+        }
+
+        // Address
+        if (settings.address) {
+            document.getElementById('footerAddress').textContent = settings.address;
+        }
+
+        // Social links helper
+        const setSocial = (id, url) => {
+            const el = document.getElementById(id);
+            if (el && url) {
+                el.href = url;
+                el.style.display = 'inline-flex';
+            } else if (el) {
+                el.style.display = 'none';
+            }
+        };
+
+        setSocial('footerFacebook', settings.facebookUrl);
+        setSocial('footerLinkedIn', settings.linkedInUrl);
+        setSocial('footerInstagram', settings.instagramUrl);
+        setSocial('footerYouTube', settings.youtubeUrl);
+        setSocial('footerTwitter', settings.twitterUrl);
+
+        // Footer About Us Logo
+        const aboutLogoEl = document.getElementById('footerAboutLogo');
+        if (aboutLogoEl && settings.logoUrl) {
+            const logoUrl = settings.logoUrl.startsWith('http')
+                ? settings.logoUrl
+                : window.location.origin + settings.logoUrl;
+
+            aboutLogoEl.src = logoUrl;
+            aboutLogoEl.style.display = 'inline-block';
+        }
+
+        /* ============================
+           Footer About Us Description
+        =============================== */
+        const aboutTextEl = document.getElementById('footerAboutText');
+        if (aboutTextEl && settings.footerDescription) {
+            aboutTextEl.innerHTML = settings.footerDescription.replace(/\n/g, '<br>');
+        }
+
+    } catch (err) {
+        console.warn('Footer settings load failed:', err);
+    }
+});
+
+
+

@@ -110,6 +110,14 @@ public class DummyDataInitializer implements CommandLineRunner {
     }
 
     private User createUser(Long id, String fullName, String email, String mobile, String password) {
+        // Check if user already exists by email (more reliable than ID)
+        User existingUser = userRepository.findByEmail(email).orElse(null);
+        if (existingUser != null) {
+            // User already exists, return it
+            System.out.println("User with email " + email + " already exists, skipping creation.");
+            return existingUser;
+        }
+        
         User user = new User();
         // Use reflection to set fields
         setField(user, "id", id);
@@ -124,7 +132,15 @@ public class DummyDataInitializer implements CommandLineRunner {
         setField(user, "city", "Mumbai");
         setField(user, "state", "Maharashtra");
         setField(user, "pincode", "400001");
-        return userRepository.save(user);
+        
+        try {
+            return userRepository.save(user);
+        } catch (org.springframework.orm.ObjectOptimisticLockingFailureException e) {
+            // If optimistic locking fails, user might have been created by another process
+            // Try to fetch it by email
+            System.out.println("Optimistic locking exception for user " + email + ", fetching existing user.");
+            return userRepository.findByEmail(email).orElse(user);
+        }
     }
     
     private void setField(Object obj, String fieldName, Object value) {
@@ -148,6 +164,12 @@ public class DummyDataInitializer implements CommandLineRunner {
     }
 
     private InvestorAccount createInvestorAccount(User user, RiskProfile.RiskCategory riskCategory) {
+        // Check if user already has an investor account
+        Object existingAccount = getField(user, "investorAccount");
+        if (existingAccount != null && existingAccount instanceof InvestorAccount) {
+            return (InvestorAccount) existingAccount;
+        }
+        
         InvestorAccount account = new InvestorAccount();
         Object fullName = getField(user, "fullName");
         Object email = getField(user, "email");
@@ -157,7 +179,27 @@ public class DummyDataInitializer implements CommandLineRunner {
         
         account = investorAccountRepo.save(account);
         setField(user, "investorAccount", account);
-        userRepository.save(user);
+        
+        try {
+            // Get user ID using reflection
+            Object userId = getField(user, "id");
+            if (userId != null) {
+                Long id = Long.valueOf(userId.toString());
+                // Refresh user from database before saving to avoid optimistic locking issues
+                User refreshedUser = userRepository.findById(id).orElse(user);
+                setField(refreshedUser, "investorAccount", account);
+                userRepository.save(refreshedUser);
+            } else {
+                // If user doesn't have an ID yet, just save it (shouldn't happen, but handle it)
+                userRepository.save(user);
+            }
+        } catch (org.springframework.orm.ObjectOptimisticLockingFailureException e) {
+            System.out.println("Warning: Could not update user with investor account due to optimistic locking. Continuing...");
+        } catch (Exception e) {
+            System.out.println("Warning: Could not update user with investor account: " + e.getMessage());
+            // Continue anyway - the investor account is created, just not linked
+        }
+        
         return account;
     }
 

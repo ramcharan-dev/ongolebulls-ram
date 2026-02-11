@@ -1244,12 +1244,13 @@ async function admindashboardLoadAdminDetails() {
                     body: JSON.stringify(payload)
                 });
 
+                const result = await res.json().catch(() => ({}));
                 if (!res.ok) {
                     const errJson = await res.json().catch(() => ({}));
                     throw new Error(errJson.message || `HTTP ${res.status}`);
                 }
 
-                const result = await res.json().catch(() => ({}));
+
                 if (messageDiv) {
                     messageDiv.innerText = result.message || 'Profile updated successfully';
                     messageDiv.style.color = '#22c55e';
@@ -1260,10 +1261,20 @@ async function admindashboardLoadAdminDetails() {
                 localStorage.setItem('adminName', payload.name);
 
                 // reload admin details to reflect any changes
-                setTimeout(() => {
-                    admindashboardLoadAdminDetails();
-                    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = originalText; }
-                }, 900);
+//                setTimeout(() => {
+//                    admindashboardLoadAdminDetails();
+//                    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = originalText; }
+//                }, 900);
+
+                 setTimeout(() => {
+                     admindashboardLoadAdminDetails();
+                 }, 1500);
+
+                 if (submitBtn) {
+                     submitBtn.disabled = false;
+                     submitBtn.textContent = originalText;
+                 }
+
 
             } catch (err) {
                 if (messageDiv) {
@@ -1764,6 +1775,8 @@ async function admindashboardLoadSettings() {
 
         // ✅ Render container template
         container.appendChild(tpl.content.cloneNode(true));
+        const addBtn = document.getElementById('addSettingBtn');
+
 
         // ✅ Bind Add Settings button
         bindSettingsListEvents();
@@ -1774,18 +1787,33 @@ async function admindashboardLoadSettings() {
 
         grid.innerHTML = '';
 
-        // ✅ Empty state
-        if (!settingsList.length) {
-            const empty = document.createElement('p');
-            empty.textContent = 'No settings found. Click "Add Settings" to create.';
-            empty.style.color = 'var(--muted)';
-            empty.style.padding = '20px';
-            grid.appendChild(empty);
-            return;
-        }
+//        // ✅ Empty state
+//        if (!settingsList.length) {
+//            const empty = document.createElement('p');
+//            empty.textContent = 'No settings found. Click "Add Settings" to create.';
+//            empty.style.color = 'var(--muted)';
+//            empty.style.padding = '20px';
+//            grid.appendChild(empty);
+//            return;
+//        }
+          // ✅ Empty state → SHOW Add button
+          if (!settingsList.length) {
+              if (addBtn) addBtn.style.display = 'inline-flex';
+
+              const empty = document.createElement('p');
+              empty.textContent = 'No settings found. Click "Add Settings" to create.';
+              empty.style.color = 'var(--muted)';
+              empty.style.padding = '20px';
+              grid.appendChild(empty);
+              return;
+          }
+
 
         const cardTpl = document.getElementById('settingCardTemplate');
         if (!cardTpl) return;
+
+        // ❌ Hide Add Settings button (ONLY ONE SETTINGS ALLOWED)
+        if (addBtn) addBtn.style.display = 'none';
 
         // ✅ Render cards
         settingsList.forEach(settings => {
@@ -1796,6 +1824,37 @@ async function admindashboardLoadSettings() {
             setElementContent(card, '[data-contact-phone]', settings.contactPhone || '—');
             setElementContent(card, '[data-address]', settings.address || '—');
             setElementContent(card, '[data-seo-title]', settings.seoTitle || '—');
+            setElementContent(
+                card,
+                '[data-seo-keywords]',
+                settings.seoKeywords || '—'
+            );
+            setElementContent(
+                card,
+                '[data-seo-description]',
+                settings.seoDescription || '—'
+            );
+            setElementContent(card, '[data-logo-url]', settings.logoUrl || '—');
+            setElementContent(card, '[data-favicon-url]', settings.faviconUrl || '—');
+            // Footer Description
+            setElementContent(
+                card,
+                '[data-footer-description]',
+                settings.footerDescription || '—'
+            );
+//            setElementContent(card, '[data-facebook-url]', settings.facebookUrl || '—');
+//            setElementContent(card, '[data-instagram-url]', settings.instagramUrl || '—');
+//            setElementContent(card, '[data-linkedin-url]', settings.linkedInUrl || '—');
+//            setElementContent(card, '[data-twitter-url]', settings.twitterUrl || '—');
+//            setElementContent(card, '[data-youtube-url]', settings.youtubeUrl || '—');
+            setLinkContent(card, '[data-facebook-url]', settings.facebookUrl);
+            setLinkContent(card, '[data-instagram-url]', settings.instagramUrl);
+            setLinkContent(card, '[data-linkedin-url]', settings.linkedInUrl);
+            setLinkContent(card, '[data-twitter-url]', settings.twitterUrl);
+            setLinkContent(card, '[data-youtube-url]', settings.youtubeUrl);
+           //for logo and favicon
+           setImageContent(card, '[data-logo-url]', settings.logoUrl, { width: 50 });
+           setImageContent(card, '[data-favicon-url]', settings.faviconUrl, { width: 50 });
 
             // Edit
             const editBtn = card.querySelector('[data-edit]');
@@ -1837,6 +1896,47 @@ async function admindashboardLoadSettings() {
     } catch (err) {
         showErrorCard('Settings', 'Error loading settings: ' + (err.message || err));
         console.error(err);
+    }
+}
+
+//function for clickable links
+function setLinkContent(card, selector, url) {
+    const el = card.querySelector(selector);
+    if (!el) return;
+
+    if (url && url.trim()) {
+        el.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+    } else {
+        el.textContent = '—';
+    }
+}
+//function for logo and favicon
+function setImageContent(card, selector, imageUrl, options = {}) {
+    const el = card.querySelector(selector);
+    if (!el) return;
+
+    if (imageUrl && imageUrl.trim()) {
+        const finalUrl = imageUrl.startsWith('http')
+            ? imageUrl
+            : `${window.location.origin}${imageUrl}`;
+
+        const width = options.width || 48;
+        const height = options.height || 'auto';
+
+        el.innerHTML = `
+            <img src="${finalUrl}"
+                 alt="Image"
+                 style="
+                    max-width: ${width}px;
+                    height: ${height};
+                    border-radius: 4px;
+                    border: 1px solid #ddd;
+                    padding: 2px;
+                    background: #fff;
+                 " />
+        `;
+    } else {
+        el.textContent = '—';
     }
 }
 
@@ -1888,15 +1988,26 @@ function openSettingsForm(settings = null) {
             setValue('siteName', settings.siteName);
             setValue('logoUrl', settings.logoUrl);
             setValue('faviconUrl', settings.faviconUrl);
+            // Show favicon preview if URL exists
+            if (settings.faviconUrl) {
+                const previewDiv = container.querySelector('#faviconPreview');
+                const previewImg = container.querySelector('#faviconPreviewImg');
+                if (previewDiv && previewImg) {
+                    previewImg.src = settings.faviconUrl.startsWith('http') 
+                        ? settings.faviconUrl 
+                        : window.location.origin + settings.faviconUrl;
+                    previewDiv.style.display = 'block';
+                }
+            }
             setValue('contactEmail', settings.contactEmail);
             setValue('contactPhone', settings.contactPhone);
             setValue('address', settings.address);
-
+            setValue('footerDescription',settings.footerDescription);
             setValue('facebookUrl', settings.facebookUrl);
             setValue('instagramUrl', settings.instagramUrl);
             setValue('linkedInUrl', settings.linkedInUrl);
             setValue('twitterUrl', settings.twitterUrl);
-
+            setValue('youtubeUrl', settings.youtubeUrl);
             setValue('seoTitle', settings.seoTitle);
             setValue('seoKeywords', settings.seoKeywords);
             setValue('seoDescription', settings.seoDescription);
@@ -1915,6 +2026,46 @@ function openSettingsForm(settings = null) {
     if (backBtn) backBtn.onclick = () => admindashboardLoadSettings();
     if (cancelBtn) cancelBtn.onclick = () => admindashboardLoadSettings();
 
+        // ---- FAVICON FILE UPLOAD & PREVIEW ----
+        const faviconFileInput = container.querySelector('#faviconFile');
+        const faviconUrlInput = container.querySelector('#faviconUrl');
+        const faviconPreview = container.querySelector('#faviconPreview');
+        const faviconPreviewImg = container.querySelector('#faviconPreviewImg');
+
+        if (faviconFileInput) {
+            faviconFileInput.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    // Show preview
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        if (faviconPreviewImg) {
+                            faviconPreviewImg.src = event.target.result;
+                            if (faviconPreview) faviconPreview.style.display = 'block';
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                    // Clear URL input when file is selected
+                    if (faviconUrlInput) faviconUrlInput.value = '';
+                }
+            };
+        }
+
+        if (faviconUrlInput) {
+            faviconUrlInput.oninput = () => {
+                // Clear file input when URL is entered
+                if (faviconFileInput) faviconFileInput.value = '';
+                // Show preview if URL is valid
+                const url = faviconUrlInput.value.trim();
+                if (url && faviconPreviewImg) {
+                    faviconPreviewImg.src = url.startsWith('http') ? url : window.location.origin + url;
+                    if (faviconPreview) faviconPreview.style.display = 'block';
+                } else if (faviconPreview) {
+                    faviconPreview.style.display = 'none';
+                }
+            };
+        }
+
         // ---- FORM SUBMIT ----
         if (form) {
             form.onsubmit = async (e) => {
@@ -1926,21 +2077,7 @@ function openSettingsForm(settings = null) {
                     messageDiv.style.color = '';
                 }
 
-                const formData = new FormData(form);
-                const payload = {};
-
-                formData.forEach((value, key) => {
-                    payload[key] = value?.trim ? value.trim() : value;
-                });
-
                 const editingId = form.dataset.editingId;
-
-                const url = editingId
-                    ? `${ADMINDASHBOARD_API}/settings/${editingId}`
-                    : `${ADMINDASHBOARD_API}/settings`;
-
-                const method = editingId ? 'PUT' : 'POST';
-
                 const submitBtn = form.querySelector('button[type="submit"]');
                 const originalText = submitBtn ? submitBtn.textContent : '';
 
@@ -1950,6 +2087,24 @@ function openSettingsForm(settings = null) {
                 }
 
                 try {
+                    // Prepare payload (exclude file input)
+                    const formData = new FormData(form);
+                    const payload = {};
+
+                    formData.forEach((value, key) => {
+                        // Skip file inputs
+                        if (key !== 'faviconFile') {
+                            payload[key] = value?.trim ? value.trim() : value;
+                        }
+                    });
+
+                    const url = editingId
+                        ? `${ADMINDASHBOARD_API}/settings/${editingId}`
+                        : `${ADMINDASHBOARD_API}/settings`;
+
+                    const method = editingId ? 'PUT' : 'POST';
+
+                    // First, save/create the settings
                     const res = await fetch(url, {
                         method,
                         headers: {
@@ -1964,7 +2119,33 @@ function openSettingsForm(settings = null) {
                         throw new Error(errJson.message || `HTTP ${res.status}`);
                     }
 
-                    await res.json().catch(() => ({}));
+                    const savedSettings = await res.json().catch(() => ({}));
+                    const settingsId = editingId || savedSettings.id;
+
+                    // Handle favicon file upload after settings is saved/created
+                    const faviconFile = faviconFileInput?.files[0];
+                    if (faviconFile && settingsId) {
+                        // Upload favicon file
+                        const uploadFormData = new FormData();
+                        uploadFormData.append('file', faviconFile);
+
+                        try {
+                            const uploadRes = await fetch(`${ADMINDASHBOARD_API}/settings/${settingsId}/upload-favicon`, {
+                                method: 'POST',
+                                headers: admindashboardAuthHeaders(),
+                                body: uploadFormData
+                            });
+
+                            if (uploadRes.ok) {
+                                const uploadData = await uploadRes.json();
+                                // The favicon URL is already updated in the settings, so we're done
+                                console.log('Favicon uploaded successfully:', uploadData.faviconUrl);
+                            }
+                        } catch (uploadErr) {
+                            console.warn('Favicon upload failed, but settings were saved:', uploadErr);
+                            // Don't fail the whole operation if favicon upload fails
+                        }
+                    }
 
                     if (messageDiv) {
                         messageDiv.style.color = '#22c55e';
@@ -1973,7 +2154,7 @@ function openSettingsForm(settings = null) {
                             : 'Settings created successfully!';
                     }
 
-                    // Step 6 will improve this (reload list)
+                    // Reload list
                     setTimeout(() => {
                         admindashboardLoadSettings();
                     }, 1000);
@@ -1992,8 +2173,6 @@ function openSettingsForm(settings = null) {
             };
         }
 }
-
-
 
 // ---------- Services: List + Form + Sections ----------
 
@@ -2407,7 +2586,6 @@ async function showServiceForm(service = null) {
         }
     };
 }
-
 
 function loadSectionsForService(service) {
     // Non-blocking navigation (fixes click violation)

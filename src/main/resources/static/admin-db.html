@@ -626,12 +626,10 @@
             <button type="submit" id="adminSaveBtn">Save Changes</button>
         </form>
 
-        <div id="responseMessage"></div>
+<!--        <div id="responseMessage"></div>-->
+        <div id="adminFormMessage"></div>
     </div>
 </template>
-
-
-
 
 
 <!-- Add these templates to your admin-dashboard.html file -->
@@ -1119,31 +1117,280 @@
             <i class="bi bi-plus-circle"></i> Add Settings
         </button>
     </div>
-    <div class="services-grid" id="settingsGrid"></div>
+    <div class="settings-grid-container" id="settingsGrid"></div>
 </template>
+
+<!--&lt;!&ndash; Setting Card Template &ndash;&gt;-->
+<!--<template id="settingCardTemplate">-->
+<!--    <div class="service-card">-->
+<!--        <div class="service-card-header">-->
+<!--            <h3 class="service-card-title" data-site-name></h3>-->
+<!--            <p class="service-card-subtitle" data-contact-email></p>-->
+<!--        </div>-->
+<!--&lt;!&ndash;        <div class="service-card-slug">&ndash;&gt;-->
+<!--&lt;!&ndash;            <div style="margin-bottom: 8px;"><strong>Phone:</strong> <span data-contact-phone></span></div>&ndash;&gt;-->
+<!--&lt;!&ndash;            <div style="margin-bottom: 8px;"><strong>Address:</strong> <span data-address></span></div>&ndash;&gt;-->
+<!--&lt;!&ndash;            <div><strong>SEO Title:</strong> <span data-seo-title></span></div>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+<!--        <div class="service-card-slug">-->
+
+<!--            &lt;!&ndash; Branding &ndash;&gt;-->
+<!--            <div style="margin-bottom: 8px;">-->
+<!--                <strong>Logo:</strong>-->
+<!--                <span data-logo-url>—</span>-->
+<!--            </div>-->
+
+<!--            <div style="margin-bottom: 8px;">-->
+<!--                <strong>Favicon:</strong>-->
+<!--                <span data-favicon-url>—</span>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Contact &ndash;&gt;-->
+<!--            <div style="margin-bottom: 8px;">-->
+<!--                <strong>Phone:</strong>-->
+<!--                <span data-contact-phone></span>-->
+<!--            </div>-->
+
+<!--            <div style="margin-bottom: 8px;">-->
+<!--                <strong>Address:</strong>-->
+<!--                <span data-address></span>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Social &ndash;&gt;-->
+<!--            <div style="margin-bottom: 8px;">-->
+<!--                <strong>Facebook:</strong>-->
+<!--                <span data-facebook-url>—</span>-->
+<!--            </div>-->
+
+<!--            <div style="margin-bottom: 8px;">-->
+<!--                <strong>Instagram:</strong>-->
+<!--                <span data-instagram-url>—</span>-->
+<!--            </div>-->
+
+<!--            <div style="margin-bottom: 8px;">-->
+<!--                <strong>LinkedIn:</strong>-->
+<!--                <span data-linkedin-url>—</span>-->
+<!--            </div>-->
+
+<!--            <div style="margin-bottom: 8px;">-->
+<!--                <strong>Twitter:</strong>-->
+<!--                <span data-twitter-url>—</span>-->
+<!--            </div>-->
+
+<!--            <div style="margin-bottom: 8px;">-->
+<!--                <strong>YouTube:</strong>-->
+<!--                <span data-youtube-url>—</span>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; SEO (only title) &ndash;&gt;-->
+<!--            <div>-->
+<!--                <strong>SEO Title:</strong>-->
+<!--                <span data-seo-title>—</span>-->
+<!--            </div>-->
+
+<!--        </div>-->
+
+
+<!--        <div class="service-card-actions">-->
+<!--            <button class="admindashboard-btn-small primary" data-edit>-->
+<!--                <i class="bi bi-pencil"></i> Edit-->
+<!--            </button>-->
+<!--            <button class="admindashboard-btn-small danger" data-delete>-->
+<!--                <i class="bi bi-trash"></i> Delete-->
+<!--            </button>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</template>-->
 
 <!-- Setting Card Template -->
 <template id="settingCardTemplate">
-    <div class="service-card">
-        <div class="service-card-header">
-            <h3 class="service-card-title" data-site-name></h3>
-            <p class="service-card-subtitle" data-contact-email></p>
+    <div class="service-card settings-card">
+        <!-- Header -->
+        <div class="settings-header">
+            <div class="settings-header-content">
+                <div class="settings-header-icon">
+                    <i class="bi bi-gear-fill"></i>
+                </div>
+                <div class="settings-header-text">
+                    <h3 class="settings-title" data-site-name></h3>
+                    <p class="settings-subtitle" data-contact-email></p>
+                </div>
+
+            </div>
+            <span class="settings-badge">
+                <i class="bi bi-shield-check"></i> Active
+            </span>
         </div>
-        <div class="service-card-slug">
-            <div style="margin-bottom: 8px;"><strong>Phone:</strong> <span data-contact-phone></span></div>
-            <div style="margin-bottom: 8px;"><strong>Address:</strong> <span data-address></span></div>
-            <div><strong>SEO Title:</strong> <span data-seo-title></span></div>
+
+        <!-- Body -->
+        <div class="settings-body">
+            <!-- Branding -->
+            <div class="settings-section">
+                <div class="settings-section-header">
+                    <div class="settings-section-icon branding-icon">
+                        <i class="bi bi-palette-fill"></i>
+                    </div>
+                    <h4 class="settings-section-title">Branding</h4>
+                </div>
+                <div class="settings-grid">
+                    <div class="settings-item">
+                        <div class="settings-item-header">
+                            <i class="bi bi-image"></i>
+                            <span class="label">Logo</span>
+                        </div>
+                        <div class="settings-item-value" data-logo-url>—</div>
+                    </div>
+                    <div class="settings-item">
+                        <div class="settings-item-header">
+                            <i class="bi bi-star-fill"></i>
+                            <span class="label">Favicon</span>
+                        </div>
+                        <div class="settings-item-value" data-favicon-url>—</div>
+                    </div>
+                    <div class="settings-item">
+                        <div class="settings-item-header">
+                            <i class="bi bi-card-text"></i>
+                            <span class="label">Footer Description</span>
+                        </div>
+                        <div class="settings-item-value" data-footer-description>—</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Contact -->
+            <div class="settings-section">
+                <div class="settings-section-header">
+                    <div class="settings-section-icon contact-icon">
+                        <i class="bi bi-telephone-fill"></i>
+                    </div>
+                    <h4 class="settings-section-title">Contact Information</h4>
+                </div>
+                <div class="settings-grid">
+                    <div class="settings-item">
+                        <div class="settings-item-header">
+                            <i class="bi bi-phone"></i>
+                            <span class="label">Phone</span>
+                        </div>
+                        <div class="settings-item-value" data-contact-phone>—</div>
+                    </div>
+                    <div class="settings-item full">
+                        <div class="settings-item-header">
+                            <i class="bi bi-geo-alt"></i>
+                            <span class="label">Address</span>
+                        </div>
+                        <div class="settings-item-value" data-address>—</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social -->
+            <div class="settings-section">
+                <div class="settings-section-header">
+                    <div class="settings-section-icon social-icon">
+                        <i class="bi bi-share-fill"></i>
+                    </div>
+                    <h4 class="settings-section-title">Social Media Links</h4>
+                </div>
+                <div class="settings-grid">
+                    <div class="settings-item social-item">
+                        <div class="settings-item-header">
+                            <i class="bi bi-facebook"></i>
+                            <span class="label">Facebook</span>
+                        </div>
+                        <div class="settings-item-value" data-facebook-url>—</div>
+                    </div>
+                    <div class="settings-item social-item">
+                        <div class="settings-item-header">
+                            <i class="bi bi-instagram"></i>
+                            <span class="label">Instagram</span>
+                        </div>
+                        <div class="settings-item-value" data-instagram-url>—</div>
+                    </div>
+                    <div class="settings-item social-item">
+                        <div class="settings-item-header">
+                            <i class="bi bi-linkedin"></i>
+                            <span class="label">LinkedIn</span>
+                        </div>
+                        <div class="settings-item-value" data-linkedin-url>—</div>
+                    </div>
+                    <div class="settings-item social-item">
+                        <div class="settings-item-header">
+                            <i class="bi bi-twitter-x"></i>
+                            <span class="label">Twitter</span>
+                        </div>
+                        <div class="settings-item-value" data-twitter-url>—</div>
+                    </div>
+                    <div class="settings-item social-item full">
+                        <div class="settings-item-header">
+                            <i class="bi bi-youtube"></i>
+                            <span class="label">YouTube</span>
+                        </div>
+                        <div class="settings-item-value" data-youtube-url>—</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEO -->
+            <div class="settings-section">
+                <div class="settings-section-header">
+                    <div class="settings-section-icon seo-icon">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+                    <h4 class="settings-section-title">SEO Settings</h4>
+                </div>
+<!--                <div class="settings-grid">-->
+<!--                    <div class="settings-item full">-->
+<!--                        <div class="settings-item-header">-->
+<!--                            <i class="bi bi-tag"></i>-->
+<!--                            <span class="label">SEO Title</span>-->
+<!--                        </div>-->
+<!--                        <div class="settings-item-value" data-seo-title>—</div>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <div class="settings-grid">
+                    <div class="settings-item full">
+                        <div class="settings-item-header">
+                            <i class="bi bi-tag"></i>
+                            <span class="label">SEO Title</span>
+                        </div>
+                        <div class="settings-item-value" data-seo-title>—</div>
+                    </div>
+
+                    <div class="settings-item full">
+                        <div class="settings-item-header">
+                            <i class="bi bi-key"></i>
+                            <span class="label">SEO Keywords</span>
+                        </div>
+                        <div class="settings-item-value" data-seo-keywords>—</div>
+                    </div>
+
+                    <div class="settings-item full">
+                        <div class="settings-item-header">
+                            <i class="bi bi-card-text"></i>
+                            <span class="label">SEO Description</span>
+                        </div>
+                        <div class="settings-item-value" data-seo-description>—</div>
+                    </div>
+                </div>
+
+            </div>
         </div>
-        <div class="service-card-actions">
-            <button class="admindashboard-btn-small primary" data-edit>
-                <i class="bi bi-pencil"></i> Edit
+
+        <!-- Actions -->
+        <div class="settings-actions">
+            <button class="settings-action-btn settings-edit-btn" data-edit>
+                <i class="bi bi-pencil-square"></i>
+                <span>Edit Settings</span>
             </button>
-            <button class="admindashboard-btn-small danger" data-delete>
-                <i class="bi bi-trash"></i> Delete
+            <button class="settings-action-btn settings-delete-btn" data-delete>
+                <i class="bi bi-trash3"></i>
+                <span>Delete</span>
             </button>
         </div>
     </div>
 </template>
+
 
 <!-- Settings Form Template -->
 <template id="settingsFormTemplate">
@@ -1168,8 +1415,24 @@
             </div>
 
             <div class="form-row">
-                <label>Favicon URL:<br/>
-                    <input type="text" name="faviconUrl" class="admindashboard-input" placeholder="https://example.com/favicon.ico"/>
+                <label>Favicon:<br/>
+                    <input type="file" id="faviconFile" accept="image/*" class="admindashboard-input" style="margin-bottom: 10px;"/>
+                    <small style="color: #666; display: block; margin-bottom: 10px;">Or enter URL:</small>
+                    <input type="text" name="faviconUrl" id="faviconUrl" class="admindashboard-input" placeholder="https://example.com/favicon.ico or /assets/favicon.png"/>
+                    <div id="faviconPreview" style="margin-top: 10px; display: none;">
+                        <img id="faviconPreviewImg" src="" alt="Favicon Preview" style="max-width: 32px; max-height: 32px; border: 1px solid #ddd; padding: 2px;"/>
+                    </div>
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Footer Description:<br/>
+                    <textarea
+                            name="footerDescription"
+                            rows="3"
+                            class="admindashboard-textarea"
+                            placeholder="Short description shown in website footer (about company, tagline, etc.)">
+        </textarea>
                 </label>
             </div>
 
@@ -1214,6 +1477,16 @@
                     <input type="text" name="twitterUrl" class="admindashboard-input" placeholder="https://twitter.com/yourhandle"/>
                 </label>
             </div>
+
+            <div class="form-row">
+                <label>YouTube URL:<br/>
+                    <input type="text"
+                           name="youtubeUrl"
+                           class="admindashboard-input"
+                           placeholder="https://youtube.com/@yourchannel or https://youtube.com/channel/XXXX"/>
+                </label>
+            </div>
+
 
             <div class="seo-section">
                 <div class="seo-section-title"><h2>SEO Information</h2></div>
