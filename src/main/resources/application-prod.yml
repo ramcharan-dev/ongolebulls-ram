@@ -6,7 +6,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://awseb-e-f2hq7tiesh-stack-awsebrdsdatabase-dnw6qusnl0mz.cfywsmks4rlh.ap-south-1.rds.amazonaws.com:3306/ebdb?useSSL=false&serverTimezone=Asia/Kolkata&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://awseb-e-f2hq7tiesh-stack-awsebrdsdatabase-dnw6qusnl0mz.cfywsmks4rlh.ap-south-1.rds.amazonaws.com:3306/ebdb
     username: root
     password: root1234
 
