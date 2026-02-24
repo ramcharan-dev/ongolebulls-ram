@@ -1,0 +1,354 @@
+/* How It Works (4 cards) + Highlight bar + Testimonials + Two-column CTA with form
+   Replicated layout: card-based, badges, same spacing. No inline styles. */
+
+/* ========== How It Works – 4 step cards ========== */
+.elss-how-wrap {
+  padding: 4rem 0;
+  background: #f8fafc;
+  font-family: 'Inter', sans-serif;
+}
+
+.elss-how-wrap .elss-how-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.elss-section-badge {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #2563eb;
+  background: #dbeafe;
+  padding: 6px 14px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
+.elss-how-wrap .elss-how-head {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.elss-how-wrap .elss-how-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+}
+
+.elss-how-wrap .elss-how-sub {
+  font-size: 1rem;
+  color: #475569;
+  margin: 0;
+}
+
+.elss-how-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 992px) {
+  .elss-how-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .elss-how-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.elss-how-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  text-align: center;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.elss-how-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.elss-how-card .elss-how-num {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px auto;
+}
+
+.elss-how-card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+}
+
+.elss-how-card p {
+  font-size: 0.9rem;
+  color: #475569;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ========== Highlight bar ========== */
+.elss-highlight-bar {
+  background: #e0f2fe;
+  border-top: 1px solid #bae6fd;
+  border-bottom: 1px solid #bae6fd;
+  padding: 16px 24px;
+  text-align: center;
+}
+
+.elss-highlight-bar .elss-highlight-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #0f172a;
+}
+
+.elss-highlight-bar .elss-highlight-inner i {
+  color: #2563eb;
+  margin-right: 8px;
+}
+
+/* ========== What Our Investors Say ========== */
+.elss-testimonial-wrap {
+  padding: 4rem 0;
+  background: #fff;
+  font-family: 'Inter', sans-serif;
+}
+
+.elss-testimonial-wrap .elss-test-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.elss-testimonial-wrap .elss-test-head {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.elss-testimonial-wrap .elss-test-badge {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.elss-testimonial-wrap .elss-test-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+}
+
+.elss-testimonial-wrap .elss-test-sub {
+  font-size: 1rem;
+  color: #475569;
+  margin: 0;
+}
+
+.elss-testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .elss-testimonial-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.elss-testimonial-card {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+
+.elss-testimonial-card p {
+  font-size: 0.95rem;
+  color: #334155;
+  line-height: 1.6;
+  margin: 0 0 16px 0;
+}
+
+.elss-testimonial-card .elss-test-author {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+}
+
+.elss-rating-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  padding: 20px 24px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.elss-rating-summary .elss-rating-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.elss-rating-summary .elss-rating-item i {
+  color: #f59e0b;
+}
+
+/* ========== Two-column CTA + Form ========== */
+.elss-cta-form-wrap {
+  padding: 4rem 0;
+  background: #f8fafc;
+  font-family: 'Inter', sans-serif;
+}
+
+.elss-cta-form-wrap .elss-cta-form-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 48px;
+  align-items: start;
+}
+
+@media (max-width: 992px) {
+  .elss-cta-form-wrap .elss-cta-form-inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+.elss-cta-form-left h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 16px 0;
+  line-height: 1.3;
+}
+
+.elss-cta-form-left h2 .elss-blue-highlight {
+  color: #2563eb;
+}
+
+.elss-cta-form-left .elss-cta-desc {
+  font-size: 1rem;
+  color: #475569;
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+}
+
+.elss-cta-form-left .elss-cta-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px 0;
+}
+
+.elss-cta-form-left .elss-cta-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+  color: #334155;
+  margin-bottom: 12px;
+}
+
+.elss-cta-form-left .elss-cta-list li i {
+  color: #22c55e;
+  flex-shrink: 0;
+}
+
+.elss-cta-form-left .elss-btn-cta-green {
+  display: inline-block;
+  background: #22c55e;
+  color: #fff !important;
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.elss-cta-form-left .elss-btn-cta-green:hover {
+  background: #16a34a;
+  color: #fff !important;
+  transform: translateY(-2px);
+}
+
+/* Right: Get Free Consultation form card */
+.elss-form-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.elss-form-card h3 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 24px 0;
+}
+
+.elss-form-card .form-control {
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+}
+
+.elss-form-card .form-label {
+  font-weight: 500;
+  color: #334155;
+  margin-bottom: 6px;
+}
+
+.elss-form-card .btn-submit {
+  background: #22c55e;
+  color: #fff !important;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  width: 100%;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.elss-form-card .btn-submit:hover {
+  background: #16a34a;
+  color: #fff !important;
+}
+
+.elss-form-card .elss-form-row {
+  margin-bottom: 1rem;
+}

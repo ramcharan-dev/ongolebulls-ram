@@ -1,0 +1,238 @@
+/* What is ELSS? Section – Premium fintech layout
+   Font: Inter. No inline styles. */
+
+.elss-what-is-elss {
+  background-color: #f8fafc;
+  padding: 100px 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.elss-what-is-elss .elss-what-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Section header – centered */
+.elss-what-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.elss-what-header .elss-what-title {
+  font-size: 42px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 16px 0;
+  line-height: 1.2;
+}
+
+.elss-what-header .elss-what-title .elss-what-highlight {
+  color: #2563eb;
+}
+
+.elss-what-header .elss-what-sub {
+  font-size: 18px;
+  color: #475569;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* Two column layout: 60% / 40% desktop, stack mobile */
+.elss-what-grid {
+  display: grid;
+  grid-template-columns: 60% 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 992px) {
+  .elss-what-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Fade in on scroll */
+.elss-what-is-elss .elss-what-left-card,
+.elss-what-is-elss .elss-what-right-card {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.elss-what-is-elss.elss-what-inview .elss-what-left-card {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.1s;
+}
+
+.elss-what-is-elss.elss-what-inview .elss-what-right-card {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.2s;
+}
+
+/* ========== LEFT CARD ========== */
+.elss-what-left-card {
+  background: linear-gradient(135deg, #e0f2fe 0%, #d1fae5 100%);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.elss-what-left-card .elss-what-card-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 20px 0;
+}
+
+.elss-what-left-card .elss-what-card-para {
+  font-size: 16px;
+  color: #334155;
+  line-height: 1.7;
+  margin: 0 0 32px 0;
+}
+
+/* Mini feature cards – 3 in a row */
+.elss-what-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .elss-what-features {
+    grid-template-columns: 1fr;
+  }
+}
+
+.elss-what-feature {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.elss-what-feature:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.elss-what-feature .elss-what-feature-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px auto;
+  font-size: 1.25rem;
+}
+
+.elss-what-feature .elss-what-feature-icon.blue {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.elss-what-feature .elss-what-feature-icon.green {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.elss-what-feature .elss-what-feature-icon.purple {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.elss-what-feature .elss-what-feature-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+}
+
+.elss-what-feature .elss-what-feature-text {
+  font-size: 0.875rem;
+  color: #475569;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ========== RIGHT CARD ========== */
+.elss-what-right-card {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.elss-what-right-card .elss-what-ideal-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 20px 0;
+}
+
+.elss-what-ideal-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px 0;
+}
+
+.elss-what-ideal-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f1f5f9;
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 15px;
+  font-size: 1rem;
+  color: #334155;
+  font-weight: 500;
+}
+
+.elss-what-ideal-list li:last-child {
+  margin-bottom: 0;
+}
+
+.elss-what-ideal-list .elss-what-check {
+  color: #22c55e;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
+/* Bottom highlight box */
+.elss-what-highlight-box {
+  background: #e0f2fe;
+  border-left: 4px solid #2563eb;
+  border-radius: 12px;
+  padding: 15px;
+  color: #1e3a8a;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .elss-what-is-elss {
+    padding: 60px 0;
+  }
+  .elss-what-header .elss-what-title {
+    font-size: 32px;
+  }
+  .elss-what-header {
+    margin-bottom: 40px;
+  }
+  .elss-what-left-card {
+    padding: 28px 24px;
+  }
+  .elss-what-right-card {
+    padding: 24px;
+  }
+}
