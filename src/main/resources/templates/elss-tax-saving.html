@@ -710,6 +710,8 @@
         msg.className = 'mt-2 small text-success';
         msg.textContent = 'Thank you! We will get in touch soon.';
         document.getElementById('elss-lead-form').reset();
+        // Redirect to thank-you page after successful submission
+        window.location.href = '/thank-you';
       })
       .catch(function() {
         msg.className = 'mt-2 small text-danger';

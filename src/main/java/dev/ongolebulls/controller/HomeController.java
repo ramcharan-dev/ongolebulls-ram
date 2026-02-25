@@ -95,4 +95,9 @@ public class HomeController {
         return "customer-document-upload";
     }
 
+    @GetMapping("/thank-you")
+    public String thankYouPage() {
+        return "thank-you";
+    }
+
 }
