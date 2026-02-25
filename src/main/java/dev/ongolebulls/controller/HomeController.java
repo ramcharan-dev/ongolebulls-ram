@@ -95,6 +95,11 @@ public class HomeController {
         return "customer-document-upload";
     }
 
+    @GetMapping("/services.html")
+    public String servicesPage() {
+        return "forward:/Services.html";
+    }
+
     @GetMapping("/thank-you")
     public String thankYouPage() {
         return "thank-you";
