@@ -14,7 +14,6 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/market-data")
-@CrossOrigin(origins = "*")
 public class MarketDataController {
 
     @Autowired

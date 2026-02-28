@@ -11,8 +11,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api") // Instead of /api/admin/dashboard
-
-@CrossOrigin(origins = "*") // Allow cross-origin requests
 public class AdminDashboardController {
 
     private final AdminDashboardService service;

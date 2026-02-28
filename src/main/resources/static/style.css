@@ -2,6 +2,11 @@ body, h1, h2, h3, p, ul, li, a, button {
     box-sizing: border-box;
     font-family: 'Manrope', sans-serif;
 }
+
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
 .custom-line {
     border: none;
     border-top: 2px solid #333;

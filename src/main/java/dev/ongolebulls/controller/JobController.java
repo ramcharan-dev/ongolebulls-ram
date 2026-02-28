@@ -1,7 +1,6 @@
 package dev.ongolebulls.controller;
 
 import dev.ongolebulls.model.Job;
-import dev.ongolebulls.repository.JobRepository;
 import dev.ongolebulls.service.JobService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +34,6 @@ import java.util.List;
 @RestController
     @RequestMapping("/api/jobs")
 //@RequestMapping("/api/admin/dashboard/jobs")
-@CrossOrigin(origins = "*")
 public class JobController {
 //    @Autowired
 //    private JobRepository jobRepository;

@@ -34,7 +34,9 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(@org.springframework.lang.NonNull CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:8080", "https://www.ongolebullsinvest.com", "https://ongolebullsinvest.com") // Allow local and production frontend
+                        // With allowCredentials(true) we must NOT use allowedOrigins("*").
+                        // Use origin patterns so local ports (8080/8085/etc) work.
+                        .allowedOriginPatterns("http://localhost:*", "http://127.0.0.1:*", "https://www.ongolebullsinvest.com", "https://ongolebullsinvest.com")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                         .allowedHeaders("*")
                         .allowCredentials(true)

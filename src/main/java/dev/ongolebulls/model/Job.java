@@ -1,5 +1,6 @@
 package dev.ongolebulls.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -45,6 +46,7 @@ public class Job {
 
 
     @OneToMany(mappedBy = "job")
+    @JsonIgnore
     private List<JobApplication> applications;
 
 

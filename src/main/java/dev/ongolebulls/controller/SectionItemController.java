@@ -50,7 +50,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/section-items")
-@CrossOrigin
 public class SectionItemController {
 
     @Autowired

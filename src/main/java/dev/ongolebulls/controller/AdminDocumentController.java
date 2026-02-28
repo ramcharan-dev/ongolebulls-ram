@@ -13,7 +13,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin/documents")
-@CrossOrigin(origins = "*")
 public class AdminDocumentController {
 
     @Autowired

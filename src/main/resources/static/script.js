@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const contactForm = document.getElementById("contactForm");
+    if (!contactForm) return;
 
     contactForm.addEventListener("submit", async function (event) {
         event.preventDefault(); // Prevent default form submission

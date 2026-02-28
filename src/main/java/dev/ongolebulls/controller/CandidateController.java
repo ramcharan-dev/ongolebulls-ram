@@ -13,7 +13,6 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-@CrossOrigin(origins = {"http://localhost:8085", "https://www.ongolebullsinvest.com"}) // Allow local and production frontend
 @RestController
 @RequestMapping("/api/candidate")
 public class CandidateController {

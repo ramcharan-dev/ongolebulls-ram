@@ -18,7 +18,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/leads")
-@CrossOrigin(origins = {"http://localhost:8080", "https://www.ongolebullsinvest.com", "https://ongolebullsinvest.com"}, allowedHeaders = "*")
 public class LeadController {
 
     private static final Logger log = LoggerFactory.getLogger(LeadController.class);

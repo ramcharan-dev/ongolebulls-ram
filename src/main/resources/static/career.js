@@ -1,10 +1,27 @@
- async function populateDesignationDropdown() {
+function resolveApiBaseUrl() {
+    const configured = (window.API_BASE_URL || "").toString().trim();
+    if (configured) return configured.replace(/\/+$/, "");
+
+    const isHttp = location.protocol === "http:" || location.protocol === "https:";
+    const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+
+    // If we’re running over HTTP(S), default to same-origin (works for localhost:8080 and prod).
+    if (isHttp) return location.origin.replace(/\/+$/, "");
+
+    // Fallback for file:// etc. Prefer the standard Spring Boot port 8080.
+    if (isLocal) return "http://localhost:8080";
+    return "http://localhost:8080";
+}
+
+const API_BASE_URL = resolveApiBaseUrl();
+
+async function populateDesignationDropdown() {
     const designationSelect = document.getElementById('designationAppliedFor'); // NEW
     if (!designationSelect) return;
 
     try {
     // Change this URL to your actual backend endpoint for job titles
-    const response = await fetch('http://localhost:8080/api/jobs');
+    const response = await fetch(`${API_BASE_URL}/api/jobs`);
     const jobs = await response.json();
 
     // Fill the select dropdown with job titles
@@ -33,9 +50,13 @@
     modal.style.display = "flex";
 }
 
-    document.getElementById("closeModal").onclick = function() {
-    document.getElementById("applyModal").style.display = "none";
-};
+    const closeModalBtn = document.getElementById("closeModal");
+    if (closeModalBtn) {
+        closeModalBtn.onclick = function() {
+            const modal = document.getElementById("applyModal");
+            if (modal) modal.style.display = "none";
+        };
+    }
 
     // ---- Pagination Logic ----
     const itemsPerPage = 4;  // or set to 10 as needed
@@ -44,7 +65,7 @@
 
     // Use this function in place of your old renderJobs call!
     function renderJobsPaged(jobsList) {
-    pagedJobs = jobsList;
+    pagedJobs = Array.isArray(jobsList) ? jobsList : [];
     showPage(currentPage);
 }
 
@@ -160,10 +181,10 @@
 
     async function populateFilterOptions() {
     const endpoints = {
-    departmentFilter: "http://localhost:8080/api/jobs/departments",
-    locationFilter: "http://localhost:8080/api/jobs/locations",
-    experienceFilter: "http://localhost:8080/api/jobs/experiences",
-    remoteTypeFilter: "http://localhost:8080/api/jobs/worktypes"
+    departmentFilter: `${API_BASE_URL}/api/jobs/departments`,
+    locationFilter: `${API_BASE_URL}/api/jobs/locations`,
+    experienceFilter: `${API_BASE_URL}/api/jobs/experiences`,
+    remoteTypeFilter: `${API_BASE_URL}/api/jobs/worktypes`
 };
     for (const [filterId, url] of Object.entries(endpoints)) {
     const select = document.getElementById(filterId);
@@ -171,8 +192,10 @@
     select.innerHTML = '<option value="">All</option>';
     try {
     const res = await fetch(url);
+    if (!res.ok) throw new Error(res.status);
     const values = await res.json();
-    select.innerHTML += values.map(val =>
+    const list = Array.isArray(values) ? values : [];
+    select.innerHTML += list.map(val =>
     `<option value="${val}">${val}</option>`
     ).join('');
 } catch (e) {
@@ -184,7 +207,8 @@
 
 
 
-    document.getElementById('applyForm').addEventListener('submit', async function(e) {
+    const applyForm = document.getElementById('applyForm');
+    if (applyForm) applyForm.addEventListener('submit', async function(e) {
     e.preventDefault();
     const form = e.target;
     const submitBtn = form.querySelector('button[type="submit"]');
@@ -195,7 +219,7 @@
     const formData = new FormData(form);
 
     try {
-    const response = await fetch('http://localhost:8080/api/candidate/add', {
+    const response = await fetch(`${API_BASE_URL}/api/candidate/add`, {
     method: 'POST',
     body: formData // No content-type header! Browser will set it
 });
@@ -219,7 +243,7 @@
 
 
 
-    const jobsApiUrl = "http://localhost:8080/api/jobs";
+    const jobsApiUrl = `${API_BASE_URL}/api/jobs`;
     let jobs = [];
     let currentView = "grid"; // "grid" or "list"
 
@@ -239,20 +263,28 @@
 
     // Add this for filtering
     async function fetchJobsFromAPI() {
-    const department = document.getElementById('departmentFilter').value;
-    const location = document.getElementById('locationFilter').value;
-    const experience = document.getElementById('experienceFilter').value;
-    const remoteType = document.getElementById('remoteTypeFilter').value;
+    try {
+    const department = document.getElementById('departmentFilter')?.value || '';
+    const location = document.getElementById('locationFilter')?.value || '';
+    const experience = document.getElementById('experienceFilter')?.value || '';
+    const remoteType = document.getElementById('remoteTypeFilter')?.value || '';
     const params = [];
     if (department) params.push("department=" + encodeURIComponent(department));
     if (location) params.push("location=" + encodeURIComponent(location));
     if (experience) params.push("experience=" + encodeURIComponent(experience));
     if (remoteType) params.push("remoteType=" + encodeURIComponent(remoteType));
-    let url = "http://localhost:8080/api/jobs";
+    let url = `${API_BASE_URL}/api/jobs`;
     if (params.length) url += "?" + params.join("&");
     const response = await fetch(url);
-    jobs = await response.json();
-    renderJobsPaged(jobs);;
+    if (!response.ok) throw new Error("Jobs API error: " + response.status);
+    const data = await response.json();
+    jobs = Array.isArray(data) ? data : [];
+    renderJobsPaged(jobs);
+    } catch (e) {
+    console.error("fetchJobsFromAPI failed", e);
+    jobs = [];
+    renderJobsPaged(jobs);
+    }
 }
 
     document.addEventListener('DOMContentLoaded', async () => {

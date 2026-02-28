@@ -11,7 +11,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/subscribers")
-@CrossOrigin(origins = {"http://localhost:8080", "https://ongolebullsinvest.com"}, allowedHeaders = "*")
 public class SubscriberController {
 
     @Autowired
