@@ -158,7 +158,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const BASE_URL = 'http://localhost:8080/api/calculator';
+    const BASE_URL = window.location.origin.replace(/\/+$/, "") + "/api/calculator";
 
     // State
     let activeTab = 'sip';
