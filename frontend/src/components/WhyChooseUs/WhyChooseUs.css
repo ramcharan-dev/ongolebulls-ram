@@ -1,0 +1,348 @@
+/* ============================================
+   MOBILE FIRST APPROACH (BASE STYLES)
+   ============================================ */
+
+.why-choose-us-section {
+    width: 100%;
+    background: #FAFAFA;
+    padding: 60px 20px;
+}
+
+.why-choose-us-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Header Section */
+.why-choose-us-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.why-choose-us-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #2C2C2C;
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.why-choose-us-subtitle {
+    font-size: 15px;
+    color: #888;
+    line-height: 1.6;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+/* Reasons Grid - Mobile: Single Column */
+.reasons-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 25px;
+    margin-bottom: 60px;
+}
+
+/* Individual Reason Item */
+.reason-item {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.reason-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* Icon Wrapper - Blue Background */
+.reason-icon-wrapper {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #3B82F6 0%, #0000A1 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s ease;
+}
+
+.reason-item:hover .reason-icon-wrapper {
+    transform: scale(1.1) rotate(-10deg);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+}
+
+/* Icon Inside Wrapper */
+.reason-icon {
+    font-size: 26px;
+    color: white;
+}
+
+/* Reason Content */
+.reason-content {
+    flex: 1;
+}
+
+.reason-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2C2C2C;
+    margin-bottom: 8px;
+    transition: color 0.3s ease;
+}
+
+.reason-item:hover .reason-title {
+    color: #10B981;
+}
+
+.reason-description {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* CTA Box */
+.cta-box {
+    background: linear-gradient(135deg, #F97316 0%, #FBBF24 100%);
+    padding: 40px 25px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(249, 115, 22, 0.3);
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.cta-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2C2C2C;
+    margin-bottom: 15px;
+    line-height: 1.3;
+}
+
+.cta-subtitle {
+    font-size: 15px;
+    color: #4A4A4A;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.cta-button {
+    background: white;
+    color: #F97316;
+    padding: 14px 28px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    background: #FFF7ED;
+}
+
+/* ============================================
+   TABLET RESPONSIVE (481px - 768px)
+   ============================================ */
+
+@media (min-width: 481px) {
+    .why-choose-us-section {
+        padding: 70px 30px;
+    }
+
+    .why-choose-us-title {
+        font-size: 38px;
+    }
+
+    .why-choose-us-subtitle {
+        font-size: 16px;
+        max-width: 600px;
+    }
+
+    .reasons-grid {
+        gap: 30px;
+    }
+
+    .reason-item {
+        padding: 30px;
+    }
+
+    .reason-icon-wrapper {
+        width: 65px;
+        height: 65px;
+    }
+
+    .reason-icon {
+        font-size: 28px;
+    }
+
+    .reason-title {
+        font-size: 19px;
+    }
+
+    .reason-description {
+        font-size: 15px;
+    }
+
+    .cta-box {
+        padding: 45px 35px;
+    }
+
+    .cta-title {
+        font-size: 28px;
+    }
+
+    .cta-subtitle {
+        font-size: 16px;
+    }
+
+    .cta-button {
+        padding: 16px 32px;
+        font-size: 17px;
+    }
+}
+
+/* ============================================
+   DESKTOP RESPONSIVE (769px - 1024px)
+   ============================================ */
+
+@media (min-width: 769px) {
+    .why-choose-us-section {
+        padding: 80px 40px;
+    }
+
+    .why-choose-us-title {
+        font-size: 42px;
+    }
+
+    .why-choose-us-subtitle {
+        font-size: 17px;
+        max-width: 750px;
+    }
+
+    /* 2 columns for desktop */
+    .reasons-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 35px;
+        margin-bottom: 70px;
+    }
+
+    .reason-item {
+        padding: 35px;
+    }
+
+    .reason-icon-wrapper {
+        width: 70px;
+        height: 70px;
+    }
+
+    .reason-icon {
+        font-size: 30px;
+    }
+
+    .reason-title {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .reason-description {
+        font-size: 15px;
+    }
+
+    .cta-box {
+        padding: 50px 40px;
+        max-width: 900px;
+    }
+
+    .cta-title {
+        font-size: 32px;
+    }
+
+    .cta-subtitle {
+        font-size: 17px;
+        max-width: 700px;
+        margin: 0 auto 30px;
+    }
+
+    .cta-button {
+        padding: 16px 36px;
+        font-size: 17px;
+    }
+}
+
+/* ============================================
+   LARGE DESKTOP (1025px+)
+   ============================================ */
+
+@media (min-width: 1025px) {
+    .why-choose-us-section {
+        padding: 100px 60px;
+    }
+
+    .why-choose-us-title {
+        font-size: 48px;
+    }
+
+    .why-choose-us-subtitle {
+        font-size: 18px;
+        max-width: 850px;
+    }
+
+    .reasons-grid {
+        gap: 40px;
+        margin-bottom: 80px;
+    }
+
+    .reason-item {
+        padding: 40px;
+    }
+
+    .reason-icon-wrapper {
+        width: 75px;
+        height: 75px;
+    }
+
+    .reason-icon {
+        font-size: 32px;
+    }
+
+    .reason-title {
+        font-size: 22px;
+    }
+
+    .reason-description {
+        font-size: 16px;
+    }
+
+    .cta-box {
+        padding: 60px 50px;
+        max-width: 1000px;
+    }
+
+    .cta-title {
+        font-size: 36px;
+    }
+
+    .cta-subtitle {
+        font-size: 18px;
+        max-width: 750px;
+    }
+
+    .cta-button {
+        padding: 18px 40px;
+        font-size: 18px;
+    }
+}

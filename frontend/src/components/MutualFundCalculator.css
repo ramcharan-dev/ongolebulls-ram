@@ -1,0 +1,171 @@
+body {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    background: #f4f6f9;
+}
+
+.page {
+    padding: 40px 20px;
+}
+
+.card {
+    max-width: 1200px;
+    margin: auto;
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 14px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+}
+
+.title {
+    font-size: 26px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.divider {
+    height: 1px;
+    background: #e2e8f0;
+    margin: 20px 0 35px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px 40px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #334155;
+}
+
+.required {
+    color: red;
+}
+
+select,
+input[type="date"] {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 14px;
+    background: #fff;
+    transition: 0.2s ease;
+}
+
+select:focus,
+input:focus {
+    outline: none;
+    border-color: #E8562F;
+    box-shadow: 0 0 0 3px rgba(232,86,47,0.15);
+}
+
+.radio-group {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.radio {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.button-row {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.btn {
+    padding: 10px 32px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.primary {
+    background: #E8562F;
+    color: white;
+}
+
+.primary:hover {
+    background: #d14520;
+}
+
+.secondary {
+    background: #64748b;
+    color: white;
+}
+
+.secondary:hover {
+    background: #475569;
+}
+
+.results {
+    margin-top: 50px;
+}
+
+.results-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #1e293b;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+thead {
+    background: #475569;
+    color: white;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    border-right: 1px solid #e2e8f0;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+    text-align: left;
+}
+
+tbody tr:hover {
+    background: #f1f5f9;
+}
+
+.notes {
+    margin-top: 20px;
+    font-size: 13px;
+    color: #475569;
+    line-height: 1.6;
+}

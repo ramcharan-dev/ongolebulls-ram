@@ -1,0 +1,394 @@
+/*
+   GENERAL SECTION STYLING
+*/
+.home-section {
+    width: 100vw;
+    background: #f7e9d5;
+    padding: 80px 0 60px;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    overflow-x: hidden;
+}
+
+.home-section.is-visible {
+    opacity: 1;
+}
+
+.home-container {
+    max-width: 1400px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+}
+
+/*
+   LEFT TEXT SECTION
+*/
+.home-left {
+    max-width: 600px;
+    flex: 1;
+}
+
+.welcome-text {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+.main-heading {
+    font-size: 54px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    color: #111;
+}
+
+.sub-text {
+    font-size: 20px;
+    color: #444;
+    line-height: 1.6;
+    margin-bottom: 35px;
+}
+
+/*
+   BUTTON SECTION
+*/
+.btn-group {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.primary-btn,
+.secondary-btn {
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.primary-btn {
+    background: #d44a1c;
+    color: white;
+}
+
+.primary-btn:hover {
+    background: #bf3f15;
+}
+
+.secondary-btn {
+    background: #ffcd25;
+    color: #000;
+}
+
+.secondary-btn:hover {
+    background: #e7b720;
+}
+
+.home-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home-right img.hero-img {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+}
+
+/*
+   BADGES SECTION
+*/
+.badges-wrapper {
+    width: 100%;
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    padding: 0 20px;
+}
+
+.badges {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.my-badge {
+    padding: 14px 28px;
+    background: #fff;
+    border-radius: 12px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    color: #000;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.my-badge:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    background: #fff8f0;
+}
+
+.my-badge i {
+    font-size: 20px;
+    color: #d44a1c;
+    transition: transform 0.3s ease;
+}
+
+.my-badge:hover i {
+    transform: scale(1.2);
+}
+
+.badge {
+    padding: 14px 28px;
+    background: #fff;
+    border-radius: 12px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    color: #000;
+}
+
+/*
+   FEATURES SECTION
+*/
+.features-container {
+    max-width: 1300px;
+    margin: 60px auto 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 40px;
+    gap: 30px;
+}
+
+.feature-card {
+    background: white;
+    flex: 1;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    background: #fffbf5;
+}
+
+.feature-icon {
+    font-size: 42px;
+    color: #d44a1c;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover .feature-icon {
+    transform: scale(1.15);
+    color: #bf3f15;
+}
+
+.feature-icon i {
+    color: #d44a1c;
+}
+
+.feature-card h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #111;
+    transition: color 0.3s ease;
+}
+
+.feature-card:hover h3 {
+    color: #d44a1c;
+}
+
+.feature-card p {
+    color: #555;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* ============================================
+   MOBILE RESPONSIVE CSS (MAX-WIDTH: 480PX)
+   ============================================ */
+
+@media (max-width: 480px) {
+    /* Section padding adjustment */
+    .home-section {
+        padding: 100px 0 40px;
+    }
+
+    /* Container: Switch to single column */
+    .home-container {
+        flex-direction: column;
+        padding: 0 20px;
+        text-align: center;
+    }
+
+    /* Left section (text content) */
+    .home-left {
+        max-width: 100%;
+        margin-bottom: 30px;
+    }
+
+    /* Welcome text - MAKE SURE IT'S VISIBLE */
+    .welcome-text {
+        font-size: 16px;
+        margin-bottom: 10px;
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    /* Main heading */
+    .main-heading {
+        font-size: 32px;
+        line-height: 1.3;
+        margin-bottom: 16px;
+    }
+
+    /* Subtext */
+    .sub-text {
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 25px;
+    }
+
+    /* Button group: Stack vertically */
+    .btn-group {
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+    }
+
+    /* Buttons: Full width */
+    .primary-btn,
+    .secondary-btn {
+        width: 100%;
+        padding: 14px 20px;
+        font-size: 15px;
+        border-radius: 10px;
+    }
+
+    /* Hero image: Scale to fit mobile */
+    .home-right {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .home-right img.hero-img {
+        width: 100%;
+        max-width: 320px;
+        height: auto;
+    }
+
+    /* Badges wrapper */
+    .badges-wrapper {
+        margin-top: 40px;
+        padding: 0 15px;
+    }
+
+    /* Badges: Stack vertically */
+    .badges {
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+    }
+
+    /* Individual badge: Full width */
+    .my-badge {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 14px;
+        justify-content: center;
+        border-radius: 10px;
+    }
+
+    .my-badge i {
+        font-size: 18px;
+        color: #d44a1c;
+    }
+
+    /* Features container: Single column layout */
+    .features-container {
+        flex-direction: column;
+        margin-top: 40px;
+        padding: 0 20px;
+        gap: 20px;
+    }
+
+    /* Feature card: Full width, rounded, soft shadow */
+    .feature-card {
+        width: 100%;
+        padding: 25px 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Feature icon */
+    .feature-icon {
+        font-size: 36px;
+        margin-bottom: 12px;
+        color: #d44a1c;
+    }
+
+    .feature-icon i {
+        color: #d44a1c;
+    }
+
+    /* Feature card heading */
+    .feature-card h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+
+    /* Feature card paragraph */
+    .feature-card p {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    /* Remove line breaks in feature text for mobile */
+    .feature-card p br {
+        display: none;
+    }
+}
+
+/* Tablet/Medium screens */
+@media (min-width: 481px) and (max-width: 1024px) {
+    .home-container {
+        padding: 0 30px;
+    }
+
+    .features-container {
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .feature-card {
+        flex: 1 1 calc(50% - 20px);
+        min-width: 250px;
+    }
+}

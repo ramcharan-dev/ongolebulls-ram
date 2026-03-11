@@ -1,0 +1,145 @@
+
+server:
+  port: ${SERVER_PORT:8080}
+  error:
+    include-message: always
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/${DB_NAME:ongolebulls}
+    username: root
+    password: root
+
+  jpa:
+    hibernate:
+      ddl-auto: ${HIBERNATE_DDL_AUTO:update}
+    show-sql: true
+    open-in-view: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        dialect: org.hibernate.dialect.MySQLDialect
+    database-platform: org.hibernate.dialect.MySQLDialect
+
+  mail:
+
+    host: ${EMAIL_HOST:mail.ongolebullsinvest.com}
+    port: ${EMAIL_PORT:587}
+    username: ${EMAIL_USERNAME:info@ongolebullsinvest.com}
+    password: ${EMAIL_PASSWORD:Ongole@bulls@2024}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.ssl.enable: false
+      mail.debug: true
+
+  security:
+    user:
+      name: ${ADMIN_USERNAME:admin}
+      password: ${ADMIN_PASSWORD:123456}
+
+  main:
+    allow-circular-references: true # Fixed key syntax
+
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+
+thymeleaf:
+  prefix: classpath:/templates/
+  suffix: .html
+  enabled: true
+
+encryption:
+  key: lTB/6CsfDkNm46qjwXf/NuFx09ddhVU0z6rO7VJcyeA=
+
+# Swagger / OpenAPI
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+    try-it-out-enabled: true
+
+# Exchange API Configuration
+bse:
+  starmf:
+    api:
+      url: ${BSE_STARMF_API_URL:https://www.bsestarmf.in/RptWebService/WebService.asmx}
+    member:
+      id: ${BSE_MEMBER_ID:}
+    user:
+      id: ${BSE_USER_ID:}
+    password: ${BSE_PASSWORD:}
+
+
+#server:
+#  port: ${SERVER_PORT:8080}
+#  error:
+#    include-message: always
+#  max-http-request-header-size: 20000000  # prevent header too large
+#
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://${DB_HOST:localhost}:3306/${DB_NAME:ongolebulls}
+#    username: root
+#    password: root1234
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: ${HIBERNATE_DDL_AUTO:update}
+#    show-sql: true
+#    open-in-view: true
+#
+#  servlet:
+#    multipart:
+#      max-file-size: 100MB
+#      max-request-size: 100MB
+#
+#  mail:
+#    host: ${EMAIL_HOST:mail.ongolebullsinvest.com}
+#    port: ${EMAIL_PORT:587}
+#    username: ${EMAIL_USERNAME:info@ongolebullsinvest.com}
+#    password: ${EMAIL_PASSWORD:Ongole@bulls@2024}
+#    properties:
+#      mail.smtp.auth: true
+#      mail.smtp.starttls.enable: true
+#      mail.smtp.ssl.enable: false
+#      mail.debug: true
+#
+#  security:
+#    user:
+#      name: ${ADMIN_USERNAME:admin}
+#      password: ${ADMIN_PASSWORD:admin123}
+#
+#  main:
+#    allow-circular-references: true
+#
+#  mvc:
+#    view:
+#      prefix: /WEB-INF/views/
+#      suffix: .jsp
+#
+#  web:
+#    resources:
+#      static-locations: file:uploads/, classpath:/static/, classpath:/public/
+#
+## Thymeleaf templates
+#spring.thymeleaf:
+#  prefix: classpath:/templates/
+#  suffix: .html
+#  enabled: true
+#  cache: false
+#
+#encryption:
+#  key: lTB/6CsfDkNm46qjwXf/NuFx09ddhVU0z6rO7VJcyeA=
+
+
+
+

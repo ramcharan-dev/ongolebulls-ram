@@ -1,0 +1,342 @@
+.sip-page {
+  padding-top: 104px;
+  background: linear-gradient(180deg, #f8fbff 0%, #edf3fa 100%);
+  color: #0f172a;
+}
+
+.sip-wrap {
+  width: min(1160px, calc(100% - 28px));
+  margin: 0 auto;
+}
+
+.sip-section {
+  padding: 58px 0;
+}
+
+.sip-alt {
+  border-top: 1px solid #dbe7f2;
+  border-bottom: 1px solid #dbe7f2;
+  background: linear-gradient(180deg, rgba(219, 234, 254, 0.2) 0%, rgba(224, 242, 254, 0.15) 100%);
+}
+
+.sip-kicker {
+  margin: 0;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  font-weight: 700;
+  color: #1e40af;
+}
+
+.sip-head {
+  margin-bottom: 24px;
+}
+
+.sip-head h2 {
+  margin: 10px 0 0;
+  font-size: clamp(1.75rem, 2.4vw, 2.2rem);
+  line-height: 1.15;
+}
+
+.sip-hero {
+  padding: 28px 0 50px;
+}
+
+.sip-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+.sip-hero-grid h1 {
+  margin: 10px 0 0;
+  font-size: clamp(2.1rem, 3vw, 3rem);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+
+.sip-subtext {
+  margin: 14px 0 0;
+  color: #4e637f;
+  max-width: 60ch;
+  line-height: 1.65;
+}
+
+.sip-cta-row {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sip-btn {
+  height: 44px;
+  border-radius: 12px;
+  padding: 0 16px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.sip-btn-primary {
+  background: linear-gradient(135deg, #1d4ed8, #1e3a8a);
+  color: #fff;
+  box-shadow: 0 12px 22px rgba(30, 64, 175, 0.3);
+}
+
+.sip-btn-primary:hover {
+  transform: translateY(-1px);
+}
+
+.sip-btn-secondary {
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.sip-points {
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.sip-points li {
+  font-size: 14px;
+  color: #334d71;
+  font-weight: 600;
+}
+
+.sip-points li::before {
+  content: '•';
+  color: #1d4ed8;
+  margin-right: 8px;
+}
+
+.sip-hero-card {
+  border-radius: 20px;
+  border: 1px solid #d8e5f1;
+  background: #fff;
+  box-shadow: 0 20px 34px rgba(15, 23, 42, 0.1);
+  padding: 22px;
+  display: grid;
+  gap: 12px;
+}
+
+.sip-hero-metric {
+  border: 1px solid #dce8f2;
+  border-radius: 12px;
+  background: #f8fbff;
+  padding: 10px;
+}
+
+.sip-hero-metric span {
+  display: block;
+  color: #5a6f8c;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.sip-hero-metric strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 18px;
+}
+
+.sip-hero-card p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.sip-benefit-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.sip-benefit-card {
+  border-radius: 16px;
+  border: 1px solid #dbe5f2;
+  background: #fff;
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
+  padding: 18px;
+}
+
+.sip-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #1d4ed8;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+}
+
+.sip-benefit-card h3 {
+  margin: 12px 0 0;
+  font-size: 17px;
+}
+
+.sip-benefit-card p {
+  margin: 8px 0 0;
+  color: #546a87;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.sip-table-wrap {
+  border-radius: 16px;
+  border: 1px solid #d9e5f1;
+  overflow: auto;
+  background: #fff;
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
+}
+
+.sip-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 620px;
+}
+
+.sip-table th,
+.sip-table td {
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid #e5edf6;
+  font-size: 14px;
+}
+
+.sip-table th {
+  background: #f8fbff;
+  color: #2e4c73;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+}
+
+.sip-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.sip-steps li {
+  border-radius: 16px;
+  border: 1px solid #dbe5f2;
+  background: #fff;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+  padding: 16px;
+}
+
+.sip-steps span {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: #1d4ed8;
+  background: #dbeafe;
+  border: 1px solid #93c5fd;
+}
+
+.sip-steps h3 {
+  margin: 10px 0 0;
+  font-size: 16px;
+}
+
+.sip-steps p {
+  margin: 8px 0 0;
+  color: #5b6f8b;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.sip-faq-list {
+  display: grid;
+  gap: 10px;
+}
+
+.sip-faq-item {
+  border-radius: 14px;
+  border: 1px solid #d7e3ef;
+  background: #fff;
+  overflow: hidden;
+}
+
+.sip-faq-trigger {
+  width: 100%;
+  border: none;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+  cursor: pointer;
+}
+
+.sip-faq-panel {
+  padding: 0 16px 14px;
+}
+
+.sip-faq-panel p {
+  margin: 0;
+  color: #526782;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.sip-disclaimer {
+  margin-top: 14px;
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  color: #1e40af;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+@media (max-width: 980px) {
+  .sip-hero-grid,
+  .sip-benefit-grid,
+  .sip-steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .sip-page {
+    padding-top: 90px;
+  }
+
+  .sip-section {
+    padding: 40px 0;
+  }
+
+  .sip-wrap {
+    width: min(1160px, calc(100% - 14px));
+  }
+}

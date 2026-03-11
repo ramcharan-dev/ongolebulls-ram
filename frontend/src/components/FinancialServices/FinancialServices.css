@@ -1,0 +1,331 @@
+/*
+   SERVICES SECTION
+*/
+.services-section {
+    width: 100vw;
+    padding: 60px 20px;
+    background: #FFFFFF;
+}
+
+.services-container {
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+/*
+   HEADER
+*/
+.services-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.services-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1F2937;
+    margin-bottom: 10px;
+}
+
+.services-subtitle {
+    font-size: 1rem;
+    color: #6B7280;
+    margin: 0;
+}
+
+/*
+   DESKTOP GRID - HIDDEN ON MOBILE
+*/
+.services-grid {
+    display: none;
+}
+
+/*
+   MOBILE CAROUSEL - VISIBLE ON MOBILE
+*/
+.services-carousel {
+    display: block;
+}
+
+.carousel-wrapper {
+    margin-bottom: 25px;
+}
+
+/*
+   SERVICE CARD
+*/
+.service-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.service-card:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
+}
+
+.service-card-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.service-media {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    background: #F3F4F6;
+}
+
+.service-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.service-card:hover .service-img {
+    transform: scale(1.05);
+}
+
+.service-body {
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.service-heading {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1F2937;
+    margin-bottom: 12px;
+    line-height: 1.3;
+}
+
+.service-text {
+    font-size: 0.95rem;
+    color: #6B7280;
+    line-height: 1.6;
+    margin-bottom: 18px;
+    flex-grow: 1;
+}
+
+.service-actions {
+    margin-top: auto;
+}
+
+.service-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #D97706;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.service-link:hover {
+    color: #B45309;
+    gap: 12px;
+}
+
+.service-link i {
+    font-size: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.service-link:hover i {
+    transform: translateX(4px);
+}
+
+/*
+   PROFESSIONAL CAROUSEL NAVIGATION
+*/
+.carousel-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    margin-bottom: 15px;
+}
+
+.nav-button {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid #E5E7EB;
+    background: #FFFFFF;
+    color: #6B7280;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.3rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.nav-button:hover {
+    background: #D97706;
+    border-color: #D97706;
+    color: #FFFFFF;
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+}
+
+.nav-button:active {
+    transform: scale(0.95);
+}
+
+.carousel-pagination {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1F2937;
+    min-width: 60px;
+    justify-content: center;
+}
+
+.pagination-current {
+    color: #D97706;
+    font-size: 1.3rem;
+}
+
+.pagination-divider {
+    color: #D1D5DB;
+}
+
+.pagination-total {
+    color: #9CA3AF;
+    font-size: 1.1rem;
+}
+
+/*
+   PROGRESS BAR
+*/
+.carousel-progress-bar {
+    width: 100%;
+    height: 4px;
+    background: #E5E7EB;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #D97706 0%, #F59E0B 100%);
+    transition: width 0.4s ease;
+    border-radius: 2px;
+}
+
+/* ============================================
+   TABLET VIEW (481px - 1024px)
+   ============================================ */
+@media (min-width: 481px) {
+    .services-section {
+        padding: 70px 30px;
+    }
+
+    .services-container {
+        max-width: 900px;
+    }
+
+    .services-title {
+        font-size: 2.25rem;
+    }
+
+    .services-subtitle {
+        font-size: 1.05rem;
+    }
+
+    /* Show grid with 2 columns */
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+
+    /* Hide carousel */
+    .services-carousel {
+        display: none;
+    }
+
+    .service-media {
+        height: 200px;
+    }
+
+    .service-body {
+        padding: 28px 24px;
+    }
+
+    .service-heading {
+        font-size: 1.3rem;
+    }
+
+    .service-text {
+        font-size: 1rem;
+    }
+}
+
+/* ============================================
+   DESKTOP VIEW (1025px+)
+   ============================================ */
+@media (min-width: 1025px) {
+    .services-section {
+        padding: 80px 40px;
+    }
+
+    .services-container {
+        max-width: 1300px;
+    }
+
+    .services-header {
+        margin-bottom: 60px;
+    }
+
+    .services-title {
+        font-size: 2.5rem;
+    }
+
+    .services-subtitle {
+        font-size: 1.1rem;
+    }
+
+    /* Show grid with 2 columns (not 4, as per your HTML) */
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 35px;
+    }
+
+    /* Hide carousel */
+    .services-carousel {
+        display: none;
+    }
+
+    .service-media {
+        height: 240px;
+    }
+
+    .service-body {
+        padding: 32px 28px;
+    }
+
+    .service-heading {
+        font-size: 1.4rem;
+    }
+
+    .service-text {
+        font-size: 1.05rem;
+    }
+
+    .service-link {
+        font-size: 1rem;
+    }
+}

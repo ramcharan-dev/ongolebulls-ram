@@ -1,0 +1,383 @@
+/* =========================================
+   Variables & Theme
+   ========================================= */
+:root {
+    --pms-navy: #0f172a;
+    --pms-gold: #c5a028;
+    --pms-gold-hover: #d4af37;
+    --pms-white: #ffffff;
+    --pms-gray-light: #f8fafc;
+    --pms-text-dark: #334155;
+    --pms-text-muted: #64748b;
+    --pms-border: #e2e8f0;
+    --pms-radius: 12px;
+    --pms-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --pms-font: 'Inter', system-ui, sans-serif;
+}
+
+/* =========================================
+   Global & Reset
+   ========================================= */
+.pms-scope {
+    font-family: var(--pms-font);
+    color: var(--pms-text-dark);
+    background-color: var(--pms-white);
+    line-height: 1.6;
+    width: 100%;
+    margin-top: 80px; /* offset fixed header height on public pages */
+}
+
+.pms-scope * {
+    box-sizing: border-box;
+}
+
+.container {
+    width: 100%;
+    padding: 0 20px;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+.text-center { text-align: center; }
+.pms-gold { color: var(--pms-gold); }
+
+/* =========================================
+   Hero Section
+   ========================================= */
+.pms-hero {
+    background: linear-gradient(180deg, #0B2447 0%, #0f172a 100%);
+    color: var(--pms-white);
+    padding: 4rem 0 2rem 0;
+    text-align: center;
+    position: relative;
+}
+
+.pms-hero-top-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.35rem 1rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    color: #e2e8f0;
+}
+
+.pms-hero-title {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+
+.pms-hero-sub {
+    font-size: 1rem;
+    color: #cbd5e1;
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+}
+
+.pms-hero-cta {
+    margin-bottom: 3rem;
+}
+
+.pms-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.875rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    width: 100%; /* Mobile full width */
+}
+
+.pms-btn-gold {
+    background-color: var(--pms-gold);
+    color: #fff;
+    border: none;
+}
+
+.pms-btn-gold:hover {
+    background-color: var(--pms-gold-hover);
+    transform: translateY(-2px);
+}
+
+.pms-btn-outline-gold {
+    background: transparent;
+    border: 1px solid var(--pms-gold);
+    color: var(--pms-text-dark); /* Dark text on white bg */
+}
+
+.pms-btn-outline-gold:hover {
+    background: var(--pms-gold);
+    color: white;
+}
+
+/* Hero Stats */
+.pms-hero-bottom-stats {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 col mobile */
+    gap: 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.pms-stat-box:last-child:nth-child(odd) {
+    grid-column: span 2; /* Center last item if odd */
+}
+
+.pms-stat {
+    text-align: center;
+}
+
+.pms-stat-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--pms-gold);
+}
+
+.pms-stat-label {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* =========================================
+   General Section Styles
+   ========================================= */
+.pms-section {
+    padding: 3.5rem 0;
+    border-bottom: 1px solid var(--pms-border);
+}
+
+.pms-section:last-child { border-bottom: none; }
+
+.pms-section-title {
+    font-size: 1.75rem;
+    color: var(--pms-navy);
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.pms-section-sub {
+    font-size: 0.95rem;
+    color: var(--pms-text-muted);
+    max-width: 700px;
+    margin: 0 auto 2.5rem auto;
+}
+
+/* =========================================
+   Cards Grid
+   ========================================= */
+.pms-card-row {
+    display: grid;
+    grid-template-columns: 1fr; /* Mobile Stack */
+    gap: 1.5rem;
+}
+
+.pms-card {
+    background: var(--pms-white);
+    padding: 1.5rem;
+    border-radius: var(--pms-radius);
+    border: 1px solid var(--pms-border);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.pms-step-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.pms-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--pms-shadow);
+    border-color: var(--pms-gold);
+}
+
+/* Feature & Benefit Specifics */
+.pms-card-small {
+    text-align: center;
+}
+
+.pms-card-icon {
+    font-size: 2.5rem;
+    color: var(--pms-gold);
+    margin-bottom: 1rem;
+}
+
+.pms-card h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--pms-navy);
+    font-size: 1.1rem;
+}
+
+.pms-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--pms-text-muted);
+}
+
+/* =========================================
+   Types Section (Highlights)
+   ========================================= */
+.pms-types {
+    background-color: var(--pms-gray-light);
+}
+
+.pms-card-highlight {
+    border-color: var(--pms-gold);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(197, 160, 40, 0.15);
+}
+
+.pms-ribbon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--pms-gold);
+    color: white;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px;
+    text-transform: uppercase;
+}
+
+.pms-card h3 {
+    font-size: 1.25rem;
+    color: var(--pms-navy);
+    margin: 1rem 0;
+}
+
+.pms-ticklist {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+    width: 100%;
+    text-align: left;
+}
+
+.pms-ticklist li {
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--pms-text-dark);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.pms-ticklist svg {
+    flex-shrink: 0;
+    margin-top: 3px;
+}
+
+.pms-btn-sm {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+/* =========================================
+   FAQ Accordion
+   ========================================= */
+.pms-faq-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.pms-accordion-item {
+    border: 1px solid var(--pms-border);
+    border-radius: 8px;
+    background: var(--pms-white);
+    overflow: hidden;
+}
+
+.pms-accordion-btn {
+    width: 100%;
+    text-align: left;
+    padding: 1.25rem;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--pms-navy);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pms-accordion-btn.open {
+    color: var(--pms-gold);
+    background-color: #fffdf5;
+}
+
+.pms-accordion-body {
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.pms-accordion-content {
+    padding: 0 1.25rem 1.25rem 1.25rem;
+    color: var(--pms-text-muted);
+    font-size: 0.95rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+.pms-narrow {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* =========================================
+   Desktop Media Queries
+   ========================================= */
+@media (min-width: 768px) {
+    .pms-hero { padding: 6rem 0 4rem 0; }
+    .pms-hero-title { font-size: 3rem; }
+    .pms-hero-sub { font-size: 1.125rem; }
+
+    .pms-btn { width: auto; } /* Revert full width button */
+
+    .pms-hero-bottom-stats {
+        display: flex;
+        justify-content: center;
+        gap: 4rem;
+    }
+
+    .pms-card-row {
+        grid-template-columns: repeat(3, 1fr); /* 3 Col Grid */
+    }
+
+    /* Special case for features if 4 items */
+    .pms-features .pms-card-row {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .pms-section-title { font-size: 2.25rem; }
+}

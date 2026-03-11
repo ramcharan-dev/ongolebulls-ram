@@ -1,0 +1,133 @@
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+.footer {
+    background-color: #ffffff;
+    color: #1e1e1e;
+    padding: 40px 80px 0;
+    font-family: "Poppins", sans-serif;
+
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 230px;
+    margin: 15px;
+}
+
+.footer-logo {
+    width: 150px;
+    margin-bottom: 15px;
+}
+
+.footer-section p {
+    line-height: 1.6;
+    font-size: 15px;
+    color: #333;
+}
+
+.footer-section h4 {
+    margin-bottom: 12px;
+    font-size: 18px;
+    color: #000;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.footer-section a {
+    color: #e74c3c;
+    text-decoration: none;
+}
+
+.social-icons {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.social-icons svg {
+    font-size: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.social-icons svg:hover {
+    color: #e74c3c;
+}
+
+.subscribe-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.subscribe-box input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 100%;
+}
+
+.subscribe-box button {
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 10px 0;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.subscribe-box button:hover {
+    background-color: #ff4b4b;
+}
+
+.footer-bottom {
+    background-color: #2d3f49;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 14px;
+
+
+
+
+}
+
+.footer-bottom .footer-links a {
+    color: white;
+    margin: 0 5px;
+    text-decoration: none;
+}
+
+.footer-bottom .footer-links a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    .footer-section {
+        margin: 20px 0;
+    }
+}

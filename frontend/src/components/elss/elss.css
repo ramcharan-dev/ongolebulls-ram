@@ -1,0 +1,692 @@
+.elss-page {
+  --elss-bg: #f5f8fc;
+  --elss-surface: #ffffff;
+  --elss-text: #0f172a;
+  --elss-subtext: #4a5d78;
+  --elss-border: #dbe4ef;
+  --elss-primary: #1d4ed8;
+  --elss-primary-deep: #1e3a8a;
+  --elss-accent: #0284c7;
+  --elss-success: #0891b2;
+  background: linear-gradient(180deg, #f7fafd 0%, #eef3f9 100%);
+  color: var(--elss-text);
+  padding-top: 108px;
+}
+
+.elss-section {
+  padding: 64px 0;
+}
+
+.elss-section-alt {
+  background: linear-gradient(180deg, rgba(219, 234, 254, 0.24) 0%, rgba(224, 242, 254, 0.18) 100%);
+  border-top: 1px solid rgba(191, 219, 254, 0.32);
+  border-bottom: 1px solid rgba(191, 219, 254, 0.32);
+}
+
+.elss-section-hero {
+  padding-top: 28px;
+}
+
+.elss-container {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.elss-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1e40af;
+}
+
+.elss-section-head {
+  max-width: 720px;
+  margin-bottom: 28px;
+}
+
+.elss-section-head h2 {
+  margin: 10px 0 0;
+  font-family: Manrope, 'Segoe UI', sans-serif;
+  font-size: clamp(1.85rem, 2.5vw, 2.35rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.elss-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 28px;
+  align-items: stretch;
+}
+
+.elss-hero-content {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(191, 219, 254, 0.65);
+  border-radius: 24px;
+  box-shadow: 0 24px 44px rgba(15, 23, 42, 0.08);
+  padding: 34px;
+  backdrop-filter: blur(4px);
+}
+
+.elss-hero-content h1 {
+  margin: 12px 0 0;
+  font-family: Manrope, 'Segoe UI', sans-serif;
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  line-height: 1.07;
+  letter-spacing: -0.02em;
+}
+
+.elss-subtitle {
+  margin: 14px 0 0;
+  color: var(--elss-subtext);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+.elss-highlight-list {
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.elss-highlight-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.96rem;
+  color: #1f3a5f;
+  font-weight: 600;
+}
+
+.elss-highlight-list li::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(145deg, var(--elss-primary), var(--elss-accent));
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.16);
+  flex-shrink: 0;
+}
+
+.elss-hero-actions {
+  margin-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.elss-btn {
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.93rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
+}
+
+.elss-btn-primary {
+  background: linear-gradient(135deg, var(--elss-primary), var(--elss-primary-deep));
+  color: #fff;
+  box-shadow: 0 12px 20px rgba(30, 64, 175, 0.3);
+}
+
+.elss-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 24px rgba(30, 64, 175, 0.36);
+}
+
+.elss-btn-secondary {
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.elss-btn-secondary:hover {
+  background: #dbeafe;
+}
+
+.elss-hero-visual {
+  min-width: 0;
+}
+
+.elss-growth-panel {
+  height: 100%;
+  border-radius: 24px;
+  border: 1px solid #d5e3f2;
+  background: var(--elss-surface);
+  box-shadow: 0 24px 44px rgba(15, 23, 42, 0.1);
+  padding: 28px;
+  display: grid;
+  gap: 20px;
+}
+
+.elss-growth-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.elss-growth-head p {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.elss-growth-head span {
+  border: 1px solid #bae6fd;
+  background: #e0f2fe;
+  color: #0369a1;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.elss-growth-bars {
+  display: grid;
+  gap: 12px;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.bar-row span {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.bar-row > div {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  overflow: hidden;
+}
+
+.bar-row i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #2563eb, #06b6d4);
+  animation: elssGrowBar 1s ease;
+}
+
+@keyframes elssGrowBar {
+  from { width: 0 !important; }
+}
+
+.elss-hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.elss-hero-stat {
+  border: 1px solid var(--elss-border);
+  border-radius: 12px;
+  background: #f8fbff;
+  padding: 10px;
+}
+
+.elss-hero-stat span {
+  display: block;
+  color: #50627f;
+  font-size: 0.74rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.elss-hero-stat strong {
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+}
+
+.elss-benefit-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.elss-benefit-card {
+  border-radius: 18px;
+  border: 1px solid #dbe6f2;
+  background: #fff;
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.08);
+  padding: 22px;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.elss-benefit-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 36px rgba(15, 23, 42, 0.12);
+}
+
+.elss-benefit-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #1d4ed8;
+  background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
+  border: 1px solid #bfdbfe;
+}
+
+.elss-benefit-card h3 {
+  margin: 14px 0 0;
+  font-size: 1.08rem;
+}
+
+.elss-benefit-card p {
+  margin: 10px 0 0;
+  color: #4f6382;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.elss-table-wrap {
+  border: 1px solid #d5e1ed;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
+}
+
+.elss-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.elss-table th,
+.elss-table td {
+  padding: 14px 14px;
+  text-align: left;
+  border-bottom: 1px solid #e9eff6;
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+
+.elss-table th {
+  background: #f8fbff;
+  color: #31517a;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.elss-table tbody tr {
+  transition: background-color 180ms ease;
+}
+
+.elss-table tbody tr:hover {
+  background: #f7fbff;
+}
+
+.elss-risk-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #bae6fd;
+  background: #ecfeff;
+  color: #0e7490;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.elss-action-group {
+  display: inline-flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.elss-link-btn {
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+  background: #eff6ff;
+  border-radius: 10px;
+  padding: 8px 10px;
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 700;
+  transition: background-color 180ms ease, transform 180ms ease;
+}
+
+.elss-link-btn.is-primary {
+  border-color: #1d4ed8;
+  color: #fff;
+  background: #1d4ed8;
+}
+
+.elss-link-btn:hover {
+  transform: translateY(-1px);
+}
+
+.elss-fund-cards {
+  display: none;
+}
+
+.elss-calc-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 18px;
+}
+
+.elss-calc-inputs,
+.elss-calc-results {
+  background: #fff;
+  border: 1px solid #d8e3f0;
+  border-radius: 18px;
+  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.08);
+  padding: 20px;
+}
+
+.elss-calc-inputs {
+  display: grid;
+  gap: 16px;
+}
+
+.elss-calc-inputs label {
+  display: grid;
+  gap: 10px;
+  color: #334155;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.elss-input-row {
+  height: 44px;
+  border: 1px solid #c6d3e4;
+  background: #f8fbff;
+  border-radius: 12px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+}
+
+.elss-input-row input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.elss-input-row span {
+  color: #5b6f8d;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.elss-calc-inputs input[type='range'] {
+  width: 100%;
+  accent-color: #1d4ed8;
+}
+
+.elss-calc-results {
+  display: grid;
+  gap: 14px;
+}
+
+.elss-chart-wrap {
+  max-width: 260px;
+  margin: 0 auto;
+}
+
+.elss-results-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.elss-result-tile {
+  border: 1px solid #dce7f2;
+  border-radius: 12px;
+  background: #f9fbff;
+  padding: 10px;
+}
+
+.elss-result-tile span {
+  display: block;
+  font-size: 0.73rem;
+  color: #5a6f8b;
+  font-weight: 700;
+}
+
+.elss-result-tile strong {
+  margin-top: 4px;
+  display: block;
+  font-size: 0.92rem;
+  letter-spacing: -0.01em;
+}
+
+.elss-result-tile.is-accent {
+  border-color: #bfdbfe;
+  background: #eff6ff;
+}
+
+.elss-result-tile.is-strong {
+  border-color: #bae6fd;
+  background: #e0f2fe;
+}
+
+.elss-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.elss-step-item {
+  position: relative;
+  border: 1px solid #d9e4f1;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
+  padding: 18px;
+}
+
+.elss-step-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 28px;
+  right: -14px;
+  width: 28px;
+  height: 2px;
+  background: #bfdbfe;
+}
+
+.elss-step-index {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid #93c5fd;
+  background: #dbeafe;
+  color: #1d4ed8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.elss-step-item h3 {
+  margin: 12px 0 0;
+  font-size: 1rem;
+}
+
+.elss-step-item p {
+  margin: 8px 0 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: #566c8b;
+}
+
+.elss-faq-list {
+  display: grid;
+  gap: 10px;
+}
+
+.elss-faq-item {
+  border: 1px solid #d7e2ef;
+  border-radius: 14px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 10px 18px rgba(15, 23, 42, 0.06);
+}
+
+.elss-faq-trigger {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  border: none;
+  background: #fff;
+  padding: 15px 16px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e293b;
+  cursor: pointer;
+}
+
+.elss-faq-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  color: #1d4ed8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.elss-faq-panel {
+  padding: 0 16px 14px;
+}
+
+.elss-faq-panel p {
+  margin: 0;
+  color: #4f6382;
+  line-height: 1.65;
+}
+
+@media (max-width: 1080px) {
+  .elss-hero-grid,
+  .elss-calc-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .elss-hero-stats,
+  .elss-results-grid,
+  .elss-benefit-grid,
+  .elss-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .elss-step-item:nth-child(2)::after {
+    display: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .elss-page {
+    padding-top: 92px;
+  }
+
+  .elss-section {
+    padding: 44px 0;
+  }
+
+  .elss-table-wrap {
+    display: none;
+  }
+
+  .elss-fund-cards {
+    display: grid;
+    gap: 12px;
+  }
+
+  .elss-fund-card {
+    border: 1px solid #d7e2ef;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 14px 24px rgba(15, 23, 42, 0.08);
+    padding: 14px;
+  }
+
+  .elss-fund-card h3 {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .elss-fund-meta {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .elss-fund-meta span {
+    font-size: 0.82rem;
+    color: #526782;
+  }
+}
+
+@media (max-width: 640px) {
+  .elss-container {
+    width: min(1180px, calc(100% - 18px));
+  }
+
+  .elss-hero-content,
+  .elss-growth-panel,
+  .elss-calc-inputs,
+  .elss-calc-results {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .elss-hero-stats,
+  .elss-results-grid,
+  .elss-benefit-grid,
+  .elss-steps,
+  .elss-fund-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .elss-step-item::after {
+    display: none;
+  }
+
+  .bar-row {
+    grid-template-columns: 110px minmax(0, 1fr);
+  }
+}

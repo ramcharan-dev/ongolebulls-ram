@@ -1,0 +1,350 @@
+/* About Us Page - Premium Styling */
+.page-about-us {
+    font-family: 'Inter', 'Segoe UI', -apple-system, sans-serif;
+    background: #ffffff;
+}
+
+/* Hero Section */
+.page-about-hero {
+    position: relative;
+    height: 400px;
+    background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.page-about-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.5;
+}
+
+.page-hero-overlay {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: white;
+}
+
+.page-hero-title {
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.page-hero-subtitle {
+    font-size: 1.4rem;
+    font-weight: 300;
+    opacity: 0.95;
+    animation: fadeInUp 1s ease-out;
+}
+
+/* About Intro Section */
+.page-about-intro {
+    padding: 100px 20px;
+    background: #f8f9fa;
+}
+
+.page-about-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.page-intro-image {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.page-intro-image:hover {
+    transform: scale(1.05) translateY(-10px);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+}
+
+.page-intro-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.page-intro-content {
+    padding: 20px;
+}
+
+.page-intro-text {
+    font-size: 1.15rem;
+    line-height: 2;
+    color: #4a5568;
+    text-align: justify;
+}
+
+/* Our Values Section */
+.page-values-section {
+    padding: 100px 20px;
+    background: white;
+}
+
+.page-values-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.page-section-title {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 700;
+    color: #0d1b2a;
+    margin-bottom: 60px;
+    position: relative;
+}
+
+.page-section-title::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #1a237e, #3949ab);
+    margin: 20px auto 0;
+    border-radius: 2px;
+}
+
+.page-values-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+}
+
+.page-value-card {
+    background: #f8f9fa;
+    padding: 45px 35px;
+    border-radius: 16px;
+    text-align: center;
+    transition: all 0.4s ease;
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+
+.page-value-card:hover {
+    background: white;
+    border-color: #1a237e;
+    transform: translateY(-15px);
+    box-shadow: 0 20px 50px rgba(26, 35, 126, 0.15);
+}
+
+.page-value-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    transition: transform 0.4s ease;
+}
+
+.page-value-card:hover .page-value-icon {
+    transform: scale(1.15) rotate(10deg);
+}
+
+.page-value-icon i {
+    font-size: 2rem;
+    color: white;
+}
+
+.page-value-card h3 {
+    font-size: 1.8rem;
+    color: #0d1b2a;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.page-value-card p {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #4a5568;
+}
+
+/* Vision & Mission Section */
+.page-vision-mission-section {
+    padding: 100px 20px;
+    background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.page-vision-mission-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 50px;
+}
+
+.page-vm-card {
+    background: white;
+    border-radius: 20px;
+    padding: 50px 40px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s ease;
+    border: 2px solid transparent;
+}
+
+.page-vm-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 70px rgba(26, 35, 126, 0.2);
+    border-color: #1a237e;
+}
+
+.page-vm-content h2 {
+    font-size: 2.5rem;
+    color: #1a237e;
+    margin-bottom: 30px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.page-vm-image {
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.4s ease;
+}
+
+.page-vm-card:hover .page-vm-image {
+    transform: scale(1.05);
+}
+
+.page-vm-image img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    display: block;
+}
+
+.page-vm-content p {
+    font-size: 1.1rem;
+    line-height: 1.9;
+    color: #4a5568;
+    text-align: center;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .page-about-container,
+    .page-vision-mission-container {
+        grid-template-columns: 1fr;
+        gap: 50px;
+    }
+
+    .page-values-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-about-hero {
+        height: 300px;
+    }
+
+    .page-hero-title {
+        font-size: 2.5rem;
+    }
+
+    .page-hero-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .page-section-title {
+        font-size: 2rem;
+    }
+
+    .page-about-intro,
+    .page-values-section,
+    .page-vision-mission-section {
+        padding: 60px 20px;
+    }
+
+    .page-intro-text {
+        font-size: 1rem;
+        text-align: left;
+    }
+
+    .page-value-card h3 {
+        font-size: 1.5rem;
+    }
+
+    .page-vm-content h2 {
+        font-size: 2rem;
+    }
+
+    .page-vm-content p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-about-hero {
+        height: 250px;
+    }
+
+    .page-hero-title {
+        font-size: 2rem;
+    }
+
+    .page-hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .page-about-intro,
+    .page-values-section,
+    .page-vision-mission-section {
+        padding: 40px 15px;
+    }
+
+    .page-value-icon {
+        width: 70px;
+        height: 70px;
+    }
+
+    .page-value-icon i {
+        font-size: 1.7rem;
+    }
+
+    .page-value-card {
+        padding: 35px 25px;
+    }
+
+    .page-vm-card {
+        padding: 35px 25px;
+    }
+
+    .page-vm-image img {
+        height: 200px;
+    }
+}

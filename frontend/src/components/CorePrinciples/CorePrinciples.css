@@ -1,0 +1,245 @@
+/* ============================================
+   MOBILE FIRST APPROACH (BASE STYLES)
+   ============================================ */
+
+.core-principles-section {
+    width: 100%;
+    background: #F5F5F5;
+    padding: 60px 20px;
+}
+
+.core-principles-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Header Section */
+.core-principles-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.core-principles-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #2C2C2C;
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.core-principles-subtitle {
+    font-size: 15px;
+    color: #9B9B9B;
+    line-height: 1.6;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+/* Principles Grid - Mobile: Single Column */
+.principles-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+}
+
+/* Individual Principle Card */
+.principle-card {
+    background: white;
+    padding: 30px 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* Container Hover Effect */
+.principle-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    background: #FAFAFA;
+}
+
+/* Icon Wrapper - Colored Square Background */
+.principle-icon-wrapper {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 20px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s ease;
+}
+
+/* Icon Wrapper Hover Effect (Different from Container) */
+.principle-card:hover .principle-icon-wrapper {
+    transform: scale(1.15) rotate(8deg);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+/* Icon Inside Wrapper */
+.principle-icon {
+    font-size: 32px;
+    color: white;
+}
+
+/* Principle Title */
+.principle-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2C2C2C;
+    margin-bottom: 12px;
+    transition: color 0.3s ease;
+}
+
+.principle-card:hover .principle-title {
+    color: #d44a1c;
+}
+
+/* Principle Description */
+.principle-description {
+    font-size: 14px;
+    color: #9B9B9B;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ============================================
+   TABLET RESPONSIVE (481px - 768px)
+   ============================================ */
+
+@media (min-width: 481px) {
+    .core-principles-section {
+        padding: 70px 30px;
+    }
+
+    .core-principles-title {
+        font-size: 38px;
+    }
+
+    .core-principles-subtitle {
+        font-size: 16px;
+        max-width: 600px;
+    }
+
+    /* 2 columns for tablet */
+    .principles-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+    }
+
+    .principle-card {
+        padding: 35px 25px;
+    }
+
+    .principle-icon-wrapper {
+        width: 75px;
+        height: 75px;
+    }
+
+    .principle-icon {
+        font-size: 34px;
+    }
+
+    .principle-title {
+        font-size: 21px;
+    }
+
+    .principle-description {
+        font-size: 15px;
+    }
+}
+
+/* ============================================
+   DESKTOP RESPONSIVE (769px - 1024px)
+   ============================================ */
+
+@media (min-width: 769px) {
+    .core-principles-section {
+        padding: 80px 40px;
+    }
+
+    .core-principles-title {
+        font-size: 42px;
+    }
+
+    .core-principles-subtitle {
+        font-size: 17px;
+        max-width: 700px;
+    }
+
+    /* 4 columns for desktop */
+    .principles-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+    }
+
+    .principle-card {
+        padding: 40px 25px;
+    }
+
+    .principle-icon-wrapper {
+        width: 80px;
+        height: 80px;
+        border-radius: 18px;
+    }
+
+    .principle-icon {
+        font-size: 36px;
+    }
+
+    .principle-title {
+        font-size: 22px;
+        margin-bottom: 15px;
+    }
+
+    .principle-description {
+        font-size: 15px;
+    }
+}
+
+/* ============================================
+   LARGE DESKTOP (1025px+)
+   ============================================ */
+
+@media (min-width: 1025px) {
+    .core-principles-section {
+        padding: 100px 60px;
+    }
+
+    .core-principles-title {
+        font-size: 48px;
+    }
+
+    .core-principles-subtitle {
+        font-size: 18px;
+        max-width: 800px;
+    }
+
+    .principles-grid {
+        gap: 35px;
+    }
+
+    .principle-card {
+        padding: 45px 30px;
+    }
+
+    .principle-icon-wrapper {
+        width: 85px;
+        height: 85px;
+        border-radius: 20px;
+    }
+
+    .principle-icon {
+        font-size: 38px;
+    }
+
+    .principle-title {
+        font-size: 23px;
+    }
+
+    .principle-description {
+        font-size: 16px;
+    }
+}

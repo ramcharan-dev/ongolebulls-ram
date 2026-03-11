@@ -1,0 +1,1 @@
+import{a}from"./index-C4XemGI7.js";const e=t=>a.post("/api/auth/send-email-otp",{email:t}),o=(t,i)=>a.post("/api/auth/verify-email-otp",{email:t,otp:i}),p=t=>a.post("/api/auth/register-client",t,{headers:{"Content-Type":"multipart/form-data"}}),r=(t,i)=>a.post("/api/auth/login",{email:t,password:i});export{r as l,p as r,e as s,o as v};

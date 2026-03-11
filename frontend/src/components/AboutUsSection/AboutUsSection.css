@@ -1,0 +1,288 @@
+/*
+   ABOUT US SECTION
+*/
+.about-section {
+    width: 100vw;
+    padding: 60px 20px;
+    background: #F9FAFB;
+}
+
+.about-container {
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+/*
+   HEADING
+*/
+.about-heading {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1F2937;
+    margin-bottom: 30px;
+    text-align: center;
+
+}
+
+/*
+   CONTENT WRAPPER - MOBILE FIRST (STACKED)
+*/
+.about-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/*
+   LEFT CONTENT
+*/
+.about-left {
+    flex: 1;
+}
+
+.about-intro {
+    font-size: 1rem;
+    color: #6B7280;
+    line-height: 1.7;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.company-name {
+    color: #DC2626;
+    font-weight: 600;
+}
+
+/*
+   FEATURES LIST
+*/
+.about-features {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-bottom: 35px;
+}
+
+.about-feature-item {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.about-feature-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.about-feature-icon i {
+    font-size: 24px;
+}
+
+.about-feature-content {
+    flex: 1;
+}
+
+.about-feature-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1F2937;
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+
+.about-feature-desc {
+    font-size: 0.95rem;
+    color: #6B7280;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/*
+   STATS CONTAINER - MOBILE (2x2 GRID)
+*/
+.about-stats-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    background: #FFFFFF;
+    padding: 25px 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.about-stat-item {
+    text-align: center;
+}
+
+.about-stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.about-stat-label {
+    font-size: 0.9rem;
+    color: #6B7280;
+    font-weight: 500;
+}
+
+/*
+   RIGHT IMAGE
+*/
+.about-right {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.about-team-image {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* ============================================
+   TABLET VIEW (481px - 1024px)
+   ============================================ */
+@media (min-width: 481px) {
+    .about-section {
+        padding: 70px 30px;
+    }
+
+    .about-container {
+        max-width: 900px;
+    }
+
+    .about-heading {
+        font-size: 2.25rem;
+        margin-bottom: 35px;
+    }
+
+    .about-intro {
+        font-size: 1.05rem;
+        text-align: left;
+        padding-right: 20px;
+    }
+
+    .about-feature-icon {
+        width: 55px;
+        height: 55px;
+    }
+
+    .about-feature-icon i {
+        font-size: 26px;
+    }
+
+    .about-feature-title {
+        font-size: 1.1rem;
+    }
+
+    .about-feature-desc {
+        font-size: 1rem;
+    }
+
+    .about-stats-container {
+        grid-template-columns: repeat(4, 1fr);
+        padding: 30px 25px;
+    }
+
+    .about-stat-value {
+        font-size: 2rem;
+    }
+
+    .about-stat-label {
+        font-size: 0.95rem;
+    }
+
+    .about-team-image {
+        max-width: 450px;
+    }
+}
+
+/* ============================================
+   DESKTOP VIEW (1025px+)
+   ============================================ */
+@media (min-width: 1025px) {
+    .about-section {
+        padding: 80px 40px;
+    }
+
+    .about-container {
+        max-width: 1300px;
+    }
+
+    .about-heading {
+        font-size: 2.5rem;
+        margin-bottom: 50px;
+        text-align: left;
+    }
+
+    .about-content-wrapper {
+        flex-direction: row;
+        gap: 60px;
+        align-items: flex-start;
+    }
+
+    .about-left {
+        flex: 1.2;
+    }
+
+    .about-right {
+        flex: 0.8;
+    }
+
+    .about-intro {
+        font-size: 1.1rem;
+        text-align: left;
+        margin-bottom: 40px;
+    }
+
+    .about-features {
+        gap: 30px;
+        margin-bottom: 45px;
+    }
+
+    .about-feature-item {
+        gap: 18px;
+    }
+
+    .about-feature-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .about-feature-icon i {
+        font-size: 28px;
+    }
+
+    .about-feature-title {
+        font-size: 1.2rem;
+    }
+
+    .about-feature-desc {
+        font-size: 1.05rem;
+    }
+
+    .about-stats-container {
+        padding: 35px 30px;
+    }
+
+    .about-stat-value {
+        font-size: 2.25rem;
+    }
+
+    .about-stat-label {
+        font-size: 1rem;
+    }
+
+    .about-team-image {
+        max-width: 500px;
+    }
+}

@@ -1,0 +1,204 @@
+/*
+   WEALTH JOURNEY SECTION
+*/
+.wealth-journey-section {
+    width: 100vw;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    text-align: center;
+}
+
+.wealth-journey-container {
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+/*
+   HEADING
+*/
+.wealth-journey-heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 35px;
+    line-height: 1.4;
+    padding: 0 10px;
+}
+
+/*
+   CARDS GRID - MOBILE FIRST (1 COLUMN)
+*/
+.wealth-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-bottom: 35px;
+}
+
+/*
+   QUESTION CARD
+*/
+.wealth-question-card {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 30px 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.wealth-question-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/*
+   ICON CIRCLE
+*/
+.wealth-icon-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.wealth-icon-circle i {
+    font-size: 32px;
+    color: #ffffff;
+}
+
+/*
+   QUESTION TEXT
+*/
+.wealth-question-text {
+    font-size: 1rem;
+    color: #2c3e50;
+    line-height: 1.5;
+    font-weight: 500;
+    margin: 0;
+    text-align: center;
+}
+
+/*
+   CTA BUTTON
+*/
+.wealth-cta-button {
+    background: #f59e0b;
+    color: #1f2937;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.wealth-cta-button:hover {
+    background: #d97706;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(245, 158, 11, 0.4);
+}
+
+.wealth-cta-button:active {
+    transform: translateY(0);
+}
+
+/* ============================================
+   TABLET VIEW (481px - 1024px)
+   ============================================ */
+@media (min-width: 481px) {
+    .wealth-journey-section {
+        padding: 70px 30px;
+    }
+
+    .wealth-journey-container {
+        max-width: 900px;
+    }
+
+    .wealth-journey-heading {
+        font-size: 1.85rem;
+        margin-bottom: 40px;
+    }
+
+    .wealth-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .wealth-question-card {
+        padding: 35px 25px;
+    }
+
+    .wealth-icon-circle {
+        width: 75px;
+        height: 75px;
+    }
+
+    .wealth-icon-circle i {
+        font-size: 34px;
+    }
+
+    .wealth-question-text {
+        font-size: 1.05rem;
+    }
+
+    .wealth-cta-button {
+        font-size: 1.05rem;
+        padding: 15px 38px;
+    }
+}
+
+/* ============================================
+   DESKTOP VIEW (1025px+)
+   ============================================ */
+@media (min-width: 1025px) {
+    .wealth-journey-section {
+        padding: 80px 40px;
+    }
+
+    .wealth-journey-container {
+        max-width: 1300px;
+    }
+
+    .wealth-journey-heading {
+        font-size: 2.25rem;
+        margin-bottom: 50px;
+    }
+
+    .wealth-cards-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        margin-bottom: 50px;
+    }
+
+    .wealth-question-card {
+        padding: 40px 30px;
+    }
+
+    .wealth-icon-circle {
+        width: 80px;
+        height: 80px;
+    }
+
+    .wealth-icon-circle i {
+        font-size: 36px;
+    }
+
+    .wealth-question-text {
+        font-size: 1.1rem;
+    }
+
+    .wealth-cta-button {
+        font-size: 1.1rem;
+        padding: 16px 42px;
+    }
+}

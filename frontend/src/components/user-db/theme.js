@@ -1,0 +1,65 @@
+export const lightTheme = {
+  colors: {
+    background: '#F9FAFB',
+    sidebar: '#FFFFFF',
+    header: '#FFFFFF',
+    surface: '#FFFFFF',
+    text: '#0F172A',
+    textMuted: '#64748B',
+    primary: '#0F172A',
+    primaryHover: '#1E293B',
+    secondary: '#2563EB', // Striking Fintech Blue
+    accent: '#059669', // Emerald
+    success: '#059669',
+    successLight: '#D1FAE5',
+    danger: '#DC2626',
+    dangerLight: '#FEE2E2',
+    warning: '#D97706',
+    warningLight: '#FEF3C7',
+    border: '#E2E8F0',
+    divider: '#F1F5F9',
+    muted: '#F1F5F9',
+    buttonText: '#FFFFFF'
+  },
+  shadows: {
+    sm: '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03)',
+    md: '0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025)',
+  },
+  typography: {
+    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+  }
+};
+
+export const darkTheme = {
+  colors: {
+    background: '#040916', // Deeper premium dark mode
+    sidebar: '#0B1121',
+    header: '#0B1121',
+    surface: '#12182B',
+    text: '#F8FAFC',
+    textMuted: '#94A3B8',
+    primary: '#FFFFFF',
+    primaryHover: '#F1F5F9',
+    secondary: '#3B82F6',
+    accent: '#10B981',
+    success: '#10B981',
+    successLight: 'rgba(16, 185, 129, 0.15)',
+    danger: '#EF4444',
+    dangerLight: 'rgba(239, 68, 68, 0.15)',
+    warning: '#F59E0B',
+    warningLight: 'rgba(245, 158, 11, 0.15)',
+    border: '#1E293B',
+    divider: '#0F172A',
+    muted: '#1E293B',
+    buttonText: '#0B1121'
+  },
+  shadows: {
+    sm: '0 1px 2px 0 rgba(0, 0, 0, 0.4)',
+    md: '0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3)',
+    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3)',
+  },
+  typography: {
+    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+  }
+};
