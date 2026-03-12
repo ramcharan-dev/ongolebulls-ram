@@ -472,3 +472,157 @@
   padding-top: 2rem;
   border-top: 1px solid #f1f5f9;
 }
+
+/* ─── Password visibility toggle ─────────────────────── */
+.auth-input-wrapper {
+  position: relative;
+}
+
+.auth-input--has-icon {
+  padding-right: 2.75rem;
+}
+
+.auth-eye-toggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.auth-eye-toggle:hover {
+  color: #475569;
+  background-color: #f1f5f9;
+}
+
+/* ─── Forgot-password modal ──────────────────────────── */
+.fp-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fpFadeIn 0.2s ease-out;
+}
+
+.fp-modal {
+  width: 100%;
+  max-width: 26rem;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2.5rem 2rem 2rem;
+  position: relative;
+  box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.15);
+  animation: fpSlideUp 0.25s ease-out;
+}
+
+.fp-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0.3rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.fp-close:hover {
+  color: #334155;
+  background-color: #f1f5f9;
+}
+
+.fp-icon-circle {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: #eff6ff;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem;
+}
+
+.fp-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.fp-desc {
+  font-size: 0.875rem;
+  color: #64748b;
+  text-align: center;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.fp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.fp-success {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  color: #166534;
+  line-height: 1.4;
+}
+
+.fp-back {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 1.25rem auto 0;
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.fp-back:hover {
+  color: #2563eb;
+  background-color: #eff6ff;
+}
+
+@keyframes fpFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fpSlideUp {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}

@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
+import SmoothScroll from './utils/SmoothScroll';
 
 // Existing pages
 import Home                 from './components/Home/Home';
@@ -50,11 +51,12 @@ const ExploreFunds = lazy(() => import('./components/user-db/pages/Placeholders'
 const SIPs = lazy(() => import('./components/user-db/pages/Placeholders').then(m => ({ default: m.SIPs })));
 const Statements = lazy(() => import('./components/user-db/pages/Placeholders').then(m => ({ default: m.Statements })));
 const Support = lazy(() => import('./components/user-db/pages/Placeholders').then(m => ({ default: m.Support })));
+const KycOnboarding = lazy(() => import('./components/user-db/kyc/KycOnboarding'));
 const UccRegistration = lazy(() => import('./pages/ucc/UccRegistration'));
 
 
 const Loader = () => (
-  <div className="min-h-screen flex items-center justify-center bg-gray-50">
+  <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}>
     <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
   </div>
 );
@@ -95,8 +97,7 @@ function App() {
             <Route path="sips" element={<SIPs />} />
             <Route path="statements" element={<Statements />} />
             <Route path="support" element={<Support />} />
-            {/* Added KYC/UCC placeholders pointing back to the dashboard home or you can make them standard pages */}
-            <Route path="kyc" element={<Support />} /> 
+            <Route path="kyc" element={<KycOnboarding />} /> 
             <Route path="ucc" element={<UccRegistration />} />
           </Route>
 
@@ -105,6 +106,7 @@ function App() {
             path="*"
             element={
               <>
+                <SmoothScroll />
                 <Header />
                 <main>
                   <Routes>
@@ -119,6 +121,7 @@ function App() {
                     <Route path="/stocks"              element={<StocksPage />} />
                     <Route path="/etfs"                element={<EtfsPage />} />
                     <Route path="/sip"                 element={<SipDetailPage />} />
+                    <Route path="/pms"                 element={<PmsPage />} />
                     <Route path="/PmsPage"             element={<PmsPage />} />
                     <Route path="/contactForm"         element={<ContactForm />} />
                     <Route path="/AppointmentForm"     element={<AppointmentForm />} />

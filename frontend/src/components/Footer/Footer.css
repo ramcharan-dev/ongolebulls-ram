@@ -4,11 +4,11 @@ body, html {
 }
 
 .footer {
-    background-color: #ffffff;
-    color: #1e1e1e;
+    background-color: var(--surface, #ffffff);
+    color: var(--text-primary, #1e1e1e);
     padding: 40px 80px 0;
     font-family: "Poppins", sans-serif;
-
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .footer-content {
@@ -32,13 +32,13 @@ body, html {
 .footer-section p {
     line-height: 1.6;
     font-size: 15px;
-    color: #333;
+    color: var(--text-muted, #333);
 }
 
 .footer-section h4 {
     margin-bottom: 12px;
     font-size: 18px;
-    color: #000;
+    color: var(--text-primary, #000);
 }
 
 .footer-section ul {
@@ -81,9 +81,12 @@ body, html {
 
 .subscribe-box input {
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border, #ccc);
     border-radius: 6px;
     width: 100%;
+    background: var(--input-bg, #fff);
+    color: var(--text-primary, #333);
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 .subscribe-box button {
@@ -101,11 +104,13 @@ body, html {
 }
 
 .footer-bottom {
-    background-color: #2d3f49;
-    color: white;
+    background-color: var(--white, #2d3f49);
+    color: var(--text-primary, white);
+    border-top: 1px solid var(--border, transparent);
     text-align: center;
     padding: 15px 0;
     font-size: 14px;
+    transition: background-color 0.3s ease, color 0.3s ease;
 
 
 
@@ -113,7 +118,7 @@ body, html {
 }
 
 .footer-bottom .footer-links a {
-    color: white;
+    color: var(--text-muted, white);
     margin: 0 5px;
     text-decoration: none;
 }

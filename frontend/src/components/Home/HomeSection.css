@@ -3,15 +3,40 @@
 */
 .home-section {
     width: 100vw;
-    background: #f7e9d5;
+    position: relative;
     padding: 80px 0 60px;
-    opacity: 0;
-    transition: opacity 0.6s ease;
-    overflow-x: hidden;
+    overflow: hidden;
+    background: #f7e9d5;
+    min-height: 100vh;
 }
 
-.home-section.is-visible {
-    opacity: 1;
+/* Parallax background layer — gradient mesh that drifts with scroll */
+.hero-parallax-bg {
+    position: absolute;
+    inset: -30% 0;
+    z-index: 0;
+    background:
+        radial-gradient(ellipse at 20% 40%, rgba(212, 74, 28, 0.1) 0%, transparent 55%),
+        radial-gradient(ellipse at 75% 15%, rgba(255, 205, 37, 0.14) 0%, transparent 45%),
+        radial-gradient(ellipse at 50% 85%, rgba(212, 74, 28, 0.06) 0%, transparent 55%),
+        radial-gradient(ellipse at 90% 60%, rgba(255, 180, 50, 0.08) 0%, transparent 50%);
+    will-change: transform;
+    pointer-events: none;
+}
+
+/* Floating orbs container */
+.hero-orbs {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+/* Ensure content sits above backgrounds */
+.home-section > *:not(.hero-parallax-bg):not(.hero-orbs) {
+    position: relative;
+    z-index: 2;
 }
 
 .home-container {
@@ -31,6 +56,36 @@
     flex: 1;
 }
 
+/* Welcome badge — pill with live dot */
+.welcome-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    background: rgba(212, 74, 28, 0.08);
+    border: 1px solid rgba(212, 74, 28, 0.15);
+    border-radius: 40px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #d44a1c;
+    margin-bottom: 20px;
+    backdrop-filter: blur(8px);
+}
+
+.welcome-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #d44a1c;
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.5; transform: scale(1.4); }
+}
+
+/* Old welcome-text class — kept for any fallback */
 .welcome-text {
     font-size: 20px;
     color: #333;
@@ -44,6 +99,7 @@
     line-height: 1.2;
     margin-bottom: 20px;
     color: #111;
+    perspective: 500px;
 }
 
 .sub-text {
@@ -65,31 +121,49 @@
 .primary-btn,
 .secondary-btn {
     padding: 14px 24px;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 16px;
     font-weight: 600;
     text-decoration: none;
-    transition: 0.3s;
     border: none;
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .primary-btn {
     background: #d44a1c;
     color: white;
+    box-shadow: 0 4px 15px rgba(212, 74, 28, 0.3);
 }
 
 .primary-btn:hover {
     background: #bf3f15;
+    box-shadow: 0 8px 25px rgba(212, 74, 28, 0.4);
+    transform: translateY(-2px);
+}
+
+.primary-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(212, 74, 28, 0.3);
 }
 
 .secondary-btn {
     background: #ffcd25;
     color: #000;
+    box-shadow: 0 4px 15px rgba(255, 205, 37, 0.25);
 }
 
 .secondary-btn:hover {
     background: #e7b720;
+    box-shadow: 0 8px 25px rgba(255, 205, 37, 0.35);
+    transform: translateY(-2px);
+}
+
+.secondary-btn:active {
+    transform: translateY(0);
 }
 
 .home-right {
@@ -103,6 +177,8 @@
     width: 100%;
     max-width: 500px;
     height: auto;
+    will-change: transform;
+    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.1));
 }
 
 /*
@@ -125,23 +201,19 @@
 
 .my-badge {
     padding: 14px 28px;
-    background: #fff;
-    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 14px;
     font-size: 16px;
     display: flex;
     align-items: center;
     gap: 10px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     color: #000;
     font-weight: 600;
-    transition: all 0.3s ease;
     cursor: pointer;
-}
-
-.my-badge:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    background: #fff8f0;
+    will-change: transform;
 }
 
 .my-badge i {
@@ -151,7 +223,7 @@
 }
 
 .my-badge:hover i {
-    transform: scale(1.2);
+    transform: scale(1.2) rotate(-5deg);
 }
 
 .badge {
@@ -179,20 +251,16 @@
 }
 
 .feature-card {
-    background: white;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     flex: 1;
     padding: 30px;
-    border-radius: 15px;
+    border-radius: 18px;
     text-align: center;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
     cursor: pointer;
-}
-
-.feature-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-    background: #fffbf5;
+    will-change: transform;
 }
 
 .feature-icon {
@@ -203,7 +271,7 @@
 }
 
 .feature-card:hover .feature-icon {
-    transform: scale(1.15);
+    transform: scale(1.15) rotate(-3deg);
     color: #bf3f15;
 }
 
@@ -234,25 +302,27 @@
    ============================================ */
 
 @media (max-width: 480px) {
-    /* Section padding adjustment */
     .home-section {
         padding: 100px 0 40px;
+        min-height: auto;
     }
 
-    /* Container: Switch to single column */
     .home-container {
         flex-direction: column;
         padding: 0 20px;
         text-align: center;
     }
 
-    /* Left section (text content) */
     .home-left {
         max-width: 100%;
         margin-bottom: 30px;
     }
 
-    /* Welcome text - MAKE SURE IT'S VISIBLE */
+    .welcome-badge {
+        font-size: 13px;
+        padding: 6px 14px;
+    }
+
     .welcome-text {
         font-size: 16px;
         margin-bottom: 10px;
@@ -261,28 +331,24 @@
         visibility: visible !important;
     }
 
-    /* Main heading */
     .main-heading {
         font-size: 32px;
         line-height: 1.3;
         margin-bottom: 16px;
     }
 
-    /* Subtext */
     .sub-text {
         font-size: 16px;
         line-height: 1.5;
         margin-bottom: 25px;
     }
 
-    /* Button group: Stack vertically */
     .btn-group {
         flex-direction: column;
         gap: 12px;
         width: 100%;
     }
 
-    /* Buttons: Full width */
     .primary-btn,
     .secondary-btn {
         width: 100%;
@@ -291,7 +357,6 @@
         border-radius: 10px;
     }
 
-    /* Hero image: Scale to fit mobile */
     .home-right {
         width: 100%;
         display: flex;
@@ -304,20 +369,17 @@
         height: auto;
     }
 
-    /* Badges wrapper */
     .badges-wrapper {
         margin-top: 40px;
         padding: 0 15px;
     }
 
-    /* Badges: Stack vertically */
     .badges {
         flex-direction: column;
         gap: 15px;
         width: 100%;
     }
 
-    /* Individual badge: Full width */
     .my-badge {
         width: 100%;
         padding: 12px 20px;
@@ -331,7 +393,6 @@
         color: #d44a1c;
     }
 
-    /* Features container: Single column layout */
     .features-container {
         flex-direction: column;
         margin-top: 40px;
@@ -339,15 +400,13 @@
         gap: 20px;
     }
 
-    /* Feature card: Full width, rounded, soft shadow */
     .feature-card {
         width: 100%;
         padding: 25px 20px;
-        border-radius: 12px;
+        border-radius: 14px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
-    /* Feature icon */
     .feature-icon {
         font-size: 36px;
         margin-bottom: 12px;
@@ -358,21 +417,23 @@
         color: #d44a1c;
     }
 
-    /* Feature card heading */
     .feature-card h3 {
         font-size: 18px;
         margin-bottom: 8px;
     }
 
-    /* Feature card paragraph */
     .feature-card p {
         font-size: 14px;
         line-height: 1.6;
     }
 
-    /* Remove line breaks in feature text for mobile */
     .feature-card p br {
         display: none;
+    }
+
+    /* Reduce orb intensity on mobile */
+    .hero-orbs {
+        opacity: 0.5;
     }
 }
 

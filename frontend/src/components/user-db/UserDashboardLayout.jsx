@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import styled, { ThemeProvider } from 'styled-components';
+import React, { useState } from 'react';
+import styled, { ThemeProvider as StyledThemeProvider } from 'styled-components';
 import { Outlet } from 'react-router-dom';
 import { lightTheme, darkTheme } from './theme';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
+import { useTheme } from '../../context/ThemeContext';
 
 const LayoutWrapper = styled.div`
   display: flex;
@@ -49,29 +50,14 @@ const PageContainer = styled.div`
 
 export const UserDashboardLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    // Check local storage for theme preference
-    const savedTheme = localStorage.getItem('ongolebulls_theme');
-    if (savedTheme === 'dark') {
-      setIsDark(true);
-    } else if (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setIsDark(true);
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    setIsDark(!isDark);
-    localStorage.setItem('ongolebulls_theme', !isDark ? 'dark' : 'light');
-  };
+  const { isDark, toggleTheme } = useTheme();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
   return (
-    <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+    <StyledThemeProvider theme={isDark ? darkTheme : lightTheme}>
       <LayoutWrapper>
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
         
@@ -88,6 +74,6 @@ export const UserDashboardLayout = () => {
           </PageContainer>
         </MainContent>
       </LayoutWrapper>
-    </ThemeProvider>
+    </StyledThemeProvider>
   );
 };

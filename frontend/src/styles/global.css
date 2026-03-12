@@ -3,7 +3,8 @@
 @layer base {
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
+  :root,
+  [data-theme="light"] {
     --green-primary: #16a34a;
     --green-dark:    #14532d;
     --green-light:   #dcfce7;
@@ -15,6 +16,27 @@
     --radius:        8px;
     --shadow:        0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
     --shadow-md:     0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.06);
+    --card-bg:       #ffffff;
+    --input-bg:      #ffffff;
+    --surface:       #ffffff;
+    --overlay:       rgba(0, 0, 0, 0.5);
+  }
+
+  [data-theme="dark"] {
+    --green-primary: #22c55e;
+    --green-dark:    #86efac;
+    --green-light:   #14532d;
+    --text-primary:  #f1f5f9;
+    --text-muted:    #94a3b8;
+    --bg:            #0f172a;
+    --white:         #1e293b;
+    --border:        #334155;
+    --shadow:        0 1px 3px rgba(0,0,0,.3), 0 1px 2px rgba(0,0,0,.2);
+    --shadow-md:     0 4px 6px rgba(0,0,0,.3), 0 2px 4px rgba(0,0,0,.2);
+    --card-bg:       #1e293b;
+    --input-bg:      #1e293b;
+    --surface:       #1e293b;
+    --overlay:       rgba(0, 0, 0, 0.7);
   }
 
   html, body, #root {
@@ -29,6 +51,7 @@
     background: var(--bg);
     color: var(--text-primary);
     line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 }
 
@@ -36,11 +59,12 @@
   /* Legacy utility classes for existing pages — scoped so Tailwind utilities always win */
   .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
   .card {
-    background: var(--white);
+    background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     padding: 1.5rem;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
   }
 
   .btn {
@@ -69,8 +93,8 @@
     border-radius: var(--radius);
     padding: .55rem .85rem;
     font-size: 14px; color: var(--text-primary);
-    outline: none; transition: border-color .15s;
-    background: var(--white);
+    outline: none; transition: border-color .15s, background-color .3s, color .3s;
+    background: var(--input-bg);
   }
   .form-group input:focus,
   .form-group select:focus,
@@ -105,4 +129,175 @@
   .mt-2 { margin-top: 1rem; }
   .mt-3 { margin-top: 1.5rem; }
   .mb-2 { margin-bottom: 1rem; }
+}
+
+/* ============================================
+   GLOBAL DARK MODE OVERRIDES
+   Catches hardcoded light colors across all
+   page-level and component-level CSS files.
+   ============================================ */
+[data-theme="dark"] {
+  /* --- Headings & text -------------------------------------------------- */
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+  }
+
+  p, span, li, label, td, th, dt, dd {
+    color: var(--text-primary);
+  }
+
+  a {
+    color: var(--green-primary);
+  }
+
+  /* --- Sections with hardcoded white/light backgrounds ------------------- */
+  section,
+  .section,
+  .hero-section,
+  .about-section,
+  .services-section,
+  .why-choose-us,
+  .core-principles,
+  .help-section,
+  .financial-goals,
+  .key-questions,
+  .faq-section,
+  .testimonials,
+  .contact-section,
+  .cta-section {
+    background-color: var(--bg) !important;
+    color: var(--text-primary) !important;
+  }
+
+  /* --- Cards & containers ------------------------------------------------ */
+  .card,
+  .service-card,
+  .blog-card,
+  .plan-card,
+  .feature-card,
+  .principle-card,
+  .goal-card,
+  .question-card,
+  .team-card,
+  .testimonial-card,
+  .calculator-card,
+  .investment-card {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border) !important;
+    color: var(--text-primary) !important;
+  }
+
+  /* --- Forms & inputs ---------------------------------------------------- */
+  input,
+  textarea,
+  select {
+    background-color: var(--input-bg) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border) !important;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--text-muted) !important;
+  }
+
+  /* --- Tables ------------------------------------------------------------ */
+  table {
+    border-color: var(--border);
+  }
+
+  th {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border) !important;
+  }
+
+  td {
+    border-color: var(--border) !important;
+  }
+
+  tr:hover {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+  }
+
+  /* --- Modals & overlays ------------------------------------------------- */
+  .modal,
+  .modal-content,
+  .dialog {
+    background-color: var(--surface) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border) !important;
+  }
+
+  /* --- Page wrappers that use hardcoded bg -------------------------------- */
+  .page-wrapper,
+  .page-container,
+  .content-wrapper,
+  .main-content,
+  .auth-container,
+  .login-container,
+  .signup-container,
+  .contact-container,
+  .appointment-container,
+  .blog-container,
+  .blog-detail,
+  .service-detail,
+  .calculator-container,
+  .ucc-container {
+    background-color: var(--bg) !important;
+    color: var(--text-primary) !important;
+  }
+
+  /* --- Specific component overrides -------------------------------------- */
+  .home-section,
+  .hero-content,
+  .about-content,
+  .mutual-fund-page,
+  .pms-page,
+  .elss-page,
+  .stocks-page,
+  .etfs-page,
+  .sip-page {
+    background-color: var(--bg) !important;
+    color: var(--text-primary) !important;
+  }
+
+  /* --- Dropdown menus ---------------------------------------------------- */
+  .dropdown-menu,
+  .dropdown-list {
+    background-color: var(--surface) !important;
+    border-color: var(--border) !important;
+  }
+
+  /* --- Borders & separators ---------------------------------------------- */
+  hr {
+    border-color: var(--border);
+  }
+
+  /* --- Scrollbar --------------------------------------------------------- */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+  }
+
+  /* --- Image adjustments ------------------------------------------------- */
+  img {
+    opacity: 0.92;
+  }
+
+  /* --- Parallax background dark mode ------------------------------------ */
+  .hero-parallax-bg {
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(212, 74, 28, 0.04) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(255, 205, 37, 0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 80%, rgba(212, 74, 28, 0.03) 0%, transparent 60%) !important;
+  }
 }

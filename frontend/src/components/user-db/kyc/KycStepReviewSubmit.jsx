@@ -86,7 +86,7 @@ function ReviewField({ label, value }) {
   return (
     <Kv>
       <span>{label}</span>
-      <strong>{value || '—'}</strong>
+      <strong>{value || 'N/A'}</strong>
     </Kv>
   );
 }
