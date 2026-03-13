@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./FinancialServices.css";
@@ -65,14 +65,44 @@ const services = [
 ];
 
 export default function FinancialServicesSection() {
-    const [currentSlide, setCurrentSlide] = useState(0);
+    const getCardsPerPage = () => {
+        if (typeof window === "undefined") return 3;
+        if (window.innerWidth >= 1100) return 3;
+        if (window.innerWidth >= 768) return 2;
+        return 1;
+    };
+
+    const [currentPage, setCurrentPage] = useState(0);
+    const [cardsPerPage, setCardsPerPage] = useState(getCardsPerPage);
+
+    useEffect(() => {
+        const handleResize = () => setCardsPerPage(getCardsPerPage());
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    const pages = useMemo(() => {
+        const chunked = [];
+        for (let i = 0; i < services.length; i += cardsPerPage) {
+            chunked.push(services.slice(i, i + cardsPerPage));
+        }
+        return chunked;
+    }, [cardsPerPage]);
+
+    const totalPages = pages.length;
+
+    useEffect(() => {
+        if (currentPage >= totalPages) {
+            setCurrentPage(Math.max(totalPages - 1, 0));
+        }
+    }, [currentPage, totalPages]);
 
     const nextSlide = () => {
-        setCurrentSlide((prev) => (prev + 1) % services.length);
+        setCurrentPage((prev) => (prev + 1) % totalPages);
     };
 
     const prevSlide = () => {
-        setCurrentSlide((prev) => (prev - 1 + services.length) % services.length);
+        setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
     };
 
     return (
@@ -83,89 +113,83 @@ export default function FinancialServicesSection() {
                     <p className="services-subtitle">Goal-based, research-driven, and regulation-first advisory</p>
                 </div>
 
-                {/* Desktop Grid View */}
-                <div className="services-grid">
-                    {services.map((service) => (
-                        <article className="service-card" key={service.id}>
-                            <div className="service-card-inner">
-                                <div className="service-media">
-                                    <img
-                                        src={service.image}
-                                        alt={service.title}
-                                        loading="lazy"
-                                        className="service-img"
-                                    />
+                <div className="services-slider-shell">
+                    <div className="services-viewport">
+                        <div
+                            className="services-track"
+                            style={{ transform: `translateX(-${currentPage * 100}%)` }}
+                        >
+                            {pages.map((page, pageIndex) => (
+                                <div className="services-slide-page" key={`page-${pageIndex}`}>
+                                    {page.map((service) => (
+                                        <article className="service-card" key={service.id}>
+                                            <div className="service-card-inner">
+                                                <div className="service-media">
+                                                    <img
+                                                        src={service.image}
+                                                        alt={service.title}
+                                                        loading="lazy"
+                                                        className="service-img"
+                                                    />
+                                                </div>
+                                                <div className="service-body">
+                                                    <h5 className="service-heading">{service.title}</h5>
+                                                    <p className="service-text">{service.description}</p>
+                                                    <div className="service-actions">
+                                                        <Link to={service.link} className="service-link">
+                                                            Read more <i className="bi bi-arrow-right"></i>
+                                                        </Link>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </article>
+                                    ))}
                                 </div>
-                                <div className="service-body">
-                                    <h5 className="service-heading">{service.title}</h5>
-                                    <p className="service-text">{service.description}</p>
-                                    <div className="service-actions">
-                                        <Link to={service.link} className="service-link">
-                                            Read more <i className="bi bi-arrow-right"></i>
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-                    ))}
-                </div>
-
-                {/* Mobile Carousel View */}
-                <div className="services-carousel">
-                    <div className="carousel-wrapper">
-                        <article className="service-card carousel-card">
-                            <div className="service-card-inner">
-                                <div className="service-media">
-                                    <img
-                                        src={services[currentSlide].image}
-                                        alt={services[currentSlide].title}
-                                        loading="lazy"
-                                        className="service-img"
-                                    />
-                                </div>
-                                <div className="service-body">
-                                    <h5 className="service-heading">{services[currentSlide].title}</h5>
-                                    <p className="service-text">{services[currentSlide].description}</p>
-                                    <div className="service-actions">
-                                        <Link to={services[currentSlide].link} className="service-link">
-                                            Read more <i className="bi bi-arrow-right"></i>
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
+                            ))}
+                        </div>
                     </div>
 
-                    {/* Professional Carousel Navigation */}
                     <div className="carousel-navigation">
                         <button
                             className="nav-button prev-button"
                             onClick={prevSlide}
-                            aria-label="Previous service"
+                            aria-label="Previous services"
+                            disabled={totalPages <= 1}
                         >
                             <i className="bi bi-chevron-left"></i>
                         </button>
 
                         <div className="carousel-pagination">
-                            <span className="pagination-current">{currentSlide + 1}</span>
+                            <span className="pagination-current">{currentPage + 1}</span>
                             <span className="pagination-divider">/</span>
-                            <span className="pagination-total">{services.length}</span>
+                            <span className="pagination-total">{totalPages}</span>
+                        </div>
+
+                        <div className="page-dots" aria-label="Services pagination">
+                            {pages.map((_, idx) => (
+                                <button
+                                    key={`dot-${idx}`}
+                                    className={`page-dot ${idx === currentPage ? "active" : ""}`}
+                                    onClick={() => setCurrentPage(idx)}
+                                    aria-label={`Go to page ${idx + 1}`}
+                                />
+                            ))}
                         </div>
 
                         <button
                             className="nav-button next-button"
                             onClick={nextSlide}
-                            aria-label="Next service"
+                            aria-label="Next services"
+                            disabled={totalPages <= 1}
                         >
                             <i className="bi bi-chevron-right"></i>
                         </button>
                     </div>
 
-                    {/* Progress Bar */}
                     <div className="carousel-progress-bar">
                         <div
                             className="progress-fill"
-                            style={{ width: `${((currentSlide + 1) / services.length) * 100}%` }}
+                            style={{ width: `${((currentPage + 1) / totalPages) * 100}%` }}
                         ></div>
                     </div>
                 </div>

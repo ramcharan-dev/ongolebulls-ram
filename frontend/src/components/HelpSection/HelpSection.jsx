@@ -5,6 +5,12 @@ import planningImg from "../../assets/manage.png";
 import protectingImg from "../../assets/execute.png";
 
 const helpCards = [
+
+
+
+
+
+
     {
         id: 1,
         image: smartWealthImg,

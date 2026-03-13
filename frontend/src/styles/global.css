@@ -300,4 +300,1169 @@
       radial-gradient(ellipse at 80% 20%, rgba(255, 205, 37, 0.06) 0%, transparent 50%),
       radial-gradient(ellipse at 50% 80%, rgba(212, 74, 28, 0.03) 0%, transparent 60%) !important;
   }
+
+  /* =====================================================================
+     HOME SECTION
+     ===================================================================== */
+  .home-section {
+    background: var(--bg) !important;
+  }
+
+  .welcome-text {
+    color: var(--text-muted) !important;
+  }
+
+  .main-heading,
+  .feature-card h3 {
+    color: var(--text-primary) !important;
+  }
+
+  .sub-text,
+  .feature-card p {
+    color: var(--text-muted) !important;
+  }
+
+  .my-badge,
+  .badge {
+    background: rgba(30, 41, 59, 0.8) !important;
+    border-color: var(--border) !important;
+    color: var(--text-primary) !important;
+    backdrop-filter: blur(10px);
+  }
+
+  .feature-card {
+    background: rgba(30, 41, 59, 0.6) !important;
+    border-color: var(--border) !important;
+    backdrop-filter: blur(10px);
+  }
+
+  .secondary-btn {
+    background: #e7b720 !important;
+    color: #0f172a !important;
+  }
+
+  /* =====================================================================
+     FINANCIAL SERVICES
+     ===================================================================== */
+  .services-section {
+    background: var(--bg) !important;
+  }
+
+  .services-title,
+  .service-heading,
+  .carousel-pagination {
+    color: var(--text-primary) !important;
+  }
+
+  .services-subtitle,
+  .service-text {
+    color: var(--text-muted) !important;
+  }
+
+  .service-card {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border) !important;
+  }
+
+  .service-media {
+    background: rgba(30, 41, 59, 0.5) !important;
+  }
+
+  .nav-button {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+    color: var(--text-muted) !important;
+  }
+
+  .carousel-progress-bar {
+    background: var(--border) !important;
+  }
+
+  /* =====================================================================
+     CORE PRINCIPLES
+     ===================================================================== */
+  .core-principles-section {
+    background: var(--bg) !important;
+  }
+
+  .core-principles-title,
+  .principle-title {
+    color: var(--text-primary) !important;
+  }
+
+  .core-principles-subtitle,
+  .principle-description {
+    color: var(--text-muted) !important;
+  }
+
+  .principle-card {
+    background: var(--card-bg) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .principle-card:hover {
+    background: rgba(30, 41, 59, 0.8) !important;
+  }
+
+  /* =====================================================================
+     HELP SECTION
+     ===================================================================== */
+  .help-section {
+    background: var(--bg) !important;
+  }
+
+  .help-heading {
+    color: var(--text-primary) !important;
+  }
+
+  .help-card-front {
+    background: var(--card-bg) !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .help-card-title {
+    color: var(--text-primary) !important;
+  }
+
+  /* =====================================================================
+     ABOUT US SECTION
+     ===================================================================== */
+  .about-section {
+    background: var(--bg) !important;
+  }
+
+  .about-heading,
+  .about-feature-title {
+    color: var(--text-primary) !important;
+  }
+
+  .about-intro,
+  .about-feature-desc,
+  .about-stat-label {
+    color: var(--text-muted) !important;
+  }
+
+  .about-stats-container {
+    background: var(--card-bg) !important;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  /* =====================================================================
+     KEY QUESTIONS / WEALTH JOURNEY
+     ===================================================================== */
+  .wealth-journey-section {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+  }
+
+  .wealth-question-card {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .wealth-question-text {
+    color: var(--text-primary) !important;
+  }
+
+  /* =====================================================================
+     WHY CHOOSE US
+     ===================================================================== */
+  .why-choose-us-section {
+    background: var(--bg) !important;
+  }
+
+  .why-choose-us-title,
+  .reason-title {
+    color: var(--text-primary) !important;
+  }
+
+  .why-choose-us-subtitle,
+  .reason-description {
+    color: var(--text-muted) !important;
+  }
+
+  .reason-item {
+    background: var(--card-bg) !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  /* =====================================================================
+     FINANCIAL GOALS
+     ===================================================================== */
+  .goals-section {
+    background: var(--bg) !important;
+  }
+
+  .goals-heading,
+  .goal-title {
+    color: var(--text-primary) !important;
+  }
+
+  .goals-subtext,
+  .goal-desc {
+    color: var(--text-muted) !important;
+  }
+
+  .goal-card {
+    background: var(--card-bg) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  /* =====================================================================
+     AUTH PAGES
+     ===================================================================== */
+  .auth-page {
+    background-color: var(--bg) !important;
+  }
+
+  .auth-card {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+    box-shadow: 0 4px 40px -12px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .auth-title,
+  .step-title {
+    color: var(--text-primary) !important;
+  }
+
+  .auth-label {
+    color: var(--text-muted) !important;
+  }
+
+  .auth-input {
+    background-color: var(--input-bg) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border) !important;
+  }
+
+  .auth-input:disabled {
+    background-color: rgba(30, 41, 59, 0.5) !important;
+  }
+
+  .auth-subtext,
+  .auth-footer-text {
+    color: var(--text-muted) !important;
+  }
+
+  .auth-error {
+    background-color: rgba(127, 29, 29, 0.2) !important;
+    border-color: rgba(239, 68, 68, 0.3) !important;
+    color: #fca5a5 !important;
+  }
+
+  .stepper-circle {
+    box-shadow: 0 0 0 4px var(--card-bg) !important;
+  }
+
+  .stepper-circle.active {
+    box-shadow: 0 0 0 4px var(--card-bg), 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .stepper-circle.upcoming {
+    background-color: rgba(30, 41, 59, 0.8) !important;
+    border-color: var(--border) !important;
+    color: var(--text-muted) !important;
+  }
+
+  .stepper-label.upcoming {
+    color: var(--text-muted) !important;
+  }
+
+  .stepper-bg-line {
+    background-color: var(--border) !important;
+  }
+
+  .radio-card {
+    border-color: var(--border) !important;
+    background: var(--card-bg) !important;
+  }
+
+  .radio-card:hover {
+    background-color: rgba(30, 41, 59, 0.8) !important;
+  }
+
+  .radio-card.selected {
+    background-color: rgba(37, 99, 235, 0.15) !important;
+    border-color: #2563eb !important;
+  }
+
+  .radio-pill {
+    background-color: var(--card-bg) !important;
+    color: var(--text-muted) !important;
+    border-color: var(--border) !important;
+  }
+
+  .radio-pill:hover {
+    background-color: rgba(30, 41, 59, 0.8) !important;
+  }
+
+  .radio-pill.selected {
+    background-color: #2563eb !important;
+    color: #ffffff !important;
+    border-color: #2563eb !important;
+  }
+
+  .file-upload-wrapper {
+    border-color: var(--border) !important;
+    background-color: var(--card-bg) !important;
+  }
+
+  .file-input {
+    color: var(--text-muted) !important;
+  }
+
+  .checkbox-item:hover {
+    background-color: rgba(30, 41, 59, 0.5) !important;
+  }
+
+  .auth-actions {
+    border-top-color: var(--border) !important;
+  }
+
+  .auth-btn-secondary {
+    background-color: rgba(30, 41, 59, 0.8) !important;
+    color: var(--text-primary) !important;
+  }
+
+  .auth-btn-outline:hover:not(:disabled) {
+    background-color: rgba(37, 99, 235, 0.15) !important;
+  }
+
+  .auth-eye-toggle {
+    color: var(--text-muted) !important;
+  }
+
+  .auth-eye-toggle:hover {
+    color: var(--text-primary) !important;
+    background-color: rgba(30, 41, 59, 0.5) !important;
+  }
+
+  .fp-modal {
+    background: var(--card-bg) !important;
+    box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  .fp-title {
+    color: var(--text-primary) !important;
+  }
+
+  .fp-desc {
+    color: var(--text-muted) !important;
+  }
+
+  .fp-close {
+    color: var(--text-muted) !important;
+  }
+
+  .fp-close:hover {
+    color: var(--text-primary) !important;
+    background-color: rgba(30, 41, 59, 0.5) !important;
+  }
+
+  .fp-icon-circle {
+    background: rgba(37, 99, 235, 0.15) !important;
+  }
+
+  .fp-success {
+    background: rgba(22, 101, 52, 0.15) !important;
+    border-color: rgba(34, 197, 94, 0.3) !important;
+    color: #86efac !important;
+  }
+
+  .fp-back {
+    color: var(--text-muted) !important;
+  }
+
+  .fp-back:hover {
+    color: #60a5fa !important;
+    background-color: rgba(37, 99, 235, 0.1) !important;
+  }
+
+  /* =====================================================================
+     ELSS PAGE
+     ===================================================================== */
+  .elss-page {
+    --elss-bg: var(--bg);
+    --elss-surface: var(--card-bg);
+    --elss-text: var(--text-primary);
+    --elss-subtext: var(--text-muted);
+    --elss-border: var(--border);
+    background: var(--bg) !important;
+  }
+
+  .elss-hero-content {
+    background: rgba(30, 41, 59, 0.7) !important;
+    border-color: var(--border) !important;
+    backdrop-filter: blur(8px);
+  }
+
+  .elss-highlight-list li {
+    color: var(--text-primary) !important;
+  }
+
+  .elss-growth-panel {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+  }
+
+  .elss-growth-head p {
+    color: var(--text-primary) !important;
+  }
+
+  .bar-row span {
+    color: var(--text-muted) !important;
+  }
+
+  .bar-row > div {
+    background: var(--border) !important;
+  }
+
+  .elss-hero-stat {
+    background: rgba(30, 41, 59, 0.6) !important;
+    border-color: var(--border) !important;
+  }
+
+  .elss-hero-stat span {
+    color: var(--text-muted) !important;
+  }
+
+  .elss-benefit-card {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .elss-benefit-icon {
+    background: linear-gradient(180deg, rgba(37, 99, 235, 0.2) 0%, rgba(37, 99, 235, 0.3) 100%) !important;
+    border-color: rgba(59, 130, 246, 0.4) !important;
+  }
+
+  .elss-benefit-card p {
+    color: var(--text-muted) !important;
+  }
+
+  .elss-table-wrap {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .elss-table th {
+    background: rgba(30, 41, 59, 0.6) !important;
+    color: var(--text-muted) !important;
+  }
+
+  .elss-table td {
+    border-color: var(--border) !important;
+  }
+
+  .elss-table tbody tr:hover {
+    background: rgba(30, 41, 59, 0.5) !important;
+  }
+
+  .elss-section-alt {
+    background: rgba(30, 41, 59, 0.3) !important;
+    border-color: var(--border) !important;
+  }
+
+  .elss-btn-secondary {
+    background: rgba(37, 99, 235, 0.15) !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+  }
+
+  .elss-growth-head span {
+    background: rgba(14, 116, 144, 0.15) !important;
+    border-color: rgba(34, 211, 238, 0.3) !important;
+    color: #67e8f9 !important;
+  }
+
+  .elss-risk-badge {
+    background: rgba(14, 116, 144, 0.15) !important;
+    border-color: rgba(34, 211, 238, 0.3) !important;
+    color: #67e8f9 !important;
+  }
+
+  .elss-calc-inputs,
+  .elss-calc-results {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .elss-calc-inputs label {
+    color: var(--text-muted) !important;
+  }
+
+  .elss-input-row {
+    background: rgba(30, 41, 59, 0.5) !important;
+    border-color: var(--border) !important;
+  }
+
+  .elss-input-row input {
+    color: var(--text-primary) !important;
+  }
+
+  .elss-input-row span {
+    color: var(--text-muted) !important;
+  }
+
+  .elss-result-tile {
+    background: rgba(30, 41, 59, 0.5) !important;
+    border-color: var(--border) !important;
+  }
+
+  .elss-result-tile span {
+    color: var(--text-muted) !important;
+  }
+
+  .elss-result-tile.is-accent {
+    background: rgba(37, 99, 235, 0.1) !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+  }
+
+  .elss-result-tile.is-strong {
+    background: rgba(14, 116, 144, 0.1) !important;
+    border-color: rgba(34, 211, 238, 0.3) !important;
+  }
+
+  .elss-step-item {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .elss-step-item p {
+    color: var(--text-muted) !important;
+  }
+
+  .elss-step-index {
+    background: rgba(37, 99, 235, 0.2) !important;
+    border-color: rgba(59, 130, 246, 0.4) !important;
+  }
+
+  .elss-faq-item {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+  }
+
+  .elss-faq-trigger {
+    background: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+  }
+
+  .elss-faq-panel p {
+    color: var(--text-muted) !important;
+  }
+
+  .elss-faq-icon {
+    background: rgba(37, 99, 235, 0.15) !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+  }
+
+  .elss-kicker {
+    color: #60a5fa !important;
+  }
+
+  .elss-link-btn {
+    background: rgba(37, 99, 235, 0.15) !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+  }
+
+  .elss-link-btn.is-primary {
+    background: #1d4ed8 !important;
+  }
+
+  .elss-fund-card {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+  }
+
+  .elss-fund-meta span {
+    color: var(--text-muted) !important;
+  }
+
+  /* =====================================================================
+     SIP DETAIL PAGE
+     ===================================================================== */
+  .sip-page {
+    background: var(--bg) !important;
+    color: var(--text-primary) !important;
+  }
+
+  .sip-subtext {
+    color: var(--text-muted) !important;
+  }
+
+  .sip-kicker {
+    color: #60a5fa !important;
+  }
+
+  .sip-hero-card {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+    box-shadow: 0 20px 34px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .sip-hero-metric {
+    background: rgba(30, 41, 59, 0.6) !important;
+    border-color: var(--border) !important;
+  }
+
+  .sip-hero-metric span {
+    color: var(--text-muted) !important;
+  }
+
+  .sip-hero-card p {
+    color: var(--text-muted) !important;
+  }
+
+  .sip-benefit-card {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .sip-benefit-card p {
+    color: var(--text-muted) !important;
+  }
+
+  .sip-icon {
+    background: rgba(37, 99, 235, 0.15) !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+  }
+
+  .sip-table-wrap {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+  }
+
+  .sip-table th {
+    background: rgba(30, 41, 59, 0.6) !important;
+    color: var(--text-muted) !important;
+  }
+
+  .sip-table td {
+    border-color: var(--border) !important;
+  }
+
+  .sip-alt {
+    background: rgba(30, 41, 59, 0.3) !important;
+    border-color: var(--border) !important;
+  }
+
+  .sip-points li {
+    color: var(--text-muted) !important;
+  }
+
+  .sip-steps li {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+  }
+
+  .sip-steps p {
+    color: var(--text-muted) !important;
+  }
+
+  .sip-faq-item {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+  }
+
+  .sip-faq-trigger {
+    background: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+  }
+
+  .sip-faq-panel p {
+    color: var(--text-muted) !important;
+  }
+
+  .sip-btn-secondary {
+    background: rgba(37, 99, 235, 0.15) !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+  }
+
+  .sip-disclaimer {
+    background: rgba(37, 99, 235, 0.1) !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+    color: #60a5fa !important;
+  }
+
+  /* =====================================================================
+     INVESTMENT GUIDES PAGE
+     ===================================================================== */
+  .ig-page {
+    background: var(--bg) !important;
+    color: var(--text-primary) !important;
+  }
+
+  .ig-subtext {
+    color: var(--text-muted) !important;
+  }
+
+  .ig-kicker {
+    color: #60a5fa !important;
+  }
+
+  .ig-hero-card {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+    box-shadow: 0 20px 32px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .ig-hero-card p {
+    color: var(--text-muted) !important;
+  }
+
+  .ig-pill-row span {
+    background: rgba(37, 99, 235, 0.15) !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+    color: #60a5fa !important;
+  }
+
+  .ig-info-card {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+    box-shadow: 0 14px 26px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .ig-info-card p {
+    color: var(--text-muted) !important;
+  }
+
+  .ig-icon {
+    background: rgba(37, 99, 235, 0.15) !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+  }
+
+  .ig-alt {
+    background: rgba(30, 41, 59, 0.3) !important;
+    border-color: var(--border) !important;
+  }
+
+  .ig-table-wrap {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+  }
+
+  .ig-table th {
+    background: rgba(30, 41, 59, 0.6) !important;
+    color: var(--text-muted) !important;
+  }
+
+  .ig-faq-item {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+  }
+
+  .ig-faq-trigger {
+    background: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+  }
+
+  .ig-faq-panel p {
+    color: var(--text-muted) !important;
+  }
+
+  .ig-btn-secondary {
+    background: rgba(37, 99, 235, 0.15) !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+  }
+
+  /* =====================================================================
+     BLOGS PAGE
+     ===================================================================== */
+  .blogs-page {
+    --blogs-ink: var(--text-primary);
+    --blogs-muted: var(--text-muted);
+    --blogs-soft: var(--bg);
+    --blogs-line: var(--border);
+    --blogs-white: var(--card-bg);
+    background: var(--bg) !important;
+  }
+
+  .blogs-hero-title {
+    color: var(--text-primary) !important;
+  }
+
+  .blogs-hero-badge {
+    background: rgba(30, 41, 59, 0.7) !important;
+    border-color: var(--border) !important;
+    color: var(--text-muted) !important;
+  }
+
+  .blogs-grid-wrapper,
+  .blogs-related-section {
+    background: rgba(30, 41, 59, 0.6) !important;
+    border-color: var(--border) !important;
+    backdrop-filter: blur(6px);
+  }
+
+  .blogs-grid-header span:first-child {
+    color: var(--text-muted) !important;
+  }
+
+  .blogs-grid-count {
+    color: var(--text-muted) !important;
+  }
+
+  .blogs-grid-count strong {
+    color: var(--text-primary) !important;
+  }
+
+  .blogs-card {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+  }
+
+  .blogs-card-title {
+    color: var(--text-primary) !important;
+  }
+
+  .blogs-card-excerpt {
+    color: var(--text-muted) !important;
+  }
+
+  .blogs-card-pill {
+    background: rgba(30, 41, 59, 0.6) !important;
+    border-color: var(--border) !important;
+    color: var(--text-muted) !important;
+  }
+
+  .blogs-card-button,
+  .blogs-readmore {
+    color: #60a5fa !important;
+  }
+
+  .blogs-detail-page {
+    background: var(--bg) !important;
+  }
+
+  .blogs-detail-title {
+    color: var(--text-primary) !important;
+  }
+
+  .blogs-detail-article {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+  }
+
+  .blogs-detail-aside {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+  }
+
+  .blogs-detail-aside h3 {
+    color: var(--text-muted) !important;
+  }
+
+  .blogs-detail-aside p {
+    color: var(--text-muted) !important;
+  }
+
+  .blogs-detail-intro {
+    background: rgba(30, 41, 59, 0.5) !important;
+    border-left-color: var(--border) !important;
+    color: var(--text-muted) !important;
+  }
+
+  .blogs-detail-content {
+    color: var(--text-primary) !important;
+  }
+
+  .blogs-detail-content h2,
+  .blogs-detail-content h3,
+  .blogs-detail-content h4 {
+    color: var(--text-primary) !important;
+  }
+
+  .blogs-detail-back {
+    color: #60a5fa !important;
+  }
+
+  .blogs-empty,
+  .blogs-error {
+    background: rgba(30, 41, 59, 0.5) !important;
+    border-color: var(--border) !important;
+  }
+
+  .blogs-empty p,
+  .blogs-error p {
+    color: var(--text-muted) !important;
+  }
+
+  /* =====================================================================
+     MUTUAL FUND CALCULATOR
+     ===================================================================== */
+  .page {
+    background: var(--bg) !important;
+  }
+
+  .page .card {
+    background: var(--card-bg) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  .title,
+  .results-title {
+    color: var(--text-primary) !important;
+  }
+
+  .divider {
+    background: var(--border) !important;
+  }
+
+  .notes {
+    color: var(--text-muted) !important;
+  }
+
+  thead {
+    background: rgba(30, 41, 59, 0.8) !important;
+  }
+
+  tbody tr:hover {
+    background: rgba(30, 41, 59, 0.5) !important;
+  }
+
+  /* =====================================================================
+     UCC ONBOARDING PAGE
+     ===================================================================== */
+  .ucc-page {
+    background: var(--bg) !important;
+  }
+
+  .ucc-page-loader {
+    background: var(--bg) !important;
+  }
+
+  .ucc-spinner {
+    border-color: var(--border) !important;
+    border-top-color: #2563eb !important;
+  }
+
+  .ucc-kicker {
+    color: var(--text-muted) !important;
+  }
+
+  .ucc-topbar h1 {
+    color: var(--text-primary) !important;
+  }
+
+  .ucc-subtitle {
+    color: var(--text-muted) !important;
+  }
+
+  .ucc-step-pill {
+    background: rgba(37, 99, 235, 0.2) !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+  }
+
+  .ucc-stepper {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .ucc-stepper-meta p {
+    color: var(--text-muted) !important;
+  }
+
+  .ucc-stepper-track {
+    background: var(--border) !important;
+  }
+
+  .ucc-step-mark {
+    background: rgba(30, 41, 59, 0.8) !important;
+    border-color: var(--border) !important;
+    color: var(--text-muted) !important;
+  }
+
+  .ucc-step-mark.is-current {
+    background: rgba(37, 99, 235, 0.15) !important;
+    border-color: #2563eb !important;
+    color: #60a5fa !important;
+  }
+
+  .ucc-step-label {
+    color: var(--text-muted) !important;
+  }
+
+  .ucc-step-helper {
+    color: var(--text-muted) !important;
+  }
+
+  .ucc-step-link {
+    background: var(--border) !important;
+  }
+
+  .ucc-form-card {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+    box-shadow: 0 22px 48px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .ucc-form-head {
+    border-bottom-color: var(--border) !important;
+  }
+
+  .ucc-form-head h2 {
+    color: var(--text-primary) !important;
+  }
+
+  .ucc-form-head p {
+    color: var(--text-muted) !important;
+  }
+
+  .ucc-step-badge {
+    background: rgba(37, 99, 235, 0.2) !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+  }
+
+  .ucc-note,
+  .ucc-review-head,
+  .ucc-review-alert {
+    background: rgba(37, 99, 235, 0.1) !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+    color: #60a5fa !important;
+  }
+
+  .ucc-field-label {
+    color: var(--text-muted) !important;
+  }
+
+  .ucc-field-control {
+    background: rgba(30, 41, 59, 0.5) !important;
+    border-color: var(--border) !important;
+    color: var(--text-primary) !important;
+  }
+
+  .ucc-field-control:focus {
+    background: var(--card-bg) !important;
+  }
+
+  .ucc-field-control.is-error {
+    background: rgba(127, 29, 29, 0.15) !important;
+  }
+
+  .ucc-field-meta {
+    color: var(--text-muted) !important;
+  }
+
+  .ucc-choice-pill {
+    background: rgba(30, 41, 59, 0.5) !important;
+    border-color: var(--border) !important;
+    color: var(--text-primary) !important;
+  }
+
+  .ucc-choice-pill.is-checked {
+    background: rgba(37, 99, 235, 0.15) !important;
+    border-color: #2563eb !important;
+    color: #60a5fa !important;
+  }
+
+  .ucc-inline-meta {
+    border-top-color: var(--border) !important;
+    color: var(--text-muted) !important;
+  }
+
+  .ucc-form-footer {
+    border-top-color: var(--border) !important;
+  }
+
+  .ucc-btn-secondary {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+    color: var(--text-primary) !important;
+  }
+
+  .ucc-btn-ghost {
+    color: var(--text-muted) !important;
+  }
+
+  .ucc-btn-ghost:hover:not(:disabled) {
+    background: rgba(37, 99, 235, 0.1) !important;
+    color: #60a5fa !important;
+  }
+
+  .ucc-status {
+    background: var(--card-bg) !important;
+  }
+
+  .ucc-status-success {
+    background: rgba(6, 95, 70, 0.15) !important;
+    border-color: rgba(34, 197, 94, 0.3) !important;
+    color: #86efac !important;
+  }
+
+  .ucc-status-warning {
+    background: rgba(146, 64, 14, 0.15) !important;
+    border-color: rgba(251, 191, 36, 0.3) !important;
+    color: #fde68a !important;
+  }
+
+  .ucc-status-danger {
+    background: rgba(127, 29, 29, 0.15) !important;
+    border-color: rgba(239, 68, 68, 0.3) !important;
+    color: #fca5a5 !important;
+  }
+
+  .ucc-review-section {
+    background: rgba(30, 41, 59, 0.5) !important;
+    border-color: var(--border) !important;
+  }
+
+  .ucc-review-section > h3 {
+    color: var(--text-primary) !important;
+  }
+
+  .ucc-review-field {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+  }
+
+  .ucc-review-field > span {
+    color: var(--text-muted) !important;
+  }
+
+  .ucc-review-field > strong {
+    color: var(--text-primary) !important;
+  }
+
+  .ucc-review-bank {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+  }
+
+  .ucc-review-bank > p {
+    color: var(--text-muted) !important;
+  }
+
+  /* =====================================================================
+     ADMIN PORTAL
+     ===================================================================== */
+  .admin-portal {
+    background: var(--bg) !important;
+    color: var(--text-primary) !important;
+  }
+
+  /* =====================================================================
+     SMOOTH TRANSITIONS
+     ===================================================================== */
+  .home-section,
+  .services-section,
+  .core-principles-section,
+  .help-section,
+  .about-section,
+  .why-choose-us-section,
+  .goals-section,
+  .auth-page,
+  .auth-card,
+  .elss-page,
+  .sip-page,
+  .ig-page,
+  .blogs-page,
+  .ucc-page {
+    transition: background-color 0.3s ease, color 0.3s ease !important;
+  }
 }

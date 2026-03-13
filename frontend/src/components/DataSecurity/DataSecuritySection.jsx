@@ -1,7 +1,7 @@
 import React from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import "./DataSecuritySection.css";
-import securityImage from "../../assets/data-security2.png";
+import "./DataSecuritySection3.css";
+import securityImage from "../../assets/datasecurity-new.png";
 
 const securityFeatures =     [
     {

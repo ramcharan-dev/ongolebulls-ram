@@ -91,13 +91,7 @@ function Header() {
                                 </a>
                                 <ul className="dropdown-menu">
                                     <li>
-                                        <Link to="/tools/sip-calculator">SIP Calculator</Link>
-                                    </li>
-                                    <li>
-                                        <Link to="/tools/lumpsum-calculator">Lumpsum Calculator</Link>
-                                    </li>
-                                    <li>
-                                        <Link to="/tools/cagr-calculator">CAGR Calculator</Link>
+                                        <Link to="/tools/mutual-fund-calculator">Mutual Fund Calculator</Link>
                                     </li>
                                 </ul>
                             </li>
@@ -209,18 +203,8 @@ function Header() {
                         </button>
                         <ul className={`dropdown-list ${openDropdown === 'tools' ? 'show' : ''}`}>
                             <li>
-                                <Link to="/tools/sip-calculator" onClick={closeSidebar}>
-                                    SIP Calculator
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/tools/lumpsum-calculator" onClick={closeSidebar}>
-                                    Lumpsum Calculator
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/tools/cagr-calculator" onClick={closeSidebar}>
-                                    CAGR Calculator
+                                <Link to="/tools/mutual-fund-calculator" onClick={closeSidebar}>
+                                    Mutual Fund Calculator
                                 </Link>
                             </li>
                         </ul>

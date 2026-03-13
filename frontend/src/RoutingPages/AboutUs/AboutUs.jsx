@@ -3,6 +3,7 @@ import './AboutUs.css';  // ← Change to regular .css
 import teamImage from '../../assets/about-us.jpg';
 import visionImage from '../../assets/vision-aboutUs.avif';
 import missionImage from '../../assets/mission-aboutUs.avif';
+import { ShieldCheck, Award, Lightbulb } from 'lucide-react';
 
 function AboutUs() {
     return (
@@ -40,7 +41,7 @@ function AboutUs() {
                     <div className="page-values-grid">  {/* Changed */}
                         <div className="page-value-card">  {/* Changed */}
                             <div className="page-value-icon">  {/* Changed */}
-                                <i className="fas fa-shield-alt"></i>
+                                <ShieldCheck aria-hidden="true" />
                             </div>
                             <h3>Integrity</h3>
                             <p>We adhere to the highest standards of ethics and remain transparent in all interactions.</p>
@@ -48,7 +49,7 @@ function AboutUs() {
 
                         <div className="page-value-card">  {/* Changed */}
                             <div className="page-value-icon">  {/* Changed */}
-                                <i className="fas fa-trophy"></i>
+                                <Award aria-hidden="true" />
                             </div>
                             <h3>Excellence</h3>
                             <p>We strive for excellence in everything we do, delivering superior results for our clients.</p>
@@ -56,7 +57,7 @@ function AboutUs() {
 
                         <div className="page-value-card">  {/* Changed */}
                             <div className="page-value-icon">  {/* Changed */}
-                                <i className="fas fa-lightbulb"></i>
+                                <Lightbulb aria-hidden="true" />
                             </div>
                             <h3>Innovation</h3>
                             <p>We embrace innovation to provide cutting-edge financial solutions for our clients.</p>

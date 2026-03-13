@@ -1,50 +1,25 @@
-import { useEffect, useRef } from "react";
-import Lenis from "lenis";
-
-/**
- * Premium Lenis smooth scroll — tight, responsive, buttery.
- * Only mounted on public-facing pages, never on dashboard/admin.
- */
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 export default function SmoothScroll() {
-  const lenisRef = useRef(null);
+  const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 0.8,
-      easing: (t) => 1 - Math.pow(1 - t, 4),   // quartic ease-out — snappy start, smooth stop
-      smoothWheel: true,
-      wheelMultiplier: 1.0,
-      touchMultiplier: 1.8,
-      infinite: false,
-    });
-    lenisRef.current = lenis;
+    document.documentElement.style.overflow = "";
+    document.body.style.overflow = "";
 
-    let rafId;
-    function raf(time) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-    rafId = requestAnimationFrame(raf);
-
-    // Respect anchor links
-    const handleAnchor = (e) => {
-      const href = e.target.closest("a")?.getAttribute("href");
-      if (href?.startsWith("#")) {
-        const target = document.querySelector(href);
+    const id = requestAnimationFrame(() => {
+      if (hash) {
+        const target = document.querySelector(hash);
         if (target) {
-          e.preventDefault();
-          lenis.scrollTo(target, { offset: -80 });
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
         }
       }
-    };
-    document.addEventListener("click", handleAnchor);
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    });
 
-    return () => {
-      cancelAnimationFrame(rafId);
-      document.removeEventListener("click", handleAnchor);
-      lenis.destroy();
-    };
-  }, []);
+    return () => cancelAnimationFrame(id);
+  }, [pathname, hash]);
 
   return null;
 }

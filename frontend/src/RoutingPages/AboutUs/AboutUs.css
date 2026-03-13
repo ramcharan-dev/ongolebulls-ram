@@ -166,6 +166,12 @@
     color: white;
 }
 
+.page-value-icon svg {
+    width: 2rem;
+    height: 2rem;
+    color: #ffffff;
+}
+
 .page-value-card h3 {
     font-size: 1.8rem;
     color: #0d1b2a;
@@ -347,4 +353,77 @@
     .page-vm-image img {
         height: 200px;
     }
+}
+
+/* Dark mode */
+[data-theme="dark"] .page-about-us {
+    background: var(--bg);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .page-about-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #1d4ed8 100%);
+}
+
+[data-theme="dark"] .page-about-intro {
+    background: #0b1220;
+}
+
+[data-theme="dark"] .page-intro-text {
+    color: var(--text-muted);
+}
+
+[data-theme="dark"] .page-values-section {
+    background: var(--bg);
+}
+
+[data-theme="dark"] .page-section-title {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .page-section-title::after {
+    background: linear-gradient(90deg, #60a5fa, #22d3ee);
+}
+
+[data-theme="dark"] .page-value-card {
+    background: #1e293b;
+    border-color: var(--border);
+    box-shadow: 0 8px 26px rgba(2, 6, 23, 0.35);
+}
+
+[data-theme="dark"] .page-value-card:hover {
+    background: #243247;
+    border-color: #60a5fa;
+    box-shadow: 0 18px 42px rgba(2, 6, 23, 0.5);
+}
+
+[data-theme="dark"] .page-value-card h3 {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .page-value-card p {
+    color: var(--text-muted);
+}
+
+[data-theme="dark"] .page-vision-mission-section {
+    background: linear-gradient(180deg, #0b1220 0%, #0f172a 100%);
+}
+
+[data-theme="dark"] .page-vm-card {
+    background: #1e293b;
+    border-color: var(--border);
+    box-shadow: 0 12px 36px rgba(2, 6, 23, 0.45);
+}
+
+[data-theme="dark"] .page-vm-card:hover {
+    border-color: #60a5fa;
+    box-shadow: 0 22px 52px rgba(2, 6, 23, 0.6);
+}
+
+[data-theme="dark"] .page-vm-content h2 {
+    color: #93c5fd;
+}
+
+[data-theme="dark"] .page-vm-content p {
+    color: var(--text-muted);
 }
