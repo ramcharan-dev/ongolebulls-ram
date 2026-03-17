@@ -1,0 +1,434 @@
+/* =========================================
+   Service Theme Engine
+   Applies gold / blue theme via CSS custom
+   properties set on .service-themed wrapper
+   ========================================= */
+
+/* ── Base wrapper ─────────────────────────── */
+.service-themed {
+  font-family: 'Inter', system-ui, sans-serif;
+  line-height: 1.6;
+  width: 100%;
+  margin-top: 80px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.service-themed * {
+  box-sizing: border-box;
+}
+
+/* ── Container ────────────────────────────── */
+.st-container {
+  width: 100%;
+  padding: 0 20px;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.st-narrow {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.st-text-center { text-align: center; }
+
+/* ── Fade-in animation ────────────────────── */
+@keyframes stFadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.st-animate {
+  animation: stFadeInUp 0.6s ease both;
+}
+
+.st-animate-delay-1 { animation-delay: 0.1s; }
+.st-animate-delay-2 { animation-delay: 0.2s; }
+.st-animate-delay-3 { animation-delay: 0.3s; }
+
+/* ── HERO ─────────────────────────────────── */
+.st-hero {
+  background: var(--st-hero-bg);
+  color: var(--st-hero-text);
+  padding: 4rem 0 2rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.st-hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 30% 50%, var(--st-primary-alpha, rgba(255,255,255,0.03)) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.st-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.35rem 1rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  color: #e2e8f0;
+}
+
+.st-hero-title {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.st-hero-sub {
+  font-size: 1rem;
+  color: var(--st-hero-sub-text);
+  max-width: 600px;
+  margin: 0 auto 2rem auto;
+}
+
+.st-hero-cta {
+  margin-bottom: 3rem;
+}
+
+/* ── BUTTONS ──────────────────────────────── */
+.st-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+}
+
+.st-btn-primary {
+  background: var(--st-btn-gradient);
+  color: var(--st-btn-text);
+}
+
+.st-btn-primary:hover {
+  transform: scale(1.05);
+  box-shadow: var(--st-btn-hover-shadow);
+}
+
+/* ── SECTIONS ─────────────────────────────── */
+.st-section {
+  padding: 4rem 0;
+  background: var(--st-section-bg);
+  border-bottom: 1px solid var(--st-divider);
+  transition: background-color 0.3s ease;
+}
+
+.st-section:last-child {
+  border-bottom: none;
+}
+
+.st-section-alt {
+  background: var(--st-section-alt-bg);
+}
+
+.st-section-title {
+  font-size: 1.75rem;
+  color: var(--st-section-title-color);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.st-section-sub {
+  font-size: 0.95rem;
+  color: var(--st-section-sub-color);
+  max-width: 700px;
+  margin: 0 auto 2.5rem auto;
+}
+
+/* ── CARDS GRID ───────────────────────────── */
+.st-card-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.st-card {
+  background: var(--st-card-bg);
+  padding: 1.75rem;
+  border-radius: var(--st-card-radius);
+  border: 1px solid var(--st-card-border);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.35s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.st-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--st-card-hover-shadow);
+  border-color: var(--st-card-hover-border);
+}
+
+.st-card-small {
+  text-align: center;
+}
+
+/* ── Feature card variant ────────────────── */
+.st-card-feature {
+  text-align: left;
+  align-items: stretch;
+}
+
+.st-card-icon-wrap {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: var(--st-primary-alpha, rgba(212,175,55,0.08));
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.st-card:hover .st-card-icon-wrap {
+  transform: scale(1.08);
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.2);
+}
+
+.st-card-icon {
+  font-size: 1.6rem;
+  color: var(--st-icon-color);
+  line-height: 1;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.st-card:hover .st-card-icon {
+  transform: scale(1.1);
+}
+
+.st-card h4 {
+  margin: 0 0 0.75rem 0;
+  color: var(--st-section-title-color);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.st-card p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--st-section-sub-color);
+  line-height: 1.6;
+}
+
+/* ── Bullet list in cards ────────────────── */
+.st-bullet-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.st-bullet-list li {
+  font-size: 0.9rem;
+  color: var(--st-section-sub-color);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  line-height: 1.5;
+}
+
+.st-bullet-list li::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--st-icon-color);
+  flex-shrink: 0;
+  margin-top: 0.45rem;
+}
+
+/* ── STEP BADGE ───────────────────────────── */
+.st-step-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: var(--st-badge-bg);
+  color: var(--st-badge-text);
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.st-card h3 {
+  font-size: 1.25rem;
+  color: var(--st-section-title-color);
+  margin: 1rem 0;
+}
+
+/* ── TICK LIST ────────────────────────────── */
+.st-ticklist {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+  width: 100%;
+  text-align: left;
+}
+
+.st-ticklist li {
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--st-section-sub-color);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.st-ticklist li::before {
+  content: '\2713';
+  color: var(--st-icon-color);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ── FAQ ACCORDION ────────────────────────── */
+.st-faq-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.st-accordion-item {
+  border: 1px solid var(--st-card-border);
+  border-radius: 10px;
+  background: var(--st-card-bg);
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+}
+
+.st-accordion-item:hover {
+  border-color: var(--st-card-hover-border);
+}
+
+.st-accordion-btn {
+  width: 100%;
+  text-align: left;
+  padding: 1.25rem;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--st-section-title-color);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.st-accordion-btn.open {
+  color: var(--st-accordion-open-color);
+  background: var(--st-accordion-open-bg);
+}
+
+.st-accordion-btn::after {
+  content: '+';
+  font-size: 1.25rem;
+  font-weight: 300;
+  transition: transform 0.3s ease;
+}
+
+.st-accordion-btn.open::after {
+  content: '\2212';
+}
+
+.st-accordion-body {
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+
+.st-accordion-content {
+  padding: 0 1.25rem 1.25rem 1.25rem;
+  color: var(--st-section-sub-color);
+  font-size: 0.95rem;
+  border-top: 1px solid var(--st-divider);
+}
+
+/* ── CTA SECTION ──────────────────────────── */
+.st-cta-card {
+  text-align: center;
+  background: var(--st-card-bg);
+  border: 1px solid var(--st-card-border);
+  border-radius: var(--st-card-radius);
+  padding: 3rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.st-cta-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--st-btn-gradient);
+}
+
+/* ── EMPTY STATE ──────────────────────────── */
+.st-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--st-section-sub-color);
+  font-size: 0.95rem;
+}
+
+/* =========================================
+   Responsive
+   ========================================= */
+@media (min-width: 768px) {
+  .st-hero {
+    padding: 6rem 0 4rem 0;
+  }
+  .st-hero-title {
+    font-size: 3rem;
+  }
+  .st-hero-sub {
+    font-size: 1.125rem;
+  }
+  .st-btn {
+    width: auto;
+  }
+  .st-card-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .st-features .st-card-row {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+  .st-section-title {
+    font-size: 2.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .st-hero-title {
+    font-size: 3.25rem;
+  }
+}

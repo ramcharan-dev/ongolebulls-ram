@@ -495,6 +495,7 @@ export default function ServiceSectionsPage() {
                   <label className="ap-label" htmlFor="section-banner">Banner URL (Hero)</label>
                   <input id="section-banner" className="ap-input" value={sectionForm.bannerImageUrl || ''}
                     onChange={(event) => setSectionForm((prev) => ({ ...prev, bannerImageUrl: event.target.value }))} />
+                  <div className="ap-field-hint">Recommended for production: `/assets/your-image.png`</div>
                 </div>
                 <div className="ap-field">
                   <label className="ap-label" htmlFor="section-meta-title">Meta Title</label>

@@ -1,7 +1,8 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import "./DataSecuritySection.css";
-import securityImage from "../../assets/data-security2.png";
+import "./DataSecuritySection3.css";
+import securityImage from "../../assets/datasecurity-new.png";
 
 const securityFeatures =     [
     {
@@ -45,7 +46,9 @@ export default function DataSecuritySection() {
                             confidentiality, integrity, and protection of your personal data during
                             storage and transmission.
                         </p>
-                        <button className="security-cta-btn">Read More</button>
+                        <Link to="/data-security" className="security-cta-btn">
+                            Read More
+                        </Link>
                     </div>
 
                     {/* Right Image */}

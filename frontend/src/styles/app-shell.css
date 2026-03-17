@@ -1,0 +1,11 @@
+.public-site-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+.public-site-main {
+  flex: 1 0 auto;
+  display: block;
+}

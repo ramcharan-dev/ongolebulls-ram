@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Layers, RotateCcw, Save } from 'lucide-react';
 import { getSectionsByService, getServiceById, updateService } from '../../api/serviceApi';
+import { resolveMediaUrl } from '../../utils/media';
 
 const SECTION_TYPES = ['hero', 'features', 'steps', 'why_choose_us', 'faq', 'cta'];
 const DEFAULT_FORM = {
@@ -13,6 +14,7 @@ const DEFAULT_FORM = {
   metaDescription: '',
   metaKeywords: '',
   isActive: true,
+  theme: 'blue',
   allowedSectionTypes: [],
 };
 
@@ -35,6 +37,7 @@ function mapServiceToForm(service) {
     metaDescription: service?.metaDescription || '',
     metaKeywords: service?.metaKeywords || '',
     isActive: service?.isActive !== false,
+    theme: service?.theme || 'blue',
     allowedSectionTypes: Array.isArray(service?.allowedSectionTypes) ? service.allowedSectionTypes : [],
   };
 }
@@ -124,7 +127,7 @@ export default function ServiceDetailPage() {
       !/^https?:\/\/.+/i.test(form.bannerImage) &&
       !/^[A-Za-z0-9._\-\/]+$/.test(form.bannerImage)
     ) {
-      next.bannerImage = 'Use full URL or relative filename';
+      next.bannerImage = 'Use /assets/file.png, a full URL, or a valid asset path';
     }
     if ((form.metaDescription || '').length > 160) {
       next.metaDescription = 'Meta description should be 160 chars max';
@@ -244,8 +247,14 @@ export default function ServiceDetailPage() {
         </div>
         <div className="ap-card">
           <div className="ap-card-body">
-            <p className="ap-kpi-label">Sections / Items</p>
-            <p className="ap-kpi-value" style={{ fontSize: 18 }}>{orderedSections.length} / {totalItems}</p>
+            <p className="ap-kpi-label">Theme</p>
+            <p className="ap-kpi-value" style={{ fontSize: 18, textTransform: 'capitalize', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{
+                width: 12, height: 12, borderRadius: '50%', display: 'inline-block',
+                background: service.theme === 'gold' ? 'linear-gradient(135deg, #D4AF37, #F5D06F)' : 'linear-gradient(135deg, #2563EB, #3B82F6)',
+              }} />
+              {service.theme || 'blue'}
+            </p>
           </div>
         </div>
       </div>
@@ -277,6 +286,7 @@ export default function ServiceDetailPage() {
               <div className="ap-field" style={{ gridColumn: '1 / -1' }}>
                 <label className="ap-label" htmlFor="service-banner-inline">Banner Image URL</label>
                 <input id="service-banner-inline" className="ap-input" value={form.bannerImage} onChange={(event) => setField('bannerImage', event.target.value)} />
+                <div className="ap-field-hint">Recommended for production: `/assets/your-image.png`</div>
                 {errors.bannerImage ? <div className="ap-field-error">{errors.bannerImage}</div> : null}
               </div>
               <div className="ap-field">
@@ -290,6 +300,31 @@ export default function ServiceDetailPage() {
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
                 </select>
+              </div>
+              <div className="ap-field">
+                <label className="ap-label">Service Theme</label>
+                <div style={{ display: 'flex', gap: 12, marginTop: 4 }}>
+                  <label style={{
+                    display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px',
+                    borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600,
+                    border: form.theme === 'gold' ? '2px solid #D4AF37' : '2px solid var(--border, #e5e7eb)',
+                    background: form.theme === 'gold' ? 'rgba(212,175,55,0.08)' : 'transparent',
+                  }}>
+                    <input type="radio" name="service-theme" value="gold" checked={form.theme === 'gold'} onChange={() => setField('theme', 'gold')} />
+                    <span style={{ width: 14, height: 14, borderRadius: '50%', background: 'linear-gradient(135deg, #D4AF37, #F5D06F)', flexShrink: 0 }} />
+                    Gold
+                  </label>
+                  <label style={{
+                    display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px',
+                    borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600,
+                    border: form.theme === 'blue' ? '2px solid #2563EB' : '2px solid var(--border, #e5e7eb)',
+                    background: form.theme === 'blue' ? 'rgba(37,99,235,0.08)' : 'transparent',
+                  }}>
+                    <input type="radio" name="service-theme" value="blue" checked={form.theme === 'blue'} onChange={() => setField('theme', 'blue')} />
+                    <span style={{ width: 14, height: 14, borderRadius: '50%', background: 'linear-gradient(135deg, #2563EB, #3B82F6)', flexShrink: 0 }} />
+                    Blue
+                  </label>
+                </div>
               </div>
               <div className="ap-field">
                 <label className="ap-label">Allowed Section Types</label>
@@ -332,7 +367,7 @@ export default function ServiceDetailPage() {
             <p className="ap-label" style={{ marginTop: 12 }}>Banner Preview</p>
             {form.bannerImage ? (
               <img
-                src={form.bannerImage}
+                src={resolveMediaUrl(form.bannerImage)}
                 alt={service.title || 'Service banner'}
                 style={{ width: '100%', maxHeight: 220, objectFit: 'cover', borderRadius: 10, border: '1px solid #e2e8f0' }}
               />

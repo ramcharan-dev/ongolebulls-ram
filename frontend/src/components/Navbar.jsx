@@ -18,9 +18,9 @@ export default function Navbar() {
   const navLink = (to, label) => (
     <Link to={to} style={{
       fontSize: 14, fontWeight: 500, padding: '.35rem .65rem', borderRadius: 6,
-      color: isActive(to) ? '#16a34a' : '#374151',
-      background: isActive(to) ? '#dcfce7' : 'transparent',
-      textDecoration: 'none', transition: 'background .15s',
+      color: isActive(to) ? 'var(--green-primary)' : 'var(--text-primary)',
+      background: isActive(to) ? 'var(--green-light)' : 'transparent',
+      textDecoration: 'none', transition: 'background .15s, color .15s',
     }}>
       {label}
     </Link>
@@ -31,21 +31,22 @@ export default function Navbar() {
 
   return (
     <nav style={{
-      background: '#fff',
-      borderBottom: '1px solid #e5e7eb',
+      background: 'var(--surface)',
+      borderBottom: '1px solid var(--border)',
       padding: '.75rem 1.5rem',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
       position: 'sticky', top: 0, zIndex: 100,
-      boxShadow: '0 1px 3px rgba(0,0,0,.06)',
+      boxShadow: 'var(--shadow)',
+      transition: 'background-color .3s ease, border-color .3s ease',
     }}>
       {/* Logo */}
       <Link to="/" style={{ textDecoration:'none', display:'flex', alignItems:'center', gap:8 }}>
         <div style={{ width:32, height:32, background:'#16a34a', borderRadius:8, display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontWeight:800, fontSize:14 }}>
           OB
         </div>
-        <span style={{ fontWeight:700, fontSize:17, color:'#14532d' }}>OngoleBulls</span>
+        <span style={{ fontWeight:700, fontSize:17, color:'var(--green-dark)' }}>OngoleBulls</span>
       </Link>
 
       {/* Nav links */}
@@ -63,7 +64,7 @@ export default function Navbar() {
         {user ? (
           <>
             <Link to="/dashboard"
-              style={{ fontSize:14, fontWeight:600, color:'#16a34a', textDecoration:'none' }}>
+              style={{ fontSize:14, fontWeight:600, color:'var(--green-primary)', textDecoration:'none' }}>
               {user.fullName?.split(' ')[0] || 'Dashboard'}
             </Link>
             <button className="btn btn-outline btn-sm" onClick={handleLogout}>Logout</button>

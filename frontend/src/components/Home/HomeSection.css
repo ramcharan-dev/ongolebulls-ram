@@ -239,7 +239,7 @@
 }
 
 /*
-   FEATURES SECTION
+   FEATURES SECTION — Premium Blue + Gold
 */
 .features-container {
     max-width: 1300px;
@@ -251,44 +251,103 @@
 }
 
 .feature-card {
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(30, 58, 138, 0.1);
     flex: 1;
-    padding: 30px;
+    padding: 32px 28px;
     border-radius: 18px;
-    text-align: center;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+    text-align: left;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
     cursor: pointer;
     will-change: transform;
+    transition: border-color 0.35s ease, box-shadow 0.35s ease;
 }
 
+.feature-card:hover {
+    border-color: rgba(212, 175, 55, 0.4);
+    box-shadow: 0 16px 40px rgba(30, 58, 138, 0.1), 0 0 0 1px rgba(212, 175, 55, 0.25);
+}
+
+.feature-icon-wrap {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.08), rgba(212, 175, 55, 0.1));
+    margin: 0 auto 18px auto;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover .feature-icon-wrap {
+    transform: scale(1.08);
+    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.2);
+}
+
+.feature-icon-wrap i {
+    font-size: 26px;
+    color: #c5a028;
+    transition: color 0.3s ease;
+}
+
+.feature-card:hover .feature-icon-wrap i {
+    color: #d4af37;
+}
+
+/* Legacy .feature-icon for any fallback */
 .feature-icon {
     font-size: 42px;
-    color: #d44a1c;
+    color: #c5a028;
     margin-bottom: 15px;
     transition: all 0.3s ease;
 }
 
-.feature-card:hover .feature-icon {
-    transform: scale(1.15) rotate(-3deg);
-    color: #bf3f15;
-}
-
 .feature-icon i {
-    color: #d44a1c;
+    color: #c5a028;
 }
 
 .feature-card h3 {
-    font-size: 20px;
-    margin-bottom: 10px;
+    font-size: 19px;
+    margin-bottom: 14px;
     font-weight: 600;
-    color: #111;
+    color: #0f172a;
+    text-align: center;
     transition: color 0.3s ease;
 }
 
 .feature-card:hover h3 {
-    color: #d44a1c;
+    color: #dc2626; /* Crisp red */
+}
+
+/* ── Bullet list in feature cards ─────── */
+.feature-bullet-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.feature-bullet-list li {
+    font-size: 15px;
+    color: #475569;
+    line-height: 1.55;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.feature-bullet-list li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #c5a028;
+    flex-shrink: 0;
+    margin-top: 7px;
 }
 
 .feature-card p {
@@ -402,33 +461,38 @@
 
     .feature-card {
         width: 100%;
-        padding: 25px 20px;
+        padding: 24px 20px;
         border-radius: 14px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .feature-icon-wrap {
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 14px auto;
+    }
+
+    .feature-icon-wrap i {
+        font-size: 22px;
     }
 
     .feature-icon {
         font-size: 36px;
         margin-bottom: 12px;
-        color: #d44a1c;
-    }
-
-    .feature-icon i {
-        color: #d44a1c;
     }
 
     .feature-card h3 {
-        font-size: 18px;
-        margin-bottom: 8px;
+        font-size: 17px;
+        margin-bottom: 10px;
+    }
+
+    .feature-bullet-list li {
+        font-size: 14px;
     }
 
     .feature-card p {
         font-size: 14px;
         line-height: 1.6;
-    }
-
-    .feature-card p br {
-        display: none;
     }
 
     /* Reduce orb intensity on mobile */

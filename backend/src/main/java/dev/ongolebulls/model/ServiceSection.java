@@ -63,7 +63,7 @@ public class ServiceSection {
     private Timestamp updatedAt;
 
     // ---------------- Relation to SectionItem ----------------
-    @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference("section-items")
     private List<SectionItem> items = new ArrayList<>();
 

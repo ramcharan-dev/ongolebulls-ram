@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getServices } from '../../api/serviceApi';
+import { resolveMediaUrl } from '../../utils/media';
+import BrandLoader from '../../components/BrandLoader/BrandLoader';
 import './Services.css';
 
 // Local mapping from backend slug to a visual category label and image key.
@@ -35,7 +37,7 @@ export default function Services() {
       try {
         const response = await getServices();
         const data = Array.isArray(response.data) ? response.data : [];
-        setServices(data.filter((item) => item.isActive !== false));
+        setServices(data.filter((item) => (item.isActive ?? item.active) !== false));
       } catch (err) {
         setError('Unable to load services. Please try again later.');
       } finally {
@@ -49,7 +51,11 @@ export default function Services() {
   if (loading) {
     return (
       <section className="services-page-loading">
-        <p>Loading services…</p>
+        <BrandLoader
+          compact
+          title="Loading services"
+          subtitle="Bringing together your advisory, investment, and planning solutions."
+        />
       </section>
     );
   }
@@ -57,8 +63,14 @@ export default function Services() {
   if (error) {
     return (
       <section className="services-page-error">
-        <h1>Unable to load services</h1>
-        <p>{error}</p>
+        <div className="services-page-status-card">
+          <p className="services-page-status-kicker">Services unavailable</p>
+          <h1>Unable to load services</h1>
+          <p>{error}</p>
+          <button type="button" className="services-page-status-btn" onClick={() => window.location.reload()}>
+            Try again
+          </button>
+        </div>
       </section>
     );
   }
@@ -66,11 +78,14 @@ export default function Services() {
   if (!services.length) {
     return (
       <section className="services-page-empty">
-        <h1>Services coming soon</h1>
-        <p>
-          Our team is configuring the services catalogue in the admin portal. Please check back
-          shortly.
-        </p>
+        <div className="services-page-status-card">
+          <p className="services-page-status-kicker">Catalogue update</p>
+          <h1>Services coming soon</h1>
+          <p>
+            Our team is configuring the services catalogue in the admin portal. Please check back
+            shortly.
+          </p>
+        </div>
       </section>
     );
   }
@@ -107,17 +122,7 @@ export default function Services() {
           <div className="services-page-grid">
             {services.map((service) => {
               const imageClass = getImageClassForSlug(service.slug || '');
-              const rawBanner = (service.bannerImage || '').trim();
-              let banner = '';
-              if (rawBanner) {
-                if (/^https?:\/\//i.test(rawBanner)) {
-                  banner = rawBanner;
-                } else if (rawBanner.startsWith('/assets/')) {
-                  banner = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}${rawBanner}`;
-                } else {
-                  banner = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/assets/${rawBanner}`;
-                }
-              }
+              const banner = resolveMediaUrl(service.bannerImage);
               const visualLabel =
                 SERVICE_VISUAL_PRESETS[service.slug || '']?.label || 'Premium service';
 
