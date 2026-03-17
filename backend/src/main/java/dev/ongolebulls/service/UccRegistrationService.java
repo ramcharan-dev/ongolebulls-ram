@@ -73,7 +73,7 @@ public class UccRegistrationService {
         reg.setStatus("PENDING");
         reg.setErrorMessage(null);
         reg.setBseResponse(null);
-        reg.setRetryCount(reg.getRetryCount() + 1);
+        reg.setRetryCount(0);
 
         return repository.save(reg);
     }
