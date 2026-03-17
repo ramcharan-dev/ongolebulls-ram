@@ -51,6 +51,7 @@ import dev.ongolebulls.model.User;
 import dev.ongolebulls.model.RiskProfile;
 import dev.ongolebulls.repository.PasswordResetTokenRepository;
 import dev.ongolebulls.repository.UserRepository;
+import dev.ongolebulls.service.AuthService;
 import dev.ongolebulls.service.OtpService;
 import dev.ongolebulls.service.UserService;
 import jakarta.servlet.http.Cookie;
@@ -87,6 +88,7 @@ public class AuthController {
     private final UserRepository userRepository;
     private final PasswordResetTokenRepository tokenRepository;
     private final JavaMailSender mailSender;
+    private final AuthService authService;
 
 
     // ==================== OTP ====================
@@ -237,29 +239,81 @@ public class AuthController {
         resetToken.setExpiryDate(LocalDateTime.now().plusMinutes(30));
         tokenRepository.save(resetToken);
 
-        // Send HTML reset mail
+        // Send professional HTML reset mail
         try {
+            // Link first hits backend, which then redirects to React app on :5173
             String resetLink = "http://localhost:8080/reset-password?token=" + token;
 
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
             String html = """
-                <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-                    <h2 style="color:#006400;">Password Reset Request</h2>
-                    <p>Dear Investor,</p>
-                    <p>We received a request to reset your password.</p>
-                    <p>
-                        <a href="%s" style="background-color:#006400; color:#fff; padding:10px 20px; 
-                        text-decoration:none; border-radius:5px;">Click here to reset your password</a>
-                    </p>
-                    <p>This link will expire in <b>30 minutes</b>.</p>
-                    <br>
-                    <p>Warm Regards,<br>OngoleBulls Invest Team</p>
-                    <p style="font-size: 12px; color: #888;">
-                        <a href="https://www.ongolebullsinvest.com">www.ongolebullsinvest.com</a>
-                    </p>
-                </div>
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Password Reset Request - OngoleBulls Invest</title>
+                </head>
+                <body style="margin:0; padding:0; background-color:#f5f7fa;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" width="100%%" style="background-color:#f5f7fa; padding:24px 0;">
+                        <tr>
+                            <td align="center">
+                                <table role="presentation" cellpadding="0" cellspacing="0" width="600" style="background-color:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.06); font-family:Arial,Helvetica,sans-serif; color:#333333;">
+                                    <tr>
+                                        <td style="padding:24px 32px; background:linear-gradient(90deg,#004225,#007b55); color:#ffffff;">
+                                            <h1 style="margin:0; font-size:22px; font-weight:600;">OngoleBulls Invest</h1>
+                                            <p style="margin:4px 0 0; font-size:14px; opacity:0.9;">Password Reset Request</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:24px 32px 8px 32px;">
+                                            <p style="margin:0 0 12px 0; font-size:14px;">Dear Investor,</p>
+                                            <p style="margin:0 0 12px 0; font-size:14px;">
+                                                We received a request to reset the password for your
+                                                <strong>OngoleBulls Invest</strong> account.
+                                            </p>
+                                            <p style="margin:0 0 20px 0; font-size:14px;">
+                                                If you made this request, please click the button below to securely set a new password.
+                                            </p>
+                                            <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 20px 0;">
+                                                <tr>
+                                                    <td align="center">
+                                                        <a href="%s"
+                                                           style="display:inline-block; background-color:#007b55; color:#ffffff; text-decoration:none;
+                                                                  padding:12px 28px; border-radius:4px; font-size:14px; font-weight:600;">
+                                                            Reset Password
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <p style="margin:0 0 12px 0; font-size:13px; color:#555555;">
+                                                This link will expire in <strong>30 minutes</strong>. If it expires, you can always request a new password reset link from the login page.
+                                            </p>
+                                            <p style="margin:16px 0 0 0; font-size:13px; color:#555555;">
+                                                If you did not request this change, you can safely ignore this email &mdash; your current password will remain unchanged.
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:16px 32px 8px 32px;">
+                                            <p style="margin:0 0 4px 0; font-size:13px; color:#333333;">
+                                                Warm Regards,<br>
+                                                <strong>OngoleBulls Invest Team</strong>
+                                            </p>
+                                            <p style="margin:8px 0 0 0; font-size:12px; color:#888888;">
+                                                <a href="http://www.ongolebullsinvest.com"
+                                                   style="color:#007b55; text-decoration:none;">
+                                                    www.ongolebullsinvest.com
+                                                </a>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </body>
+                </html>
                 """.formatted(resetLink);
 
             helper.setFrom(Objects.requireNonNull("info@ongolebullsinvest.com", "Sender email cannot be null"));
@@ -275,6 +329,68 @@ public class AuthController {
         }
 
         return ResponseEntity.ok(Map.of("status", "reset-link-sent"));
+    }
+
+
+    // ==================== RESET PASSWORD (API) ====================
+
+    /**
+     * Validate a password reset token before showing the reset form.
+     * GET /api/auth/reset-password/validate?token=...
+     */
+    @GetMapping("/reset-password/validate")
+    public ResponseEntity<?> validateResetToken(@RequestParam("token") String token) {
+        if (token == null || token.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "valid", false,
+                    "message", "Missing token"
+            ));
+        }
+
+        boolean valid = authService.isResetTokenValid(token);
+        return ResponseEntity.ok(Map.of(
+                "valid", valid,
+                "token", token,
+                "message", valid ? "Valid reset link" : "Invalid or expired reset link"
+        ));
+    }
+
+    /**
+     * Perform the actual password reset.
+     * POST /api/auth/reset-password
+     * Body: { "token": "...", "newPassword": "..." }
+     */
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPasswordApi(@RequestBody Map<String, String> body) {
+        String token = body.get("token");
+        String newPassword = body.get("newPassword");
+
+        if (token == null || token.isBlank() || newPassword == null || newPassword.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", "Token and newPassword are required"
+            ));
+        }
+
+        if (newPassword.length() < 6) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", "Password must be at least 6 characters"
+            ));
+        }
+
+        boolean ok = authService.resetPassword(token, newPassword);
+        if (!ok) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(
+                    "success", false,
+                    "message", "Invalid or expired reset token"
+            ));
+        }
+
+        return ResponseEntity.ok(Map.of(
+            "success", true,
+            "message", "Password reset successfully"
+        ));
     }
 
 
