@@ -1,33 +1,66 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getServiceBySlug, getSectionsByService } from '../../api/serviceApi';
-import '../PmsPage/PMS.css';
+import { getServiceTheme } from '../../config/serviceThemes';
+import { useTheme } from '../../context/ThemeContext';
+import './ServiceTheme.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
 const SECTION_ORDER = ['hero', 'features', 'steps', 'why_choose_us', 'faq', 'cta'];
 
+/** Convert a theme object into CSS custom properties on a wrapper element */
+function themeToCSS(theme) {
+  return {
+    '--st-primary': theme.primary,
+    '--st-primary-dark': theme.primaryDark,
+    '--st-primary-light': theme.primaryLight,
+    '--st-primary-alpha': theme.name === 'gold' ? 'rgba(212,175,55,0.08)' : 'rgba(59,130,246,0.08)',
+    '--st-hero-bg': theme.heroBg,
+    '--st-hero-text': theme.heroText,
+    '--st-hero-sub-text': theme.heroSubText,
+    '--st-section-bg': theme.sectionBg,
+    '--st-section-alt-bg': theme.sectionAltBg,
+    '--st-section-title-color': theme.sectionTitleColor,
+    '--st-section-sub-color': theme.sectionSubColor,
+    '--st-card-bg': theme.cardBg,
+    '--st-card-border': theme.cardBorder,
+    '--st-card-radius': theme.cardRadius,
+    '--st-card-hover-border': theme.cardHoverBorder,
+    '--st-card-hover-shadow': theme.cardHoverShadow,
+    '--st-btn-gradient': theme.btnGradient,
+    '--st-btn-text': theme.btnText,
+    '--st-btn-hover-shadow': theme.btnHoverShadow,
+    '--st-badge-bg': theme.badgeBg,
+    '--st-badge-text': theme.badgeText,
+    '--st-accordion-open-bg': theme.accordionOpenBg,
+    '--st-accordion-open-color': theme.accordionOpenColor,
+    '--st-divider': theme.dividerColor,
+    '--st-icon-color': theme.iconColor,
+    '--st-link-color': theme.linkColor,
+  };
+}
+
 function FAQAccordion({ items }) {
   const [openIndex, setOpenIndex] = useState(0);
-
   if (!items.length) return null;
 
   return (
-    <div className="pms-faq-accordion">
+    <div className="st-faq-accordion">
       {items.map((item, idx) => (
-        <div className="pms-accordion-item" key={item.id || idx}>
+        <div className="st-accordion-item st-animate" style={{ animationDelay: `${idx * 0.05}s` }} key={item.id || idx}>
           <button
             type="button"
-            className={`pms-accordion-btn${openIndex === idx ? ' open' : ''}`}
+            className={`st-accordion-btn${openIndex === idx ? ' open' : ''}`}
             onClick={() => setOpenIndex(openIndex === idx ? -1 : idx)}
             aria-expanded={openIndex === idx}
           >
             {item.title || `Question ${idx + 1}`}
           </button>
           <div
-            className={`pms-accordion-body${openIndex === idx ? ' open' : ''}`}
+            className={`st-accordion-body${openIndex === idx ? ' open' : ''}`}
             style={{ maxHeight: openIndex === idx ? '320px' : '0' }}
           >
-            <div className="pms-accordion-content">
+            <div className="st-accordion-content">
               {item.description || item.subtitle || 'Details coming soon.'}
             </div>
           </div>
@@ -39,6 +72,7 @@ function FAQAccordion({ items }) {
 
 export default function ServiceDetail() {
   const { slug } = useParams();
+  const { isDark } = useTheme();
   const [service, setService] = useState(null);
   const [sections, setSections] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -56,14 +90,22 @@ export default function ServiceDetail() {
         setService(svc || null);
 
         if (svc?.id) {
-          const sectionsRes = await getSectionsByService(svc.id);
-          const raw = Array.isArray(sectionsRes.data) ? sectionsRes.data : [];
+          // Try dedicated sections endpoint first; fall back to sections embedded in the service response
+          let raw = [];
+          try {
+            const sectionsRes = await getSectionsByService(svc.id);
+            raw = Array.isArray(sectionsRes.data) ? sectionsRes.data : [];
+          } catch {
+            console.warn('[ServiceDetail] sections endpoint failed, using embedded sections');
+          }
+          if (!raw.length && Array.isArray(svc.sections)) {
+            raw = svc.sections;
+          }
+
           const withSortedItems = raw.map((section) => ({
             ...section,
             items: Array.isArray(section.items)
-              ? [...section.items].sort(
-                  (a, b) => (a.orderIndex || 0) - (b.orderIndex || 0),
-                )
+              ? [...section.items].sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0))
               : [],
           }));
 
@@ -79,6 +121,7 @@ export default function ServiceDetail() {
           setSections([]);
         }
       } catch (err) {
+        console.error('[ServiceDetail] load error:', err);
         setError('Unable to load this service page. It may not exist or is inactive.');
       } finally {
         setLoading(false);
@@ -87,6 +130,9 @@ export default function ServiceDetail() {
 
     load();
   }, [slug]);
+
+  const theme = useMemo(() => getServiceTheme(service?.theme, isDark), [service?.theme, isDark]);
+  const cssVars = useMemo(() => themeToCSS(theme), [theme]);
 
   const structure = useMemo(() => {
     const byType = (type) => sections.filter((section) => section.sectionType === type);
@@ -102,10 +148,10 @@ export default function ServiceDetail() {
 
   if (loading) {
     return (
-      <div className="pms-scope">
-        <section className="pms-section text-center">
-          <div className="container">
-            <p>Loading service…</p>
+      <div className="service-themed" style={cssVars}>
+        <section className="st-section st-text-center">
+          <div className="st-container">
+            <p style={{ color: 'var(--st-section-sub-color)' }}>Loading service...</p>
           </div>
         </section>
       </div>
@@ -114,11 +160,11 @@ export default function ServiceDetail() {
 
   if (error || !service) {
     return (
-      <div className="pms-scope">
-        <section className="pms-section text-center">
-          <div className="container">
-            <h2 className="pms-section-title">Service not found</h2>
-            <p className="pms-section-sub">
+      <div className="service-themed" style={cssVars}>
+        <section className="st-section st-text-center">
+          <div className="st-container">
+            <h2 className="st-section-title">Service not found</h2>
+            <p className="st-section-sub">
               {error || 'We could not find the requested service page.'}
             </p>
           </div>
@@ -131,82 +177,88 @@ export default function ServiceDetail() {
   const heroSubtitle = structure.hero?.subtitle || service.subtitle;
 
   return (
-    <div className="pms-scope">
-      {/* Hero – styled like PMS hero */}
-      <header className="pms-hero">
-        <div className="pms-hero-top-badge">
-          Service
-        </div>
-        <div className="pms-hero-content container">
-          <h1 className="pms-hero-title">{heroTitle}</h1>
-          {heroSubtitle ? <p className="pms-hero-sub">{heroSubtitle}</p> : null}
-          <div className="pms-hero-cta">
-            {/* Simple generic CTA – text can be refined in backend hero section items later */}
-            <a
-              className="pms-btn pms-btn-gold"
-              href="/AppointmentForm"
-            >
-              Talk to an advisor →
+    <div className="service-themed" data-service-theme={theme.name} style={cssVars}>
+      {/* ── Hero ───────────────────────────────── */}
+      <header className="st-hero">
+        <div className="st-hero-badge st-animate">Service</div>
+        <div className="st-container">
+          <h1 className="st-hero-title st-animate st-animate-delay-1">{heroTitle}</h1>
+          {heroSubtitle && <p className="st-hero-sub st-animate st-animate-delay-2">{heroSubtitle}</p>}
+          <div className="st-hero-cta st-animate st-animate-delay-3">
+            <a className="st-btn st-btn-primary" href="/AppointmentForm">
+              Talk to an advisor &rarr;
             </a>
           </div>
         </div>
       </header>
 
       <main>
-        {/* Features – cards row like PMS "Key Features" */}
-        {structure.features.length ? (
-          <section className="pms-section pms-features text-center">
-            <div className="container">
-              <h2 className="pms-section-title">
+        {/* ── Features ─────────────────────────── */}
+        {structure.features.length > 0 && (
+          <section className="st-section st-features st-text-center">
+            <div className="st-container">
+              <h2 className="st-section-title st-animate">
                 {structure.features[0].title || 'Key Features'}
               </h2>
-              {structure.features[0].subtitle ? (
-                <p className="pms-section-sub">{structure.features[0].subtitle}</p>
-              ) : null}
-              <div className="pms-card-row">
-                {structure.features[0].items.map((item) => {
+              {structure.features[0].subtitle && (
+                <p className="st-section-sub st-animate">{structure.features[0].subtitle}</p>
+              )}
+              <div className="st-card-row">
+                {structure.features[0].items.map((item, idx) => {
                   const iconClass = (item.icon || '').trim();
                   const biClass = iconClass
-                    ? iconClass.includes('bi-')
-                      ? iconClass
-                      : `bi-${iconClass}`
+                    ? iconClass.includes('bi-') ? iconClass : `bi-${iconClass}`
                     : '';
 
+                  const rawDesc = item.description || item.subtitle || '';
+                  const bullets = rawDesc
+                    .split(/\n|(?:\.\s)/)
+                    .map((s) => s.replace(/\.$/, '').trim())
+                    .filter(Boolean);
+
                   return (
-                    <div className="pms-card pms-card-small" key={item.id}>
-                      {biClass ? (
-                        <div className="pms-card-icon">
-                          <i className={`bi ${biClass}`} />
+                    <div className="st-card st-card-feature st-animate" style={{ animationDelay: `${idx * 0.08}s` }} key={item.id}>
+                      {biClass && (
+                        <div className="st-card-icon-wrap">
+                          <div className="st-card-icon">
+                            <i className={`bi ${biClass}`} />
+                          </div>
                         </div>
-                      ) : null}
+                      )}
                       <h4>{item.title || 'Feature'}</h4>
-                      <p>{item.description || item.subtitle || ''}</p>
+                      {bullets.length > 1 ? (
+                        <ul className="st-bullet-list">
+                          {bullets.map((b) => (
+                            <li key={b}>{b}</li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p>{rawDesc}</p>
+                      )}
                     </div>
                   );
                 })}
               </div>
             </div>
           </section>
-        ) : null}
+        )}
 
-        {/* Steps / process – styled like PMS "Types"/cards */}
-        {structure.steps.length ? (
-          <section className="pms-section pms-types text-center">
-            <div className="container">
-              <h2 className="pms-section-title">
+        {/* ── Steps ────────────────────────────── */}
+        {structure.steps.length > 0 && (
+          <section className="st-section st-section-alt st-text-center">
+            <div className="st-container">
+              <h2 className="st-section-title st-animate">
                 {structure.steps[0].title || 'How this service works'}
               </h2>
-              {structure.steps[0].subtitle ? (
-                <p className="pms-section-sub">{structure.steps[0].subtitle}</p>
-              ) : null}
-              <div className="pms-card-row">
+              {structure.steps[0].subtitle && (
+                <p className="st-section-sub st-animate">{structure.steps[0].subtitle}</p>
+              )}
+              <div className="st-card-row">
                 {structure.steps[0].items.map((item, index) => (
-                  <div className="pms-card" key={item.id || index}>
-                    <div className="pms-step-badge">
-                      Step {index + 1}
-                    </div>
+                  <div className="st-card st-animate" style={{ animationDelay: `${index * 0.08}s` }} key={item.id || index}>
+                    <div className="st-step-badge">Step {index + 1}</div>
                     <h3>{item.title || `Step ${index + 1}`}</h3>
-                    <ul className="pms-ticklist">
+                    <ul className="st-ticklist">
                       {(item.description || item.subtitle || '')
                         .split('\n')
                         .filter(Boolean)
@@ -219,96 +271,100 @@ export default function ServiceDetail() {
               </div>
             </div>
           </section>
-        ) : null}
+        )}
 
-        {/* Why choose us – benefits style grid */}
-        {structure.why.length ? (
-          <section className="pms-section pms-benefits text-center">
-            <div className="container">
-              <h2 className="pms-section-title">
+        {/* ── Why choose us ────────────────────── */}
+        {structure.why.length > 0 && (
+          <section className="st-section st-text-center">
+            <div className="st-container">
+              <h2 className="st-section-title st-animate">
                 {structure.why[0].title || 'Why choose this service?'}
               </h2>
-              {structure.why[0].subtitle ? (
-                <p className="pms-section-sub">{structure.why[0].subtitle}</p>
-              ) : null}
-              <div className="pms-card-row">
-                {structure.why[0].items.map((item) => {
+              {structure.why[0].subtitle && (
+                <p className="st-section-sub st-animate">{structure.why[0].subtitle}</p>
+              )}
+              <div className="st-card-row">
+                {structure.why[0].items.map((item, idx) => {
                   const iconClass = (item.icon || '').trim();
                   const biClass = iconClass
-                    ? iconClass.includes('bi-')
-                      ? iconClass
-                      : `bi-${iconClass}`
+                    ? iconClass.includes('bi-') ? iconClass : `bi-${iconClass}`
                     : '';
 
+                  const rawDesc = item.description || item.subtitle || '';
+                  const bullets = rawDesc
+                    .split(/\n|(?:\.\s)/)
+                    .map((s) => s.replace(/\.$/, '').trim())
+                    .filter(Boolean);
+
                   return (
-                    <div className="pms-card pms-card-small" key={item.id}>
-                      {biClass ? (
-                        <div className="pms-card-icon">
-                          <i className={`bi ${biClass}`} />
+                    <div className="st-card st-card-feature st-animate" style={{ animationDelay: `${idx * 0.08}s` }} key={item.id}>
+                      {biClass && (
+                        <div className="st-card-icon-wrap">
+                          <div className="st-card-icon">
+                            <i className={`bi ${biClass}`} />
+                          </div>
                         </div>
-                      ) : null}
+                      )}
                       <h4>{item.title || 'Benefit'}</h4>
-                      <p>{item.description || item.subtitle || ''}</p>
+                      {bullets.length > 1 ? (
+                        <ul className="st-bullet-list">
+                          {bullets.map((b) => (
+                            <li key={b}>{b}</li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p>{rawDesc}</p>
+                      )}
                     </div>
                   );
                 })}
               </div>
             </div>
           </section>
-        ) : null}
+        )}
 
-        {/* FAQ – accordion like PMS FAQ */}
-        {structure.faq ? (
-          <section className="pms-section pms-faq">
-            <div className="container pms-narrow">
-              <h2 className="pms-section-title text-center">
+        {/* ── FAQ ──────────────────────────────── */}
+        {structure.faq && (
+          <section className="st-section st-section-alt">
+            <div className="st-container st-narrow">
+              <h2 className="st-section-title st-text-center st-animate">
                 {structure.faq.title || 'Frequently Asked Questions'}
               </h2>
-              {structure.faq.subtitle ? (
-                <p className="pms-section-sub text-center">
+              {structure.faq.subtitle && (
+                <p className="st-section-sub st-text-center st-animate">
                   {structure.faq.subtitle}
                 </p>
-              ) : null}
+              )}
               <FAQAccordion items={structure.faq.items || []} />
             </div>
           </section>
-        ) : null}
+        )}
 
-        {/* CTA – closing card, using CTA section if present */}
-        {structure.cta ? (
-          <section className="pms-section">
-            <div className="container">
-              <div className="pms-card" style={{ textAlign: 'center' }}>
-                <h3 className="pms-section-title">
+        {/* ── CTA ──────────────────────────────── */}
+        {structure.cta && (
+          <section className="st-section">
+            <div className="st-container">
+              <div className="st-cta-card st-animate">
+                <h3 className="st-section-title">
                   {structure.cta.title || 'Ready to get started?'}
                 </h3>
-                {structure.cta.subtitle ? (
-                  <p className="pms-section-sub">
-                    {structure.cta.subtitle}
-                  </p>
-                ) : null}
-                <a
-                  className="pms-btn pms-btn-gold"
-                  href="/AppointmentForm"
-                >
-                  Book a consultation →
+                {structure.cta.subtitle && (
+                  <p className="st-section-sub">{structure.cta.subtitle}</p>
+                )}
+                <a className="st-btn st-btn-primary" href="/AppointmentForm">
+                  Book a consultation &rarr;
                 </a>
               </div>
             </div>
           </section>
-        ) : null}
+        )}
 
-        {!sections.length ? (
-          <section className="pms-section text-center">
-            <div className="container">
-              <p className="pms-section-sub">
-                This service page has not been configured with sections yet in the admin portal.
-              </p>
-            </div>
-          </section>
-        ) : null}
+        {!sections.length && (
+          <div className="st-empty">
+            This service page has not been configured with sections yet in the admin portal.
+          </div>
+        )}
       </main>
     </div>
   );
 }
-

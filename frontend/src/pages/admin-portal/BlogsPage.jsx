@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FileText, Plus } from 'lucide-react';
 import { createBlog, deleteBlog, getAllBlogs, updateBlog } from '../../api/blogApi';
+import { resolveMediaUrl } from '../../utils/media';
 import ConfirmDialog from './components/ConfirmDialog';
 
 const EMPTY_BLOG = {
@@ -103,9 +104,7 @@ export default function BlogsPage() {
   };
 
   const blogImageUrl = (blog) => {
-    if (!blog?.image) return '';
-    if (blog.image.startsWith('http')) return blog.image;
-    return `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/assets/${blog.image}`;
+    return resolveMediaUrl(blog?.image);
   };
 
   return (

@@ -18,23 +18,39 @@ const features = [
     {
         icon: <BsBullseye />,
         title: "Tailored Investment Strategy",
-        desc: "PMS constructs a customized portfolio based on investor preferences, risk profile, and objectives."
+        bullets: [
+            "Customized portfolio based on your risk profile",
+            "Aligned with personal financial objectives",
+            "Adapts to changing market conditions",
+        ],
     },
     {
         icon: <BsBarChartLine />,
         title: "Active or Passive Management",
-        desc: "PMS offers both actively managed portfolios aiming for higher returns and passive strategies aligned with market indices."
+        bullets: [
+            "Actively managed for higher alpha generation",
+            "Passive strategies tracking market indices",
+            "Flexible approach based on your preference",
+        ],
     },
     {
         icon: <BsBriefcaseFill />,
         title: "High Minimum Investment",
-        desc: "The minimum investment is typically ₹50 lakh, making it suitable mostly for high-net-worth individuals (HNIs)."
+        bullets: [
+            "Minimum investment typically ₹50 lakh",
+            "Designed for High-Net-Worth Individuals",
+            "Exclusive access to premium opportunities",
+        ],
     },
     {
         icon: <BsEyeFill />,
         title: "Transparency & Monitoring",
-        desc: "Regular performance updates and account statements provide full transparency."
-    }
+        bullets: [
+            "Regular performance updates & reports",
+            "Detailed account statements on demand",
+            "Full visibility into portfolio holdings",
+        ],
+    },
 ];
 
 const types = [
@@ -74,23 +90,39 @@ const benefits = [
     {
         icon: <BsSliders2 />,
         title: "Customization",
-        desc: "Investment strategies are personalized based on individual needs and risk profile."
+        bullets: [
+            "Personalized to your unique risk appetite",
+            "Strategies aligned with individual goals",
+            "Flexible asset allocation framework",
+        ],
     },
     {
         icon: <BsPersonGear />,
         title: "Professional Management",
-        desc: "Experienced portfolio managers actively manage investments, reducing the need for investor involvement."
+        bullets: [
+            "Experienced portfolio managers at the helm",
+            "Active rebalancing & market monitoring",
+            "Minimal day-to-day involvement needed",
+        ],
     },
     {
         icon: <BsShieldCheck />,
         title: "Risk Management & Diversification",
-        desc: "PMS helps balance risk and returns through diversified, tailored portfolios."
+        bullets: [
+            "Balanced risk-return optimization",
+            "Diversified across sectors & instruments",
+            "Downside protection strategies in place",
+        ],
     },
     {
         icon: <BsGraphUpArrow />,
         title: "Potential for Higher Returns",
-        desc: "Active management aims to outperform benchmark indices, focusing on achieving specific financial goals."
-    }
+        bullets: [
+            "Aims to outperform benchmark indices",
+            "Focus on alpha generation over time",
+            "Goal-oriented wealth accumulation",
+        ],
+    },
 ];
 
 const stats = [
@@ -195,10 +227,16 @@ export default function PMSLanding() {
                         </p>
                         <div className="pms-card-row">
                             {features.map((f) => (
-                                <div className="pms-card pms-card-small" key={f.title}>
-                                    <div className="pms-card-icon">{f.icon}</div>
+                                <div className="pms-card pms-card-feature" key={f.title}>
+                                    <div className="pms-card-icon-wrap">
+                                        <div className="pms-card-icon">{f.icon}</div>
+                                    </div>
                                     <h4>{f.title}</h4>
-                                    <p>{f.desc}</p>
+                                    <ul className="pms-bullet-list">
+                                        {f.bullets.map((b) => (
+                                            <li key={b}>{b}</li>
+                                        ))}
+                                    </ul>
                                 </div>
                             ))}
                         </div>
@@ -246,10 +284,16 @@ export default function PMSLanding() {
                         </p>
                         <div className="pms-card-row">
                             {benefits.map((b) => (
-                                <div className="pms-card pms-card-small" key={b.title}>
-                                    <div className="pms-card-icon">{b.icon}</div>
+                                <div className="pms-card pms-card-feature" key={b.title}>
+                                    <div className="pms-card-icon-wrap">
+                                        <div className="pms-card-icon">{b.icon}</div>
+                                    </div>
                                     <h4>{b.title}</h4>
-                                    <p>{b.desc}</p>
+                                    <ul className="pms-bullet-list">
+                                        {b.bullets.map((bullet) => (
+                                            <li key={bullet}>{bullet}</li>
+                                        ))}
+                                    </ul>
                                 </div>
                             ))}
                         </div>

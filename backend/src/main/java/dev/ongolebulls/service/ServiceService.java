@@ -4,7 +4,7 @@ package dev.ongolebulls.service;
 import dev.ongolebulls.model.Service;
 import dev.ongolebulls.repository.ServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -17,16 +17,19 @@ public class ServiceService {
     private ServiceRepository repo;
 
     // Get all services
+    @Transactional(readOnly = true)
     public List<Service> getAll() {
         return repo.findAll();
     }
 
     // Get service by ID
+    @Transactional(readOnly = true)
     public Service getById(String id) {
         return repo.findById(id).orElse(null);
     }
 
     // Get service by Slug
+    @Transactional(readOnly = true)
     public Service getBySlug(String slug) {
         return repo.findBySlug(slug).orElse(null);
     }
@@ -60,6 +63,7 @@ public class ServiceService {
         existing.setMetaDescription(s.getMetaDescription());
         existing.setMetaKeywords(s.getMetaKeywords());
         existing.setActive(s.isActive());
+        existing.setTheme(s.getTheme());
 
         existing.setAllowedSectionTypes(s.getAllowedSectionTypes());
 

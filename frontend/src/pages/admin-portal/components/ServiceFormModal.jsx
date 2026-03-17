@@ -13,6 +13,7 @@ const DEFAULT_FORM = {
   metaDescription: '',
   metaKeywords: '',
   isActive: true,
+  theme: 'blue',
 };
 
 export default function ServiceFormModal({ open, initial, loading, onClose, onSubmit }) {
@@ -70,7 +71,7 @@ export default function ServiceFormModal({ open, initial, loading, onClose, onSu
         !/^https?:\/\/.+/i.test(form.bannerImage) &&
         !/^[A-Za-z0-9._\-\/]+$/.test(form.bannerImage)
       ) {
-        nextErrors.bannerImage = 'Enter a full URL or asset filename (e.g. hero.jpg)';
+        nextErrors.bannerImage = 'Use /assets/file.png, a full URL, or a valid asset path';
       }
       if ((form.metaDescription || '').length > 160) {
         nextErrors.metaDescription = 'Meta description should be 160 chars max';
@@ -130,6 +131,32 @@ export default function ServiceFormModal({ open, initial, loading, onClose, onSu
                 <input type="checkbox" checked={form.isActive} onChange={(e) => set('isActive', e.target.checked)} />
                 Active Service
               </label>
+
+              <div className="ap-field" style={{ marginTop: 16 }}>
+                <label className="ap-label">Service Theme</label>
+                <div style={{ display: 'flex', gap: 12, marginTop: 6 }}>
+                  <label style={{
+                    display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px',
+                    borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600,
+                    border: form.theme === 'gold' ? '2px solid #D4AF37' : '2px solid #e5e7eb',
+                    background: form.theme === 'gold' ? 'rgba(212,175,55,0.08)' : 'transparent',
+                  }}>
+                    <input type="radio" name="theme" value="gold" checked={form.theme === 'gold'} onChange={() => set('theme', 'gold')} />
+                    <span style={{ width: 14, height: 14, borderRadius: '50%', background: 'linear-gradient(135deg, #D4AF37, #F5D06F)', flexShrink: 0 }} />
+                    Gold Theme
+                  </label>
+                  <label style={{
+                    display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px',
+                    borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600,
+                    border: form.theme === 'blue' ? '2px solid #2563EB' : '2px solid #e5e7eb',
+                    background: form.theme === 'blue' ? 'rgba(37,99,235,0.08)' : 'transparent',
+                  }}>
+                    <input type="radio" name="theme" value="blue" checked={form.theme === 'blue'} onChange={() => set('theme', 'blue')} />
+                    <span style={{ width: 14, height: 14, borderRadius: '50%', background: 'linear-gradient(135deg, #2563EB, #3B82F6)', flexShrink: 0 }} />
+                    Blue Theme
+                  </label>
+                </div>
+              </div>
             </>
           ) : null}
 
@@ -138,6 +165,7 @@ export default function ServiceFormModal({ open, initial, loading, onClose, onSu
               <div className="ap-field">
                 <label className="ap-label" htmlFor="service-banner">Banner Image URL</label>
                 <input id="service-banner" className="ap-input" value={form.bannerImage} onChange={(e) => set('bannerImage', e.target.value)} />
+                <div className="ap-field-hint">Recommended for production: `/assets/your-image.png`</div>
                 {errors.bannerImage ? <div className="ap-field-error">{errors.bannerImage}</div> : null}
               </div>
 
@@ -168,6 +196,7 @@ export default function ServiceFormModal({ open, initial, loading, onClose, onSu
                     <tr><th>Title</th><td>{form.title || '-'}</td></tr>
                     <tr><th>Slug</th><td>{slugPreview}</td></tr>
                     <tr><th>Status</th><td>{form.isActive ? 'Active' : 'Inactive'}</td></tr>
+                    <tr><th>Theme</th><td style={{ textTransform: 'capitalize' }}>{form.theme || 'blue'}</td></tr>
                     <tr><th>Subtitle</th><td>{form.subtitle || '-'}</td></tr>
                     <tr><th>Banner URL</th><td>{form.bannerImage || '-'}</td></tr>
                     <tr><th>Meta Title</th><td>{form.metaTitle || '-'}</td></tr>

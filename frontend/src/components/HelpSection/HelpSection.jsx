@@ -11,6 +11,8 @@ const helpCards = [
 
 
 
+
+
     {
         id: 1,
         image: smartWealthImg,
@@ -69,3 +71,4 @@ export default function HelpSection() {
         </section>
     );
 }
+

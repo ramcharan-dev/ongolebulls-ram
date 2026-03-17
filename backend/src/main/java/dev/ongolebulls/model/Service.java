@@ -3,6 +3,7 @@
 package dev.ongolebulls.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -46,6 +47,9 @@ public class Service {
     @Lob
     @Column(name = "meta_keywords", columnDefinition = "LONGTEXT")
     private String metaKeywords;
+
+    @Column(length = 10, nullable = false)
+    private String theme = "blue";
 
     @Column(name = "is_active")
     private boolean isActive = true;
@@ -138,10 +142,22 @@ public class Service {
         this.metaDescription = metaDescription;
     }
 
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        if ("gold".equalsIgnoreCase(theme) || "blue".equalsIgnoreCase(theme)) {
+            this.theme = theme.toLowerCase();
+        }
+    }
+
+    @JsonProperty("isActive")
     public boolean isActive() {
         return isActive;
     }
 
+    @JsonProperty("isActive")
     public void setActive(boolean active) {
         isActive = active;
     }

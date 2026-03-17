@@ -327,10 +327,33 @@
 .services-page-empty,
 .services-page-error,
 .services-page-loading {
-  padding: 80px 24px;
+  min-height: clamp(420px, 58vh, 680px);
+  padding: 72px 24px;
+  display: grid;
+  place-items: center;
   text-align: center;
   color: #0f172a;
   background: #f8fafc;
+}
+
+.services-page-status-card {
+  width: min(100%, 620px);
+  padding: 34px 30px;
+  border-radius: 24px;
+  border: 1px solid #e2e8f0;
+  background:
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 38%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 250, 252, 0.98) 100%);
+  box-shadow: 0 22px 44px rgba(15, 23, 42, 0.08);
+}
+
+.services-page-status-kicker {
+  margin: 0 0 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #64748b;
 }
 
 .services-page-empty h1,
@@ -344,6 +367,24 @@
   max-width: 520px;
   margin: 0 auto;
   color: #6b7280;
+}
+
+.services-page-status-btn {
+  margin-top: 20px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  border-radius: 14px;
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 14px 30px rgba(29, 78, 216, 0.18);
+}
+
+.services-page-status-btn:hover {
+  filter: brightness(1.03);
 }
 
 @media (min-width: 700px) {
@@ -428,4 +469,16 @@
   background: #162033;
   border-color: var(--border);
   color: var(--text-muted);
+}
+
+[data-theme="dark"] .services-page-status-card {
+  border-color: var(--border);
+  background:
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.15), transparent 38%),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(17, 24, 39, 0.98) 100%);
+  box-shadow: 0 24px 46px rgba(2, 6, 23, 0.4);
+}
+
+[data-theme="dark"] .services-page-status-kicker {
+  color: #94a3b8;
 }

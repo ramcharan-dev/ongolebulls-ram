@@ -39,8 +39,9 @@ public class ServiceSectionService {
         return repo.findById(id).orElse(null);
     }
 
+    @Transactional(readOnly = true)
     public List<ServiceSection> getByService(String serviceId) {
-        return repo.findByServiceIdOrderByOrderIndexAsc(serviceId);
+        return repo.findByServiceIdWithItems(serviceId);
     }
 
     /* =========================
