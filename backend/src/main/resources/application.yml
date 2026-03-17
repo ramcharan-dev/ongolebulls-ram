@@ -9,7 +9,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${DB_HOST:localhost}:3306/${DB_NAME:ongolebulls}
     username: root
-    password: root1234
+    password: Innomax@C12
 
   jpa:
     hibernate:
@@ -70,6 +70,8 @@ springdoc:
 # Exchange API Configuration
 bse:
   starmf:
+    base-url: ${BSE_STARMF_BASE_URL:https://www.bsestarmf.in}
+    ucc-api-path: /BSEMFWEBAPI/UCCAPI/UCCRegistrationV183
     api:
       url: ${BSE_STARMF_API_URL:https://www.bsestarmf.in/RptWebService/WebService.asmx}
     member:
