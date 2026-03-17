@@ -1,18 +1,61 @@
 /* =========================================
-   Variables & Theme
+   PMS Page — Premium Blue + Gold Theme
+   with Light / Dark mode support
    ========================================= */
-:root {
+
+/* ── Light-mode variables (default) ────── */
+:root,
+[data-theme="light"] {
     --pms-navy: #0f172a;
+    --pms-navy-soft: #1e293b;
+    --pms-blue: #1e3a8a;
+    --pms-blue-mid: #2563eb;
     --pms-gold: #c5a028;
     --pms-gold-hover: #d4af37;
+    --pms-gold-light: rgba(212, 175, 55, 0.12);
     --pms-white: #ffffff;
     --pms-gray-light: #f8fafc;
-    --pms-text-dark: #334155;
+    --pms-text-dark: #1e293b;
     --pms-text-muted: #64748b;
     --pms-border: #e2e8f0;
-    --pms-radius: 12px;
-    --pms-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --pms-card-bg: #ffffff;
+    --pms-card-border: #e2e8f0;
+    --pms-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --pms-card-hover-shadow: 0 12px 32px rgba(30, 58, 138, 0.12), 0 0 0 1px rgba(212, 175, 55, 0.3);
+    --pms-card-hover-border: var(--pms-gold);
+    --pms-icon-bg: linear-gradient(135deg, rgba(30, 58, 138, 0.08), rgba(212, 175, 55, 0.1));
+    --pms-icon-color: var(--pms-gold);
+    --pms-section-bg: #ffffff;
+    --pms-section-alt-bg: #f8fafc;
+    --pms-bullet-dot: var(--pms-gold);
+    --pms-radius: 14px;
     --pms-font: 'Inter', system-ui, sans-serif;
+}
+
+/* ── Dark-mode variables ─────────────── */
+[data-theme="dark"] {
+    --pms-navy: #f1f5f9;
+    --pms-navy-soft: #e2e8f0;
+    --pms-blue: #60a5fa;
+    --pms-blue-mid: #3b82f6;
+    --pms-gold: #d4af37;
+    --pms-gold-hover: #e5c44a;
+    --pms-gold-light: rgba(212, 175, 55, 0.1);
+    --pms-white: #0f172a;
+    --pms-gray-light: #111827;
+    --pms-text-dark: #f1f5f9;
+    --pms-text-muted: #94a3b8;
+    --pms-border: #334155;
+    --pms-card-bg: #1e293b;
+    --pms-card-border: #334155;
+    --pms-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    --pms-card-hover-shadow: 0 12px 32px rgba(212, 175, 55, 0.15), 0 0 0 1px rgba(212, 175, 55, 0.35);
+    --pms-card-hover-border: var(--pms-gold);
+    --pms-icon-bg: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(212, 175, 55, 0.12));
+    --pms-icon-color: var(--pms-gold);
+    --pms-section-bg: #0f172a;
+    --pms-section-alt-bg: #111827;
+    --pms-bullet-dot: var(--pms-gold);
 }
 
 /* =========================================
@@ -21,48 +64,63 @@
 .pms-scope {
     font-family: var(--pms-font);
     color: var(--pms-text-dark);
-    background-color: var(--pms-white);
+    background-color: var(--pms-section-bg);
     line-height: 1.6;
     width: 100%;
-    margin-top: 80px; /* offset fixed header height on public pages */
+    margin-top: 80px;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .pms-scope * {
     box-sizing: border-box;
 }
 
-.container {
+.pms-scope .container {
     width: 100%;
     padding: 0 20px;
     margin: 0 auto;
     max-width: 1200px;
 }
 
-.text-center { text-align: center; }
-.pms-gold { color: var(--pms-gold); }
+.pms-scope .text-center { text-align: center; }
+.pms-gold { color: var(--pms-gold) !important; }
 
 /* =========================================
    Hero Section
    ========================================= */
 .pms-hero {
     background: linear-gradient(180deg, #0B2447 0%, #0f172a 100%);
-    color: var(--pms-white);
+    color: #f9fafb;
     padding: 4rem 0 2rem 0;
     text-align: center;
     position: relative;
+    overflow: hidden;
+}
+
+.pms-hero::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    left: -30%;
+    width: 160%;
+    height: 160%;
+    background: radial-gradient(circle at 25% 50%, rgba(212, 175, 55, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 75% 30%, rgba(37, 99, 235, 0.05) 0%, transparent 45%);
+    pointer-events: none;
 }
 
 .pms-hero-top-badge {
     display: inline-flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.25);
     padding: 0.35rem 1rem;
     border-radius: 50px;
     font-size: 0.85rem;
     font-weight: 500;
     margin-bottom: 1.5rem;
-    color: #e2e8f0;
+    color: #d4af37;
+    position: relative;
 }
 
 .pms-hero-title {
@@ -70,6 +128,8 @@
     font-weight: 800;
     line-height: 1.2;
     margin-bottom: 1rem;
+    color: #f9fafb;
+    position: relative;
 }
 
 .pms-hero-sub {
@@ -77,10 +137,12 @@
     color: #cbd5e1;
     max-width: 600px;
     margin: 0 auto 2rem auto;
+    position: relative;
 }
 
 .pms-hero-cta {
     margin-bottom: 3rem;
+    position: relative;
 }
 
 .pms-btn {
@@ -92,46 +154,45 @@
     font-weight: 600;
     font-size: 1rem;
     text-decoration: none;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
-    width: 100%; /* Mobile full width */
+    width: 100%;
 }
 
 .pms-btn-gold {
-    background-color: var(--pms-gold);
-    color: #fff;
+    background: linear-gradient(135deg, #c5a028, #d4af37, #e5c44a);
+    color: #0f172a;
     border: none;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
 }
 
 .pms-btn-gold:hover {
-    background-color: var(--pms-gold-hover);
     transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.45);
 }
 
 .pms-btn-outline-gold {
     background: transparent;
-    border: 1px solid var(--pms-gold);
-    color: var(--pms-text-dark); /* Dark text on white bg */
+    border: 1.5px solid var(--pms-gold);
+    color: var(--pms-text-dark);
 }
 
 .pms-btn-outline-gold:hover {
     background: var(--pms-gold);
-    color: white;
+    color: #0f172a;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
 }
 
 /* Hero Stats */
 .pms-hero-bottom-stats {
-    border-top: 1px solid rgba(255,255,255,0.1);
+    border-top: 1px solid rgba(212, 175, 55, 0.15);
     padding-top: 2rem;
     display: grid;
-    grid-template-columns: 1fr 1fr; /* 2 col mobile */
+    grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
     max-width: 800px;
     margin: 0 auto;
-}
-
-.pms-stat-box:last-child:nth-child(odd) {
-    grid-column: span 2; /* Center last item if odd */
+    position: relative;
 }
 
 .pms-stat {
@@ -142,7 +203,7 @@
     display: block;
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--pms-gold);
+    color: #d4af37;
 }
 
 .pms-stat-label {
@@ -156,8 +217,10 @@
    General Section Styles
    ========================================= */
 .pms-section {
-    padding: 3.5rem 0;
+    padding: 4rem 0;
     border-bottom: 1px solid var(--pms-border);
+    background: var(--pms-section-bg);
+    transition: background-color 0.3s ease;
 }
 
 .pms-section:last-child { border-bottom: none; }
@@ -181,56 +244,66 @@
    ========================================= */
 .pms-card-row {
     display: grid;
-    grid-template-columns: 1fr; /* Mobile Stack */
+    grid-template-columns: 1fr;
     gap: 1.5rem;
 }
 
 .pms-card {
-    background: var(--pms-white);
-    padding: 1.5rem;
+    background: var(--pms-card-bg);
+    padding: 1.75rem;
     border-radius: var(--pms-radius);
-    border: 1px solid var(--pms-border);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid var(--pms-card-border);
+    box-shadow: var(--pms-card-shadow);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.35s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
     height: 100%;
 }
 
-.pms-step-badge {
-    display: inline-flex;
+.pms-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--pms-card-hover-shadow);
+    border-color: var(--pms-card-hover-border);
+}
+
+/* ── Feature / Benefit card ────────────── */
+.pms-card-feature {
+    text-align: left;
+    align-items: stretch;
+}
+
+.pms-card-icon-wrap {
+    width: 56px;
+    height: 56px;
+    display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0.25rem 0.75rem;
-    border-radius: 999px;
-    background: #fef3c7;
-    color: #92400e;
-    font-size: 0.75rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
+    border-radius: 14px;
+    background: var(--pms-icon-bg);
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.pms-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--pms-shadow);
-    border-color: var(--pms-gold);
-}
-
-/* Feature & Benefit Specifics */
-.pms-card-small {
-    text-align: center;
+.pms-card:hover .pms-card-icon-wrap {
+    transform: scale(1.08);
+    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.2);
 }
 
 .pms-card-icon {
-    font-size: 2.5rem;
-    color: var(--pms-gold);
-    margin-bottom: 1rem;
+    font-size: 1.75rem;
+    color: var(--pms-icon-color);
+    line-height: 1;
+    transition: color 0.3s ease;
 }
 
 .pms-card h4 {
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 0.75rem 0;
     color: var(--pms-navy);
     font-size: 1.1rem;
+    font-weight: 600;
 }
 
 .pms-card p {
@@ -239,18 +312,47 @@
     color: var(--pms-text-muted);
 }
 
+/* ── Bullet list inside feature cards ─── */
+.pms-bullet-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.pms-bullet-list li {
+    font-size: 0.9rem;
+    color: var(--pms-text-muted);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    line-height: 1.5;
+}
+
+.pms-bullet-list li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--pms-bullet-dot);
+    flex-shrink: 0;
+    margin-top: 0.45rem;
+}
+
 /* =========================================
    Types Section (Highlights)
    ========================================= */
 .pms-types {
-    background-color: var(--pms-gray-light);
+    background-color: var(--pms-section-alt-bg) !important;
 }
 
 .pms-card-highlight {
     border-color: var(--pms-gold);
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(197, 160, 40, 0.15);
+    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.12);
 }
 
 .pms-ribbon {
@@ -258,13 +360,14 @@
     top: 0;
     left: 0;
     right: 0;
-    background: var(--pms-gold);
-    color: white;
+    background: linear-gradient(135deg, #c5a028, #d4af37);
+    color: #0f172a;
     text-align: center;
     font-size: 0.75rem;
     font-weight: 700;
     padding: 4px;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .pms-card h3 {
@@ -301,6 +404,19 @@
     width: 100%;
 }
 
+.pms-step-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    background: var(--pms-gold-light);
+    color: var(--pms-gold);
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
 /* =========================================
    FAQ Accordion
    ========================================= */
@@ -311,10 +427,15 @@
 }
 
 .pms-accordion-item {
-    border: 1px solid var(--pms-border);
-    border-radius: 8px;
-    background: var(--pms-white);
+    border: 1px solid var(--pms-card-border);
+    border-radius: 10px;
+    background: var(--pms-card-bg);
     overflow: hidden;
+    transition: border-color 0.3s ease;
+}
+
+.pms-accordion-item:hover {
+    border-color: var(--pms-gold);
 }
 
 .pms-accordion-btn {
@@ -330,11 +451,24 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+.pms-accordion-btn::after {
+    content: '+';
+    font-size: 1.25rem;
+    font-weight: 300;
+    color: var(--pms-text-muted);
+    transition: transform 0.3s ease;
+}
+
+.pms-accordion-btn.open::after {
+    content: '\2212';
 }
 
 .pms-accordion-btn.open {
     color: var(--pms-gold);
-    background-color: #fffdf5;
+    background: var(--pms-gold-light);
 }
 
 .pms-accordion-body {
@@ -346,7 +480,7 @@
     padding: 0 1.25rem 1.25rem 1.25rem;
     color: var(--pms-text-muted);
     font-size: 0.95rem;
-    border-top: 1px solid #f1f5f9;
+    border-top: 1px solid var(--pms-border);
 }
 
 .pms-narrow {
@@ -362,7 +496,7 @@
     .pms-hero-title { font-size: 3rem; }
     .pms-hero-sub { font-size: 1.125rem; }
 
-    .pms-btn { width: auto; } /* Revert full width button */
+    .pms-btn { width: auto; }
 
     .pms-hero-bottom-stats {
         display: flex;
@@ -371,11 +505,14 @@
     }
 
     .pms-card-row {
-        grid-template-columns: repeat(3, 1fr); /* 3 Col Grid */
+        grid-template-columns: repeat(3, 1fr);
     }
 
-    /* Special case for features if 4 items */
     .pms-features .pms-card-row {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .pms-benefits .pms-card-row {
         grid-template-columns: repeat(4, 1fr);
     }
 

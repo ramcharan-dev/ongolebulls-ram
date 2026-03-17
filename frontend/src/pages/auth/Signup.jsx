@@ -49,11 +49,11 @@ const Step1 = memo(({ personal, updatePersonal, email, setEmail, otp, setOtp, ot
         </div>
 
         {otpSent && !otpVerified && (
-            <div style={{ marginBottom: '1rem', padding: '1.25rem', backgroundColor: '#eff6ff', borderRadius: '0.75rem', border: '1px solid #bfdbfe' }}>
+            <div className="otp-container">
                 <label className="auth-label">Email OTP</label>
                 <input
                     type="number" value={otp} onChange={(e) => setOtp(e.target.value)} placeholder="• • • • • •"
-                    className="auth-input" style={{ marginBottom: '1rem', textAlign: 'center', letterSpacing: '0.5em', fontSize: '1.125rem' }}
+                    className="auth-input otp-input"
                 />
                 <button type="button" onClick={handleVerifyOtp} disabled={loading || otp.length < 6} className="auth-btn auth-btn-success" style={{ width: '100%' }}>
                     {loading ? 'Verifying...' : 'Verify OTP'}
@@ -197,7 +197,7 @@ const Step6 = memo(({ consent, updateConsent }) => {
                 {items.map(item => (
                     <label key={item.id} className="checkbox-item">
                         <input type="checkbox" name={item.id} checked={consent[item.id] || false} onChange={updateConsent} className="checkbox-native" />
-                        <span style={{ fontSize: '0.875rem', color: '#334155', fontWeight: 500, lineHeight: 1.5 }}>{item.text}</span>
+                        <span className="consent-text" style={{ fontSize: '0.875rem', fontWeight: 500, lineHeight: 1.5 }}>{item.text}</span>
                     </label>
                 ))}
             </div>
@@ -251,12 +251,46 @@ export default function Signup() {
         setStep(s => Math.max(0, s - 1));
     }, []);
 
+    const parseJakartaError = (errorMsg) => {
+        if (typeof errorMsg === 'string' && errorMsg.includes('ConstraintViolationImpl')) {
+            const messages = [];
+            const messageRegex = /messageTemplate='([^']+)'/g;
+            let match;
+            while ((match = messageRegex.exec(errorMsg)) !== null) {
+                messages.push(match[1]);
+            }
+            if (messages.length > 0) {
+                return `Please fix the following: ${[...new Set(messages)].join(', ')}`;
+            } else {
+                return 'Please ensure all fields are filled out correctly according to requirements.';
+            }
+        }
+        // Catch SQL Duplicate Entry constraints
+        if (typeof errorMsg === 'string' && errorMsg.includes('Duplicate entry')) {
+            const dupRegex = /Duplicate entry '([^']+)' for key '([^']+)'/;
+            const match = errorMsg.match(dupRegex);
+            if (match) {
+                const value = match[1];
+                let key = match[2];
+                // Clean up the key if it looks like 'kyc_details.pan_number'
+                if (key.includes('.')) {
+                    key = key.split('.')[1].replace(/_/g, ' ');
+                }
+                return `An account with this ${key} already exists.`;
+            } else {
+                return 'An account with this information already exists.';
+            }
+        }
+        
+        return errorMsg;
+    };
+
     const handleSendOtp = useCallback(async () => {
         setError(''); setLoading(true);
         try {
             await sendEmailOtp(email);
             setOtpSent(true);
-        } catch (e) { setError(e.userMessage || 'Failed to send OTP.'); }
+        } catch (e) { setError(parseJakartaError(e.userMessage) || 'Failed to send OTP.'); }
         finally { setLoading(false); }
     }, [email]);
 
@@ -266,7 +300,7 @@ export default function Signup() {
             const res = await verifyEmailOtp(email, otp);
             if (res.data?.status === 'verified') setOtpVerified(true);
             else setError('Incorrect OTP.');
-        } catch (e) { setError(e.userMessage || 'OTP verification failed.'); }
+        } catch (e) { setError(parseJakartaError(e.userMessage) || 'OTP verification failed.'); }
         finally { setLoading(false); }
     }, [email, otp]);
 
@@ -291,7 +325,9 @@ export default function Signup() {
             const res = await registerClient(fd);
             saveUser({ id: res.data.id, email: res.data.email });
             navigate('/dashboard');
-        } catch (e) { setError(e.userMessage || 'Registration failed.'); }
+        } catch (e) {
+            setError(parseJakartaError(e.userMessage) || 'Registration failed.');
+        }
         finally { setLoading(false); }
     }, [email, personal, kyc, bank, profileType, risk, consent, kycFile, chequeFile, navigate]);
 

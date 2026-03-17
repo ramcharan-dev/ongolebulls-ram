@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EntityScan(basePackages = "dev.ongolebulls")
 @EnableJpaRepositories(basePackages = "dev.ongolebulls")
 @EnableScheduling // Enable scheduled tasks for market data updates
+
 public class OngoleBullsApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(OngoleBullsApplication.class, args);

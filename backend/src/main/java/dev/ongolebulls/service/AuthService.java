@@ -226,39 +226,49 @@ public class AuthService {
         return "Registration successful!";
     }
 
-    public boolean resetPassword(String token, String newPassword) {
-
+    /**
+     * Validate whether a reset token exists and is not expired.
+     */
+    public boolean isResetTokenValid(String token) {
         Optional<PasswordResetToken> optionalToken = tokenRepository.findByToken(token);
-        if (optionalToken.isEmpty()) return false;
+        if (optionalToken.isEmpty()) {
+            return false;
+        }
+        PasswordResetToken resetToken = optionalToken.get();
+        return !resetToken.getExpiryDate().isBefore(LocalDateTime.now());
+    }
+
+    /**
+     * Consume a reset token and update the user's password.
+     */
+    public boolean resetPassword(String token, String newPassword) {
+        Optional<PasswordResetToken> optionalToken = tokenRepository.findByToken(token);
+        if (optionalToken.isEmpty()) {
+            return false;
+        }
 
         PasswordResetToken resetToken = optionalToken.get();
 
-        // check expiry
+        // Check expiry (30 minutes logic is enforced here)
         if (resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
             return false;
         }
 
-        // fetch user by email
+        // Fetch user by email
         Optional<User> optionalUser = userRepository.findByEmail(resetToken.getEmail());
-        if (optionalUser.isEmpty()) return false;
+        if (optionalUser.isEmpty()) {
+            return false;
+        }
 
-//        User user = optionalUser.get();
-//
-//        // encode new password
-//        user.setPassword(passwordEncoder.encode(newPassword));
-//        userRepository.save(user); // update user
         User user = optionalUser.get();
-
-// encode password and save in the correct column
-        user.setPasswordHash(passwordEncoder.encode(newPassword)); // <-- use the correct field
+        // Encode password and save in the correct column
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
         userRepository.save(user);
 
-
-        // optionally delete token
+        // Optionally delete token after successful reset
         tokenRepository.delete(resetToken);
 
         return true;
     }
-
 
 }

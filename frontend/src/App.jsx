@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import SmoothScroll from './utils/SmoothScroll';
+import BrandLoader from './components/BrandLoader/BrandLoader';
+import './styles/app-shell.css';
 
 // Existing pages
 import Home                 from './components/Home/Home';
@@ -20,6 +22,7 @@ import ElssPage             from './pages/ElssPage';
 import SipDetailPage        from './pages/SipDetailPage';
 import StocksPage           from './pages/StocksPage';
 import EtfsPage             from './pages/EtfsPage';
+import DataSecurityPage     from './pages/DataSecurityPage';
 
 // Auth (lazy)
 const Login  = lazy(() => import('./pages/auth/Login'));
@@ -56,8 +59,11 @@ const UccRegistration = lazy(() => import('./pages/ucc/UccRegistration'));
 
 
 const Loader = () => (
-  <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}>
-    <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+  <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <BrandLoader
+      title="Loading OngoleBulls"
+      subtitle="Syncing markets, services, and platform data for you."
+    />
   </div>
 );
 
@@ -105,10 +111,10 @@ function App() {
           <Route
             path="*"
             element={
-              <>
+              <div className="public-site-shell">
                 <SmoothScroll />
                 <Header />
-                <main>
+                <main className="public-site-main">
                   <Routes>
                     <Route path="/"                    element={<Home />} />
                     <Route path="/Aboutus"             element={<AboutUs />} />
@@ -121,6 +127,7 @@ function App() {
                     <Route path="/stocks"              element={<StocksPage />} />
                     <Route path="/etfs"                element={<EtfsPage />} />
                     <Route path="/sip"                 element={<SipDetailPage />} />
+                    <Route path="/data-security"       element={<DataSecurityPage />} />
                     <Route path="/pms"                 element={<PmsPage />} />
                     <Route path="/PmsPage"             element={<PmsPage />} />
                     <Route path="/contactForm"         element={<ContactForm />} />
@@ -131,7 +138,7 @@ function App() {
                   </Routes>
                 </main>
                 <Footer />
-              </>
+              </div>
             }
           />
         </Routes>

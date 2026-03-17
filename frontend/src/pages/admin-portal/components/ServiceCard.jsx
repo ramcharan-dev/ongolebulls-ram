@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Eye, Layers, Pencil, Trash2, Clock3 } from 'lucide-react';
+import { resolveMediaUrl } from '../../../utils/media';
 
 export default function ServiceCard({ service, onView, onManageSections, onEdit, onDelete }) {
   const [imageError, setImageError] = useState(false);
@@ -15,7 +16,7 @@ export default function ServiceCard({ service, onView, onManageSections, onEdit,
     <div className="ap-service-card">
       <div className="ap-service-banner">
         {service.bannerImage && !imageError ? (
-          <img src={service.bannerImage} alt={service.title || 'Service'} onError={() => setImageError(true)} />
+          <img src={resolveMediaUrl(service.bannerImage)} alt={service.title || 'Service'} onError={() => setImageError(true)} />
         ) : (
           <div className="ap-service-banner-placeholder"><Layers size={24} /></div>
         )}
@@ -26,6 +27,13 @@ export default function ServiceCard({ service, onView, onManageSections, onEdit,
           <div className="ap-service-title">{service.title || 'Untitled'}</div>
           <span className={`ap-badge ${service.isActive !== false ? 'ap-badge-green' : 'ap-badge-gray'}`}>
             {service.isActive !== false ? 'Active' : 'Inactive'}
+          </span>
+          <span className="ap-badge" style={{
+            background: service.theme === 'gold' ? 'rgba(212,175,55,0.12)' : 'rgba(37,99,235,0.1)',
+            color: service.theme === 'gold' ? '#B8962E' : '#2563EB',
+            textTransform: 'capitalize',
+          }}>
+            {service.theme || 'blue'}
           </span>
         </div>
         {service.subtitle ? <div className="ap-service-subtitle">{service.subtitle}</div> : null}

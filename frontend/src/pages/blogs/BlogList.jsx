@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { getAllBlogs } from '../../api/blogApi';
 import { formatDate, truncate } from '../../utils/formatters';
+import { resolveMediaUrl } from '../../utils/media';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import './Blogs.css';
 
@@ -9,15 +10,6 @@ const estimateReadMinutes = (text) => {
   if (!text) return 1;
   const words = String(text).split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.round(words / 220));
-};
-
-const resolveBlogImage = (image) => {
-  const raw = String(image || '').trim();
-  if (!raw) return '';
-  const base = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
-  if (raw.startsWith('http')) return raw;
-  if (raw.startsWith('/assets/')) return `${base}${raw}`;
-  return `${base}/assets/${raw}`;
 };
 
 export default function BlogList() {
@@ -39,7 +31,7 @@ export default function BlogList() {
   const enriched = useMemo(
     () =>
       blogs.map((blog) => {
-        const image = resolveBlogImage(blog.image);
+        const image = resolveMediaUrl(blog.image);
         const readMinutes = estimateReadMinutes(blog.fullContent || blog.shortDescription);
         return { ...blog, image, readMinutes };
       }),

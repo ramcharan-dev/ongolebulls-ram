@@ -172,9 +172,33 @@ export default function HomeSection() {
                 style={{ position: "relative", zIndex: 2 }}
             >
                 {[
-                    { icon: "bi-graph-up",      title: "Tailored Wealth Solutions",  desc: "Smart investing plans for HNIs, professionals & business owners." },
-                    { icon: "bi-unlock",         title: "Path to Financial Freedom",  desc: "Create wealth that works for your future — secure and sustainable." },
-                    { icon: "bi-arrow-repeat",   title: "360° Financial Planning",    desc: "From SIPs to IPOs — we guide every step of your journey." },
+                    {
+                        icon: "bi-graph-up",
+                        title: "Tailored Wealth Solutions",
+                        bullets: [
+                            "Smart investing plans for HNIs & professionals",
+                            "Customized to your risk appetite & goals",
+                            "Adaptive strategies for market changes",
+                        ],
+                    },
+                    {
+                        icon: "bi-unlock",
+                        title: "Path to Financial Freedom",
+                        bullets: [
+                            "Build wealth that works for your future",
+                            "Secure & sustainable growth strategies",
+                            "Tax-efficient portfolio structuring",
+                        ],
+                    },
+                    {
+                        icon: "bi-arrow-repeat",
+                        title: "360° Financial Planning",
+                        bullets: [
+                            "From SIPs to IPOs — full spectrum coverage",
+                            "End-to-end guidance at every stage",
+                            "Regular portfolio reviews & rebalancing",
+                        ],
+                    },
                 ].map((card, i) => (
                     <motion.div
                         key={i}
@@ -187,9 +211,15 @@ export default function HomeSection() {
                         }}
                         transition={{ type: "spring", stiffness: 250, damping: 20 }}
                     >
-                        <div className="feature-icon"><i className={`bi ${card.icon}`}></i></div>
+                        <div className="feature-icon-wrap">
+                            <i className={`bi ${card.icon}`}></i>
+                        </div>
                         <h3>{card.title}</h3>
-                        <p>{card.desc}</p>
+                        <ul className="feature-bullet-list">
+                            {card.bullets.map((b) => (
+                                <li key={b}>{b}</li>
+                            ))}
+                        </ul>
                     </motion.div>
                 ))}
             </motion.div>
