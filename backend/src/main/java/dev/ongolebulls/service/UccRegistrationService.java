@@ -114,6 +114,31 @@ public class UccRegistrationService {
             reg.setNominationJson(toJson(request.getNomination()));
         if (request.getNomineeDetails() != null)
             reg.setNomineeDetailsJson(toJson(request.getNomineeDetails()));
+
+        // Map clientCode: extract from clientDetails or generate dummy
+        if (reg.getClientCode() == null || reg.getClientCode().isBlank()) {
+            String clientCode = extractClientCode(request);
+            if (clientCode == null || clientCode.isBlank()) {
+                clientCode = generateDummyClientCode();
+            }
+            reg.setClientCode(clientCode);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private String extractClientCode(UccDraftRequest request) {
+        if (request.getClientDetails() instanceof java.util.Map) {
+            Object code = ((java.util.Map<String, Object>) request.getClientDetails()).get("clientCode");
+            if (code != null && !code.toString().isBlank()) {
+                return code.toString();
+            }
+        }
+        return null;
+    }
+
+    private String generateDummyClientCode() {
+        int random = java.util.concurrent.ThreadLocalRandom.current().nextInt(100000, 999999);
+        return "OB" + random;
     }
 
     private void validateAllSteps(UccRegistration reg) {

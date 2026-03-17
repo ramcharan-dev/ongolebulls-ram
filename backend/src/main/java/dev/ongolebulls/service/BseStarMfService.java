@@ -31,6 +31,9 @@ public class BseStarMfService {
     @Value("${bse.starmf.password:}")
     private String bsePassword;
 
+    @Value("${bse.starmf.dev-mode:true}")
+    private boolean devMode;
+
     private final RestTemplate restTemplate = new RestTemplate();
 
     /**
@@ -39,6 +42,14 @@ public class BseStarMfService {
      */
     public Map<String, Object> createUcc(UccRegistration registration) {
         Map<String, Object> result = new HashMap<>();
+
+        if (devMode) {
+            log.info("[DEV-MODE] Simulating BSE UCC API success for userId={}", registration.getUserId());
+            String simulatedResponse = "100|SUCCESS|UCC CREATED";
+            result.put("success", true);
+            result.put("response", simulatedResponse);
+            return result;
+        }
 
         try {
             // Build the exchange UCC request payload
