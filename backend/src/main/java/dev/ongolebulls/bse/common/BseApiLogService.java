@@ -24,9 +24,6 @@ public class BseApiLogService {
     private static final Pattern ACCOUNT_PATTERN = Pattern.compile("\\d{9,18}");
 
     public void log(String apiName, Long investorId, String clientCode,
-                    Integer httpStatus, String bseStatus, String bseRemarks,
-                    String rawRequest, String rawResponse) {
-    public void log(String apiName, Long investorId, String clientCode,
                     int httpStatus, String bseStatus, String bseRemarks,
                     Object requestPayload, String responsePayload) {
         try {
@@ -37,16 +34,12 @@ public class BseApiLogService {
                     .httpStatus(httpStatus)
                     .bseStatus(bseStatus)
                     .bseRemarks(bseRemarks)
-                    .maskedRequestPayload(maskSensitiveFields(rawRequest))
-                    .responsePayload(rawResponse)
+                    .maskedRequestPayload(maskSensitiveFields(toJson(requestPayload)))
+                    .responsePayload(responsePayload)
                     .build();
 
             repository.save(entry);
             log.debug("BSE API log saved: api={}, investorId={}, status={}", apiName, investorId, bseStatus);
-                    .maskedRequestPayload(maskSensitiveData(toJson(requestPayload)))
-                    .responsePayload(responsePayload)
-                    .build();
-            repository.save(entry);
         } catch (Exception e) {
             log.error("Failed to save BSE API log for api={}, investorId={}", apiName, investorId, e);
         }
@@ -71,6 +64,10 @@ public class BseApiLogService {
             log.warn("Failed JSON-aware masking, falling back to regex masking", e);
             masked = maskWithPatterns(masked);
         }
+
+        return masked;
+    }
+
     private String maskSensitiveData(String json) {
         if (json == null || json.isBlank()) return json;
 
@@ -126,6 +123,7 @@ public class BseApiLogService {
         masked = AADHAAR_PATTERN.matcher(masked).replaceAll(BseConstants.MASKED_VALUE);
         return masked;
     }
+
     private String toJson(Object obj) {
         if (obj == null) return null;
         if (obj instanceof String) return (String) obj;

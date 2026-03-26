@@ -14,4 +14,8 @@ public interface BseApiLogRepository extends JpaRepository<BseApiLog, Long> {
     List<BseApiLog> findByApiNameOrderByCreatedAtDesc(String apiName);
 
     List<BseApiLog> findByClientCode(String clientCode);
+
+    List<BseApiLog> findByApiNameAndInvestorIdOrderByCreatedAtDesc(String apiName, Long investorId);
+
+    List<BseApiLog> findByApiNameAndClientCodeOrderByCreatedAtDesc(String apiName, String clientCode);
 }
