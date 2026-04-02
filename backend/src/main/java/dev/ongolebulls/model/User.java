@@ -244,9 +244,12 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -277,7 +280,8 @@ public class User implements UserDetails {
     @Column(nullable = true)
     private String passwordHash;
 
-    private boolean isForSelf = true; // default true
+    @Column(nullable = true)
+    private Boolean isForSelf = true; // default true
 
 
 
@@ -295,26 +299,26 @@ public class User implements UserDetails {
     private String kycProofPath;
 
     // --- Consents with defaults ---
-    @Column(nullable = false)
-    private boolean termsAccepted = false;
+    @Column(nullable = true)
+    private Boolean termsAccepted = false;
 
-    @Column(nullable = false)
-    private boolean declarationAccepted = false;
+    @Column(nullable = true)
+    private Boolean declarationAccepted = false;
 
-    @Column(nullable = false)
-    private boolean consentComm = false;
+    @Column(nullable = true)
+    private Boolean consentComm = false;
 
-    @Column(nullable = false)
-    private boolean consentShareDocs = false;
+    @Column(nullable = true)
+    private Boolean consentShareDocs = false;
 
-    @Column(nullable = false)
-    private boolean consentShareWithProviders = false;
+    @Column(nullable = true)
+    private Boolean consentShareWithProviders = false;
 
-    @Column(nullable = false)
-    private boolean consentShareWithAmc = false;
+    @Column(nullable = true)
+    private Boolean consentShareWithAmc = false;
 
-    @Column(nullable = false)
-    private boolean understoodMarketRisk = false;
+    @Column(nullable = true)
+    private Boolean understoodMarketRisk = false;
 
     private String consentDeviceId;
     private String consentIp;
@@ -339,22 +343,61 @@ public class User implements UserDetails {
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
 
+    @Column(nullable = true)
+    private Boolean enabled = true;  // default to true
+
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private boolean enabled = true;  // default to true
+    private Role role = Role.USER;
+
+    @Column(name = "is_activated", nullable = true)
+    private Boolean isActivated = false;
+
+    // --- Partner-specific fields ---
+    private String firmName;
+    private String authorizedPerson;
+    private String pan;
+    private String arn;
+    private String euin;
+    private String euinHolderName;
+    private String partnerBankAccount;
+    private String partnerIfsc;
+    private String partnerBankName;
+
+    // --- Partner referral & client tracking ---
+    @Column(name = "referred_by")
+    private Long referredBy;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "lifecycle_stage")
+    private LifecycleStage lifecycleStage;
+
+    @Column(name = "assigned_partner_id")
+    private Long assignedPartnerId;
+
+    @Column(name = "last_cas_upload")
+    private LocalDateTime lastCasUpload;
+
+    @Column(name = "assigned_rm_id")
+    private Long assignedRmId;
+
+    @Column(name = "rejection_reason")
+    private String rejectionReason;
 
     @PrePersist
     public void prePersist() {
         if (createdAt == null) createdAt = Instant.now();
-        // Ensure all booleans have a default value if not set
-        if (!isForSelf) isForSelf = true;
-        if (!termsAccepted) termsAccepted = false;
-        if (!declarationAccepted) declarationAccepted = false;
-        if (!consentComm) consentComm = false;
-        if (!consentShareDocs) consentShareDocs = false;
-        if (!consentShareWithProviders) consentShareWithProviders = false;
-        if (!consentShareWithAmc) consentShareWithAmc = false;
-        if (!understoodMarketRisk) understoodMarketRisk = false;
-        if (!enabled) enabled = true;
+        // Ensure all Booleans have a default value if null
+        if (isForSelf == null) isForSelf = true;
+        if (termsAccepted == null) termsAccepted = false;
+        if (declarationAccepted == null) declarationAccepted = false;
+        if (consentComm == null) consentComm = false;
+        if (consentShareDocs == null) consentShareDocs = false;
+        if (consentShareWithProviders == null) consentShareWithProviders = false;
+        if (consentShareWithAmc == null) consentShareWithAmc = false;
+        if (understoodMarketRisk == null) understoodMarketRisk = false;
+        if (enabled == null) enabled = true;
+        if (isActivated == null) isActivated = false;
     }
 
     // --- Security (Spring Security integration) ---
@@ -385,16 +428,25 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return enabled && termsAccepted && declarationAccepted;
+        return Boolean.TRUE.equals(enabled) && Boolean.TRUE.equals(termsAccepted) && Boolean.TRUE.equals(declarationAccepted);
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.name()));
+    }
+
+    // --- Backward-compatible accessors for isActivated (Lombok changes getter name for Boolean) ---
+    public boolean isActivated() {
+        return Boolean.TRUE.equals(isActivated);
+    }
+
+    public void setActivated(Boolean activated) {
+        this.isActivated = activated;
     }
 
     // --- Custom setters for nested objects ---
-    public void setIsForSelf(boolean isForSelf) {
+    public void setIsForSelf(Boolean isForSelf) {
         this.isForSelf = isForSelf;
     }
 
@@ -405,7 +457,7 @@ public class User implements UserDetails {
         this.kycDetails.setPanNumber(panNumber);
     }
 
-    public void setConsentDeclared(boolean declarationAccepted) {
+    public void setConsentDeclared(Boolean declarationAccepted) {
         this.declarationAccepted = declarationAccepted;
     }
 

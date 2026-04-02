@@ -29,8 +29,8 @@ spring:
 
   security:
     user:
-      name: ${ADMIN_USERNAME:admin}
-      password: ${ADMIN_PASSWORD:admin123}
+      name: ${SPRING_SECURITY_USER_NAME:ob-api}
+      password: ${SPRING_SECURITY_USER_PASSWORD:ob-set-spring-basic-auth-in-prod}
 
   main:
     allow-circular-references: true
@@ -47,3 +47,7 @@ thymeleaf:
 
 encryption:
   key: lTB/6CsfDkNm46qjwXf/NuFx09ddhVU0z6rO7VJcyeA=
+
+jwt:
+  secret: ${JWT_SECRET:change-this-to-a-secure-32-char-secret-key}
+  expiration: ${JWT_EXPIRATION:86400000}

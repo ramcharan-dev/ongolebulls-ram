@@ -190,7 +190,7 @@ export default function ServiceDetailPage() {
       <div>
         <div className="ap-page-header">
           <div className="ap-page-title">
-            <button type="button" className="ap-btn ap-btn-ghost" onClick={() => navigate('/admin-portal/services')}>
+            <button type="button" className="ap-btn ap-btn-ghost" onClick={() => navigate('/website-controls/services')}>
               <ArrowLeft size={14} /> Back
             </button>
             <div>
@@ -210,7 +210,7 @@ export default function ServiceDetailPage() {
 
       <div className="ap-page-header">
         <div className="ap-page-title">
-          <button type="button" className="ap-btn ap-btn-ghost" onClick={() => navigate('/admin-portal/services')}>
+          <button type="button" className="ap-btn ap-btn-ghost" onClick={() => navigate('/website-controls/services')}>
             <ArrowLeft size={14} /> Back
           </button>
           <div>
@@ -220,7 +220,7 @@ export default function ServiceDetailPage() {
         </div>
         <div className="ap-actions">
           <button type="button" className="ap-btn ap-btn-secondary" onClick={load} disabled={saving}>Refresh</button>
-          <button type="button" className="ap-btn ap-btn-secondary" onClick={() => navigate(`/admin-portal/services/${service.id}/sections`)}>
+          <button type="button" className="ap-btn ap-btn-secondary" onClick={() => navigate(`/website-controls/services/${service.id}/sections`)}>
             <Layers size={14} /> Manage Sections
           </button>
           <button type="button" className="ap-btn ap-btn-secondary" onClick={resetInline} disabled={!isDirty || saving}>

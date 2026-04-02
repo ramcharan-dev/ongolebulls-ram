@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { DynamicGreeting } from '../widgets/DynamicGreeting';
 import { StatusCards } from '../widgets/StatusCards';
 import { DashboardWidgets } from '../widgets/DashboardWidgets';
+import { AssetAllocationChart } from '../widgets/AssetAllocationChart';
+import { MarketWatchlist } from '../widgets/MarketWatchlist';
 
 const DashboardHomeContainer = styled.div`
   display: flex;
@@ -24,14 +26,31 @@ const SectionTitle = styled.h2`
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
 `;
 
+const TwoColumnGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 8px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
 export const DashboardHome = () => {
   return (
     <DashboardHomeContainer>
       <DynamicGreeting />
       <StatusCards />
-      
+
       <SectionTitle>Portfolio Overview</SectionTitle>
       <DashboardWidgets />
+
+      <SectionTitle>Insights & Markets</SectionTitle>
+      <TwoColumnGrid>
+        <AssetAllocationChart />
+        <MarketWatchlist />
+      </TwoColumnGrid>
     </DashboardHomeContainer>
   );
 };

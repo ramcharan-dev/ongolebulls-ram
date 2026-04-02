@@ -51,6 +51,7 @@ import dev.ongolebulls.model.User;
 import dev.ongolebulls.model.RiskProfile;
 import dev.ongolebulls.repository.PasswordResetTokenRepository;
 import dev.ongolebulls.repository.UserRepository;
+import dev.ongolebulls.security.JwtUtil;
 import dev.ongolebulls.service.OtpService;
 import dev.ongolebulls.service.UserService;
 import jakarta.servlet.http.Cookie;
@@ -87,6 +88,7 @@ public class AuthController {
     private final UserRepository userRepository;
     private final PasswordResetTokenRepository tokenRepository;
     private final JavaMailSender mailSender;
+    private final JwtUtil jwtUtil;
 
 
     // ==================== OTP ====================
@@ -185,6 +187,7 @@ public class AuthController {
 
         return userService.login(email, password)
                 .map(user -> {
+                    String token = jwtUtil.generateToken(user.getEmail());
                     // Use reflection to get fields (Lombok IDE issue workaround)
                     java.lang.reflect.Field idField, emailField, fullNameField, mobileField;
                     try {
@@ -197,22 +200,32 @@ public class AuthController {
                         fullNameField.setAccessible(true);
                         mobileField.setAccessible(true);
                         
-                        Map<String, Object> response = new HashMap<>();
-                        response.put("id", idField.get(user));
-                        response.put("email", emailField.get(user));
-                        response.put("fullName", fullNameField.get(user));
+                        Map<String, Object> userPayload = new HashMap<>();
+                        userPayload.put("id", idField.get(user));
+                        userPayload.put("email", emailField.get(user));
+                        userPayload.put("fullName", fullNameField.get(user));
                         Object mobile = mobileField.get(user);
-                        response.put("mobileNumber", mobile != null ? mobile.toString() : "");
-                        response.put("username", emailField.get(user));
+                        userPayload.put("mobileNumber", mobile != null ? mobile.toString() : "");
+                        userPayload.put("username", emailField.get(user));
+
+                        Map<String, Object> response = new HashMap<>(userPayload);
+                        response.put("token", token);
+                        response.put("user", userPayload);
+                        response.put("role", user.getRole().name());
                         return ResponseEntity.ok(response);
                     } catch (Exception e) {
                         // Fallback to basic response
-                        Map<String, Object> response = new HashMap<>();
-                        response.put("id", 0);
-                        response.put("email", email);
-                        response.put("fullName", "");
-                        response.put("mobileNumber", "");
-                        response.put("username", email);
+                        Map<String, Object> userPayload = new HashMap<>();
+                        userPayload.put("id", 0);
+                        userPayload.put("email", email);
+                        userPayload.put("fullName", "");
+                        userPayload.put("mobileNumber", "");
+                        userPayload.put("username", email);
+
+                        Map<String, Object> response = new HashMap<>(userPayload);
+                        response.put("token", token);
+                        response.put("user", userPayload);
+                        response.put("role", user.getRole().name());
                         return ResponseEntity.ok(response);
                     }
                 })

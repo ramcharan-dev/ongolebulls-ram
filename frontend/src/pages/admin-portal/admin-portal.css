@@ -825,3 +825,153 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* ── Dark Mode ──────────────────────────────────────────────────────── */
+.ap-root[data-theme="dark"] {
+  --ap-bg: #040916;
+  --ap-sidebar: #0B1121;
+  --ap-surface: #12182B;
+  --ap-text: #F8FAFC;
+  --ap-text-muted: #94A3B8;
+  --ap-border: #1E293B;
+  --ap-muted: #1E293B;
+  --ap-primary-1: #3B82F6;
+  --ap-primary-2: #2563EB;
+  --ap-primary-soft: rgba(59,130,246,0.15);
+  --ap-primary-text: #93C5FD;
+}
+
+.ap-root[data-theme="dark"] .ap-sidebar {
+  background: #0B1121;
+  border-color: #1E293B;
+}
+
+.ap-root[data-theme="dark"] .ap-topbar {
+  background: #0B1121;
+  border-color: #1E293B;
+  color: #F8FAFC;
+}
+
+.ap-root[data-theme="dark"] .ap-topbar-title,
+.ap-root[data-theme="dark"] .ap-admin-chip {
+  color: #F8FAFC;
+}
+
+.ap-root[data-theme="dark"] .ap-content {
+  background: #040916;
+}
+
+.ap-root[data-theme="dark"] .ap-card {
+  background: #12182B;
+  border-color: #1E293B;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.ap-root[data-theme="dark"] .ap-kpi-label {
+  color: #94A3B8;
+}
+
+.ap-root[data-theme="dark"] .ap-table-wrap {
+  background: #12182B;
+  border-color: #1E293B;
+}
+
+.ap-root[data-theme="dark"] .ap-table th {
+  background: #0B1121;
+  color: #94A3B8;
+  border-color: #1E293B;
+}
+
+.ap-root[data-theme="dark"] .ap-table td {
+  color: #F8FAFC;
+  border-color: #1E293B;
+}
+
+.ap-root[data-theme="dark"] .ap-table tr:hover td {
+  background: #1E293B;
+}
+
+.ap-root[data-theme="dark"] .ap-input,
+.ap-root[data-theme="dark"] .ap-select,
+.ap-root[data-theme="dark"] .ap-textarea {
+  background: #12182B;
+  color: #F8FAFC;
+  border-color: #334155;
+}
+
+.ap-root[data-theme="dark"] .ap-input::placeholder {
+  color: #64748B;
+}
+
+.ap-root[data-theme="dark"] .ap-modal-backdrop {
+  background: rgba(0,0,0,0.7);
+}
+
+.ap-root[data-theme="dark"] .ap-modal {
+  background: #12182B;
+  border: 1px solid #1E293B;
+}
+
+.ap-root[data-theme="dark"] .ap-modal-header {
+  border-color: #1E293B;
+  color: #F8FAFC;
+}
+
+.ap-root[data-theme="dark"] .ap-modal-footer {
+  border-color: #1E293B;
+}
+
+.ap-root[data-theme="dark"] .ap-toast {
+  background: #12182B;
+  border-color: #1E293B;
+  color: #F8FAFC;
+}
+
+.ap-root[data-theme="dark"] .ap-empty {
+  color: #94A3B8;
+}
+
+.ap-root[data-theme="dark"] .ap-loading {
+  color: #94A3B8;
+}
+
+.ap-root[data-theme="dark"] .ap-pill-tabs .ap-pill {
+  color: #94A3B8;
+  background: #1E293B;
+}
+
+.ap-root[data-theme="dark"] .ap-pill-tabs .ap-pill.active {
+  background: #2563EB;
+  color: #FFFFFF;
+}
+
+.ap-root[data-theme="dark"] .ap-page-header {
+  color: #F8FAFC;
+}
+
+.ap-root[data-theme="dark"] .ap-btn {
+  border-color: #334155;
+  color: #F8FAFC;
+}
+
+.ap-root[data-theme="dark"] .ap-btn-primary {
+  background: #2563EB;
+  color: #FFFFFF;
+}
+
+.ap-root[data-theme="dark"] .ap-nav-link {
+  color: #94A3B8;
+}
+
+.ap-root[data-theme="dark"] .ap-nav-link:hover,
+.ap-root[data-theme="dark"] .ap-nav-link.active {
+  color: #F8FAFC;
+}
+
+.ap-root[data-theme="dark"] .ap-brand h1 {
+  color: #F8FAFC;
+}
+
+.ap-root[data-theme="dark"] .ap-brand p {
+  color: #94A3B8;
+}

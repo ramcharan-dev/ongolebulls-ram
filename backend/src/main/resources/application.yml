@@ -7,9 +7,10 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DB_HOST:localhost}:3306/${DB_NAME:ongolebulls}
-    username: root
-    password: root
+    url: jdbc:mysql://ongolebulls-db.cbqqc0wcszzt.ap-south-2.rds.amazonaws.com:3306/ongolebulls?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: admin
+    password: XqweXuUHRxj3C2m
+
 
   jpa:
     hibernate:
@@ -37,8 +38,14 @@ spring:
 
   security:
     user:
-      name: ${ADMIN_USERNAME:admin}
-      password: ${ADMIN_PASSWORD:123456}
+      # Spring Boot HTTP basic (e.g. Swagger) — not the Website Controls CMS login
+      name: ${SPRING_SECURITY_USER_NAME:ob-api}
+      password: ${SPRING_SECURITY_USER_PASSWORD:ob-local-dev-only}
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
   main:
     allow-circular-references: true # Fixed key syntax
@@ -55,6 +62,18 @@ thymeleaf:
 
 encryption:
   key: lTB/6CsfDkNm46qjwXf/NuFx09ddhVU0z6rO7VJcyeA=
+
+# Website Controls — seed user in ob_admin_users (POST /api/admin/login). Override in prod.
+website:
+  controls:
+    seed:
+      email: ${WEBSITE_CONTROLS_EMAIL:controls@ongolebullsinvest.com}
+      password: ${WEBSITE_CONTROLS_PASSWORD:controls123}
+      name: ${WEBSITE_CONTROLS_NAME:Website Controls}
+    # Remove old dummy admin row so only Website Controls credentials work (set false to keep both)
+    migration:
+      remove-legacy-seed-user: ${WEBSITE_CONTROLS_REMOVE_LEGACY:true}
+      legacy-email: ${WEBSITE_CONTROLS_LEGACY_EMAIL:admin@ongolebullsinvest.com}
 
 # Swagger / OpenAPI
 springdoc:
@@ -76,6 +95,10 @@ bse:
     user:
       id: ${BSE_USER_ID:}
     password: ${BSE_PASSWORD:}
+
+jwt:
+  secret: ${JWT_SECRET:change-this-to-a-secure-32-char-secret-key}
+  expiration: ${JWT_EXPIRATION:86400000}
 
 
 #server:
@@ -115,8 +138,8 @@ bse:
 #
 #  security:
 #    user:
-#      name: ${ADMIN_USERNAME:admin}
-#      password: ${ADMIN_PASSWORD:admin123}
+#      name: ${SPRING_SECURITY_USER_NAME:ob-api}
+#      password: ${SPRING_SECURITY_USER_PASSWORD:ob-local-dev-only}
 #
 #  main:
 #    allow-circular-references: true

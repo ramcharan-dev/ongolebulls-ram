@@ -20,18 +20,18 @@ export default function AdminLogin() {
       const response = await adminLogin(email, password);
       const payload = response?.data || {};
       if (!payload.success) {
-        setError(payload.message || 'Invalid admin credentials');
+        setError(payload.message || 'Invalid credentials');
         return;
       }
 
       clearAdmin();
       saveAdmin({
         email,
-        name: payload.name || 'Admin',
+        name: payload.name || 'Manager',
         loggedInAt: new Date().toISOString(),
       });
 
-      navigate('/admin-portal');
+      navigate('/website-controls');
     } catch (err) {
       setError(err.userMessage || 'Unable to sign in. Please try again.');
     } finally {
@@ -44,7 +44,7 @@ export default function AdminLogin() {
       <div style={{ width: '100%', maxWidth: 420, background: '#fff', borderRadius: 18, border: '1px solid #e2e8f0', boxShadow: '0 30px 80px rgba(2,6,23,.35)', overflow: 'hidden' }}>
         <div style={{ padding: 24, borderBottom: '1px solid #eef2f7', background: 'linear-gradient(135deg, #e0f2fe, #dbeafe)' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 10px', borderRadius: 999, background: '#fff', border: '1px solid #bae6fd', color: '#0c4a6e', fontWeight: 700, fontSize: 12 }}>
-            <Shield size={14} /> Admin Portal
+            <Shield size={14} /> Website Controls
           </div>
           <h1 style={{ margin: '12px 0 0', fontSize: 24, color: '#0f172a' }}>Sign In</h1>
           <p style={{ margin: '4px 0 0', color: '#475569', fontSize: 13 }}>Authenticate to manage website content and operations.</p>
@@ -65,7 +65,7 @@ export default function AdminLogin() {
               value={email}
               required
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@example.com"
+              placeholder="controls@ongolebullsinvest.com"
               style={{ width: '100%', border: '1px solid #dbe1ea', borderRadius: 10, padding: '9px 10px 9px 34px', fontSize: 13 }}
             />
           </div>

@@ -5,6 +5,7 @@ import dev.ongolebulls.model.AlertType;
 import dev.ongolebulls.repository.*;
 import dev.ongolebulls.repository.AdminUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -47,10 +48,27 @@ public class DummyDataInitializer implements CommandLineRunner {
     @Autowired
     private AdminUserRepository adminUserRepository;
 
+    /** Website Controls (/website-controls) — ob_admin_users row; override via WEBSITE_CONTROLS_* env vars. */
+    @Value("${website.controls.seed.email}")
+    private String websiteControlsSeedEmail;
+
+    @Value("${website.controls.seed.password}")
+    private String websiteControlsSeedPassword;
+
+    @Value("${website.controls.seed.name}")
+    private String websiteControlsSeedName;
+
+    @Value("${website.controls.migration.remove-legacy-seed-user:true}")
+    private boolean removeLegacySeedUser;
+
+    @Value("${website.controls.migration.legacy-email:admin@ongolebullsinvest.com}")
+    private String legacyAdminEmail;
+
     @Override
     public void run(String... args) {
-        // Create default admin user if it doesn't exist
-        createDefaultAdminUser();
+        // Seed Website Controls login (distinct from any future separate admin area)
+        createDefaultWebsiteControlsUser();
+        removeLegacyWebsiteControlsUserIfConfigured();
         
         // Only create if users don't exist
         if (userRepository.count() == 0) {
@@ -62,19 +80,38 @@ public class DummyDataInitializer implements CommandLineRunner {
         }
     }
     
-    private void createDefaultAdminUser() {
-        // Check if admin user exists
-        if (adminUserRepository.findByEmail("admin@ongolebullsinvest.com").isEmpty()) {
-            System.out.println("Creating default admin user...");
-            AdminUser admin = new AdminUser();
-            admin.setEmail("admin@ongolebullsinvest.com");
-            admin.setPassword("admin123"); // Plain password (as per current implementation)
-            admin.setName("Admin");
-            adminUserRepository.save(admin);
-            System.out.println("Default admin user created: admin@ongolebullsinvest.com / admin123");
-        } else {
-            System.out.println("Default admin user already exists.");
+    private void createDefaultWebsiteControlsUser() {
+        if (adminUserRepository.findByEmail(websiteControlsSeedEmail).isPresent()) {
+            System.out.println("Website Controls user already exists: " + websiteControlsSeedEmail);
+            return;
         }
+        System.out.println("Creating default Website Controls user...");
+        AdminUser admin = new AdminUser();
+        admin.setEmail(websiteControlsSeedEmail);
+        admin.setPassword(websiteControlsSeedPassword); // Plain text — matches AdminAuthController
+        admin.setName(websiteControlsSeedName);
+        adminUserRepository.save(admin);
+        System.out.println("Website Controls user created for " + websiteControlsSeedEmail + " (set WEBSITE_CONTROLS_PASSWORD in production).");
+    }
+
+    /**
+     * Old seed used admin@ongolebullsinvest.com — that row stays in DB forever unless removed,
+     * so /api/admin/login would still accept the old password after "migrating" to new seed config.
+     */
+    private void removeLegacyWebsiteControlsUserIfConfigured() {
+        if (!removeLegacySeedUser) {
+            return;
+        }
+        if (legacyAdminEmail == null || legacyAdminEmail.isBlank()) {
+            return;
+        }
+        if (legacyAdminEmail.equalsIgnoreCase(websiteControlsSeedEmail)) {
+            return;
+        }
+        adminUserRepository.findByEmail(legacyAdminEmail).ifPresent((user) -> {
+            adminUserRepository.delete(user);
+            System.out.println("Removed legacy Website Controls user: " + legacyAdminEmail);
+        });
     }
 
     private void createDummyUsers() {
