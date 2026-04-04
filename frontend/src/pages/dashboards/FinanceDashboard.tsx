@@ -465,7 +465,7 @@ const statusVariant = (s: string): 'success' | 'warning' | 'danger' | 'info' | '
    ═══════════════════════════════════════════════════════════════════════ */
 export default function FinanceDashboard() {
   const navigate = useNavigate();
-  const { isDark } = useTheme();
+  const { isDark, toggleTheme } = useTheme();
   const userData = JSON.parse(localStorage.getItem('ob_user') || '{}');
 
   useEffect(() => {
@@ -523,6 +523,7 @@ export default function FinanceDashboard() {
           <HeaderEl>
             <span style={{ fontSize: 18, fontWeight: 600 }}>{NAV_LABELS[section]}</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              <button onClick={toggleTheme} title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'} style={{ background: 'none', border: `1px solid ${isDark ? '#334155' : '#e2e8f0'}`, borderRadius: 8, padding: '6px 10px', cursor: 'pointer', fontSize: 18, display: 'flex', alignItems: 'center', transition: 'all 0.2s ease', color: 'inherit' }}>{isDark ? '\u2600\uFE0F' : '\uD83C\uDF19'}</button>
               <Bell size={18} style={{ cursor: 'pointer', opacity: 0.5 }} />
               <div style={{ width: 1, height: 24, background: 'currentColor', opacity: 0.15 }} />
               <span style={{ fontSize: 14, fontWeight: 500 }}>{userData.fullName || userData.name}</span>

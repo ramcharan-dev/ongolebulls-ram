@@ -529,7 +529,7 @@ function CategoryBadge({ category }: { category: string }) {
 
 export default function SupportDashboard() {
   const navigate = useNavigate();
-  const { isDark } = useTheme();
+  const { isDark, toggleTheme } = useTheme();
   const userData = JSON.parse(localStorage.getItem('ob_user') || '{}');
 
   useEffect(() => {
@@ -587,6 +587,7 @@ export default function SupportDashboard() {
           <HeaderEl>
             <HeaderTitle>{NAV_LABELS[section]}</HeaderTitle>
             <HeaderRight>
+              <button onClick={toggleTheme} title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'} style={{ background: 'none', border: `1px solid ${isDark ? '#334155' : '#e2e8f0'}`, borderRadius: 8, padding: '6px 10px', cursor: 'pointer', fontSize: 18, display: 'flex', alignItems: 'center', transition: 'all 0.2s ease', color: 'inherit' }}>{isDark ? '\u2600\uFE0F' : '\uD83C\uDF19'}</button>
               <HeaderName>{userData.fullName || userData.name}</HeaderName>
               <SmallAvatar>{initials(userData.fullName || userData.name)}</SmallAvatar>
             </HeaderRight>

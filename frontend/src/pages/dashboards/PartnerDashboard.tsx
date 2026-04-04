@@ -90,7 +90,7 @@ const NAV_LABELS: Record<Section, string> = { overview: 'Overview', profile: 'Pr
 
 /* ═══════════════════════════════════════════════════════════════════════ */
 export default function PartnerDashboard() {
-  const { isDark } = useTheme();
+  const { isDark, toggleTheme } = useTheme();
   C = getColors(isDark);
   S = getStyles(C);
 
@@ -171,6 +171,7 @@ export default function PartnerDashboard() {
           <header style={{ height: 64, background: C.white, borderBottom: `1px solid ${C.gray100}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', position: 'sticky', top: 0, zIndex: 10 }}>
             <span style={{ fontSize: 18, fontWeight: 600, color: C.gray900 }}>{NAV_LABELS[section]}</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              <button onClick={toggleTheme} title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'} style={{ background: 'none', border: `1px solid ${C.gray200}`, borderRadius: 8, padding: '6px 10px', cursor: 'pointer', fontSize: 18, color: C.gray700, display: 'flex', alignItems: 'center', transition: 'all 0.2s ease' }}>{isDark ? '\u2600\uFE0F' : '\uD83C\uDF19'}</button>
               <Bell size={18} color={C.gray400} style={{ cursor: 'pointer' }} />
               <div style={{ width: 1, height: 24, background: C.gray200 }} />
               <span style={{ fontSize: 14, fontWeight: 500, color: C.gray700 }}>{profile.fullName || profile.firmName}</span>

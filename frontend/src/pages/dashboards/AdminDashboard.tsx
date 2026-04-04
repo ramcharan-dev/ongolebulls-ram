@@ -68,7 +68,7 @@ export default function AdminDashboard() {
     return null;
   }
 
-  const { isDark } = useTheme();
+  const { isDark, toggleTheme } = useTheme();
 
   const [section, setSection] = useState<Section>('overview');
   const [toast, setToast] = useState<Toast | null>(null);
@@ -127,7 +127,8 @@ export default function AdminDashboard() {
       <div className="ap-main">
         <header className="ap-topbar">
           <span className="ap-topbar-title">Admin Dashboard</span>
-          <div className="ap-topbar-right">
+          <div className="ap-topbar-right" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <button onClick={toggleTheme} title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'} style={{ background: 'none', border: '1px solid', borderColor: isDark ? '#334155' : '#e2e8f0', borderRadius: 8, padding: '6px 10px', cursor: 'pointer', fontSize: 18, color: isDark ? '#f1f5f9' : '#374151', display: 'flex', alignItems: 'center', transition: 'all 0.2s ease' }}>{isDark ? '\u2600\uFE0F' : '\uD83C\uDF19'}</button>
             <span className="ap-admin-chip">{userData.fullName || userData.name || 'Admin'}</span>
           </div>
         </header>

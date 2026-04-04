@@ -32,7 +32,7 @@ const CSS = `
   .pr-spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: pr-spin 0.6s linear infinite; display: inline-block; }
   @media (max-width: 768px) {
     .pr-left-panel { display: none !important; }
-    .pr-right-panel { width: 100% !important; padding: 24px 20px !important; }
+    .pr-right-panel { margin-left: 0 !important; width: 100% !important; padding: 24px 20px !important; }
     .pr-root { flex-direction: column !important; }
   }
 `;
@@ -121,12 +121,11 @@ export default function PartnerRegister() {
     if (!form.termsAccepted) e.termsAccepted = 'You must accept the terms.';
     if (isIndividual) {
       if (!form.fullName.trim()) e.fullName = 'Required.'; if (!PAN_REGEX.test(form.pan)) e.pan = 'Invalid PAN.';
-      if (!form.arn.trim()) e.arn = 'Required.'; if (!form.euin.trim()) e.euin = 'Required.';
+      if (!form.arn.trim()) e.arn = 'Required.';
       if (!form.bankAccount.trim()) e.bankAccount = 'Required.'; if (!form.ifsc.trim()) e.ifsc = 'Required.'; if (!form.bankName.trim()) e.bankName = 'Required.';
     } else if (form.partnerType === 'NON_INDIVIDUAL_PARTNER') {
       if (!form.firmName.trim()) e.firmName = 'Required.'; if (!form.authorizedPerson.trim()) e.authorizedPerson = 'Required.';
       if (!PAN_REGEX.test(form.pan)) e.pan = 'Invalid PAN.'; if (!form.arn.trim()) e.arn = 'Required.';
-      if (!form.euinHolderName.trim()) e.euinHolderName = 'Required.'; if (!form.euin.trim()) e.euin = 'Required.';
       if (!form.bankAccount.trim()) e.bankAccount = 'Required.'; if (!form.ifsc.trim()) e.ifsc = 'Required.'; if (!form.bankName.trim()) e.bankName = 'Required.';
     }
     setErrors(e); return Object.keys(e).length === 0;
@@ -173,7 +172,7 @@ export default function PartnerRegister() {
       <div className="pr-root" style={{ display: 'flex', minHeight: '100vh', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}>
 
         {/* ═══ LEFT PANEL ═══ */}
-        <div className="pr-left-panel" style={{ width: '45%', background: 'linear-gradient(160deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '48px 40px', flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
+        <div className="pr-left-panel" style={{ width: '45%', background: 'linear-gradient(160deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '48px 36px', flexShrink: 0, position: 'fixed', top: 0, left: 0, height: '100vh', overflowY: 'auto', zIndex: 1 }}>
           {/* Decorative circles */}
           <div style={{ position: 'absolute', top: -80, right: -80, width: 240, height: 240, borderRadius: '50%', background: 'rgba(59,130,246,0.06)' }} />
           <div style={{ position: 'absolute', bottom: -60, left: -60, width: 200, height: 200, borderRadius: '50%', background: 'rgba(59,130,246,0.04)' }} />
@@ -187,16 +186,16 @@ export default function PartnerRegister() {
 
           {/* Middle — Benefits */}
           <div style={{ position: 'relative', zIndex: 1 }}>
-            <h3 style={{ fontSize: 18, fontWeight: 600, color: '#fff', margin: '0 0 24px' }}>Why join our partner network?</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+            <h3 style={{ fontSize: 17, fontWeight: 600, color: '#fff', margin: '0 0 16px' }}>Why join our partner network?</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               {BENEFITS.map((b, i) => (
-                <div key={i} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d={b.icon} /></svg>
+                <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(96,165,250,0.1)', border: '1px solid rgba(96,165,250,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={b.icon} /></svg>
                   </div>
                   <div>
-                    <div style={{ fontSize: 15, fontWeight: 600, color: '#fff', marginBottom: 3 }}>{b.title}</div>
-                    <div style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.5 }}>{b.desc}</div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: '#f1f5f9', marginBottom: 2 }}>{b.title}</div>
+                    <div style={{ fontSize: 12, color: '#94a3b8', lineHeight: 1.5 }}>{b.desc}</div>
                   </div>
                 </div>
               ))}
@@ -205,11 +204,11 @@ export default function PartnerRegister() {
 
           {/* Bottom — Trust indicators */}
           <div style={{ position: 'relative', zIndex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginBottom: 16 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginBottom: 12 }}>
               {[{ num: '500+', label: 'Partners' }, { num: '\u20B9200Cr+', label: 'AUM' }, { num: '10,000+', label: 'Investors' }].map((t, i) => (
-                <div key={i} style={{ flex: 1, textAlign: 'center', borderRight: i < 2 ? '1px solid rgba(255,255,255,0.15)' : 'none' }}>
-                  <div style={{ fontSize: 24, fontWeight: 700, color: '#fff' }}>{t.num}</div>
-                  <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 2 }}>{t.label}</div>
+                <div key={i} style={{ flex: 1, textAlign: 'center', borderRight: i < 2 ? '1px solid rgba(255,255,255,0.12)' : 'none' }}>
+                  <div style={{ fontSize: 22, fontWeight: 700, color: '#fff', letterSpacing: '-0.3px' }}>{t.num}</div>
+                  <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 2, textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 500 }}>{t.label}</div>
                 </div>
               ))}
             </div>
@@ -218,7 +217,7 @@ export default function PartnerRegister() {
         </div>
 
         {/* ═══ RIGHT PANEL ═══ */}
-        <div className="pr-right-panel" style={{ width: '55%', background: '#f8fafc', overflowY: 'auto', padding: '48px 40px' }}>
+        <div className="pr-right-panel" style={{ marginLeft: '45%', width: '55%', minHeight: '100vh', background: '#f8fafc', overflowY: 'auto', padding: '48px 40px' }}>
           <div style={{ maxWidth: 560, margin: '0 auto' }}>
 
             {/* Header */}
@@ -311,7 +310,7 @@ export default function PartnerRegister() {
                       </div>
                       <div style={s.row}>
                         <div><label style={s.label}>ARN Number *</label><input name="arn" value={form.arn} onChange={set} placeholder="ARN-XXXXXX" className="pr-input" style={s.input} />{err('arn')}</div>
-                        <div><label style={s.label}>EUIN *</label><input name="euin" value={form.euin} onChange={set} placeholder="EUIN number" className="pr-input" style={s.input} />{err('euin')}</div>
+                        <div><label style={s.label}>EUIN (Optional)</label><input name="euin" value={form.euin} onChange={set} placeholder="Enter manually or auto-fetched (optional)" className="pr-input" style={s.input} />{err('euin')}</div>
                       </div>
                     </>
                   ) : (
@@ -323,8 +322,8 @@ export default function PartnerRegister() {
                         <div><label style={s.label}>Firm ARN *</label><input name="arn" value={form.arn} onChange={set} placeholder="ARN-XXXXXX" className="pr-input" style={s.input} />{err('arn')}</div>
                       </div>
                       <div style={s.row}>
-                        <div><label style={s.label}>EUIN Holder Name *</label><input name="euinHolderName" value={form.euinHolderName} onChange={set} placeholder="EUIN holder name" className="pr-input" style={s.input} />{err('euinHolderName')}</div>
-                        <div><label style={s.label}>EUIN Number *</label><input name="euin" value={form.euin} onChange={set} placeholder="EUIN number" className="pr-input" style={s.input} />{err('euin')}</div>
+                        <div><label style={s.label}>EUIN Holder Name (Optional)</label><input name="euinHolderName" value={form.euinHolderName} onChange={set} placeholder="Enter manually or auto-fetched (optional)" className="pr-input" style={s.input} />{err('euinHolderName')}</div>
+                        <div><label style={s.label}>EUIN Number (Optional)</label><input name="euin" value={form.euin} onChange={set} placeholder="Enter manually or auto-fetched (optional)" className="pr-input" style={s.input} />{err('euin')}</div>
                       </div>
                     </>
                   )}
@@ -350,7 +349,7 @@ export default function PartnerRegister() {
                 {err('termsAccepted')}
               </div>
 
-              <button type="submit" className="pr-submit" disabled={loading} style={{ width: '100%', height: 52, background: 'linear-gradient(135deg, #1e293b, #1e3a5f)', color: '#fff', border: 'none', borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'all 0.2s ease' }}>
+              <button type="submit" className="pr-submit" disabled={loading} style={{ width: '100%', minHeight: 52, background: 'linear-gradient(135deg, #1e293b, #1e3a5f)', color: '#fff', border: 'none', borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'all 0.2s ease', whiteSpace: 'nowrap', padding: '0 24px', flexShrink: 0 }}>
                 {loading && <span className="pr-spinner" />}
                 {loading ? 'Creating Account...' : 'Create Partner Account \u2192'}
               </button>
