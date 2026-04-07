@@ -4,6 +4,7 @@ import {
   LayoutDashboard, Users, Handshake, UserCheck,
   LogOut, Plus, RefreshCw, Search, Eye, KeyRound, X,
   BarChart3, GitBranch, Shield, ChevronRight, Check,
+  Radio, Zap, Clock, AlertTriangle, CheckCircle2, Loader2,
 } from 'lucide-react';
 import { adminUserApi } from '../../api/adminUserApi';
 import type { UserSummary, AdminStats, PartnerSummary, ClientSummary, PlatformStats, ReferralTreeEntry, PartnerDetail, RoleUsers, UserPermissions, PermissionRow } from '../../types/api';
@@ -40,7 +41,7 @@ const PARTNER_FILTER_OPTIONS = [
   { label: 'Pending', value: 'pending' },
 ];
 
-type Section = 'overview' | 'users' | 'partners' | 'clients' | 'platformStats' | 'referralTree' | 'permissions';
+type Section = 'overview' | 'users' | 'partners' | 'clients' | 'platformStats' | 'referralTree' | 'permissions' | 'bseMonitor';
 
 interface CreateForm { name: string; email: string; role: string; password: string }
 interface ResetForm { userId: number; userName: string; newPassword: string }
@@ -94,6 +95,7 @@ export default function AdminDashboard() {
     { key: 'platformStats', label: 'Platform Stats', icon: <BarChart3 size={16} /> },
     { key: 'referralTree', label: 'Referral Tree', icon: <GitBranch size={16} /> },
     { key: 'permissions', label: 'Roles & Permissions', icon: <Shield size={16} /> },
+    { key: 'bseMonitor', label: 'BSE Monitor', icon: <Radio size={16} /> },
   ];
 
   return (
@@ -140,6 +142,7 @@ export default function AdminDashboard() {
           {section === 'platformStats' && <PlatformStatsSection showToast={showToast} />}
           {section === 'referralTree' && <ReferralTreeSection showToast={showToast} />}
           {section === 'permissions' && <PermissionsSection showToast={showToast} />}
+          {section === 'bseMonitor' && <BseMonitorSection showToast={showToast} />}
         </div>
       </div>
 
@@ -1337,6 +1340,287 @@ function DetailRow({ label, value }: { label: string; value: string | null | und
       <span className="ap-label">{label}</span>
       <span style={{ fontSize: 13 }}>{value || '-'}</span>
     </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/*  BSE MONITOR                                                               */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+interface BseTx {
+  transactionId: string; apiName: string; status: string; endpoint: string;
+  createdAt: string; completedAt: string | null; errorMessage: string | null;
+  bseStatus?: string; httpStatus?: number;
+}
+
+function BseMonitorSection({ showToast }: { showToast: (t: Toast['type'], m: string) => void }) {
+  const [transactions, setTransactions] = useState<BseTx[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [detailModal, setDetailModal] = useState<any>(null);
+  const [detailLoading, setDetailLoading] = useState(false);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await adminUserApi.bseTransactions(50);
+      setTransactions(Array.isArray(res.data) ? res.data : []);
+    } catch {
+      showToast('error', 'Failed to load BSE transactions');
+    } finally {
+      setLoading(false);
+    }
+  }, [showToast]);
+
+  useEffect(() => { load(); }, [load]);
+
+  // Auto-refresh every 30s
+  useEffect(() => {
+    const interval = setInterval(load, 30_000);
+    return () => clearInterval(interval);
+  }, [load]);
+
+  const handleLogin = async () => {
+    setActionLoading('login');
+    try {
+      const res = await adminUserApi.bseLogin();
+      if (res.data?.success) {
+        showToast('success', 'BSE login successful');
+      } else {
+        showToast('error', res.data?.message || 'BSE login failed');
+      }
+      load();
+    } catch (err: any) {
+      showToast('error', err.userMessage || 'BSE login failed');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleSchemes = async () => {
+    setActionLoading('schemes');
+    try {
+      const res = await adminUserApi.bseSchemes({ start: 0, length: 10 });
+      showToast('success', `Scheme fetch initiated: ${res.data?.transactionId}`);
+      setTimeout(load, 2000);
+    } catch (err: any) {
+      showToast('error', err.userMessage || 'Scheme fetch failed');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleNav = async () => {
+    setActionLoading('nav');
+    try {
+      const res = await adminUserApi.bseNav({ start: 0, length: 10 });
+      showToast('success', `NAV fetch initiated: ${res.data?.transactionId}`);
+      setTimeout(load, 2000);
+    } catch (err: any) {
+      showToast('error', err.userMessage || 'NAV fetch failed');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const viewDetail = async (txId: string) => {
+    setDetailLoading(true);
+    setDetailModal(null);
+    try {
+      const res = await adminUserApi.bseStatus(txId);
+      setDetailModal(res.data);
+    } catch {
+      showToast('error', 'Failed to load transaction detail');
+    } finally {
+      setDetailLoading(false);
+    }
+  };
+
+  const statusBadge = (status: string) => {
+    const colors: Record<string, { bg: string; fg: string }> = {
+      PENDING: { bg: '#fef3c7', fg: '#92400e' },
+      IN_PROGRESS: { bg: '#dbeafe', fg: '#1e40af' },
+      SUCCESS: { bg: '#dcfce7', fg: '#166534' },
+      FAILED: { bg: '#fee2e2', fg: '#991b1b' },
+    };
+    const c = colors[status] || { bg: '#f3f4f6', fg: '#374151' };
+    return (
+      <span style={{ display: 'inline-block', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 600, background: c.bg, color: c.fg }}>
+        {status}
+      </span>
+    );
+  };
+
+  const apiNameBadge = (name: string) => {
+    const colors: Record<string, { bg: string; fg: string }> = {
+      LOGIN: { bg: '#f3e8ff', fg: '#6b21a8' },
+      SCHEME_LIST: { bg: '#dbeafe', fg: '#1e40af' },
+      NAV_LIST: { bg: '#ccfbf1', fg: '#115e59' },
+    };
+    const c = colors[name] || { bg: '#f3f4f6', fg: '#374151' };
+    return (
+      <span style={{ display: 'inline-block', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 600, background: c.bg, color: c.fg }}>
+        {name}
+      </span>
+    );
+  };
+
+  const duration = (created: string, completed: string | null) => {
+    if (!completed) return '\u2014';
+    const ms = new Date(completed).getTime() - new Date(created).getTime();
+    return ms < 1000 ? `${ms}ms` : `${(ms / 1000).toFixed(1)}s`;
+  };
+
+  return (
+    <>
+      <div className="ap-page-header">
+        <div className="ap-page-title">
+          <Radio size={20} />
+          <div>
+            <h1>BSE Monitor</h1>
+            <p className="ap-page-subtitle">BSE StAR MF v2 connection status and transactions</p>
+          </div>
+        </div>
+        <button type="button" className="ap-btn ap-btn-secondary" onClick={load}><RefreshCw size={14} /> Refresh</button>
+      </div>
+
+      {/* ── Connection Status ──────────────────────────────────── */}
+      <div className="ap-card" style={{ marginBottom: 20 }}>
+        <div className="ap-card-body">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+            <div>
+              <h3 style={{ fontSize: 15, fontWeight: 600, marginBottom: 4 }}>BSE StAR MF v2 Connection</h3>
+              <p style={{ fontSize: 13, opacity: 0.7 }}>Mock mode enabled by default. Set BSE_V2_MOCK_MODE=false for live.</p>
+            </div>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                className="ap-btn ap-btn-primary"
+                onClick={handleLogin}
+                disabled={actionLoading === 'login'}
+                style={{ fontSize: 12 }}
+              >
+                {actionLoading === 'login' ? <><Loader2 size={12} className="spin" /> Testing...</> : <><Zap size={12} /> Test BSE Login</>}
+              </button>
+              <button
+                type="button"
+                className="ap-btn ap-btn-secondary"
+                onClick={handleSchemes}
+                disabled={actionLoading === 'schemes'}
+                style={{ fontSize: 12 }}
+              >
+                {actionLoading === 'schemes' ? <><Loader2 size={12} className="spin" /> Fetching...</> : 'Fetch Schemes'}
+              </button>
+              <button
+                type="button"
+                className="ap-btn ap-btn-secondary"
+                onClick={handleNav}
+                disabled={actionLoading === 'nav'}
+                style={{ fontSize: 12 }}
+              >
+                {actionLoading === 'nav' ? <><Loader2 size={12} className="spin" /> Fetching...</> : 'Fetch NAV'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Recent Transactions ──────────────────────────────────── */}
+      <div className="ap-card">
+        <div className="ap-card-body">
+          <h3 style={{ fontSize: 15, fontWeight: 600, marginBottom: 12 }}>Recent Transactions</h3>
+          <div className="ap-table-wrap">
+            <div className="ap-table-scroll">
+              <table className="ap-table">
+                <thead>
+                  <tr>
+                    <th>Transaction ID</th>
+                    <th>API</th>
+                    <th>Status</th>
+                    <th>Endpoint</th>
+                    <th>Created</th>
+                    <th>Duration</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr><td colSpan={7}><div className="ap-loading"><div className="ap-spinner" /></div></td></tr>
+                  ) : transactions.length ? (
+                    transactions.map((tx) => (
+                      <tr key={tx.transactionId}>
+                        <td><code style={{ fontSize: 11 }}>{tx.transactionId.length > 28 ? tx.transactionId.substring(0, 28) + '...' : tx.transactionId}</code></td>
+                        <td>{apiNameBadge(tx.apiName)}</td>
+                        <td>{statusBadge(tx.status)}</td>
+                        <td style={{ fontSize: 12, opacity: 0.8 }}>{tx.endpoint}</td>
+                        <td style={{ fontSize: 12 }}>{fmt(tx.createdAt)}</td>
+                        <td style={{ fontSize: 12, fontFamily: 'monospace' }}>{duration(tx.createdAt, tx.completedAt)}</td>
+                        <td>
+                          <button
+                            type="button"
+                            className="ap-btn ap-btn-secondary"
+                            onClick={() => viewDetail(tx.transactionId)}
+                            style={{ fontSize: 11, padding: '3px 8px' }}
+                          >
+                            <Eye size={11} /> View
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr><td colSpan={7}><div className="ap-empty">No BSE transactions yet. Use the buttons above to test.</div></td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Detail Modal ──────────────────────────────────── */}
+      {(detailModal || detailLoading) && (
+        <div className="ap-modal-overlay" onClick={() => { setDetailModal(null); setDetailLoading(false); }}>
+          <div className="ap-modal" style={{ maxWidth: 700 }} onClick={(e) => e.stopPropagation()}>
+            <div className="ap-modal-header">
+              <h2>Transaction Detail</h2>
+              <button type="button" className="ap-modal-close" onClick={() => { setDetailModal(null); setDetailLoading(false); }}>
+                <X size={16} />
+              </button>
+            </div>
+            <div className="ap-modal-body">
+              {detailLoading ? (
+                <div className="ap-loading"><div className="ap-spinner" /></div>
+              ) : detailModal ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                    <div><strong style={{ fontSize: 12 }}>Transaction ID</strong><br /><code style={{ fontSize: 11 }}>{detailModal.transactionId}</code></div>
+                    <div><strong style={{ fontSize: 12 }}>API</strong><br />{apiNameBadge(detailModal.apiName)}</div>
+                    <div><strong style={{ fontSize: 12 }}>Status</strong><br />{statusBadge(detailModal.status)}</div>
+                    <div><strong style={{ fontSize: 12 }}>Endpoint</strong><br /><span style={{ fontSize: 12 }}>{detailModal.endpoint}</span></div>
+                    <div><strong style={{ fontSize: 12 }}>Created</strong><br /><span style={{ fontSize: 12 }}>{fmt(detailModal.createdAt)}</span></div>
+                    <div><strong style={{ fontSize: 12 }}>Completed</strong><br /><span style={{ fontSize: 12 }}>{detailModal.completedAt ? fmt(detailModal.completedAt) : '\u2014'}</span></div>
+                    {detailModal.bseStatus && <div><strong style={{ fontSize: 12 }}>BSE Status</strong><br /><span style={{ fontSize: 12 }}>{detailModal.bseStatus}</span></div>}
+                    {detailModal.httpStatus && <div><strong style={{ fontSize: 12 }}>HTTP Status</strong><br /><span style={{ fontSize: 12 }}>{detailModal.httpStatus}</span></div>}
+                  </div>
+                  {detailModal.errorMessage && (
+                    <div style={{ background: '#fee2e2', padding: 10, borderRadius: 6, fontSize: 12, color: '#991b1b' }}>
+                      <strong>Error:</strong> {detailModal.errorMessage}
+                    </div>
+                  )}
+                  {detailModal.data && (
+                    <div>
+                      <strong style={{ fontSize: 12 }}>Response Data</strong>
+                      <pre style={{ background: 'var(--bg, #f9fafb)', border: '1px solid var(--border, #e5e7eb)', borderRadius: 6, padding: 10, fontSize: 11, maxHeight: 300, overflow: 'auto', whiteSpace: 'pre-wrap', wordBreak: 'break-all', marginTop: 4 }}>
+                        {typeof detailModal.data === 'string' ? detailModal.data : JSON.stringify(detailModal.data, null, 2)}
+                      </pre>
+                    </div>
+                  )}
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 

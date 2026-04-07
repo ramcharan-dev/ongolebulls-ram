@@ -153,6 +153,20 @@
         </dependency>
         -->
 
+		<!-- Nimbus JOSE + JWT for BSE v2 JWE/JWS -->
+		<dependency>
+			<groupId>com.nimbusds</groupId>
+			<artifactId>nimbus-jose-jwt</artifactId>
+			<version>9.37.3</version>
+		</dependency>
+
+		<!-- BouncyCastle for RSA PEM key loading -->
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcpkix-jdk18on</artifactId>
+			<version>1.77</version>
+		</dependency>
+
 		<!-- TEST dependencies -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

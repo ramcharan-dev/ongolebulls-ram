@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### BSE RSA keys — never commit ###
+*.pem
+*.key

@@ -33,4 +33,11 @@ export const adminUserApi = {
   getUserPermissions: (userId) => api.get(`/api/admin/permissions/users/${userId}`),
   updateUserPermissions: (userId, data) => api.put(`/api/admin/permissions/users/${userId}`, data),
   getRoleDefaults: (role) => api.get(`/api/admin/permissions/defaults/${role}`),
+
+  // BSE Monitor
+  bseLogin: () => api.post('/api/bse/login'),
+  bseSchemes: (params) => api.post('/api/bse/schemes', null, { params }),
+  bseNav: (params) => api.post('/api/bse/nav', null, { params }),
+  bseStatus: (txId) => api.get(`/api/bse/status/${txId}`),
+  bseTransactions: (limit = 50) => api.get('/api/bse/transactions', { params: { limit } }),
 };
