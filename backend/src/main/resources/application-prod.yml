@@ -40,10 +40,11 @@ spring:
       prefix: /WEB-INF/views/
       suffix: .jsp
 
-thymeleaf:
-  prefix: classpath:/templates/
-  suffix: .html
-  enabled: true
+# Legacy Thymeleaf settings removed – React handles all views now
+#thymeleaf:
+#  prefix: classpath:/templates/
+#  suffix: .html
+#  enabled: true
 
 encryption:
   key: lTB/6CsfDkNm46qjwXf/NuFx09ddhVU0z6rO7VJcyeA=
