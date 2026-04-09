@@ -353,6 +353,10 @@ public class User implements UserDetails {
     @Column(name = "is_activated", nullable = true)
     private Boolean isActivated = false;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "arn_status", columnDefinition = "varchar(255) default 'NOT_SUBMITTED'")
+    private ArnStatus arnStatus = ArnStatus.NOT_SUBMITTED;
+
     // --- Partner-specific fields ---
     private String firmName;
     private String authorizedPerson;
