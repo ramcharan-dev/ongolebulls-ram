@@ -1,9 +1,11 @@
 package dev.ongolebulls.controller;
 
 import dev.ongolebulls.dto.PartnerSummaryResponse;
+import dev.ongolebulls.dto.admin.ArnRequestResponse;
 import dev.ongolebulls.model.Role;
 import dev.ongolebulls.model.User;
 import dev.ongolebulls.repository.UserRepository;
+import dev.ongolebulls.service.partner.PartnerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import java.util.Set;
 public class AdminPartnerController {
 
     private final UserRepository userRepository;
+    private final PartnerService partnerService;
 
     private static final Set<Role> PARTNER_ROLES = Set.of(
             Role.INDIVIDUAL_PARTNER, Role.NON_INDIVIDUAL_PARTNER
@@ -92,6 +95,35 @@ public class AdminPartnerController {
                     return ResponseEntity.ok(toPartnerSummary(saved));
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/arn-requests")
+    public ResponseEntity<List<ArnRequestResponse>> getArnRequests(
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String search
+    ) {
+        return ResponseEntity.ok(partnerService.getArnRequests(status, search));
+    }
+
+    @PatchMapping("/arn-requests/{userId}/approve")
+    public ResponseEntity<?> approveArn(@PathVariable Long userId) {
+        try {
+            return ResponseEntity.ok(partnerService.approveArn(userId));
+        } catch (Exception e) {
+            log.error("Error approving ARN for user {}: {}", userId, e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PatchMapping("/arn-requests/{userId}/reject")
+    public ResponseEntity<?> rejectArn(@PathVariable Long userId, @RequestBody Map<String, String> body) {
+        try {
+            String reason = body.getOrDefault("reason", "No reason provided");
+            return ResponseEntity.ok(partnerService.rejectArn(userId, reason));
+        } catch (Exception e) {
+            log.error("Error rejecting ARN for user {}: {}", userId, e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
     }
 
     private PartnerSummaryResponse toPartnerSummary(User u) {

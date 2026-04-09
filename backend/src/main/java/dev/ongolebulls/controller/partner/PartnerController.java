@@ -1,8 +1,9 @@
 package dev.ongolebulls.controller.partner;
 
-import dev.ongolebulls.dto.partner.AddClientRequest;
+import dev.ongolebulls.dto.partner.ArnSubmitRequest;
 import dev.ongolebulls.dto.partner.ReferralResponse;
 import dev.ongolebulls.dto.partner.TrackerHoldingRequest;
+import jakarta.validation.Valid;
 import dev.ongolebulls.model.ReferralClick;
 import dev.ongolebulls.model.User;
 import dev.ongolebulls.repository.ReferralClickRepository;
@@ -18,6 +19,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * PartnerController — handles partner profile, dashboard stats, SIPs, tracker, and referrals.
+ * Client endpoints → ClientController (/api/partner/clients)
+ * Transaction endpoints → TransactionController (/api/partner/transactions)
+ * Revenue endpoints → RevenueController (/api/partner/revenue)
+ */
 @RestController
 @RequestMapping("/api/partner")
 @RequiredArgsConstructor
@@ -27,6 +34,8 @@ public class PartnerController {
     private final PartnerService partnerService;
     private final ReferralClickRepository referralClickRepository;
     private final UserRepository userRepository;
+
+    // ── Profile ─────────────────────────────────────────────────────────
 
     @GetMapping("/me")
     public ResponseEntity<?> getProfile(Authentication auth) {
@@ -65,12 +74,8 @@ public class PartnerController {
     public ResponseEntity<?> updateBankDetails(Authentication auth, @RequestBody Map<String, String> body) {
         try {
             User partner = partnerService.getCurrentPartner(auth);
-            return ResponseEntity.ok(partnerService.updateBankDetails(
-                    partner,
-                    body.get("partnerBankAccount"),
-                    body.get("partnerIfsc"),
-                    body.get("partnerBankName")
-            ));
+            return ResponseEntity.ok(partnerService.updateBankDetails(partner,
+                    body.get("partnerBankAccount"), body.get("partnerIfsc"), body.get("partnerBankName")));
         } catch (Exception e) {
             log.error("Error updating bank details: {}", e.getMessage());
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
@@ -88,46 +93,18 @@ public class PartnerController {
         }
     }
 
-    @PostMapping("/clients")
-    public ResponseEntity<?> addClient(Authentication auth, @RequestBody AddClientRequest request) {
+    @PostMapping("/arn-submit")
+    public ResponseEntity<?> submitArn(Authentication auth, @Valid @RequestBody ArnSubmitRequest request) {
         try {
             User partner = partnerService.getCurrentPartner(auth);
-            return ResponseEntity.ok(partnerService.addClient(partner, request));
-        } catch (RuntimeException e) {
-            if (e.getMessage().contains("not activated")) {
-                return ResponseEntity.status(403).body(Map.of("error", e.getMessage()));
-            }
+            return ResponseEntity.ok(partnerService.submitArn(partner, request));
+        } catch (Exception e) {
+            log.error("Error submitting ARN: {}", e.getMessage());
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
-    @GetMapping("/clients")
-    public ResponseEntity<?> getClients(
-            Authentication auth,
-            @RequestParam(required = false) String search,
-            @RequestParam(required = false) String stage) {
-        try {
-            User partner = partnerService.getCurrentPartner(auth);
-            return ResponseEntity.ok(partnerService.getClients(partner.getId(), stage, search));
-        } catch (Exception e) {
-            log.error("Error fetching clients: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
-    }
-
-    @PatchMapping("/clients/{clientId}/lifecycle")
-    public ResponseEntity<?> updateClientLifecycle(
-            Authentication auth,
-            @PathVariable Long clientId,
-            @RequestBody Map<String, String> body) {
-        try {
-            User partner = partnerService.getCurrentPartner(auth);
-            return ResponseEntity.ok(partnerService.updateClientLifecycle(partner, clientId, body.get("stage")));
-        } catch (Exception e) {
-            log.error("Error updating client lifecycle: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
-    }
+    // ── SIPs ────────────────────────────────────────────────────────────
 
     @GetMapping("/sips")
     public ResponseEntity<?> getSips(Authentication auth, @RequestParam(required = false) String status) {
@@ -139,6 +116,8 @@ public class PartnerController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
+
+    // ── Tracker ─────────────────────────────────────────────────────────
 
     @PostMapping("/tracker/upload")
     public ResponseEntity<?> uploadCas(Authentication auth, @RequestParam("file") MultipartFile file) {
@@ -184,6 +163,8 @@ public class PartnerController {
         }
     }
 
+    // ── Referrals ───────────────────────────────────────────────────────
+
     @GetMapping("/referrals")
     public ResponseEntity<?> getReferrals(Authentication auth) {
         try {
@@ -197,15 +178,10 @@ public class PartnerController {
                             .orElse("Unknown");
                 }
                 return ReferralResponse.builder()
-                        .id(c.getId())
-                        .referralType(c.getReferralType())
-                        .clickedAt(c.getClickedAt())
-                        .converted(Boolean.TRUE.equals(c.getConverted()))
-                        .registeredUserName(c.getRegisteredUserName())
-                        .registeredAt(c.getRegisteredAt())
-                        .registeredUserId(c.getRegisteredUserId())
-                        .partnerStatus(status)
-                        .build();
+                        .id(c.getId()).referralType(c.getReferralType()).clickedAt(c.getClickedAt())
+                        .converted(Boolean.TRUE.equals(c.getConverted())).registeredUserName(c.getRegisteredUserName())
+                        .registeredAt(c.getRegisteredAt()).registeredUserId(c.getRegisteredUserId())
+                        .partnerStatus(status).build();
             }).toList();
             return ResponseEntity.ok(responses);
         } catch (Exception e) {
