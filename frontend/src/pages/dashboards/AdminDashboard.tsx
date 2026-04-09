@@ -4,10 +4,10 @@ import {
   LayoutDashboard, Users, Handshake, UserCheck,
   LogOut, Plus, RefreshCw, Search, Eye, KeyRound, X,
   BarChart3, GitBranch, Shield, ChevronRight, Check,
-  Radio, Zap, Clock, AlertTriangle, CheckCircle2, Loader2,
+  Radio, Zap, Clock, AlertTriangle, CheckCircle2, Loader2, FileCheck,
 } from 'lucide-react';
 import { adminUserApi } from '../../api/adminUserApi';
-import type { UserSummary, AdminStats, PartnerSummary, ClientSummary, PlatformStats, ReferralTreeEntry, PartnerDetail, RoleUsers, UserPermissions, PermissionRow } from '../../types/api';
+import type { UserSummary, AdminStats, PartnerSummary, ClientSummary, PlatformStats, ReferralTreeEntry, PartnerDetail, RoleUsers, UserPermissions, PermissionRow, ArnRequestResponse } from '../../types/api';
 import { useTheme } from '../../context/ThemeContext';
 import '../../pages/admin-portal/admin-portal.css';
 
@@ -41,7 +41,7 @@ const PARTNER_FILTER_OPTIONS = [
   { label: 'Pending', value: 'pending' },
 ];
 
-type Section = 'overview' | 'users' | 'partners' | 'clients' | 'platformStats' | 'referralTree' | 'permissions' | 'bseMonitor';
+type Section = 'overview' | 'users' | 'partners' | 'arnRequests' | 'clients' | 'platformStats' | 'referralTree' | 'permissions' | 'bseMonitor';
 
 interface CreateForm { name: string; email: string; role: string; password: string }
 interface ResetForm { userId: number; userName: string; newPassword: string }
@@ -91,6 +91,7 @@ export default function AdminDashboard() {
     { key: 'overview', label: 'Overview', icon: <LayoutDashboard size={16} /> },
     { key: 'users', label: 'Internal Users', icon: <Users size={16} /> },
     { key: 'partners', label: 'Partners', icon: <Handshake size={16} /> },
+    { key: 'arnRequests', label: 'ARN Requests', icon: <FileCheck size={16} /> },
     { key: 'clients', label: 'Clients', icon: <UserCheck size={16} /> },
     { key: 'platformStats', label: 'Platform Stats', icon: <BarChart3 size={16} /> },
     { key: 'referralTree', label: 'Referral Tree', icon: <GitBranch size={16} /> },
@@ -138,6 +139,7 @@ export default function AdminDashboard() {
           {section === 'overview' && <OverviewSection showToast={showToast} />}
           {section === 'users' && <InternalUsersSection showToast={showToast} />}
           {section === 'partners' && <PartnersSection showToast={showToast} />}
+          {section === 'arnRequests' && <ArnRequestsSection showToast={showToast} />}
           {section === 'clients' && <ClientsSection showToast={showToast} />}
           {section === 'platformStats' && <PlatformStatsSection showToast={showToast} />}
           {section === 'referralTree' && <ReferralTreeSection showToast={showToast} />}
@@ -687,6 +689,186 @@ function PartnerFullDetail({ partnerId }: { partnerId: number }) {
         View Only — Partners cannot have permissions edited
       </div>
     </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/*  ARN REQUESTS                                                               */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+function ArnRequestsSection({ showToast }: { showToast: (t: Toast['type'], m: string) => void }) {
+  const [requests, setRequests] = useState<ArnRequestResponse[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [actionLoading, setActionLoading] = useState<number | null>(null);
+  const [rejectModal, setRejectModal] = useState<{ userId: number; name: string } | null>(null);
+  const [rejectReason, setRejectReason] = useState('');
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const params: Record<string, string> = {};
+      if (statusFilter) params.status = statusFilter;
+      if (search) params.search = search;
+      const res = await adminUserApi.getArnRequests(params);
+      setRequests(Array.isArray(res.data) ? res.data : []);
+    } catch {
+      setError('Failed to load ARN requests');
+      setRequests([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [statusFilter, search]);
+
+  useEffect(() => { load(); }, [load]);
+
+  const handleApprove = async (userId: number) => {
+    setActionLoading(userId);
+    try {
+      await adminUserApi.approveArn(userId);
+      showToast('success', 'ARN approved successfully');
+      load();
+    } catch {
+      showToast('error', 'Failed to approve ARN');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleReject = async () => {
+    if (!rejectModal || !rejectReason.trim()) return;
+    setActionLoading(rejectModal.userId);
+    try {
+      await adminUserApi.rejectArn(rejectModal.userId, rejectReason.trim());
+      showToast('success', 'ARN rejected');
+      setRejectModal(null);
+      setRejectReason('');
+      load();
+    } catch {
+      showToast('error', 'Failed to reject ARN');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const STATUS_FILTERS = [
+    { label: 'All', value: '' },
+    { label: 'Pending', value: 'PENDING_APPROVAL' },
+    { label: 'Approved', value: 'APPROVED' },
+    { label: 'Rejected', value: 'REJECTED' },
+  ];
+
+  const statusBadge = (status: string) => {
+    const map: Record<string, { bg: string; color: string; label: string }> = {
+      PENDING_APPROVAL: { bg: '#FEF3C7', color: '#92400E', label: 'Pending' },
+      APPROVED: { bg: '#D1FAE5', color: '#065F46', label: 'Approved' },
+      REJECTED: { bg: '#FEE2E2', color: '#991B1B', label: 'Rejected' },
+    };
+    const s = map[status] || { bg: '#F3F4F6', color: '#6B7280', label: status };
+    return <span style={{ padding: '3px 10px', borderRadius: 999, fontSize: 12, fontWeight: 600, background: s.bg, color: s.color }}>{s.label}</span>;
+  };
+
+  return (
+    <>
+      <div className="ap-section-header">
+        <h2>ARN Requests</h2>
+      </div>
+
+      <div style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
+        <div className="ap-filter-group">
+          {STATUS_FILTERS.map(f => (
+            <button key={f.value} type="button"
+              className={`ap-filter-btn ${statusFilter === f.value ? 'active' : ''}`}
+              onClick={() => setStatusFilter(f.value)}>{f.label}</button>
+          ))}
+        </div>
+        <input type="text" className="ap-search" placeholder="Search by name or ARN..."
+          value={search} onChange={e => setSearch(e.target.value)} style={{ marginLeft: 'auto', maxWidth: 260 }} />
+      </div>
+
+      {error && <div className="ap-error">{error}</div>}
+
+      <div className="ap-table-wrap">
+        <table className="ap-table">
+          <thead>
+            <tr>
+              <th>Partner Name</th>
+              <th>Type</th>
+              <th>ARN Number</th>
+              <th>PAN</th>
+              <th>EUIN</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr><td colSpan={7}><div className="ap-loading"><div className="ap-spinner" /></div></td></tr>
+            ) : requests.length ? (
+              requests.map(r => (
+                <tr key={r.userId}>
+                  <td>{r.partnerType === 'NON_INDIVIDUAL_PARTNER' ? (r.firmName || r.fullName || '-') : (r.fullName || '-')}</td>
+                  <td>{ROLE_LABELS[r.partnerType] || r.partnerType}</td>
+                  <td>{r.arn || '-'}</td>
+                  <td>{r.pan || '-'}</td>
+                  <td>{r.euin || '-'}</td>
+                  <td>
+                    {statusBadge(r.arnStatus)}
+                    {r.arnStatus === 'REJECTED' && r.rejectionReason && (
+                      <div style={{ fontSize: 11, color: '#991B1B', marginTop: 4 }} title={r.rejectionReason}>
+                        Reason: {r.rejectionReason.length > 30 ? r.rejectionReason.slice(0, 30) + '...' : r.rejectionReason}
+                      </div>
+                    )}
+                  </td>
+                  <td>
+                    <div className="ap-actions">
+                      {r.arnStatus === 'PENDING_APPROVAL' && (
+                        <>
+                          <button type="button" className="ap-btn ap-btn-primary" onClick={() => handleApprove(r.userId)}
+                            disabled={actionLoading === r.userId} style={{ fontSize: 12, padding: '5px 10px' }}>Approve</button>
+                          <button type="button" className="ap-btn ap-btn-danger" onClick={() => setRejectModal({ userId: r.userId, name: r.fullName || r.firmName || 'Partner' })}
+                            disabled={actionLoading === r.userId} style={{ fontSize: 12, padding: '5px 10px' }}>Reject</button>
+                        </>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr><td colSpan={7}><div className="ap-empty">No ARN requests found</div></td></tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Reject Modal */}
+      {rejectModal && (
+        <div className="ap-modal-backdrop">
+          <div className="ap-modal" role="dialog" aria-modal="true" style={{ maxWidth: 480 }}>
+            <div className="ap-modal-header">
+              <h2>Reject ARN</h2>
+              <button type="button" className="ap-btn ap-btn-ghost" onClick={() => { setRejectModal(null); setRejectReason(''); }}><X size={16} /></button>
+            </div>
+            <div className="ap-modal-body">
+              <p style={{ marginBottom: 16, fontSize: 14 }}>Reject ARN for <strong>{rejectModal.name}</strong>?</p>
+              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Rejection Reason *</label>
+              <textarea value={rejectReason} onChange={e => setRejectReason(e.target.value)}
+                placeholder="Enter reason for rejection..." rows={3}
+                style={{ width: '100%', padding: '10px 12px', borderRadius: 8, border: '1px solid #D1D5DB', fontSize: 14, resize: 'vertical' }} />
+            </div>
+            <div className="ap-modal-footer">
+              <button type="button" className="ap-btn ap-btn-secondary" onClick={() => { setRejectModal(null); setRejectReason(''); }}>Cancel</button>
+              <button type="button" className="ap-btn ap-btn-danger" onClick={handleReject}
+                disabled={!rejectReason.trim() || actionLoading === rejectModal.userId}>
+                {actionLoading === rejectModal.userId ? 'Rejecting...' : 'Confirm Reject'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
