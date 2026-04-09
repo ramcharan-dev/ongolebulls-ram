@@ -1,6 +1,7 @@
 package dev.ongolebulls.service.partner;
 
 import dev.ongolebulls.dto.partner.*;
+import dev.ongolebulls.dto.admin.ArnRequestResponse;
 import dev.ongolebulls.model.*;
 import dev.ongolebulls.repository.SipPlanRepo;
 import dev.ongolebulls.repository.TrackerHoldingRepository;
@@ -8,17 +9,18 @@ import dev.ongolebulls.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * PartnerService — handles partner profile, dashboard stats, SIPs, and tracker.
+ * Client, Transaction, and Revenue logic are delegated to their own services.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -27,9 +29,12 @@ public class PartnerService {
     private final UserRepository userRepository;
     private final SipPlanRepo sipPlanRepo;
     private final TrackerHoldingRepository trackerHoldingRepository;
-    private final PasswordEncoder passwordEncoder;
+    // Domain services for aggregation in stats
+    private final ClientService clientService;
+    private final TransactionService transactionService;
+    private final RevenueService revenueService;
 
-    // ── Helper ───────────────────────────────────────────────────────────────
+    // ── Auth helper ─────────────────────────────────────────────────────────
 
     public User getCurrentPartner(Authentication auth) {
         String email = auth.getName();
@@ -37,7 +42,7 @@ public class PartnerService {
                 .orElseThrow(() -> new RuntimeException("Partner not found"));
     }
 
-    // ── 1. Profile ───────────────────────────────────────────────────────────
+    // ── Profile ─────────────────────────────────────────────────────────────
 
     public PartnerProfileResponse getProfile(User partner) {
         return PartnerProfileResponse.builder()
@@ -54,6 +59,8 @@ public class PartnerService {
                 .partnerBankAccount(partner.getPartnerBankAccount())
                 .partnerIfsc(partner.getPartnerIfsc())
                 .partnerBankName(partner.getPartnerBankName())
+                .arnStatus(partner.getArnStatus() != null ? partner.getArnStatus().name() : "NOT_SUBMITTED")
+                .rejectionReason(partner.getRejectionReason())
                 .isActivated(partner.isActivated())
                 .termsAccepted(Boolean.TRUE.equals(partner.getTermsAccepted()))
                 .declarationAccepted(Boolean.TRUE.equals(partner.getDeclarationAccepted()))
@@ -65,16 +72,15 @@ public class PartnerService {
                 .build();
     }
 
-    // ── 2. Stats ─────────────────────────────────────────────────────────────
+    // ── Dashboard Stats (aggregates from domain services) ───────────────────
 
     public PartnerStatsResponse getStats(Long partnerId) {
-        long totalClients = userRepository.countByAssignedPartnerId(partnerId);
-        long activeInvestors = userRepository.countByAssignedPartnerIdAndLifecycleStage(
-                partnerId, LifecycleStage.ACTIVE_INVESTOR);
-        long pendingKyc = userRepository.countByAssignedPartnerIdAndLifecycleStageIn(
-                partnerId, List.of(LifecycleStage.KYC_STARTED, LifecycleStage.KYC_COMPLETED));
+        long totalClients = clientService.countByPartner(partnerId);
+        long activeInvestors = clientService.countByPartnerAndStage(partnerId, LifecycleStage.ACTIVE_INVESTOR);
+        long pendingKyc = clientService.countByPartnerAndStages(partnerId,
+                List.of(LifecycleStage.KYC_STARTED, LifecycleStage.KYC_COMPLETED));
 
-        // Count active SIPs across all clients
+        // SIPs — still in PartnerService since SipPlan is partner-domain
         long monthlySips = 0;
         List<User> clients = userRepository.findByAssignedPartnerIdOrderByCreatedAtDesc(partnerId);
         for (User client : clients) {
@@ -85,98 +91,154 @@ public class PartnerService {
             }
         }
 
+        // Lifecycle distribution — delegate to client counts
+        Map<String, Long> lifecycleDistribution = new LinkedHashMap<>();
+        for (LifecycleStage stage : LifecycleStage.values()) {
+            lifecycleDistribution.put(stage.name(),
+                    clientService.countByPartnerAndStage(partnerId, stage));
+        }
+
+        // Delegate to domain services
+        long totalTransactions = transactionService.countByPartner(partnerId);
+        BigDecimal totalTxnAmount = transactionService.sumActiveAmount(partnerId);
+        BigDecimal totalRevenue = revenueService.getTotalRevenue(partnerId);
+
         return PartnerStatsResponse.builder()
                 .totalClients(totalClients)
                 .activeInvestors(activeInvestors)
                 .pendingKyc(pendingKyc)
                 .monthlySips(monthlySips)
+                .totalTransactions(totalTransactions)
+                .totalTransactionAmount(totalTxnAmount)
+                .totalRevenue(totalRevenue)
+                .lifecycleDistribution(lifecycleDistribution)
                 .build();
     }
 
-    // ── 3. Clients list ──────────────────────────────────────────────────────
+    // ── Profile updates ─────────────────────────────────────────────────────
 
-    public List<ClientSummaryResponse> getClients(Long partnerId, String stage, String search) {
-        List<User> users;
-
-        if (search != null && !search.isEmpty()) {
-            users = userRepository.searchClientsByPartner(partnerId, search);
-        } else {
-            users = userRepository.findByAssignedPartnerIdOrderByCreatedAtDesc(partnerId);
+    public PartnerProfileResponse updateProfile(User partner, Map<String, String> updates) {
+        if (updates.containsKey("fullName")) partner.setFullName(updates.get("fullName"));
+        if (updates.containsKey("mobileNumber")) partner.setMobileNumber(updates.get("mobileNumber"));
+        if (updates.containsKey("pan")) {
+            String pan = updates.get("pan");
+            if (pan != null && !pan.matches("^[A-Z]{5}[0-9]{4}[A-Z]{1}$")) {
+                throw new RuntimeException("Invalid PAN format. Expected: ABCDE1234F");
+            }
+            partner.setPan(pan);
         }
-
-        if (stage != null && !stage.isEmpty()) {
-            users = users.stream()
-                    .filter(u -> u.getLifecycleStage() != null && u.getLifecycleStage().name().equals(stage))
-                    .collect(Collectors.toList());
-        }
-
-        return users.stream().map(this::toClientSummary).collect(Collectors.toList());
+        if (updates.containsKey("arn")) partner.setArn(updates.get("arn"));
+        if (updates.containsKey("euin")) partner.setEuin(updates.get("euin"));
+        userRepository.save(partner);
+        log.info("Partner {} updated profile", partner.getId());
+        return getProfile(partner);
     }
 
-    // ── 4. Add client ────────────────────────────────────────────────────────
+    public PartnerProfileResponse updateBankDetails(User partner, String bankAccount, String ifsc, String bankName) {
+        if (bankAccount == null || bankAccount.isBlank()) throw new RuntimeException("Bank account number is required");
+        if (ifsc == null || ifsc.isBlank()) throw new RuntimeException("IFSC code is required");
+        if (bankName == null || bankName.isBlank()) throw new RuntimeException("Bank name is required");
+        if (!ifsc.matches("^[A-Z]{4}0[A-Z0-9]{6}$")) throw new RuntimeException("Invalid IFSC format. Expected: ABCD0123456");
+        partner.setPartnerBankAccount(bankAccount);
+        partner.setPartnerIfsc(ifsc);
+        partner.setPartnerBankName(bankName);
+        userRepository.save(partner);
+        log.info("Partner {} updated bank details", partner.getId());
+        return getProfile(partner);
+    }
 
-    public ClientSummaryResponse addClient(User partner, AddClientRequest req) {
-        if (!partner.isActivated()) {
-            throw new RuntimeException("Account not activated. Cannot add clients until your account is activated.");
-        }
-        if (req.getFullName() == null || req.getFullName().isBlank()) {
-            throw new RuntimeException("Full name is required");
-        }
-        if (req.getEmail() == null || req.getEmail().isBlank()) {
-            throw new RuntimeException("Email is required");
-        }
-        if (req.getMobile() == null || req.getMobile().isBlank()) {
-            throw new RuntimeException("Mobile number is required");
-        }
-        if (!req.getMobile().matches("^[0-9]{10}$")) {
-            throw new RuntimeException("Mobile number must be exactly 10 digits");
-        }
-        if (userRepository.findByEmail(req.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already registered");
-        }
+    public PartnerProfileResponse acceptAgreement(User partner) {
+        partner.setTermsAccepted(true);
+        partner.setDeclarationAccepted(true);
+        userRepository.save(partner);
+        log.info("Partner {} accepted agreement", partner.getId());
+        return getProfile(partner);
+    }
 
-        User client = User.builder()
-                .fullName(req.getFullName())
-                .email(req.getEmail())
-                .mobileNumber(req.getMobile())
-                .role(Role.USER)
-                .assignedPartnerId(partner.getId())
-                .lifecycleStage(LifecycleStage.LEAD_CREATED)
-                .isActivated(false)
-                .enabled(true)
-                .termsAccepted(false)
-                .declarationAccepted(false)
+    public PartnerProfileResponse submitArn(User partner, ArnSubmitRequest request) {
+        partner.setArn(request.getArnNumber());
+        partner.setPan(request.getPan());
+        if (request.getEuin() != null && !request.getEuin().isBlank()) {
+            partner.setEuin(request.getEuin());
+        }
+        partner.setArnStatus(ArnStatus.PENDING_APPROVAL);
+        partner.setRejectionReason(null);
+        userRepository.save(partner);
+        log.info("Partner {} submitted ARN for approval", partner.getId());
+        return getProfile(partner);
+    }
+
+    public List<ArnRequestResponse> getArnRequests(String status, String search) {
+        List<Role> partnerRoles = List.of(Role.INDIVIDUAL_PARTNER, Role.NON_INDIVIDUAL_PARTNER);
+        List<User> partners = userRepository.findByRoleIn(partnerRoles);
+
+        return partners.stream()
+                .filter(p -> p.getArnStatus() != null && p.getArnStatus() != ArnStatus.NOT_SUBMITTED)
+                .filter(p -> {
+                    if (status == null || status.isBlank()) return true;
+                    return status.equalsIgnoreCase(p.getArnStatus().name());
+                })
+                .filter(p -> {
+                    if (search == null || search.isBlank()) return true;
+                    String q = search.toLowerCase();
+                    String name = p.getFullName() != null ? p.getFullName().toLowerCase() : "";
+                    String firmName = p.getFirmName() != null ? p.getFirmName().toLowerCase() : "";
+                    String arn = p.getArn() != null ? p.getArn().toLowerCase() : "";
+                    return name.contains(q) || firmName.contains(q) || arn.contains(q);
+                })
+                .map(this::toArnRequestResponse)
+                .toList();
+    }
+
+    private ArnRequestResponse toArnRequestResponse(User u) {
+        return ArnRequestResponse.builder()
+                .userId(u.getId())
+                .fullName(u.getFullName())
+                .firmName(u.getFirmName())
+                .email(u.getEmail())
+                .partnerType(u.getRole().name())
+                .arn(u.getArn())
+                .pan(u.getPan())
+                .euin(u.getEuin())
+                .arnStatus(u.getArnStatus() != null ? u.getArnStatus().name() : "NOT_SUBMITTED")
+                .rejectionReason(u.getRejectionReason())
+                .createdAt(u.getCreatedAt())
                 .build();
-
-        userRepository.save(client);
-        log.info("Partner {} added client {} ({})", partner.getId(), client.getFullName(), client.getEmail());
-
-        return toClientSummary(client);
     }
 
-    // ── 5. Update client lifecycle ───────────────────────────────────────────
-
-    public ClientSummaryResponse updateClientLifecycle(User partner, Long clientId, String stage) {
-        User client = userRepository.findById(clientId)
-                .orElseThrow(() -> new RuntimeException("Client not found"));
-
-        if (!partner.getId().equals(client.getAssignedPartnerId())) {
-            throw new RuntimeException("Client not assigned to this partner");
+    public ArnRequestResponse approveArn(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Partner not found"));
+        List<Role> partnerRoles = List.of(Role.INDIVIDUAL_PARTNER, Role.NON_INDIVIDUAL_PARTNER);
+        if (!partnerRoles.contains(user.getRole())) {
+            throw new RuntimeException("User is not a partner");
         }
-
-        LifecycleStage newStage = LifecycleStage.valueOf(stage);
-        client.setLifecycleStage(newStage);
-        userRepository.save(client);
-        log.info("Partner {} updated client {} lifecycle to {}", partner.getId(), clientId, stage);
-
-        return toClientSummary(client);
+        user.setArnStatus(ArnStatus.APPROVED);
+        user.setActivated(true);
+        user.setRejectionReason(null);
+        userRepository.save(user);
+        log.info("Partner {} ARN approved", userId);
+        return toArnRequestResponse(user);
     }
 
-    // ── 6. SIPs ──────────────────────────────────────────────────────────────
+    public ArnRequestResponse rejectArn(Long userId, String reason) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Partner not found"));
+        List<Role> partnerRoles = List.of(Role.INDIVIDUAL_PARTNER, Role.NON_INDIVIDUAL_PARTNER);
+        if (!partnerRoles.contains(user.getRole())) {
+            throw new RuntimeException("User is not a partner");
+        }
+        user.setArnStatus(ArnStatus.REJECTED);
+        user.setRejectionReason(reason);
+        userRepository.save(user);
+        log.info("Partner {} ARN rejected: {}", userId, reason);
+        return toArnRequestResponse(user);
+    }
+
+    // ── SIPs (partner-domain — tied to InvestorAccount) ─────────────────────
 
     public List<SipSummaryResponse> getSips(Long partnerId, String statusFilter) {
         List<User> clients = userRepository.findByAssignedPartnerIdOrderByCreatedAtDesc(partnerId);
-
         return clients.stream()
                 .filter(client -> client.getInvestorAccount() != null)
                 .flatMap(client -> {
@@ -197,89 +259,43 @@ public class PartnerService {
                 .collect(Collectors.toList());
     }
 
-    // ── 7. CAS file upload ───────────────────────────────────────────────────
+    // ── Tracker (partner-domain — CAS holdings) ─────────────────────────────
 
     public Map<String, Object> uploadCasFile(User partner, MultipartFile file) {
         partner.setLastCasUpload(LocalDateTime.now());
         userRepository.save(partner);
         log.info("Partner {} uploaded CAS file: {}", partner.getId(), file.getOriginalFilename());
-
-        return Map.of(
-                "message", "File uploaded successfully. Holdings will be processed shortly.",
-                "uploadDate", partner.getLastCasUpload()
-        );
+        return Map.of("message", "File uploaded successfully. Holdings will be processed shortly.",
+                "uploadDate", partner.getLastCasUpload());
     }
-
-    // ── 8. Add holdings ──────────────────────────────────────────────────────
 
     public TrackerSummaryResponse addHoldings(Long partnerId, List<TrackerHoldingRequest> requests) {
         for (TrackerHoldingRequest req : requests) {
             TrackerHolding holding = TrackerHolding.builder()
-                    .partnerId(partnerId)
-                    .clientName(req.getClientName())
-                    .clientId(req.getClientId())
-                    .amcName(req.getAmcName())
-                    .fundName(req.getFundName())
-                    .folioNumber(req.getFolioNumber())
-                    .units(req.getUnits())
-                    .nav(req.getNav())
-                    .currentValue(req.getCurrentValue())
-                    .uploadDate(LocalDateTime.now())
-                    .build();
+                    .partnerId(partnerId).clientName(req.getClientName()).clientId(req.getClientId())
+                    .amcName(req.getAmcName()).fundName(req.getFundName()).folioNumber(req.getFolioNumber())
+                    .units(req.getUnits()).nav(req.getNav()).currentValue(req.getCurrentValue())
+                    .uploadDate(LocalDateTime.now()).build();
             trackerHoldingRepository.save(holding);
         }
         log.info("Partner {} added {} holdings", partnerId, requests.size());
-
         return getHoldings(partnerId);
     }
 
-    // ── 9. Get holdings ──────────────────────────────────────────────────────
-
     public TrackerSummaryResponse getHoldings(Long partnerId) {
-        List<TrackerHolding> holdings = trackerHoldingRepository
-                .findByPartnerIdOrderByUploadDateDescAmcName(partnerId);
-
+        List<TrackerHolding> holdings = trackerHoldingRepository.findByPartnerIdOrderByUploadDateDescAmcName(partnerId);
         List<TrackerHoldingResponse> responses = holdings.stream()
                 .map(h -> TrackerHoldingResponse.builder()
-                        .id(h.getId())
-                        .clientName(h.getClientName())
-                        .clientId(h.getClientId())
-                        .amcName(h.getAmcName())
-                        .fundName(h.getFundName())
-                        .folioNumber(h.getFolioNumber())
-                        .units(h.getUnits())
-                        .nav(h.getNav())
-                        .currentValue(h.getCurrentValue())
-                        .uploadDate(h.getUploadDate())
-                        .build())
+                        .id(h.getId()).clientName(h.getClientName()).clientId(h.getClientId())
+                        .amcName(h.getAmcName()).fundName(h.getFundName()).folioNumber(h.getFolioNumber())
+                        .units(h.getUnits()).nav(h.getNav()).currentValue(h.getCurrentValue())
+                        .uploadDate(h.getUploadDate()).build())
                 .toList();
-
-        BigDecimal totalValue = holdings.stream()
-                .map(TrackerHolding::getCurrentValue)
-                .filter(Objects::nonNull)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        long folioCount = holdings.stream()
-                .map(TrackerHolding::getFolioNumber)
-                .filter(Objects::nonNull)
-                .distinct()
-                .count();
-
-        long amcCount = holdings.stream()
-                .map(TrackerHolding::getAmcName)
-                .filter(Objects::nonNull)
-                .distinct()
-                .count();
-
-        return TrackerSummaryResponse.builder()
-                .holdings(responses)
-                .totalValue(totalValue)
-                .folioCount(folioCount)
-                .amcCount(amcCount)
-                .build();
+        BigDecimal totalValue = holdings.stream().map(TrackerHolding::getCurrentValue).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
+        long folioCount = holdings.stream().map(TrackerHolding::getFolioNumber).filter(Objects::nonNull).distinct().count();
+        long amcCount = holdings.stream().map(TrackerHolding::getAmcName).filter(Objects::nonNull).distinct().count();
+        return TrackerSummaryResponse.builder().holdings(responses).totalValue(totalValue).folioCount(folioCount).amcCount(amcCount).build();
     }
-
-    // ── 10. COB opportunities ────────────────────────────────────────────────
 
     public List<CobOpportunityResponse> getCobOpportunities(Long partnerId) {
         List<Object[]> rows = trackerHoldingRepository.findCobOpportunities(partnerId);
@@ -287,101 +303,8 @@ public class PartnerService {
                 .map(row -> CobOpportunityResponse.builder()
                         .clientName((String) row[0])
                         .amcCount(((Number) row[1]).longValue())
-                        .totalValue(row[2] instanceof BigDecimal
-                                ? (BigDecimal) row[2]
-                                : new BigDecimal(row[2].toString()))
+                        .totalValue(row[2] instanceof BigDecimal ? (BigDecimal) row[2] : new BigDecimal(row[2].toString()))
                         .build())
                 .toList();
-    }
-
-    // ── 11. Update profile ───────────────────────────────────────────────────
-
-    public PartnerProfileResponse updateProfile(User partner, Map<String, String> updates) {
-        if (updates.containsKey("fullName")) {
-            partner.setFullName(updates.get("fullName"));
-        }
-        if (updates.containsKey("mobileNumber")) {
-            partner.setMobileNumber(updates.get("mobileNumber"));
-        }
-        if (updates.containsKey("pan")) {
-            String pan = updates.get("pan");
-            if (pan != null && !pan.matches("^[A-Z]{5}[0-9]{4}[A-Z]{1}$")) {
-                throw new RuntimeException("Invalid PAN format. Expected: ABCDE1234F");
-            }
-            partner.setPan(pan);
-        }
-        if (updates.containsKey("arn")) {
-            partner.setArn(updates.get("arn"));
-        }
-        if (updates.containsKey("euin")) {
-            partner.setEuin(updates.get("euin"));
-        }
-
-        userRepository.save(partner);
-        log.info("Partner {} updated profile", partner.getId());
-
-        return getProfile(partner);
-    }
-
-    // ── 12. Update bank details ──────────────────────────────────────────────
-
-    public PartnerProfileResponse updateBankDetails(User partner, String bankAccount, String ifsc, String bankName) {
-        if (bankAccount == null || bankAccount.isBlank()) {
-            throw new RuntimeException("Bank account number is required");
-        }
-        if (ifsc == null || ifsc.isBlank()) {
-            throw new RuntimeException("IFSC code is required");
-        }
-        if (bankName == null || bankName.isBlank()) {
-            throw new RuntimeException("Bank name is required");
-        }
-        if (!ifsc.matches("^[A-Z]{4}0[A-Z0-9]{6}$")) {
-            throw new RuntimeException("Invalid IFSC format. Expected: ABCD0123456");
-        }
-
-        partner.setPartnerBankAccount(bankAccount);
-        partner.setPartnerIfsc(ifsc);
-        partner.setPartnerBankName(bankName);
-        userRepository.save(partner);
-        log.info("Partner {} updated bank details", partner.getId());
-
-        return getProfile(partner);
-    }
-
-    // ── 13. Accept agreement ─────────────────────────────────────────────────
-
-    public PartnerProfileResponse acceptAgreement(User partner) {
-        partner.setTermsAccepted(true);
-        partner.setDeclarationAccepted(true);
-        userRepository.save(partner);
-        log.info("Partner {} accepted agreement", partner.getId());
-
-        return getProfile(partner);
-    }
-
-    // ── Private helpers ──────────────────────────────────────────────────────
-
-    private ClientSummaryResponse toClientSummary(User user) {
-        String kycStatus;
-        if (user.getKycDetails() != null && user.getKycDetails().isVerified()) {
-            kycStatus = "VERIFIED";
-        } else if (user.getKycDetails() != null) {
-            kycStatus = "SUBMITTED";
-        } else {
-            kycStatus = "NOT_STARTED";
-        }
-
-        return ClientSummaryResponse.builder()
-                .id(user.getId())
-                .fullName(user.getFullName())
-                .email(user.getEmail())
-                .mobileNumber(user.getMobileNumber())
-                .lifecycleStage(user.getLifecycleStage() != null
-                        ? user.getLifecycleStage().name()
-                        : "LEAD_CREATED")
-                .kycStatus(kycStatus)
-                .createdAt(user.getCreatedAt())
-                .lastActivityDate(user.getCreatedAt())
-                .build();
     }
 }
