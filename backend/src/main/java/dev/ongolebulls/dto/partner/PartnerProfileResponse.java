@@ -25,6 +25,8 @@ public class PartnerProfileResponse {
     private String partnerBankAccount;
     private String partnerIfsc;
     private String partnerBankName;
+    private String arnStatus;
+    private String rejectionReason;
     private boolean isActivated;
     private boolean termsAccepted;
     private boolean declarationAccepted;
