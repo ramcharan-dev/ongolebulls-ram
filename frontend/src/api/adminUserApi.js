@@ -16,6 +16,11 @@ export const adminUserApi = {
   activatePartner: (id) => api.patch(`/api/admin/partners/${id}/activate`),
   deactivatePartner: (id) => api.patch(`/api/admin/partners/${id}/deactivate`),
 
+  // ARN Requests
+  getArnRequests: (params) => api.get('/api/admin/partners/arn-requests', { params }),
+  approveArn: (userId) => api.patch(`/api/admin/partners/arn-requests/${userId}/approve`),
+  rejectArn: (userId, reason) => api.patch(`/api/admin/partners/arn-requests/${userId}/reject`, { reason }),
+
   // Clients
   getClients: (params) => api.get('/api/admin/clients', { params }),
 

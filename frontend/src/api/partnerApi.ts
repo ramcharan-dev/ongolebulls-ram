@@ -15,6 +15,10 @@ export const partnerApi = {
 
   acceptAgreement: () => api.patch('/api/partner/agreement'),
 
+  // ARN Onboarding
+  submitArn: (data: { arnNumber: string; pan: string; euin?: string }) =>
+    api.post('/api/partner/arn-submit', data),
+
   // Stats
   getStats: () => api.get('/api/partner/stats'),
 
@@ -55,6 +59,15 @@ export const partnerApi = {
   getHoldings: () => api.get('/api/partner/tracker/holdings'),
 
   getCobOpportunities: () => api.get('/api/partner/tracker/cob-opportunities'),
+
+  // Transactions
+  getTransactions: (params?: { type?: string; status?: string }) =>
+    api.get('/api/partner/transactions', { params }),
+  createTransaction: (data: { clientId?: number; type: string; schemeName?: string; amount: number; notes?: string }) =>
+    api.post('/api/partner/transactions', data),
+
+  // Revenue
+  getRevenue: () => api.get('/api/partner/revenue'),
 
   // Referrals
   getReferrals: () => api.get('/api/partner/referrals'),

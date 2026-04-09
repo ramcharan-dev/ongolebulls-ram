@@ -111,6 +111,8 @@ export interface PartnerProfile {
   partnerBankAccount: string | null;
   partnerIfsc: string | null;
   partnerBankName: string | null;
+  arnStatus: 'NOT_SUBMITTED' | 'PENDING_APPROVAL' | 'APPROVED' | 'REJECTED';
+  rejectionReason: string | null;
   isActivated: boolean;
   termsAccepted: boolean;
   declarationAccepted: boolean;
@@ -126,6 +128,29 @@ export interface PartnerStats {
   activeInvestors: number;
   pendingKyc: number;
   monthlySips: number;
+  totalTransactions: number;
+  totalTransactionAmount: number;
+  totalRevenue: number;
+  lifecycleDistribution: Record<string, number>;
+}
+
+export interface PartnerTransaction {
+  id: number;
+  clientId: number | null;
+  clientName: string | null;
+  type: string;
+  schemeName: string | null;
+  amount: number;
+  status: string;
+  notes: string | null;
+  createdAt: string;
+}
+
+export interface PartnerRevenue {
+  totalRevenue: number;
+  releasedRevenue: number;
+  pendingRevenue: number;
+  monthlyBreakdown: { period: string; gross: number; net: number; status: string }[];
 }
 
 export type LifecycleStage =
@@ -551,6 +576,20 @@ export interface PartnerDetail {
   totalClients: number;
   clientsByLifecycle: Record<string, number>;
   referralCount: number;
+}
+
+export interface ArnRequestResponse {
+  userId: number;
+  fullName: string;
+  firmName: string | null;
+  email: string;
+  partnerType: string;
+  arn: string;
+  pan: string;
+  euin: string | null;
+  arnStatus: string;
+  rejectionReason: string | null;
+  createdAt: string;
 }
 
 // ── Permission Types ────────────────────────────────────────────────────────
