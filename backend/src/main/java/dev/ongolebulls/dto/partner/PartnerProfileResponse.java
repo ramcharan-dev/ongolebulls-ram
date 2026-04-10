@@ -36,4 +36,11 @@ public class PartnerProfileResponse {
     private boolean hasArn;
     private boolean hasBankDetails;
     private boolean hasAgreement;
+    // Partner location + RM mapping (read-only to the partner)
+    private String state;
+    private String district;
+    private String city;
+    private Long assignedRmId;
+    private String assignedRmName;
+    private String assignedRmEmail;
 }

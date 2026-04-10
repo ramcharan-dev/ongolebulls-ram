@@ -26,4 +26,11 @@ public class PartnerSummaryResponse {
     private String partnerBankName;
     private boolean isActivated;
     private Instant createdAt;
+
+    // Location-based RM mapping
+    private String state;
+    private String district;
+    private String city;
+    private Long assignedRmId;
+    private String assignedRmName;
 }

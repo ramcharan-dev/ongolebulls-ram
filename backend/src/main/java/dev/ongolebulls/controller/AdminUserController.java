@@ -5,6 +5,7 @@ import dev.ongolebulls.dto.UserSummaryResponse;
 import dev.ongolebulls.model.Role;
 import dev.ongolebulls.model.User;
 import dev.ongolebulls.repository.UserRepository;
+import dev.ongolebulls.service.LocationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ public class AdminUserController {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final LocationService locationService;
 
     private static final Set<Role> EXCLUDED_ROLES = Set.of(
             Role.USER, Role.INDIVIDUAL_PARTNER, Role.NON_INDIVIDUAL_PARTNER
@@ -63,6 +65,26 @@ public class AdminUserController {
             return ResponseEntity.badRequest().body(Map.of("error", "Password must be at least 8 characters"));
         }
 
+        // RM-specific validation: location is required and must exist in the master.
+        boolean isRm = "RELATIONSHIP_MANAGER".equals(req.getRole());
+        if (isRm) {
+            if (req.getAssignedState() == null || req.getAssignedState().isBlank()) {
+                return ResponseEntity.badRequest().body(
+                        Map.of("error", "assignedState is required for Relationship Manager"));
+            }
+            if (!locationService.isValidState(req.getAssignedState())) {
+                return ResponseEntity.badRequest().body(
+                        Map.of("error", "Invalid assignedState: " + req.getAssignedState()));
+            }
+            // assignedDistrict is optional — blank means state-level RM.
+            if (req.getAssignedDistrict() != null && !req.getAssignedDistrict().isBlank()
+                    && !locationService.isValidStateAndDistrict(req.getAssignedState(), req.getAssignedDistrict())) {
+                return ResponseEntity.badRequest().body(
+                        Map.of("error", "District '" + req.getAssignedDistrict() +
+                                "' does not belong to state '" + req.getAssignedState() + "'"));
+            }
+        }
+
         // Check duplicate email
         if (userRepository.findByEmail(req.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Email already registered"));
@@ -71,7 +93,7 @@ public class AdminUserController {
         try {
             Role role = Role.valueOf(req.getRole());
 
-            User user = User.builder()
+            User.UserBuilder builder = User.builder()
                     .fullName(req.getName())
                     .email(req.getEmail())
                     .mobileNumber("0000000000") // placeholder for internal users
@@ -80,12 +102,19 @@ public class AdminUserController {
                     .isActivated(true)
                     .enabled(true)
                     .termsAccepted(true)
-                    .declarationAccepted(true)
-                    .build();
+                    .declarationAccepted(true);
 
-            User saved = userRepository.save(user);
+            if (isRm) {
+                builder.assignedState(req.getAssignedState().trim());
+                if (req.getAssignedDistrict() != null && !req.getAssignedDistrict().isBlank()) {
+                    builder.assignedDistrict(req.getAssignedDistrict().trim());
+                }
+            }
 
-            log.info("Internal user created: email={}, role={}", req.getEmail(), role);
+            User saved = userRepository.save(builder.build());
+
+            log.info("Internal user created: email={}, role={}, assignedState={}, assignedDistrict={}",
+                    req.getEmail(), role, saved.getAssignedState(), saved.getAssignedDistrict());
 
             return ResponseEntity.ok(Map.of(
                     "message", "User created successfully",
@@ -105,14 +134,7 @@ public class AdminUserController {
         List<User> users = userRepository.findByRoleNotIn(EXCLUDED_ROLES);
 
         List<UserSummaryResponse> response = users.stream()
-                .map(u -> UserSummaryResponse.builder()
-                        .id(u.getId())
-                        .name(u.getFullName())
-                        .email(u.getEmail())
-                        .role(u.getRole().name())
-                        .isActivated(u.isActivated())
-                        .createdAt(u.getCreatedAt())
-                        .build())
+                .map(this::toSummary)
                 .toList();
 
         return ResponseEntity.ok(response);
@@ -127,17 +149,8 @@ public class AdminUserController {
                 .map(user -> {
                     user.setActivated(!user.isActivated());
                     User saved = userRepository.save(user);
-
                     log.info("User {} activation toggled to {}", id, saved.isActivated());
-
-                    return ResponseEntity.ok(UserSummaryResponse.builder()
-                            .id(saved.getId())
-                            .name(saved.getFullName())
-                            .email(saved.getEmail())
-                            .role(saved.getRole().name())
-                            .isActivated(saved.isActivated())
-                            .createdAt(saved.getCreatedAt())
-                            .build());
+                    return ResponseEntity.ok(toSummary(saved));
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -160,5 +173,56 @@ public class AdminUserController {
                     return ResponseEntity.ok(Map.of("message", "Password reset successfully"));
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /**
+     * PATCH /api/admin/users/{id}/rm-location — Update an RM's service area.
+     * Body: { "assignedState": "...", "assignedDistrict": "..." }  (district optional)
+     */
+    @PatchMapping("/{id}/rm-location")
+    public ResponseEntity<?> updateRmLocation(@PathVariable Long id,
+                                              @RequestBody Map<String, String> body) {
+        String state = body.get("assignedState");
+        String district = body.get("assignedDistrict");
+
+        if (state == null || state.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "assignedState is required"));
+        }
+        if (!locationService.isValidState(state)) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid assignedState: " + state));
+        }
+        if (district != null && !district.isBlank()
+                && !locationService.isValidStateAndDistrict(state, district)) {
+            return ResponseEntity.badRequest().body(
+                    Map.of("error", "District '" + district + "' does not belong to state '" + state + "'"));
+        }
+
+        return userRepository.findById(id)
+                .map(user -> {
+                    if (user.getRole() != Role.RELATIONSHIP_MANAGER) {
+                        return ResponseEntity.badRequest().body(
+                                (Object) Map.of("error", "User is not a Relationship Manager"));
+                    }
+                    user.setAssignedState(state.trim());
+                    user.setAssignedDistrict(district != null && !district.isBlank() ? district.trim() : null);
+                    User saved = userRepository.save(user);
+                    log.info("RM {} location updated to state={}, district={}",
+                            id, saved.getAssignedState(), saved.getAssignedDistrict());
+                    return ResponseEntity.ok((Object) toSummary(saved));
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    private UserSummaryResponse toSummary(User u) {
+        return UserSummaryResponse.builder()
+                .id(u.getId())
+                .name(u.getFullName())
+                .email(u.getEmail())
+                .role(u.getRole().name())
+                .isActivated(u.isActivated())
+                .createdAt(u.getCreatedAt())
+                .assignedState(u.getAssignedState())
+                .assignedDistrict(u.getAssignedDistrict())
+                .build();
     }
 }

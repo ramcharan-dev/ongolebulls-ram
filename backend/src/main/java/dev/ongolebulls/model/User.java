@@ -252,7 +252,15 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(
+        name = "users",
+        indexes = {
+                @Index(name = "idx_users_assigned_location",
+                        columnList = "assigned_state, assigned_district"),
+                @Index(name = "idx_users_partner_location",
+                        columnList = "state, district")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -294,6 +302,11 @@ public class User implements UserDetails {
     private String city;
     private String state;
     private String pincode;
+
+    // Partner location — captured during partner registration and used for
+    // location-based RM auto-assignment. `city` above is reused for partners.
+    @Column(name = "district")
+    private String district;
 
     private String chequePath;
     private String kycProofPath;
@@ -384,6 +397,14 @@ public class User implements UserDetails {
 
     @Column(name = "assigned_rm_id")
     private Long assignedRmId;
+
+    // RM service area — populated only for users with RELATIONSHIP_MANAGER role.
+    // Drives location-based RM auto-assignment during partner registration.
+    @Column(name = "assigned_state")
+    private String assignedState;
+
+    @Column(name = "assigned_district")
+    private String assignedDistrict;
 
     @Column(name = "rejection_reason")
     private String rejectionReason;

@@ -15,6 +15,11 @@ export const adminUserApi = {
   getPartners: (params) => api.get('/api/admin/partners', { params }),
   activatePartner: (id) => api.patch(`/api/admin/partners/${id}/activate`),
   deactivatePartner: (id) => api.patch(`/api/admin/partners/${id}/deactivate`),
+  // Manual RM override — rmId can be null to clear the assignment
+  assignPartnerRm: (id, rmId) => api.patch(`/api/admin/partners/${id}/assign-rm`, { rmId }),
+  // RM service area update
+  updateRmLocation: (id, assignedState, assignedDistrict) =>
+    api.patch(`/api/admin/users/${id}/rm-location`, { assignedState, assignedDistrict }),
 
   // ARN Requests
   getArnRequests: (params) => api.get('/api/admin/partners/arn-requests', { params }),

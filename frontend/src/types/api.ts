@@ -37,6 +37,10 @@ export interface PartnerRegistrationRequest {
   bankAccount: string;
   ifsc: string;
   bankName: string;
+  // Partner location — required, drives RM auto-assignment
+  state: string;
+  district: string;
+  city: string;
 }
 
 export interface CreateUserRequest {
@@ -44,6 +48,9 @@ export interface CreateUserRequest {
   email: string;
   role: Exclude<Role, 'INDIVIDUAL_PARTNER' | 'NON_INDIVIDUAL_PARTNER' | 'USER'>;
   password: string;
+  // Only used when role = RELATIONSHIP_MANAGER
+  assignedState?: string;
+  assignedDistrict?: string;
 }
 
 export interface UserSummary {
@@ -54,6 +61,8 @@ export interface UserSummary {
   isActivated: boolean;
   activated?: boolean;
   createdAt: string;
+  assignedState?: string | null;
+  assignedDistrict?: string | null;
 }
 
 export interface AdminStats {
@@ -81,6 +90,11 @@ export interface PartnerSummary {
   isActivated: boolean;
   activated?: boolean;
   createdAt: string;
+  state: string | null;
+  district: string | null;
+  city: string | null;
+  assignedRmId: number | null;
+  assignedRmName: string | null;
 }
 
 export interface ClientSummary {
@@ -121,6 +135,13 @@ export interface PartnerProfile {
   hasArn: boolean;
   hasBankDetails: boolean;
   hasAgreement: boolean;
+  // Location + assigned RM (read-only to the partner)
+  state: string | null;
+  district: string | null;
+  city: string | null;
+  assignedRmId: number | null;
+  assignedRmName: string | null;
+  assignedRmEmail: string | null;
 }
 
 export interface PartnerStats {

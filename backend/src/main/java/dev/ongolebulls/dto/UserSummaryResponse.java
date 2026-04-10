@@ -18,4 +18,8 @@ public class UserSummaryResponse {
     private String role;
     private boolean isActivated;
     private Instant createdAt;
+
+    // RM service area (only populated for RELATIONSHIP_MANAGER rows).
+    private String assignedState;
+    private String assignedDistrict;
 }

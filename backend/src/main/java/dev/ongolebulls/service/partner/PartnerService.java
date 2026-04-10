@@ -45,6 +45,19 @@ public class PartnerService {
     // ── Profile ─────────────────────────────────────────────────────────────
 
     public PartnerProfileResponse getProfile(User partner) {
+        // Resolve assigned RM name/email for display on the partner dashboard.
+        String rmName = null;
+        String rmEmail = null;
+        if (partner.getAssignedRmId() != null) {
+            User rm = userRepository.findById(partner.getAssignedRmId()).orElse(null);
+            if (rm != null) {
+                rmName = rm.getFullName() != null && !rm.getFullName().isBlank()
+                        ? rm.getFullName()
+                        : rm.getEmail();
+                rmEmail = rm.getEmail();
+            }
+        }
+
         return PartnerProfileResponse.builder()
                 .id(partner.getId())
                 .fullName(partner.getFullName())
@@ -69,6 +82,12 @@ public class PartnerService {
                 .hasArn(partner.getArn() != null && !partner.getArn().isEmpty())
                 .hasBankDetails(partner.getPartnerBankAccount() != null && !partner.getPartnerBankAccount().isEmpty())
                 .hasAgreement(Boolean.TRUE.equals(partner.getTermsAccepted()) && Boolean.TRUE.equals(partner.getDeclarationAccepted()))
+                .state(partner.getState())
+                .district(partner.getDistrict())
+                .city(partner.getCity())
+                .assignedRmId(partner.getAssignedRmId())
+                .assignedRmName(rmName)
+                .assignedRmEmail(rmEmail)
                 .build();
     }
 

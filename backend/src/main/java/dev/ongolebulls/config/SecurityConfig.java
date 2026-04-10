@@ -67,6 +67,8 @@ public class SecurityConfig {
                                 "/api/admin/login",
                                 "/api/contact",
                                 "/api/subscribers/**",
+                                // Location dropdowns (called from pre-login partner registration)
+                                "/api/locations/**",
                                 // Website Controls CMS endpoints (non-JWT auth)
                                 "/api/kpi",
                                 "/api/charts/**",

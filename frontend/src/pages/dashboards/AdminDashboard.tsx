@@ -7,6 +7,7 @@ import {
   Radio, Zap, Clock, AlertTriangle, CheckCircle2, Loader2, FileCheck,
 } from 'lucide-react';
 import { adminUserApi } from '../../api/adminUserApi';
+import { locationApi } from '../../api/locationApi';
 import type { UserSummary, AdminStats, PartnerSummary, ClientSummary, PlatformStats, ReferralTreeEntry, PartnerDetail, RoleUsers, UserPermissions, PermissionRow, ArnRequestResponse } from '../../types/api';
 import { useTheme } from '../../context/ThemeContext';
 import '../../pages/admin-portal/admin-portal.css';
@@ -43,11 +44,11 @@ const PARTNER_FILTER_OPTIONS = [
 
 type Section = 'overview' | 'users' | 'partners' | 'arnRequests' | 'clients' | 'platformStats' | 'referralTree' | 'permissions' | 'bseMonitor';
 
-interface CreateForm { name: string; email: string; role: string; password: string }
+interface CreateForm { name: string; email: string; role: string; password: string; assignedState: string; assignedDistrict: string }
 interface ResetForm { userId: number; userName: string; newPassword: string }
 interface Toast { type: 'success' | 'error'; message: string }
 
-const EMPTY_FORM: CreateForm = { name: '', email: '', role: '', password: '' };
+const EMPTY_FORM: CreateForm = { name: '', email: '', role: '', password: '', assignedState: '', assignedDistrict: '' };
 
 const fmt = (d: string | null | undefined) => {
   if (!d) return '-';
@@ -282,6 +283,58 @@ function InternalUsersSection({ showToast }: { showToast: (t: Toast['type'], m: 
   const [resetLoading, setResetLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState<number | null>(null);
 
+  // Location dropdowns (RM creation only)
+  const [states, setStates] = useState<string[]>([]);
+  const [districts, setDistricts] = useState<string[]>([]);
+  const [statesLoaded, setStatesLoaded] = useState(false);
+
+  // Fetch states eagerly on section mount so dropdowns are ready the first
+  // time the Create User modal opens. Previously this was gated on modalOpen,
+  // which caused a visible 'Loading states...' flash on the first open.
+  useEffect(() => {
+    console.log('[AdminDashboard.InternalUsers] fetching states');
+    locationApi.getStates()
+      .then((res) => {
+        const data = Array.isArray(res.data) ? res.data : [];
+        console.log('[AdminDashboard.InternalUsers] states response:', data.length, 'items', data.slice(0, 3));
+        setStates(data);
+      })
+      .catch((err) => {
+        console.error('[AdminDashboard.InternalUsers] states fetch failed:', err);
+        setStates([]);
+      })
+      .finally(() => setStatesLoaded(true));
+  }, []);
+
+  // Reload districts whenever the assigned state changes.
+  useEffect(() => {
+    if (!form.assignedState) {
+      setDistricts([]);
+      return;
+    }
+    console.log('[AdminDashboard.InternalUsers] fetching districts for', form.assignedState);
+    locationApi.getDistricts(form.assignedState)
+      .then((res) => {
+        const data = Array.isArray(res.data) ? res.data : [];
+        console.log('[AdminDashboard.InternalUsers] districts response:', data.length, 'items');
+        setDistricts(data);
+      })
+      .catch((err) => {
+        console.error('[AdminDashboard.InternalUsers] districts fetch failed:', err);
+        setDistricts([]);
+      });
+  }, [form.assignedState]);
+
+  // Log role value on every change so the user can verify the condition
+  // in the modal matches. Drop this once the issue is confirmed fixed.
+  useEffect(() => {
+    if (modalOpen) {
+      console.log('[AdminDashboard.InternalUsers] form.role =', JSON.stringify(form.role),
+        '| isRm =', form.role === 'RELATIONSHIP_MANAGER',
+        '| states loaded =', states.length);
+    }
+  }, [form.role, modalOpen, states.length]);
+
   const load = useCallback(async () => {
     setLoading(true);
     setError('');
@@ -306,9 +359,24 @@ function InternalUsersSection({ showToast }: { showToast: (t: Toast['type'], m: 
     if (!form.email.trim()) { setFormError('Email is required'); return; }
     if (!form.role) { setFormError('Role is required'); return; }
     if (!form.password || form.password.length < 8) { setFormError('Password must be at least 8 characters'); return; }
+    // RM-specific: assignedState is mandatory (district optional = state-level fallback)
+    if (form.role === 'RELATIONSHIP_MANAGER' && !form.assignedState) {
+      setFormError('Assigned state is required for Relationship Manager');
+      return;
+    }
     setFormLoading(true);
     try {
-      await adminUserApi.createUser(form);
+      const payload: Record<string, string> = {
+        name: form.name,
+        email: form.email,
+        role: form.role,
+        password: form.password,
+      };
+      if (form.role === 'RELATIONSHIP_MANAGER') {
+        payload.assignedState = form.assignedState;
+        if (form.assignedDistrict) payload.assignedDistrict = form.assignedDistrict;
+      }
+      await adminUserApi.createUser(payload);
       setModalOpen(false);
       showToast('success', 'User created successfully');
       load();
@@ -379,7 +447,14 @@ function InternalUsersSection({ showToast }: { showToast: (t: Toast['type'], m: 
                     <tr key={u.id}>
                       <td>{u.name || '-'}</td>
                       <td>{u.email || '-'}</td>
-                      <td>{ROLE_LABELS[u.role] || u.role}</td>
+                      <td>
+                        {ROLE_LABELS[u.role] || u.role}
+                        {u.role === 'RELATIONSHIP_MANAGER' && u.assignedState && (
+                          <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>
+                            {u.assignedDistrict ? `${u.assignedDistrict}, ${u.assignedState}` : `${u.assignedState} (state-level)`}
+                          </div>
+                        )}
+                      </td>
                       <td><StatusBadge active={isActive(u)} /></td>
                       <td>{fmt(u.createdAt)}</td>
                       <td>
@@ -427,11 +502,35 @@ function InternalUsersSection({ showToast }: { showToast: (t: Toast['type'], m: 
               <div className="ap-field"><label className="ap-label">Name</label><input className="ap-input" value={form.name} onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))} placeholder="Full name" /></div>
               <div className="ap-field"><label className="ap-label">Email</label><input className="ap-input" type="email" value={form.email} onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))} placeholder="user@company.com" /></div>
               <div className="ap-field"><label className="ap-label">Role</label>
-                <select className="ap-select" value={form.role} onChange={(e) => setForm((p) => ({ ...p, role: e.target.value }))}>
+                <select className="ap-select" value={form.role} onChange={(e) => setForm((p) => ({ ...p, role: e.target.value, assignedState: '', assignedDistrict: '' }))}>
                   <option value="">Select a role</option>
                   {ROLE_OPTIONS.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
                 </select>
               </div>
+              {/* RM location fields — shown whenever the selected role is Relationship Manager.
+                  The comparison is case/whitespace-tolerant to survive any future value drift
+                  in ROLE_OPTIONS without hiding the fields. */}
+              {(form.role || '').trim().toUpperCase() === 'RELATIONSHIP_MANAGER' && (
+                <>
+                  <div className="ap-field">
+                    <label className="ap-label">Assigned State *</label>
+                    <select className="ap-select" value={form.assignedState}
+                      onChange={(e) => setForm((p) => ({ ...p, assignedState: e.target.value, assignedDistrict: '' }))}>
+                      <option value="">{statesLoaded ? (states.length ? 'Select state' : 'No states available — check /api/locations/states') : 'Loading states...'}</option>
+                      {states.map((st) => <option key={st} value={st}>{st}</option>)}
+                    </select>
+                  </div>
+                  <div className="ap-field">
+                    <label className="ap-label">Assigned District (optional — leave blank for state-level RM)</label>
+                    <select className="ap-select" value={form.assignedDistrict}
+                      disabled={!form.assignedState}
+                      onChange={(e) => setForm((p) => ({ ...p, assignedDistrict: e.target.value }))}>
+                      <option value="">{!form.assignedState ? 'Select state first' : 'Any district in state'}</option>
+                      {districts.map((d) => <option key={d} value={d}>{d}</option>)}
+                    </select>
+                  </div>
+                </>
+              )}
               <div className="ap-field"><label className="ap-label">Temporary Password</label><input className="ap-input" type="password" value={form.password} onChange={(e) => setForm((p) => ({ ...p, password: e.target.value }))} placeholder="Minimum 8 characters" /></div>
             </div>
             <div className="ap-modal-footer">
@@ -487,6 +586,36 @@ function PartnersSection({ showToast }: { showToast: (t: Toast['type'], m: strin
   const [detail, setDetail] = useState<PartnerSummary | null>(null);
   const [actionLoading, setActionLoading] = useState<number | null>(null);
 
+  // Location + RM filters
+  const [stateFilter, setStateFilter] = useState('');
+  const [districtFilter, setDistrictFilter] = useState('');
+  const [rmFilter, setRmFilter] = useState<string>(''); // RM user id as string, or ''
+  const [allStates, setAllStates] = useState<string[]>([]);
+  const [filterDistricts, setFilterDistricts] = useState<string[]>([]);
+  const [rmOptions, setRmOptions] = useState<UserSummary[]>([]);
+
+  // Manual RM override modal
+  const [reassign, setReassign] = useState<PartnerSummary | null>(null);
+  const [reassignRmId, setReassignRmId] = useState<string>('');
+  const [reassignSaving, setReassignSaving] = useState(false);
+
+  // Load states + RM list once for filters & reassignment dropdown.
+  useEffect(() => {
+    locationApi.getStates().then((r) => setAllStates(Array.isArray(r.data) ? r.data : [])).catch(() => {});
+    adminUserApi.getUsers().then((r) => {
+      const users: UserSummary[] = Array.isArray(r.data) ? r.data : [];
+      setRmOptions(users.filter((u) => u.role === 'RELATIONSHIP_MANAGER'));
+    }).catch(() => {});
+  }, []);
+
+  // Refresh district filter options when state filter changes.
+  useEffect(() => {
+    if (!stateFilter) { setFilterDistricts([]); setDistrictFilter(''); return; }
+    locationApi.getDistricts(stateFilter)
+      .then((r) => setFilterDistricts(Array.isArray(r.data) ? r.data : []))
+      .catch(() => setFilterDistricts([]));
+  }, [stateFilter]);
+
   const load = useCallback(async () => {
     setLoading(true);
     setError('');
@@ -496,6 +625,9 @@ function PartnersSection({ showToast }: { showToast: (t: Toast['type'], m: strin
       if (search) params.search = search;
       if (filter && !isStatusFilter) params.type = filter;
       if (isStatusFilter) params.status = filter;
+      if (stateFilter) params.state = stateFilter;
+      if (districtFilter) params.district = districtFilter;
+      if (rmFilter) params.rmId = rmFilter;
       const res = await adminUserApi.getPartners(params);
       setPartners(Array.isArray(res.data) ? res.data : []);
     } catch {
@@ -504,9 +636,30 @@ function PartnersSection({ showToast }: { showToast: (t: Toast['type'], m: strin
     } finally {
       setLoading(false);
     }
-  }, [search, filter]);
+  }, [search, filter, stateFilter, districtFilter, rmFilter]);
 
   useEffect(() => { load(); }, [load]);
+
+  const openReassign = (p: PartnerSummary) => {
+    setReassign(p);
+    setReassignRmId(p.assignedRmId ? String(p.assignedRmId) : '');
+  };
+
+  const submitReassign = async () => {
+    if (!reassign) return;
+    setReassignSaving(true);
+    try {
+      const newId = reassignRmId ? Number(reassignRmId) : null;
+      await adminUserApi.assignPartnerRm(reassign.id, newId);
+      showToast('success', newId ? 'RM reassigned' : 'RM cleared');
+      setReassign(null);
+      load();
+    } catch (err: any) {
+      showToast('error', err?.userMessage || 'Failed to reassign RM');
+    } finally {
+      setReassignSaving(false);
+    }
+  };
 
   const handleActivate = async (id: number) => {
     setActionLoading(id);
@@ -550,6 +703,36 @@ function PartnersSection({ showToast }: { showToast: (t: Toast['type'], m: strin
         </div>
       </div>
 
+      <div className="ap-row" style={{ marginBottom: 14, gap: 10, flexWrap: 'wrap' }}>
+        <select className="ap-select" style={{ maxWidth: 200 }}
+          value={stateFilter} onChange={(e) => setStateFilter(e.target.value)}>
+          <option value="">All states</option>
+          {allStates.map((s) => <option key={s} value={s}>{s}</option>)}
+        </select>
+        <select className="ap-select" style={{ maxWidth: 200 }}
+          value={districtFilter} onChange={(e) => setDistrictFilter(e.target.value)}
+          disabled={!stateFilter}>
+          <option value="">{stateFilter ? 'All districts' : 'All districts (pick state)'}</option>
+          {filterDistricts.map((d) => <option key={d} value={d}>{d}</option>)}
+        </select>
+        <select className="ap-select" style={{ maxWidth: 220 }}
+          value={rmFilter} onChange={(e) => setRmFilter(e.target.value)}>
+          <option value="">All RMs</option>
+          {rmOptions.map((rm) => (
+            <option key={rm.id} value={rm.id}>
+              {rm.name}{rm.assignedState ? ` — ${rm.assignedDistrict || rm.assignedState}` : ''}
+            </option>
+          ))}
+        </select>
+        {(stateFilter || districtFilter || rmFilter) && (
+          <button type="button" className="ap-btn ap-btn-ghost"
+            onClick={() => { setStateFilter(''); setDistrictFilter(''); setRmFilter(''); }}
+            style={{ fontSize: 12 }}>
+            Clear location filters
+          </button>
+        )}
+      </div>
+
       {error ? (
         <div className="ap-empty">
           <p>{error}</p>
@@ -559,18 +742,32 @@ function PartnersSection({ showToast }: { showToast: (t: Toast['type'], m: strin
         <div className="ap-table-wrap">
           <div className="ap-table-scroll">
             <table className="ap-table">
-              <thead><tr><th>Name</th><th>Type</th><th>Email</th><th>Mobile</th><th>ARN</th><th>Registered</th><th>Status</th><th>Actions</th></tr></thead>
+              <thead><tr><th>Name</th><th>Type</th><th>Email</th><th>Location</th><th>ARN</th><th>Assigned RM</th><th>Registered</th><th>Status</th><th>Actions</th></tr></thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={8}><div className="ap-loading"><div className="ap-spinner" /></div></td></tr>
+                  <tr><td colSpan={9}><div className="ap-loading"><div className="ap-spinner" /></div></td></tr>
                 ) : partners.length ? (
                   partners.map((p) => (
                     <tr key={p.id}>
                       <td>{p.partnerType === 'NON_INDIVIDUAL_PARTNER' ? (p.firmName || p.fullName || '-') : (p.fullName || '-')}</td>
                       <td>{ROLE_LABELS[p.partnerType] || p.partnerType}</td>
                       <td>{p.email || '-'}</td>
-                      <td>{p.mobileNumber || '-'}</td>
+                      <td>
+                        {p.state || p.district || p.city ? (
+                          <div style={{ fontSize: 12 }}>
+                            <div>{[p.city, p.district].filter(Boolean).join(', ') || '-'}</div>
+                            {p.state && <div style={{ color: '#64748b' }}>{p.state}</div>}
+                          </div>
+                        ) : '-'}
+                      </td>
                       <td>{p.arn || '-'}</td>
+                      <td>
+                        {p.assignedRmName ? (
+                          <span style={{ fontSize: 12 }}>{p.assignedRmName}</span>
+                        ) : (
+                          <span style={{ fontSize: 12, color: '#b45309' }}>Unassigned</span>
+                        )}
+                      </td>
                       <td>{fmt(p.createdAt)}</td>
                       <td><StatusBadge active={isActive(p)} pending={!isActive(p)} /></td>
                       <td>
@@ -582,6 +779,8 @@ function PartnersSection({ showToast }: { showToast: (t: Toast['type'], m: strin
                             <button type="button" className="ap-btn ap-btn-primary" onClick={() => handleActivate(p.id)}
                               disabled={actionLoading === p.id} style={{ fontSize: 12, padding: '5px 10px' }}>Activate</button>
                           )}
+                          <button type="button" className="ap-btn ap-btn-secondary" onClick={() => openReassign(p)}
+                            style={{ fontSize: 12, padding: '5px 10px' }}>Reassign RM</button>
                           <button type="button" className="ap-btn ap-btn-secondary" onClick={() => setDetail(p)}
                             style={{ fontSize: 12, padding: '5px 10px' }}><Eye size={12} /> View</button>
                         </div>
@@ -589,7 +788,7 @@ function PartnersSection({ showToast }: { showToast: (t: Toast['type'], m: strin
                     </tr>
                   ))
                 ) : (
-                  <tr><td colSpan={8}><div className="ap-empty">No partners registered yet</div></td></tr>
+                  <tr><td colSpan={9}><div className="ap-empty">No partners registered yet</div></td></tr>
                 )}
               </tbody>
             </table>
@@ -618,6 +817,10 @@ function PartnersSection({ showToast }: { showToast: (t: Toast['type'], m: strin
                 <DetailRow label="Bank Name" value={detail.partnerBankName} />
                 <DetailRow label="Account" value={detail.partnerBankAccount} />
                 <DetailRow label="IFSC" value={detail.partnerIfsc} />
+                <DetailRow label="State" value={detail.state} />
+                <DetailRow label="District" value={detail.district} />
+                <DetailRow label="City" value={detail.city} />
+                <DetailRow label="Assigned RM" value={detail.assignedRmName || 'Unassigned'} />
                 <DetailRow label="Status" value={isActive(detail) ? 'Active' : 'Pending Activation'} />
                 <DetailRow label="Registered On" value={fmt(detail.createdAt)} />
               </div>
@@ -625,6 +828,50 @@ function PartnersSection({ showToast }: { showToast: (t: Toast['type'], m: strin
             <PartnerFullDetail partnerId={detail.id} />
             <div className="ap-modal-footer">
               <button type="button" className="ap-btn ap-btn-secondary" onClick={() => setDetail(null)}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Manual RM Reassignment Modal */}
+      {reassign && (
+        <div className="ap-modal-backdrop">
+          <div className="ap-modal ap-modal-sm" role="dialog" aria-modal="true">
+            <div className="ap-modal-header">
+              <h2>Reassign Relationship Manager</h2>
+              <button type="button" className="ap-btn ap-btn-ghost" onClick={() => setReassign(null)}><X size={16} /></button>
+            </div>
+            <div className="ap-modal-body">
+              <p style={{ fontSize: 13, color: '#64748b', marginBottom: 12 }}>
+                Partner: <strong>{reassign.fullName || reassign.firmName}</strong>
+                <br />
+                Location: {[reassign.city, reassign.district, reassign.state].filter(Boolean).join(', ') || '—'}
+                <br />
+                Current RM: {reassign.assignedRmName || 'Unassigned'}
+              </p>
+              <div className="ap-field">
+                <label className="ap-label">Select RM</label>
+                <select className="ap-select" value={reassignRmId} onChange={(e) => setReassignRmId(e.target.value)}>
+                  <option value="">— Unassign (clear RM) —</option>
+                  {rmOptions.map((rm) => (
+                    <option key={rm.id} value={rm.id}>
+                      {rm.name}
+                      {rm.assignedState
+                        ? ` (${rm.assignedDistrict ? rm.assignedDistrict + ', ' : ''}${rm.assignedState})`
+                        : ''}
+                    </option>
+                  ))}
+                </select>
+                <p style={{ fontSize: 11, color: '#64748b', marginTop: 6 }}>
+                  Manually overrides the auto-assigned RM. Use this when the partner's location doesn't match any RM service area.
+                </p>
+              </div>
+            </div>
+            <div className="ap-modal-footer">
+              <button type="button" className="ap-btn ap-btn-secondary" onClick={() => setReassign(null)}>Cancel</button>
+              <button type="button" className="ap-btn ap-btn-primary" onClick={submitReassign} disabled={reassignSaving}>
+                {reassignSaving ? 'Saving...' : 'Save'}
+              </button>
             </div>
           </div>
         </div>

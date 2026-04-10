@@ -6,6 +6,8 @@ import dev.ongolebulls.model.Role;
 import dev.ongolebulls.model.User;
 import dev.ongolebulls.repository.ReferralClickRepository;
 import dev.ongolebulls.repository.UserRepository;
+import dev.ongolebulls.service.LocationService;
+import dev.ongolebulls.service.RmAssignmentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,8 @@ public class PartnerRegistrationController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ReferralClickRepository referralClickRepository;
+    private final LocationService locationService;
+    private final RmAssignmentService rmAssignmentService;
 
     @PostMapping("/register/partner")
     public ResponseEntity<?> registerPartner(
@@ -46,6 +50,26 @@ public class PartnerRegistrationController {
         }
         if (req.getMobile() == null || !req.getMobile().matches("^[0-9]{10}$")) {
             return ResponseEntity.badRequest().body(Map.of("error", "Mobile must be exactly 10 digits"));
+        }
+
+        // Validate location — state + district must exist in the master, city is free-text.
+        if (req.getState() == null || req.getState().isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "State is required"));
+        }
+        if (req.getDistrict() == null || req.getDistrict().isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "District is required"));
+        }
+        if (req.getCity() == null || req.getCity().isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "City is required"));
+        }
+        if (!locationService.isValidState(req.getState())) {
+            return ResponseEntity.badRequest().body(
+                    Map.of("error", "Invalid state: " + req.getState()));
+        }
+        if (!locationService.isValidStateAndDistrict(req.getState(), req.getDistrict())) {
+            return ResponseEntity.badRequest().body(
+                    Map.of("error", "District '" + req.getDistrict() +
+                            "' does not belong to state '" + req.getState() + "'"));
         }
 
         // Check for duplicate email
@@ -83,10 +107,18 @@ public class PartnerRegistrationController {
                     .partnerBankAccount(req.getBankAccount())
                     .partnerIfsc(req.getIfsc())
                     .partnerBankName(req.getBankName())
+                    // Partner location
+                    .state(req.getState().trim())
+                    .district(req.getDistrict().trim())
+                    .city(req.getCity().trim())
                     .referredBy(ref != null && userRepository.findById(ref)
                             .filter(u -> u.getRole() == Role.INDIVIDUAL_PARTNER || u.getRole() == Role.NON_INDIVIDUAL_PARTNER)
                             .isPresent() ? ref : null)
                     .build();
+
+            // Auto-assign an RM based on the partner's location (state + district).
+            // Sets user.assignedRmId in-place; null if no RM covers that area.
+            Long assignedRmId = rmAssignmentService.autoAssignRm(user);
 
             userRepository.save(user);
 
@@ -108,12 +140,14 @@ public class PartnerRegistrationController {
                 log.info("Referral recorded: referrer={}, newUser={}", ref, user.getEmail());
             }
 
-            log.info("Partner registered: email={}, role={}", req.getEmail(), role);
+            log.info("Partner registered: email={}, role={}, state={}, district={}, assignedRmId={}",
+                    req.getEmail(), role, req.getState(), req.getDistrict(), assignedRmId);
 
-            return ResponseEntity.ok(Map.of(
-                    "message", "Registration successful. Awaiting activation.",
-                    "email", req.getEmail()
-            ));
+            Map<String, Object> response = new java.util.HashMap<>();
+            response.put("message", "Registration successful. Awaiting activation.");
+            response.put("email", req.getEmail());
+            response.put("assignedRmId", assignedRmId); // null if no RM matched
+            return ResponseEntity.ok(response);
 
         } catch (Exception ex) {
             log.error("Partner registration failed: {}", ex.getMessage(), ex);

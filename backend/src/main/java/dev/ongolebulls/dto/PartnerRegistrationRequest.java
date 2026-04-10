@@ -18,4 +18,10 @@ public class PartnerRegistrationRequest {
     private String bankAccount;
     private String ifsc;
     private String bankName;
+
+    // Partner location (required) — drives RM auto-assignment.
+    // state and district must match a row in location_master.
+    private String state;
+    private String district;
+    private String city;
 }

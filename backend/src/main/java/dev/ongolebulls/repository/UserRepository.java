@@ -61,6 +61,44 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "OR LOWER(u.email) LIKE LOWER(CONCAT('%',:search,'%')))")
     List<User> searchClientsByPartner(@Param("partnerId") Long partnerId, @Param("search") String search);
 
+    // --- RM location-based auto-assignment queries ---
+
+    /**
+     * Exact-match RM lookup: RM whose service area is the partner's exact
+     * state and district. Only considers activated RMs.
+     */
+    @Query("SELECT u FROM User u WHERE u.role = :role " +
+            "AND LOWER(u.assignedState) = LOWER(:state) " +
+            "AND LOWER(u.assignedDistrict) = LOWER(:district) " +
+            "AND u.isActivated = true " +
+            "ORDER BY u.id ASC")
+    List<User> findRmsByServiceArea(@Param("role") Role role,
+                                    @Param("state") String state,
+                                    @Param("district") String district);
+
+    /**
+     * State-level fallback: RMs assigned to the state with NO specific district,
+     * meaning they handle the whole state. Used when no district-level RM exists.
+     */
+    @Query("SELECT u FROM User u WHERE u.role = :role " +
+            "AND LOWER(u.assignedState) = LOWER(:state) " +
+            "AND u.assignedDistrict IS NULL " +
+            "AND u.isActivated = true " +
+            "ORDER BY u.id ASC")
+    List<User> findStateOnlyRms(@Param("role") Role role,
+                                @Param("state") String state);
+
+    /**
+     * Any-district fallback: any activated RM in the state, regardless of
+     * district. Used when neither exact-match nor state-only RMs exist.
+     */
+    @Query("SELECT u FROM User u WHERE u.role = :role " +
+            "AND LOWER(u.assignedState) = LOWER(:state) " +
+            "AND u.isActivated = true " +
+            "ORDER BY u.id ASC")
+    List<User> findAnyRmInState(@Param("role") Role role,
+                                @Param("state") String state);
+
     // --- RM queries ---
     List<User> findByAssignedRmIdAndRoleIn(Long rmId, Collection<Role> roles);
 

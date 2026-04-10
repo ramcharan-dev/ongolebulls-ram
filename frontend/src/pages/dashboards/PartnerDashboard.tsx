@@ -954,6 +954,21 @@ function ProfileSection({ profile, setProfile, showToast, reload }: { profile: P
             )}
           </div>
           <div style={S.card}>
+            <h3 style={{ margin: '0 0 20px', fontSize: 16, fontWeight: 600, color: C.gray900 }}>Location & Relationship Manager</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, marginBottom: 16 }}>
+              <Detail label="State" value={profile.state} />
+              <Detail label="District" value={profile.district} />
+              <Detail label="City" value={profile.city} />
+            </div>
+            <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: 16, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <Detail label="Assigned Relationship Manager" value={profile.assignedRmName || 'Not yet assigned'} />
+              <Detail label="RM Email" value={profile.assignedRmEmail || '-'} />
+            </div>
+            <p style={{ fontSize: 12, color: C.gray400, marginTop: 12, marginBottom: 0 }}>
+              Your RM is auto-assigned based on your location. Contact support to change your RM.
+            </p>
+          </div>
+          <div style={S.card}>
             <h3 style={{ margin: '0 0 12px', fontSize: 16, fontWeight: 600, color: C.gray900 }}>Platform Agreement</h3>
             {profile.hasAgreement
               ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 8, background: C.green100, color: '#065F46', fontSize: 14, fontWeight: 500 }}><CheckCircle size={16} /> Agreement Accepted</span>

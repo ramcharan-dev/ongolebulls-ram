@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import { sendEmailOtp, verifyEmailOtp } from '../../api/authApi';
 import api from '../../api/axiosConfig';
+import { locationApi } from '../../api/locationApi';
 import logo from '../../assets/logo4.png';
 
 /* ─── Constants ───────────────────────────────────────────────────────── */
@@ -11,6 +12,7 @@ const INITIAL_FORM = {
   partnerType: '', mobile: '', otp: '', email: '', password: '', confirmPassword: '',
   termsAccepted: false, fullName: '', pan: '', arn: '', euin: '',
   bankAccount: '', ifsc: '', bankName: '', firmName: '', authorizedPerson: '', euinHolderName: '',
+  state: '', district: '', city: '',
 };
 
 const BENEFITS = [
@@ -68,6 +70,50 @@ export default function PartnerRegister() {
   const [otpLoading, setOtpLoading] = useState(false);
   const [otpError, setOtpError] = useState('');
 
+  // Location dropdowns
+  const [states, setStates] = useState<string[]>([]);
+  const [districts, setDistricts] = useState<string[]>([]);
+  const [statesLoading, setStatesLoading] = useState(false);
+  const [districtsLoading, setDistrictsLoading] = useState(false);
+
+  // Load the list of states once on mount.
+  useEffect(() => {
+    console.log('[PartnerRegister] fetching states from /api/locations/states');
+    setStatesLoading(true);
+    locationApi.getStates()
+      .then(res => {
+        const data = Array.isArray(res.data) ? res.data : [];
+        console.log('[PartnerRegister] states response:', data.length, 'items', data.slice(0, 3));
+        setStates(data);
+      })
+      .catch(err => {
+        console.error('[PartnerRegister] states fetch failed:', err);
+        setStates([]);
+      })
+      .finally(() => setStatesLoading(false));
+  }, []);
+
+  // Reload districts whenever the selected state changes.
+  useEffect(() => {
+    if (!form.state) {
+      setDistricts([]);
+      return;
+    }
+    console.log('[PartnerRegister] fetching districts for state:', form.state);
+    setDistrictsLoading(true);
+    locationApi.getDistricts(form.state)
+      .then(res => {
+        const data = Array.isArray(res.data) ? res.data : [];
+        console.log('[PartnerRegister] districts response for', form.state + ':', data.length, 'items');
+        setDistricts(data);
+      })
+      .catch(err => {
+        console.error('[PartnerRegister] districts fetch failed:', err);
+        setDistricts([]);
+      })
+      .finally(() => setDistrictsLoading(false));
+  }, [form.state]);
+
   useEffect(() => {
     const typeParam = searchParams.get('type');
     const refParam = searchParams.get('ref');
@@ -88,8 +134,14 @@ export default function PartnerRegister() {
   const set = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const target = e.target;
     const value = target.type === 'checkbox' ? (target as HTMLInputElement).checked : target.value;
-    setForm(p => ({ ...p, [target.name]: value }));
-    setErrors(p => ({ ...p, [target.name]: '' }));
+    setForm(p => {
+      // Changing the state clears the dependent district selection.
+      if (target.name === 'state') {
+        return { ...p, state: value as string, district: '' };
+      }
+      return { ...p, [target.name]: value };
+    });
+    setErrors(p => ({ ...p, [target.name]: '', ...(target.name === 'state' ? { district: '' } : {}) }));
   };
 
   const handleSendOtp = async () => {
@@ -118,6 +170,9 @@ export default function PartnerRegister() {
     if (!form.email || !/\S+@\S+\.\S+/.test(form.email)) e.email = 'Enter a valid email.';
     if (!form.password || form.password.length < 8) e.password = 'Minimum 8 characters.';
     if (form.password !== form.confirmPassword) e.confirmPassword = 'Passwords do not match.';
+    if (!form.state) e.state = 'State is required.';
+    if (!form.district) e.district = 'District is required.';
+    if (!form.city.trim()) e.city = 'City is required.';
     if (!form.termsAccepted) e.termsAccepted = 'You must accept the terms.';
     if (isIndividual) {
       if (!form.fullName.trim()) e.fullName = 'Required.'; if (!PAN_REGEX.test(form.pan)) e.pan = 'Invalid PAN.';
@@ -141,6 +196,7 @@ export default function PartnerRegister() {
         fullName: isIndividual ? form.fullName : null, firmName: isIndividual ? null : form.firmName,
         authorizedPerson: isIndividual ? null : form.authorizedPerson, pan: form.pan, arn: form.arn, euin: form.euin,
         euinHolderName: isIndividual ? null : form.euinHolderName, bankAccount: form.bankAccount, ifsc: form.ifsc, bankName: form.bankName,
+        state: form.state, district: form.district, city: form.city.trim(),
       });
       setSuccess(true);
     } catch (err: any) { setGlobalError(err.userMessage || 'Registration failed. Please try again.'); }
@@ -298,7 +354,7 @@ export default function PartnerRegister() {
                 </div>
               </div>
 
-              {/* Section: Partner/Firm Details (accordion) */}
+              {/* Section: Partner/Firm Details (accordion — gated on partner type) */}
               <div style={s.accordion(typeSelected)}>
                 <div style={s.section}>
                   <div style={s.sectionTitle}>{isIndividual ? 'Personal Details' : 'Firm Details'}</div>
@@ -328,8 +384,53 @@ export default function PartnerRegister() {
                     </>
                   )}
                 </div>
+              </div>
 
-                {/* Section: Bank Details */}
+              {/* ════════════════════════════════════════════════════════════
+                  Section: Location — ALWAYS VISIBLE, not inside any accordion
+                  or conditional. Positioned between Personal Details and Bank
+                  Details so it is clearly visible in the form flow.
+                  ════════════════════════════════════════════════════════════ */}
+              <div style={s.section}>
+                <div style={{ background: '#fef3c7', color: '#92400e', padding: '6px 10px', borderRadius: 6, fontSize: 11, fontWeight: 700, marginBottom: 10, letterSpacing: '0.3px' }}>
+                  LOCATION SECTION LOADED
+                </div>
+                <div style={s.sectionTitle}>Location</div>
+                <div style={{ ...s.row, marginBottom: 16 }}>
+                  <div>
+                    <label style={s.label}>State *</label>
+                    <select name="state" value={form.state} onChange={set} className="pr-select pr-input" style={s.select} disabled={statesLoading}>
+                      <option value="" disabled>
+                        {statesLoading
+                          ? 'Loading states...'
+                          : states.length === 0
+                            ? 'No states available — check /api/locations/states'
+                            : 'Select state'}
+                      </option>
+                      {states.map((st) => <option key={st} value={st}>{st}</option>)}
+                    </select>
+                    {err('state')}
+                  </div>
+                  <div>
+                    <label style={s.label}>District *</label>
+                    <select name="district" value={form.district} onChange={set} className="pr-select pr-input" style={s.select} disabled={!form.state || districtsLoading}>
+                      <option value="" disabled>
+                        {!form.state ? 'Select state first' : districtsLoading ? 'Loading districts...' : 'Select district'}
+                      </option>
+                      {districts.map((d) => <option key={d} value={d}>{d}</option>)}
+                    </select>
+                    {err('district')}
+                  </div>
+                </div>
+                <div>
+                  <label style={s.label}>City *</label>
+                  <input name="city" value={form.city} onChange={set} placeholder="e.g. Ongole" className="pr-input" style={s.input} />
+                  {err('city')}
+                </div>
+              </div>
+
+              {/* Section: Bank Details (accordion — gated on partner type) */}
+              <div style={s.accordion(typeSelected)}>
                 <div style={s.section}>
                   <div style={s.sectionTitle}>Bank Details</div>
                   <div style={{ marginBottom: 16 }}><label style={s.label}>Bank Account Number *</label><input name="bankAccount" value={form.bankAccount} onChange={set} placeholder="Account number" className="pr-input" style={s.input} />{err('bankAccount')}</div>
