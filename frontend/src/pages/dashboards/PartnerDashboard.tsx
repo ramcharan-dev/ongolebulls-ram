@@ -8,7 +8,7 @@ import {
   Target, CheckCircle, Circle, Clock, AlertTriangle, Info,
   UserPlus, Handshake, Wallet, BarChart3, FolderOpen,
   MessageSquare, Link2, ArrowRight, Shield, Building2, User,
-  Inbox, Receipt, IndianRupee, Sun, Moon,
+  Inbox, Receipt, IndianRupee, Sun, Moon, Calculator,
 } from 'lucide-react';
 import { partnerApi } from '../../api/partnerApi';
 import type {
@@ -94,7 +94,7 @@ const stageBadge = (stage: string) => {
   return <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 20, fontSize: 12, fontWeight: 500, background: s.bg, color: s.color }}>{stage === 'ACTIVE_INVESTOR' && <CheckCircle size={12} />}{s.label}</span>;
 };
 
-type Section = 'overview' | 'profile' | 'clients' | 'transactions' | 'revenue' | 'sips' | 'referrals' | 'tracker' | 'arn-onboarding';
+type Section = 'overview' | 'profile' | 'clients' | 'transactions' | 'revenue' | 'sips' | 'referrals' | 'tracker' | 'planner' | 'arn-onboarding';
 interface Toast { type: 'success' | 'error'; message: string }
 
 const NAV_ITEMS: { key: Section; label: string; Icon: React.FC<{ size?: number }> }[] = [
@@ -104,6 +104,7 @@ const NAV_ITEMS: { key: Section; label: string; Icon: React.FC<{ size?: number }
   { key: 'sips',         label: 'Systematic Plans', Icon: Receipt },
   { key: 'revenue',      label: 'Revenue',          Icon: Wallet },
   { key: 'tracker',      label: 'Tracker',          Icon: FolderOpen },
+  { key: 'planner',      label: 'Planner',          Icon: Calculator },
   { key: 'profile',      label: 'Profile',          Icon: UserCircle },
   { key: 'referrals',    label: 'Refer & Earn',     Icon: Handshake },
 ];
@@ -209,6 +210,8 @@ export default function PartnerDashboard() {
         }
         @media (max-width: 820px) {
           .pd-header-search { display: none !important; }
+          .pd-planner-inputs { grid-template-columns: 1fr !important; }
+          .pd-planner-results { grid-template-columns: 1fr !important; }
           .pd-arn-grid { padding: 22px; }
           .pd-arn-choice-row { flex-direction: column; }
           .pd-arn-choice-row button { width: 100%; justify-content: center; }
@@ -290,6 +293,7 @@ export default function PartnerDashboard() {
             {section === 'sips' && <SipBookSection profile={profile} showToast={showToast} />}
             {section === 'referrals' && <ReferralsSection profile={profile} showToast={showToast} />}
             {section === 'tracker' && <TrackerSection profile={profile} showToast={showToast} />}
+            {section === 'planner' && <PlannerSection profile={profile} showToast={showToast} />}
             {section === 'arn-onboarding' && <ArnOnboardingSection profile={profile} showToast={showToast} setSection={setSection} />}
           </div>
         </div>
@@ -779,15 +783,68 @@ function OverviewSection({ profile, showToast, setSection }: { profile: PartnerP
     { label: 'Profile', icon: UserCircle, onClick: () => setSection('profile') },
   ];
   const funnelStages = [
-    { label: 'Lead', count: leadCount, bg: 'rgba(246,169,26,0.10)', bar: 'linear-gradient(135deg, rgba(246,169,26,0.85), rgba(216,141,8,0.95))' },
-    { label: 'Link Sent', count: linkSentCount, bg: 'rgba(96,165,250,0.12)', bar: 'linear-gradient(135deg, rgba(96,165,250,0.75), rgba(37,99,235,0.95))' },
-    { label: 'Investor', count: investorCount, bg: 'rgba(40,209,124,0.12)', bar: 'linear-gradient(135deg, rgba(40,209,124,0.8), rgba(22,163,74,0.95))' },
+    { label: 'Lead', count: leadCount, stage: 'LEAD_CREATED', bg: 'rgba(246,169,26,0.10)', bar: 'linear-gradient(135deg, rgba(246,169,26,0.85), rgba(216,141,8,0.95))' },
+    { label: 'Link Sent', count: linkSentCount, stage: 'LINK_SENT', bg: 'rgba(96,165,250,0.12)', bar: 'linear-gradient(135deg, rgba(96,165,250,0.75), rgba(37,99,235,0.95))' },
+    { label: 'KYC Started', count: lifecycleDistribution.KYC_STARTED ?? 0, stage: 'KYC_STARTED', bg: 'rgba(168,85,247,0.10)', bar: 'linear-gradient(135deg, rgba(168,85,247,0.75), rgba(126,34,206,0.95))' },
+    { label: 'Investor', count: investorCount, stage: 'ACTIVE_INVESTOR', bg: 'rgba(40,209,124,0.12)', bar: 'linear-gradient(135deg, rgba(40,209,124,0.8), rgba(22,163,74,0.95))' },
   ];
+
+  // --- Improvement 6: Client Alerts (derived from existing data) ---
+  const alerts: { icon: React.ReactNode; text: string; tone: string; color: string }[] = [];
+  if (pausedSips > 0) alerts.push({ icon: <AlertTriangle size={14} />, text: `${pausedSips} SIP${pausedSips > 1 ? 's' : ''} paused — follow up to resume`, tone: 'rgba(245,158,11,0.10)', color: C.amber500 });
+  if (failedSips > 0) alerts.push({ icon: <AlertTriangle size={14} />, text: `${failedSips} SIP${failedSips > 1 ? 's' : ''} failed — requires attention`, tone: C.red100, color: C.red500 });
+  if (pendingKyc > 0) alerts.push({ icon: <Clock size={14} />, text: `${pendingKyc} client${pendingKyc > 1 ? 's' : ''} pending KYC completion`, tone: 'rgba(96,165,250,0.10)', color: '#3B82F6' });
+  if (totalAum === 0 && totalClients > 0) alerts.push({ icon: <FolderOpen size={14} />, text: 'No portfolio data — upload CAS to track AUM', tone: C.gray100, color: C.gray500 });
+  if (failedOrders > 0) alerts.push({ icon: <AlertTriangle size={14} />, text: `${failedOrders} order${failedOrders > 1 ? 's' : ''} failed or rejected`, tone: C.red100, color: C.red500 });
+
+  // --- Improvement 4: SIP donut data ---
+  const totalSips = activeSips + pausedSips + cancelledSips + failedSips;
+  const sipTotal = Math.max(totalSips, 1);
+  const sipSlices = [
+    { pct: (activeSips / sipTotal) * 100, color: C.green500 },
+    { pct: (pausedSips / sipTotal) * 100, color: C.pri600 },
+    { pct: (cancelledSips / sipTotal) * 100, color: C.gray400 },
+    { pct: (failedSips / sipTotal) * 100, color: C.red500 },
+  ];
+  let sipConicGrad = C.gray100;
+  if (totalSips > 0) {
+    let acc = 0;
+    const stops = sipSlices.map(s => { const start = acc; acc += s.pct; return `${s.color} ${start}% ${acc}%`; });
+    sipConicGrad = `conic-gradient(${stops.join(', ')})`;
+  }
+  const totalSipMonthlyValue = sips.filter(s => s.status === 'ACTIVE').reduce((sum, s) => sum + (s.amount ?? 0), 0);
+  const avgSipAmt = activeSips > 0 ? Math.round(totalSipMonthlyValue / activeSips) : 0;
+
+  // --- Improvement 2: Quick Access with micro-stats ---
+  const profileCompletion = [profile.hasArn, profile.hasBankDetails, profile.hasAgreement, profile.isActivated].filter(Boolean).length;
+  const quickActionsEnhanced = [
+    { label: 'Add Client', sub: `${totalClients} total`, icon: UserPlus, onClick: () => setShowAddClient(true) },
+    { label: 'SIP Book', sub: `${activeSips} active`, icon: Receipt, onClick: () => setSection('sips') },
+    { label: 'Tracker', sub: totalAum > 0 ? formatCompactNumber(totalAum) : '—', icon: FolderOpen, onClick: () => setSection('tracker') },
+    { label: 'Revenue', sub: monthlyRevenue > 0 ? `${formatCompactNumber(monthlyRevenue)}/mo` : '—', icon: Wallet, onClick: () => setSection('revenue') },
+    { label: 'Planner', sub: 'Plan income', icon: Calculator, onClick: () => setSection('planner') },
+    { label: 'Profile', sub: `${profileCompletion * 25}%`, icon: UserCircle, onClick: () => setSection('profile') },
+  ];
+
+  // --- Improvement 8: Portfolio Insights ---
+  const holdings = tracker?.holdings ?? [];
+  const amcMap: Record<string, number> = {};
+  holdings.forEach(h => { amcMap[h.amcName] = (amcMap[h.amcName] ?? 0) + (h.currentValue ?? 0); });
+  const topAmcs = Object.entries(amcMap).sort((a, b) => b[1] - a[1]).slice(0, 3);
+
+  // --- Improvement 5: Orders pipeline total ---
+  const totalOrderValue = transactions.reduce((s, t) => s + (t.amount ?? 0), 0);
+  const totalOrders = transactions.length;
+
+  // Section label helper
+  const secLabel = (text: string) => <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.22em', textTransform: 'uppercase' as const, color: C.gray400, marginBottom: 8 }}>{text}</div>;
 
   return (
     <>
       <ArnStatusBanner profile={profile} onCompleteArn={() => setSection('arn-onboarding')} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
+
+        {/* ── Header ── */}
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
           <div>
             <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: '.34em', textTransform: 'uppercase', color: C.gray400, marginBottom: 10 }}>Portfolio Snapshot</div>
@@ -799,12 +856,13 @@ function OverviewSection({ profile, showToast, setSection }: { profile: PartnerP
           </div>
         </div>
 
+        {/* ── 1. Enhanced Stat Cards ── */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: 16 }}>
           {[
-            { label: 'Total AUM', value: formatCurrency(totalAum), icon: TrendingUp, chip: latestInflow > 0 ? `↗ ${formatCurrency(latestInflow)}` : '₹0', chipTone: C.green100, chipColor: C.green500, iconBg: C.green100 },
-            { label: 'Active Clients', value: totalClients, icon: Users, chip: `${activeInvestors} investors`, chipTone: C.gray100, chipColor: C.gray500, iconBg: C.indigo100 },
-            { label: 'Active SIPs', value: activeSips, icon: RefreshCw, chip: `${pausedSips} paused`, chipTone: C.gray100, chipColor: C.gray500, iconBg: C.pri100 },
-            { label: 'Monthly Revenue', value: formatCurrency(monthlyRevenue), icon: Wallet, chip: latestInflow > 0 ? `↗ ${formatCurrency(totalRevenue)} total` : '₹0 total', chipTone: C.green100, chipColor: C.green500, iconBg: C.green100 },
+            { label: 'Total AUM', value: formatCurrency(totalAum), icon: TrendingUp, chip: latestInflow > 0 ? `↗ ${formatCompactNumber(latestInflow)}` : '₹0', chipTone: C.green100, chipColor: C.green500, iconBg: C.green100, detail: `${tracker?.folioCount ?? 0} folios · ${tracker?.amcCount ?? 0} AMCs` },
+            { label: 'Active Clients', value: totalClients, icon: Users, chip: `${activeInvestors} investors`, chipTone: C.gray100, chipColor: C.gray500, iconBg: C.indigo100, detail: pendingKyc > 0 ? `${pendingKyc} pending KYC` : 'All KYC complete' },
+            { label: 'Active SIPs', value: activeSips, icon: RefreshCw, chip: `${pausedSips} paused`, chipTone: C.gray100, chipColor: C.gray500, iconBg: C.pri100, detail: totalSipMonthlyValue > 0 ? `${formatCurrency(totalSipMonthlyValue)}/mo value` : `Avg ${formatCurrency(avgSipAmt)}/SIP` },
+            { label: 'Monthly Revenue', value: formatCurrency(monthlyRevenue), icon: Wallet, chip: totalRevenue > 0 ? `↗ ${formatCompactNumber(totalRevenue)} total` : '₹0 total', chipTone: C.green100, chipColor: C.green500, iconBg: C.green100, detail: revenue?.releasedRevenue ? `${formatCurrency(revenue.releasedRevenue)} released` : 'Trail + upfront' },
           ].map(card => (
             <div key={card.label} className="pd-panel pd-stat-card" style={{ borderRadius: 18, padding: 24, transition: 'transform 0.18s ease, border-color 0.18s ease' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 20 }}>
@@ -815,156 +873,258 @@ function OverviewSection({ profile, showToast, setSection }: { profile: PartnerP
               </div>
               <div style={{ fontSize: typeof card.value === 'number' ? 34 : 30, fontWeight: 700, color: C.gray900, letterSpacing: '-0.03em' }}>{card.value}</div>
               <div style={{ fontSize: 14, color: C.gray500, marginTop: 8 }}>{card.label}</div>
+              <div style={{ fontSize: 12, color: C.gray400, marginTop: 6, borderTop: `1px solid ${C.gray100}`, paddingTop: 8 }}>{card.detail}</div>
             </div>
           ))}
         </div>
 
+        {/* ── Today's Focus + ARN ── */}
         <div className="pd-overview-grid" style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 16 }}>
           <div className="pd-panel" style={{ borderRadius: 18, padding: 26, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18, background: `linear-gradient(90deg, rgba(246,169,26,0.10), ${C.white})` }}>
             <div>
-              <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: '.3em', textTransform: 'uppercase', color: C.gray400, marginBottom: 10 }}>Today's Focus</div>
+              {secLabel("Today's Focus")}
               <div style={{ fontSize: 18, lineHeight: 1.55, fontWeight: 600, color: C.gray900, maxWidth: 680 }}>{focusTitle}</div>
             </div>
             <button type="button" style={{ ...S.btnPrimary, whiteSpace: 'nowrap' }} onClick={focusAction}>{focusActionLabel} <ArrowRight size={15} /></button>
           </div>
-
           <div className="pd-panel" style={{ borderRadius: 18, padding: 26, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 18 }}>
             <div style={{ display: 'flex', gap: 16 }}>
               <div style={{ width: 48, height: 48, borderRadius: 16, background: C.pri100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Shield size={20} color={C.pri600} />
               </div>
               <div>
-                <div style={{ fontSize: 16, fontWeight: 600, color: C.gray900 }}>
-                  {!profile.hasArn ? 'ARN Pending' : 'ARN Verified'}
-                </div>
+                <div style={{ fontSize: 16, fontWeight: 600, color: C.gray900 }}>{!profile.hasArn ? 'ARN Pending' : 'ARN Verified'}</div>
                 <div style={{ fontSize: 14, color: C.gray500, lineHeight: 1.6, marginTop: 8 }}>
-                  {!profile.hasArn
-                    ? 'Finish your ARN flow to unlock client onboarding, SIP workflows, and advanced partner tools.'
-                    : 'Your ARN is on file. Keep the rest of your profile updated so partner operations remain smooth.'}
+                  {!profile.hasArn ? 'Finish your ARN flow to unlock client onboarding.' : 'Your ARN is on file. Keep your profile updated.'}
                 </div>
-                <button type="button" onClick={() => setSection('profile')} style={{ marginTop: 14, background: 'none', border: 'none', padding: 0, color: C.pri600, fontWeight: 600, cursor: 'pointer' }}>
+                <button type="button" onClick={() => setSection('profile')} style={{ marginTop: 10, background: 'none', border: 'none', padding: 0, color: C.pri600, fontWeight: 600, cursor: 'pointer' }}>
                   {!profile.hasArn ? 'Complete ARN' : 'Open profile'}
                 </button>
               </div>
             </div>
-            <span style={{ padding: '6px 12px', borderRadius: 999, background: C.gray100, color: C.gray500, fontSize: 12, fontWeight: 600, whiteSpace: 'nowrap' }}>
+            <span style={{ padding: '6px 12px', borderRadius: 999, background: profile.hasArn ? C.green100 : C.gray100, color: profile.hasArn ? C.green500 : C.gray500, fontSize: 12, fontWeight: 600, whiteSpace: 'nowrap' }}>
               {!profile.hasArn ? 'Pending' : 'Verified'}
             </span>
           </div>
         </div>
 
+        {/* ── 6. Client Alerts (conditional — only shows if alerts exist) ── */}
+        {alerts.length > 0 && (
+          <div className="pd-panel" style={{ borderRadius: 18, padding: 22, borderLeft: `4px solid ${C.amber500}` }}>
+            {secLabel('Alerts')}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {alerts.map((a, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 10, background: a.tone }}>
+                  <span style={{ color: a.color, flexShrink: 0 }}>{a.icon}</span>
+                  <span style={{ fontSize: 13, fontWeight: 500, color: a.color }}>{a.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── Action Center + 2. Quick Access with micro-stats ── */}
         <div className="pd-overview-subgrid" style={{ display: 'grid', gridTemplateColumns: '1.05fr 1.15fr', gap: 16 }}>
           <div className="pd-panel" style={{ borderRadius: 18, padding: 24 }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
               <div>
-                <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: '.3em', textTransform: 'uppercase', color: C.gray400, marginBottom: 10 }}>Action Center</div>
+                {secLabel('Action Center')}
                 <div style={{ fontSize: 16, fontWeight: 600, color: C.gray900 }}>You have {pendingActions} pending action{pendingActions !== 1 ? 's' : ''}</div>
                 <div style={{ fontSize: 14, color: C.gray500, lineHeight: 1.6, marginTop: 10 }}>
-                  Review outstanding KYC, activation, and compliance setup tasks in one place instead of scanning multiple alerts.
+                  Review outstanding KYC, activation, and compliance setup tasks in one place.
                 </div>
+                {pendingActions > 0 && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 14 }}>
+                    {!profile.hasArn && <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: C.amber500 }}><Circle size={8} /> Submit ARN details</div>}
+                    {!profile.hasBankDetails && <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: C.amber500 }}><Circle size={8} /> Add bank details</div>}
+                    {!profile.hasAgreement && <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: C.amber500 }}><Circle size={8} /> Accept platform agreement</div>}
+                    {!profile.isActivated && <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: C.gray400 }}><Clock size={8} /> Awaiting admin activation</div>}
+                    {pendingKyc > 0 && <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#3B82F6' }}><Circle size={8} /> {pendingKyc} client KYC pending</div>}
+                  </div>
+                )}
               </div>
               <button type="button" onClick={() => setSection('profile')} style={{ ...S.btnGhost, color: C.gray400 }}><ArrowRight size={18} /></button>
             </div>
           </div>
 
           <div>
-            <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: '.3em', textTransform: 'uppercase', color: C.gray400, marginBottom: 10 }}>Quick Access</div>
+            {secLabel('Quick Access')}
             <div style={{ fontSize: 18, fontWeight: 600, color: C.gray900, marginBottom: 14 }}>Quick actions</div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(132px, 1fr))', gap: 12 }}>
-              {quickActions.map(action => (
-                <button key={action.label} type="button" className="pd-panel pd-action-card" onClick={action.onClick} style={{ textAlign: 'left', borderRadius: 16, padding: 18, cursor: 'pointer', transition: 'transform 0.18s ease, border-color 0.18s ease' }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 14, background: C.pri100, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>
-                    <action.icon size={20} color={C.pri600} />
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 10 }}>
+              {quickActionsEnhanced.map(action => (
+                <button key={action.label} type="button" className="pd-panel pd-action-card" onClick={action.onClick} style={{ textAlign: 'left', borderRadius: 16, padding: 16, cursor: 'pointer', transition: 'transform 0.18s ease, border-color 0.18s ease' }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 12, background: C.pri100, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}>
+                    <action.icon size={18} color={C.pri600} />
                   </div>
-                  <div style={{ fontSize: 15, fontWeight: 600, color: C.gray900 }}>{action.label}</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: C.gray900 }}>{action.label}</div>
+                  <div style={{ fontSize: 11, color: C.gray400, marginTop: 3 }}>{action.sub}</div>
                 </button>
               ))}
             </div>
           </div>
         </div>
 
+        {/* ── 4. SIP Donut + 5. Orders Pipeline ── */}
         <div className="pd-overview-subgrid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
           <div className="pd-panel" style={{ borderRadius: 18, padding: 24 }}>
-            <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: '.3em', textTransform: 'uppercase', color: C.gray400, marginBottom: 10 }}>Health Overview</div>
+            {secLabel('Health Overview')}
             <div style={{ fontSize: 18, fontWeight: 600, color: C.gray900, marginBottom: 18 }}>SIP Overview</div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
-              {[
-                { label: 'Active', value: activeSips, color: C.green500 },
-                { label: 'Paused', value: pausedSips, color: C.pri600 },
-                { label: 'Cancelled', value: cancelledSips, color: C.gray500 },
-                { label: 'Failed', value: failedSips, color: C.red500 },
-              ].map(item => (
-                <div key={item.label} style={{ background: C.gray50, border: `1px solid ${C.gray200}`, borderRadius: 16, padding: '20px 12px', textAlign: 'center' }}>
-                  <div style={{ fontSize: 28, fontWeight: 700, color: item.color }}>{item.value}</div>
-                  <div style={{ marginTop: 8, fontSize: 12, color: C.gray400, letterSpacing: '.18em', textTransform: 'uppercase' }}>{item.label}</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+              {/* Donut */}
+              <div style={{ width: 110, height: 110, borderRadius: '50%', background: sipConicGrad, padding: 10, flexShrink: 0 }}>
+                <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: C.white, border: `1px solid ${C.gray200}`, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ fontSize: 24, fontWeight: 700, color: C.gray900 }}>{totalSips}</div>
+                  <div style={{ fontSize: 10, color: C.gray400 }}>TOTAL</div>
                 </div>
-              ))}
+              </div>
+              {/* Detail */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {[
+                  { label: 'Active', value: activeSips, color: C.green500 },
+                  { label: 'Paused', value: pausedSips, color: C.pri600 },
+                  { label: 'Cancelled', value: cancelledSips, color: C.gray400 },
+                  { label: 'Failed', value: failedSips, color: C.red500 },
+                ].map(s => (
+                  <div key={s.label} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: s.color, flexShrink: 0 }} />
+                    <span style={{ fontSize: 13, color: C.gray700, flex: 1 }}>{s.label}</span>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: C.gray900 }}>{s.value}</span>
+                  </div>
+                ))}
+                {totalSipMonthlyValue > 0 && (
+                  <div style={{ borderTop: `1px solid ${C.gray100}`, paddingTop: 8, marginTop: 4, fontSize: 12, color: C.gray500 }}>
+                    Monthly SIP value: <strong style={{ color: C.gray700 }}>{formatCurrency(totalSipMonthlyValue)}</strong>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
           <div className="pd-panel" style={{ borderRadius: 18, padding: 24 }}>
-            <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: '.3em', textTransform: 'uppercase', color: C.gray400, marginBottom: 10 }}>Execution Pulse</div>
+            {secLabel('Execution Pulse')}
             <div style={{ fontSize: 18, fontWeight: 600, color: C.gray900, marginBottom: 18 }}>Orders Overview</div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+            {/* Pipeline */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6, marginBottom: 18 }}>
               {[
-                { label: 'In Progress', value: pendingOrders, color: C.pri600 },
-                { label: 'Allocated', value: confirmedOrders, color: C.green500 },
-                { label: 'Failed', value: failedOrders, color: C.red500 },
-              ].map(item => (
-                <div key={item.label} style={{ background: C.gray50, border: `1px solid ${C.gray200}`, borderRadius: 16, padding: '20px 12px', textAlign: 'center' }}>
-                  <div style={{ fontSize: 28, fontWeight: 700, color: item.color }}>{item.value}</div>
-                  <div style={{ marginTop: 8, fontSize: 12, color: C.gray400, letterSpacing: '.18em', textTransform: 'uppercase' }}>{item.label}</div>
+                { label: 'In Progress', value: pendingOrders, color: C.pri600, bg: C.pri100 },
+                { label: 'Allocated', value: confirmedOrders, color: C.green500, bg: C.green100 },
+                { label: 'Failed', value: failedOrders, color: C.red500, bg: C.red100 },
+              ].map((item, idx) => (
+                <div key={item.label} style={{ display: 'contents' }}>
+                  <div style={{ flex: 1, background: item.bg, borderRadius: 14, padding: '16px 12px', textAlign: 'center' }}>
+                    <div style={{ fontSize: 24, fontWeight: 700, color: item.color }}>{item.value}</div>
+                    <div style={{ fontSize: 10, color: C.gray500, letterSpacing: '.14em', textTransform: 'uppercase', marginTop: 4 }}>{item.label}</div>
+                  </div>
+                  {idx < 2 && <ArrowRight size={14} color={C.gray300} style={{ flexShrink: 0 }} />}
                 </div>
               ))}
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: C.gray400, borderTop: `1px solid ${C.gray100}`, paddingTop: 10 }}>
+              <span>Total orders: <strong style={{ color: C.gray700 }}>{totalOrders}</strong></span>
+              <span>Value: <strong style={{ color: C.gray700 }}>{formatCurrency(totalOrderValue)}</strong></span>
             </div>
           </div>
         </div>
 
+        {/* ── 3. Lifecycle Funnel with conversion rates + clickable ── */}
         <div className="pd-overview-subgrid" style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: 16 }}>
           <div className="pd-panel" style={{ borderRadius: 18, padding: 24 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 18 }}>
               <div>
-                <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: '.3em', textTransform: 'uppercase', color: C.gray400, marginBottom: 10 }}>Lifecycle Funnel</div>
+                {secLabel('Lifecycle Funnel')}
                 <div style={{ fontSize: 18, fontWeight: 600, color: C.gray900 }}>Lead to investor</div>
               </div>
               <button type="button" style={S.btnOutline} onClick={() => setSection('clients')}>Open Clients</button>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {funnelStages.map((stage, index) => {
                 const percent = percentOf(stage.count, Math.max(totalClients, 1));
+                const prevCount = index > 0 ? funnelStages[index - 1].count : 0;
+                const convPct = index > 0 && prevCount > 0 ? Math.round((stage.count / prevCount) * 100) : null;
                 return (
                   <div key={stage.label}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                      <span style={{ fontSize: 14, fontWeight: 600, color: C.gray900 }}>{stage.label}</span>
-                      <span style={{ fontSize: 13, color: C.gray500 }}>{formatCompactNumber(stage.count)} · {percent}%</span>
-                    </div>
-                    <div style={{ height: 12, borderRadius: 999, background: stage.bg, overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: `${Math.max(percent, stage.count > 0 ? 10 : 0)}%`, borderRadius: 999, background: stage.bar }} />
-                    </div>
-                    {index < funnelStages.length - 1 && <div style={{ marginTop: 10, color: C.gray400 }}><ArrowRight size={16} /></div>}
+                    {index > 0 && convPct !== null && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, margin: '4px 0 4px 8px', color: convPct > 50 ? C.green500 : convPct > 20 ? C.amber500 : C.red500 }}>
+                        <ChevronDown size={12} />
+                        <span style={{ fontSize: 11, fontWeight: 700 }}>{convPct}% conversion</span>
+                      </div>
+                    )}
+                    <button type="button" onClick={() => setSection('clients')} style={{ display: 'block', width: '100%', background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                        <span style={{ fontSize: 14, fontWeight: 600, color: C.gray900 }}>{stage.label}</span>
+                        <span style={{ fontSize: 13, color: C.gray500 }}>{stage.count} · {percent}%</span>
+                      </div>
+                      <div style={{ height: 10, borderRadius: 999, background: stage.bg, overflow: 'hidden' }}>
+                        <div style={{ height: '100%', width: `${Math.max(percent, stage.count > 0 ? 10 : 0)}%`, borderRadius: 999, background: stage.bar }} />
+                      </div>
+                    </button>
                   </div>
                 );
               })}
             </div>
           </div>
 
-          <div className="pd-panel" style={{ borderRadius: 18, padding: 24 }}>
-            <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: '.3em', textTransform: 'uppercase', color: C.gray400, marginBottom: 10 }}>Insight</div>
-            <div style={{ fontSize: 18, fontWeight: 600, color: C.gray900, marginBottom: 18 }}>Conversion rate</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-              <div style={{ width: 132, height: 132, borderRadius: '50%', background: `conic-gradient(${C.pri600} 0 ${conversionRate}%, ${C.gray100} ${conversionRate}% 100%)`, padding: 12, flexShrink: 0 }}>
-                <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: C.white, border: `1px solid ${C.gray200}`, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                  <div style={{ fontSize: 34, fontWeight: 700, color: C.gray900 }}>{conversionRate}%</div>
-                  <div style={{ fontSize: 12, color: C.gray500 }}>conversion</div>
+          {/* ── Conversion Rate + 8. Portfolio Insights ── */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div className="pd-panel" style={{ borderRadius: 18, padding: 24 }}>
+              {secLabel('Insight')}
+              <div style={{ fontSize: 18, fontWeight: 600, color: C.gray900, marginBottom: 18 }}>Conversion rate</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+                <div style={{ width: 110, height: 110, borderRadius: '50%', background: `conic-gradient(${C.pri600} 0 ${conversionRate}%, ${C.gray100} ${conversionRate}% 100%)`, padding: 10, flexShrink: 0 }}>
+                  <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: C.white, border: `1px solid ${C.gray200}`, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ fontSize: 28, fontWeight: 700, color: C.gray900 }}>{conversionRate}%</div>
+                    <div style={{ fontSize: 10, color: C.gray500 }}>conversion</div>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <div style={{ fontSize: 16, fontWeight: 600, color: C.gray900 }}>{activeInvestors} of {totalClients} clients are active investors</div>
-                <div style={{ fontSize: 14, lineHeight: 1.7, color: C.gray500, marginTop: 10 }}>
-                  Push KYC completion and link follow-ups to move more prospects into funded investor status.
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: C.gray900 }}>{activeInvestors} of {totalClients} clients</div>
+                  <div style={{ fontSize: 13, lineHeight: 1.6, color: C.gray500, marginTop: 6 }}>
+                    Push KYC completion and follow-ups to move prospects into funded investors.
+                  </div>
                 </div>
               </div>
             </div>
+
+            <div className="pd-panel" style={{ borderRadius: 18, padding: 24 }}>
+              {secLabel('Portfolio Insights')}
+              {topAmcs.length > 0 ? (
+                <>
+                  <div style={{ fontSize: 16, fontWeight: 600, color: C.gray900, marginBottom: 14 }}>Top AMCs by value</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {topAmcs.map(([amc, val], i) => (
+                      <div key={amc} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13 }}>
+                        <span style={{ width: 20, height: 20, borderRadius: 6, background: [C.pri100, C.green100, C.indigo100][i], display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color: [C.pri700, C.green500, C.indigo700][i], flexShrink: 0 }}>{i + 1}</span>
+                        <span style={{ flex: 1, color: C.gray700, fontWeight: 500 }}>{amc}</span>
+                        <span style={{ fontWeight: 700, color: C.gray900 }}>{formatCurrency(val)}</span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div style={{ fontSize: 16, fontWeight: 600, color: C.gray900, marginBottom: 8 }}>Portfolio composition</div>
+                  <p style={{ fontSize: 13, color: C.gray500, margin: '0 0 12px', lineHeight: 1.6 }}>Upload a CAS statement or add holdings manually to see your portfolio breakdown by AMC.</p>
+                  <button type="button" style={S.btnOutline} onClick={() => setSection('tracker')}><FolderOpen size={14} /> Open Tracker</button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* ── 7. Client Engagement Calendar ── */}
+        <div className="pd-panel" style={{ borderRadius: 18, padding: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+            <div>
+              {secLabel('Client Engagement')}
+              <div style={{ fontSize: 18, fontWeight: 600, color: C.gray900, marginBottom: 8 }}>Upcoming events</div>
+              <p style={{ margin: 0, fontSize: 13, color: C.gray500, lineHeight: 1.6 }}>
+                Birthday and anniversary reminders help retain clients 3x longer.
+                Add client date-of-birth in the Clients section to enable automated engagement reminders.
+              </p>
+            </div>
+            <button type="button" style={S.btnOutline} onClick={() => setSection('clients')}>
+              <Users size={14} /> Go to Clients
+            </button>
           </div>
         </div>
       </div>
@@ -1580,6 +1740,198 @@ function RevenueSection({ profile, showToast }: { profile: PartnerProfile; showT
           </div>
         )}
       </div>
+    </>
+  );
+}
+
+/* ─── Planner Section ────────────────────────────────────────────────── */
+function PlannerSection({ profile, showToast }: { profile: PartnerProfile; showToast: (t: 'success' | 'error', m: string) => void }) {
+  const [targetMonthly, setTargetMonthly] = useState<number>(100000);
+  const [trailPercent, setTrailPercent] = useState<number>(1);
+  const [avgSipAmount, setAvgSipAmount] = useState<number>(5000);
+  const [currentAum, setCurrentAum] = useState<number>(0);
+  const [newSipsPerMonth, setNewSipsPerMonth] = useState<number>(10);
+
+  // Attempt to auto-fetch current AUM from partner holdings
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await partnerApi.getHoldings();
+        const fetched = res.data?.totalValue ?? 0;
+        if (fetched > 0) setCurrentAum(fetched);
+      } catch { /* user can input manually */ }
+    })();
+  }, []);
+
+  // ── Derived calculations (no state, pure math) ──
+  const hasValidInputs = targetMonthly > 0 && trailPercent > 0 && avgSipAmount > 0;
+  const targetAum = hasValidInputs ? (targetMonthly * 12) / (trailPercent / 100) : 0;
+  const additionalAum = Math.max(0, targetAum - currentAum);
+  const progressPct = targetAum > 0 ? Math.min(100, Math.round((currentAum / targetAum) * 100)) : 0;
+  const annualPerSip = avgSipAmount * 12;
+  const sipsNeeded = annualPerSip > 0 ? Math.ceil(additionalAum / annualPerSip) : 0;
+  const estimatedMonths = newSipsPerMonth > 0 ? Math.ceil(sipsNeeded / newSipsPerMonth) : 0;
+  const goalReached = currentAum >= targetAum && targetAum > 0;
+  const estimatedCurrentIncome = trailPercent > 0 ? Math.round((currentAum * (trailPercent / 100)) / 12) : 0;
+
+  const formatInr = (n: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(n);
+  const formatCompact = (n: number) => {
+    if (n >= 10000000) return `${(n / 10000000).toFixed(1)} Cr`;
+    if (n >= 100000) return `${(n / 100000).toFixed(1)} L`;
+    if (n >= 1000) return `${(n / 1000).toFixed(1)}K`;
+    return String(n);
+  };
+  const timeLabel = (m: number) => {
+    if (m <= 0) return '0 months';
+    const y = Math.floor(m / 12);
+    const mo = m % 12;
+    if (y === 0) return `${mo} month${mo === 1 ? '' : 's'}`;
+    if (mo === 0) return `${y} year${y === 1 ? '' : 's'}`;
+    return `${y}y ${mo}m`;
+  };
+
+  const inputLabel = { ...S.label, fontSize: 11, fontWeight: 600, color: C.gray500 } as React.CSSProperties;
+  const inputStyle = { ...S.input, fontSize: 15, fontWeight: 600, height: 46, background: C.white, borderColor: C.gray200 } as React.CSSProperties;
+
+  return (
+    <>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
+        <div style={{ width: 42, height: 42, borderRadius: 14, background: `linear-gradient(135deg, ${C.pri500}, ${C.pri700})`, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: `0 10px 24px rgba(219,143,0,0.22)` }}>
+          <Calculator size={20} color="#111827" />
+        </div>
+        <div>
+          <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: C.gray900 }}>Income Planner</h2>
+          <p style={{ margin: 0, fontSize: 13, color: C.gray400 }}>Plan your trail commission income growth</p>
+        </div>
+      </div>
+
+      {/* Input Card */}
+      <div style={{ ...S.card, marginBottom: 20 }}>
+        <h3 style={{ margin: '0 0 16px', fontSize: 14, fontWeight: 600, color: C.gray700 }}>Your Assumptions</h3>
+        <div className="pd-planner-inputs" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 16 }}>
+          <div>
+            <label style={inputLabel}>Target Monthly Income</label>
+            <div style={{ position: 'relative' }}>
+              <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: 13, color: C.gray400, fontWeight: 600 }}>₹</span>
+              <input type="number" value={targetMonthly || ''} onChange={e => setTargetMonthly(Math.max(0, Number(e.target.value)))} style={{ ...inputStyle, paddingLeft: 30 }} placeholder="100000" />
+            </div>
+          </div>
+          <div>
+            <label style={inputLabel}>Avg SIP Amount (monthly)</label>
+            <div style={{ position: 'relative' }}>
+              <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: 13, color: C.gray400, fontWeight: 600 }}>₹</span>
+              <input type="number" value={avgSipAmount || ''} onChange={e => setAvgSipAmount(Math.max(0, Number(e.target.value)))} style={{ ...inputStyle, paddingLeft: 30 }} placeholder="5000" />
+            </div>
+          </div>
+          <div>
+            <label style={inputLabel}>Trail Commission % (p.a.)</label>
+            <div style={{ position: 'relative' }}>
+              <input type="number" step="0.1" min="0.01" max="10" value={trailPercent || ''} onChange={e => setTrailPercent(Math.max(0, Number(e.target.value)))} style={{ ...inputStyle, paddingRight: 30 }} placeholder="1" />
+              <span style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', fontSize: 13, color: C.gray400, fontWeight: 600 }}>%</span>
+            </div>
+          </div>
+        </div>
+        <div className="pd-planner-inputs" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
+          <div>
+            <label style={inputLabel}>Your Current AUM</label>
+            <div style={{ position: 'relative' }}>
+              <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: 13, color: C.gray400, fontWeight: 600 }}>₹</span>
+              <input type="number" value={currentAum || ''} onChange={e => setCurrentAum(Math.max(0, Number(e.target.value)))} style={{ ...inputStyle, paddingLeft: 30 }} placeholder="0" />
+            </div>
+          </div>
+          <div>
+            <label style={inputLabel}>New SIPs you can add per month</label>
+            <input type="number" min="1" max="1000" value={newSipsPerMonth || ''} onChange={e => setNewSipsPerMonth(Math.max(1, Number(e.target.value)))} style={inputStyle} placeholder="10" />
+          </div>
+        </div>
+      </div>
+
+      {!hasValidInputs ? (
+        <div style={{ ...S.card, textAlign: 'center', padding: 40, color: C.gray400 }}>
+          <Target size={32} style={{ marginBottom: 12, opacity: 0.5 }} />
+          <p style={{ margin: 0, fontSize: 15 }}>Enter a valid target income, SIP amount, and trail % to see your plan.</p>
+        </div>
+      ) : (
+        <>
+          {/* Progress Bar */}
+          <div style={{ ...S.cardElevated, marginBottom: 20 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
+              <span style={{ fontSize: 12, fontWeight: 600, color: C.gray500 }}>
+                {goalReached ? 'GOAL REACHED' : 'PROGRESS TO GOAL'}
+              </span>
+              <span style={{ fontSize: 14, fontWeight: 700, color: goalReached ? C.green500 : C.pri600 }}>{progressPct}%</span>
+            </div>
+            <div style={{ width: '100%', height: 12, borderRadius: 10, background: C.gray100, overflow: 'hidden' }}>
+              <div style={{ width: `${progressPct}%`, height: '100%', borderRadius: 10, background: goalReached ? `linear-gradient(90deg, ${C.green500}, ${C.green500})` : `linear-gradient(90deg, ${C.pri500}, ${C.pri700})`, transition: 'width 0.6s ease' }} />
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
+              <span style={{ fontSize: 12, color: C.gray400 }}>Current: <strong style={{ color: C.gray700 }}>{formatInr(currentAum)}</strong></span>
+              <span style={{ fontSize: 12, color: C.gray400 }}>Target: <strong style={{ color: C.gray700 }}>{formatInr(targetAum)}</strong></span>
+            </div>
+          </div>
+
+          {/* Results Grid */}
+          <div className="pd-planner-results" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 20 }}>
+            {/* AUM Needed */}
+            <div className="pd-stat-card" style={{ ...S.card, textAlign: 'center', padding: '20px 16px' }}>
+              <div style={{ width: 40, height: 40, borderRadius: 12, background: `${C.green500}18`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 10px' }}>
+                <TrendingUp size={18} color={C.green500} />
+              </div>
+              <div style={{ fontSize: 11, fontWeight: 600, color: C.gray400, textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>AUM Needed</div>
+              <div style={{ fontSize: 22, fontWeight: 800, color: C.gray900, lineHeight: 1.2 }}>₹{formatCompact(targetAum)}</div>
+              {!goalReached && additionalAum > 0 && (
+                <div style={{ marginTop: 6, fontSize: 11, padding: '3px 8px', borderRadius: 8, background: `${C.pri500}14`, color: C.pri700, fontWeight: 600, display: 'inline-block' }}>
+                  +₹{formatCompact(additionalAum)} more
+                </div>
+              )}
+            </div>
+            {/* SIPs Needed */}
+            <div className="pd-stat-card" style={{ ...S.card, textAlign: 'center', padding: '20px 16px' }}>
+              <div style={{ width: 40, height: 40, borderRadius: 12, background: `${C.pri500}18`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 10px' }}>
+                <Receipt size={18} color={C.pri600} />
+              </div>
+              <div style={{ fontSize: 11, fontWeight: 600, color: C.gray400, textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>New SIPs Needed</div>
+              <div style={{ fontSize: 22, fontWeight: 800, color: C.gray900, lineHeight: 1.2 }}>{goalReached ? 0 : sipsNeeded.toLocaleString('en-IN')}</div>
+              <div style={{ marginTop: 6, fontSize: 11, color: C.gray400 }}>at {formatInr(avgSipAmount)}/month each</div>
+            </div>
+            {/* Timeline */}
+            <div className="pd-stat-card" style={{ ...S.card, textAlign: 'center', padding: '20px 16px' }}>
+              <div style={{ width: 40, height: 40, borderRadius: 12, background: `rgba(99,102,241,0.12)`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 10px' }}>
+                <Clock size={18} color="#6366F1" />
+              </div>
+              <div style={{ fontSize: 11, fontWeight: 600, color: C.gray400, textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>Estimated Timeline</div>
+              <div style={{ fontSize: 22, fontWeight: 800, color: C.gray900, lineHeight: 1.2 }}>{goalReached ? '0' : timeLabel(estimatedMonths)}</div>
+              <div style={{ marginTop: 6, fontSize: 11, color: C.gray400 }}>at {newSipsPerMonth} new SIPs/month</div>
+            </div>
+          </div>
+
+          {/* Motivational Summary */}
+          <div style={{ ...S.card, borderLeft: `4px solid ${goalReached ? C.green500 : C.pri500}`, display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: goalReached ? `${C.green500}18` : `${C.pri500}14`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+              {goalReached ? <CheckCircle size={18} color={C.green500} /> : <Target size={18} color={C.pri600} />}
+            </div>
+            <div>
+              {goalReached ? (
+                <p style={{ margin: 0, fontSize: 14, color: C.gray700, lineHeight: 1.7 }}>
+                  <strong style={{ color: C.green500 }}>Congratulations!</strong> Your current AUM of <strong>{formatInr(currentAum)}</strong> already
+                  exceeds your target of <strong>{formatInr(targetAum)}</strong>. You are earning an estimated <strong>{formatInr(estimatedCurrentIncome)}/month</strong> in trail commission.
+                </p>
+              ) : (
+                <p style={{ margin: 0, fontSize: 14, color: C.gray700, lineHeight: 1.7 }}>
+                  You need <strong style={{ color: C.pri700 }}>{sipsNeeded.toLocaleString('en-IN')} more SIPs</strong> of <strong>{formatInr(avgSipAmount)}</strong> to
+                  build an AUM of <strong>{formatInr(targetAum)}</strong> and earn <strong style={{ color: C.pri700 }}>{formatInr(targetMonthly)}/month</strong> in
+                  trail commission. At <strong>{newSipsPerMonth} new SIPs per month</strong>, you can reach this goal in
+                  approximately <strong style={{ color: '#6366F1' }}>{timeLabel(estimatedMonths)}</strong>.
+                  {estimatedCurrentIncome > 0 && (
+                    <span> Your current AUM already earns ~<strong>{formatInr(estimatedCurrentIncome)}/month</strong>.</span>
+                  )}
+                </p>
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }
