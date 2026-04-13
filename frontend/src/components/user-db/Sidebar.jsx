@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Compass, Receipt, FileText, HelpCircle, X } from 'lucide-react';
+import { LayoutDashboard, Compass, Receipt, FileText, HelpCircle, X, User } from 'lucide-react';
 import logo from '../../assets/logo4.png';
 
 const SidebarContainer = styled.aside`
@@ -105,6 +105,7 @@ export const Sidebar = ({ isOpen, toggleSidebar }) => {
     { name: 'Explore Funds', path: '/dashboard/explore', icon: <Compass size={20} /> },
     { name: 'SIPs', path: '/dashboard/sips', icon: <Receipt size={20} /> },
     { name: 'Statements', path: '/dashboard/statements', icon: <FileText size={20} /> },
+    { name: 'My Profile', path: '/dashboard/profile', icon: <User size={20} /> },
     { name: 'Support / Help', path: '/dashboard/support', icon: <HelpCircle size={20} /> },
   ];
 

@@ -1573,9 +1573,10 @@
   }
 
   /* =====================================================================
-     ADMIN PORTAL
+     WEBSITE CONTROLS (admin console)
      ===================================================================== */
-  .admin-portal {
+  .admin-portal,
+  .website-controls {
     background: var(--bg) !important;
     color: var(--text-primary) !important;
   }

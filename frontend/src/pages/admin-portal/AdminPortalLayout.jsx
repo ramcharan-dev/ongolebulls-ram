@@ -16,16 +16,16 @@ import { clearAdmin, getAdmin } from '../../utils/storage';
 import './admin-portal.css';
 
 const NAV_ITEMS = [
-  { to: '/admin-portal', icon: LayoutDashboard, label: 'Dashboard', end: true },
-  { to: '/admin-portal/clients', icon: Users, label: 'Clients' },
-  { to: '/admin-portal/plans', icon: ReceiptText, label: 'Plans' },
-  { to: '/admin-portal/investments', icon: TrendingUp, label: 'Investments' },
-  { to: '/admin-portal/blogs', icon: FileText, label: 'Blogs' },
-  { to: '/admin-portal/services', icon: Wrench, label: 'Services' },
-  { to: '/admin-portal/seo', icon: Search, label: 'SEO' },
-  { to: '/admin-portal/settings', icon: Settings, label: 'Settings' },
-  { to: '/admin-portal/documents', icon: FolderOpen, label: 'Documents' },
-  { to: '/admin-portal/careers', icon: Briefcase, label: 'Careers' },
+  { to: '/website-controls', icon: LayoutDashboard, label: 'Dashboard', end: true },
+  { to: '/website-controls/clients', icon: Users, label: 'Clients' },
+  { to: '/website-controls/plans', icon: ReceiptText, label: 'Plans' },
+  { to: '/website-controls/investments', icon: TrendingUp, label: 'Investments' },
+  { to: '/website-controls/blogs', icon: FileText, label: 'Blogs' },
+  { to: '/website-controls/services', icon: Wrench, label: 'Services' },
+  { to: '/website-controls/seo', icon: Search, label: 'SEO' },
+  { to: '/website-controls/settings', icon: Settings, label: 'Settings' },
+  { to: '/website-controls/documents', icon: FolderOpen, label: 'Documents' },
+  { to: '/website-controls/careers', icon: Briefcase, label: 'Careers' },
 ];
 
 export default function AdminPortalLayout() {
@@ -35,18 +35,18 @@ export default function AdminPortalLayout() {
 
   const doLogout = () => {
     clearAdmin();
-    navigate('/admin/login', { replace: true });
+    navigate('/website-controls/login', { replace: true });
   };
 
   const pageTitle = NAV_ITEMS.find((item) =>
     item.end ? location.pathname === item.to : location.pathname.startsWith(item.to)
-  )?.label || 'Admin Portal';
+  )?.label || 'Website Controls';
 
   return (
     <div className="ap-root">
       <aside className="ap-sidebar">
         <div className="ap-brand">
-          <h1>OngoleBulls Admin</h1>
+          <h1>OngoleBulls Controls</h1>
           <p>Website Operations Console</p>
         </div>
 
@@ -59,14 +59,14 @@ export default function AdminPortalLayout() {
           ))}
         </nav>
 
-        <div className="ap-sidebar-footer">Environment: Admin</div>
+        <div className="ap-sidebar-footer">Website controls</div>
       </aside>
 
       <main className="ap-main">
         <header className="ap-topbar">
           <div className="ap-topbar-title">{pageTitle}</div>
           <div className="ap-topbar-right">
-            <div className="ap-admin-chip">{admin?.name || 'Admin'}</div>
+            <div className="ap-admin-chip">{admin?.name || 'Manager'}</div>
             <button type="button" className="ap-btn ap-btn-secondary" onClick={doLogout}>
               <LogOut size={14} /> Logout
             </button>

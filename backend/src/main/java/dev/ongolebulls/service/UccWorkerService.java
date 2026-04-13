@@ -1,16 +1,20 @@
 package dev.ongolebulls.service;
 
+import dev.ongolebulls.bse.common.BseConstants;
+import dev.ongolebulls.bse.common.exception.BseApiException;
+import dev.ongolebulls.bse.common.exception.BseTimeoutException;
+import dev.ongolebulls.bse.common.exception.BseValidationException;
+import dev.ongolebulls.bse.ucc.dto.UccGenerationResult;
+import dev.ongolebulls.bse.ucc.service.UccService;
 import dev.ongolebulls.model.UccRegistration;
 import dev.ongolebulls.repository.UccRegistrationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -18,18 +22,18 @@ import java.util.Map;
 public class UccWorkerService {
 
     private final UccRegistrationRepository repository;
-    private final BseStarMfService bseService;
+    private final UccService uccService;
 
     private static final int MAX_RETRIES = 3;
 
     /**
      * Scheduled job that picks up PENDING UCC registrations
-     * and submits them to the exchange API.
+     * and submits them to the BSE UCC API via the new architecture.
      * Runs every 30 seconds.
      */
     @Scheduled(fixedDelay = 30000, initialDelay = 10000)
     public void processPendingRegistrations() {
-        List<UccRegistration> pending = repository.findByStatus("PENDING");
+        List<UccRegistration> pending = repository.findByStatus(BseConstants.STATUS_PENDING);
 
         if (pending.isEmpty()) return;
 
@@ -46,62 +50,59 @@ public class UccWorkerService {
             log.info("Processing UCC registration id={}, userId={}, attempt={}",
                     reg.getId(), reg.getUserId(), reg.getRetryCount() + 1);
 
-            Map<String, Object> result = bseService.createUcc(reg);
+            // Delegate to the new BSE UCC architecture
+            UccGenerationResult result = uccService.generateUcc(reg);
 
-            boolean success = Boolean.TRUE.equals(result.get("success"));
-            String response = result.get("response") != null ? result.get("response").toString() : null;
-            String errorMsg = result.get("errorMessage") != null ? result.get("errorMessage").toString() : null;
-
-            reg.setBseResponse(response);
-
-            if (success) {
-                reg.setStatus("SUCCESS");
+            if (result.isSuccess()) {
+                reg.setStatus(BseConstants.STATUS_SUCCESS);
                 reg.setErrorMessage(null);
-                // Extract client code from BSE response if available
-                if (reg.getClientCode() == null || reg.getClientCode().isBlank()) {
-                    reg.setClientCode(extractClientCode(response));
+                reg.setBseResponse(result.getBseRemarks());
+                if (result.getClientCode() != null) {
+                    reg.setClientCode(result.getClientCode());
                 }
-                log.info("UCC registration SUCCESS for userId={}", reg.getUserId());
+                log.info("UCC registration SUCCESS for userId={}, clientCode={}",
+                        reg.getUserId(), result.getClientCode());
             } else {
-                reg.setRetryCount(reg.getRetryCount() + 1);
-
-                if (reg.getRetryCount() >= MAX_RETRIES) {
-                    reg.setStatus("FAILED");
-                    reg.setErrorMessage(errorMsg != null ? errorMsg : "Max retries exceeded");
-                    log.warn("UCC registration FAILED after {} retries for userId={}", MAX_RETRIES, reg.getUserId());
-                } else {
-                    // Keep as PENDING for next retry cycle
-                    reg.setErrorMessage(errorMsg);
-                    log.info("UCC registration attempt {} failed for userId={}, will retry", reg.getRetryCount(), reg.getUserId());
-                }
+                handleFailure(reg, result.getErrorMessage());
             }
 
             repository.save(reg);
 
+        } catch (BseValidationException e) {
+            // Validation errors are not retryable — fail immediately
+            log.error("UCC validation failed for userId={}: {}", reg.getUserId(), e.getValidationErrors());
+            reg.setStatus(BseConstants.STATUS_FAILED);
+            reg.setErrorMessage("Validation failed: " + String.join("; ", e.getValidationErrors()));
+            repository.save(reg);
+
+        } catch (BseTimeoutException e) {
+            log.warn("BSE API timeout for userId={}", reg.getUserId());
+            handleFailure(reg, "BSE API timeout: " + e.getMessage());
+            repository.save(reg);
+
+        } catch (BseApiException e) {
+            log.error("BSE API error for userId={}: {}", reg.getUserId(), e.getMessage());
+            handleFailure(reg, "BSE API error: " + e.getMessage());
+            repository.save(reg);
+
         } catch (Exception e) {
-            log.error("Error processing UCC registration id={}", reg.getId(), e);
-            reg.setRetryCount(reg.getRetryCount() + 1);
-            reg.setErrorMessage("Processing error: " + e.getMessage());
-            if (reg.getRetryCount() >= MAX_RETRIES) {
-                reg.setStatus("FAILED");
-            }
+            log.error("Unexpected error processing UCC registration id={}", reg.getId(), e);
+            handleFailure(reg, "Processing error: " + e.getMessage());
             repository.save(reg);
         }
     }
 
-    private String extractClientCode(String response) {
-        // Parse the BSE response to extract generated client code
-        // This depends on actual BSE API response format
-        if (response == null) return null;
-        try {
-            if (response.contains("ClientCode")) {
-                int idx = response.indexOf("ClientCode");
-                // Basic extraction — adapt to actual BSE response format
-                return response.substring(idx).replaceAll("[^A-Z0-9]", "").substring(0, Math.min(10, response.length()));
-            }
-        } catch (Exception e) {
-            log.warn("Could not extract client code from response", e);
+    private void handleFailure(UccRegistration reg, String errorMessage) {
+        reg.setRetryCount(reg.getRetryCount() + 1);
+        reg.setErrorMessage(errorMessage);
+
+        if (reg.getRetryCount() >= MAX_RETRIES) {
+            reg.setStatus(BseConstants.STATUS_FAILED);
+            log.warn("UCC registration FAILED after {} retries for userId={}", MAX_RETRIES, reg.getUserId());
+        } else {
+            // Keep as PENDING for next retry cycle
+            log.info("UCC registration attempt {} failed for userId={}, will retry",
+                    reg.getRetryCount(), reg.getUserId());
         }
-        return null;
     }
 }

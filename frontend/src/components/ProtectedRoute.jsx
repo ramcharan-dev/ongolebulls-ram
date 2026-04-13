@@ -16,13 +16,13 @@ export const ProtectedRoute = ({ children }) => {
 
 /**
  * AdminRoute — wraps a route that requires an admin session.
- * Redirects to /admin/login if no admin session exists.
+ * Redirects to /website-controls/login if no admin session exists.
  */
 export const AdminRoute = ({ children }) => {
   const admin = getAdmin();
   const location = useLocation();
   if (!admin) {
-    return <Navigate to="/admin/login" state={{ from: location }} replace />;
+    return <Navigate to="/website-controls/login" state={{ from: location }} replace />;
   }
   return children;
 };

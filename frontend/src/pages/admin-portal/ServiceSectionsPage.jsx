@@ -320,7 +320,7 @@ export default function ServiceSectionsPage() {
 
       <div className="ap-page-header">
         <div className="ap-page-title">
-          <button type="button" className="ap-btn ap-btn-ghost" onClick={() => navigate('/admin-portal/services')}>
+          <button type="button" className="ap-btn ap-btn-ghost" onClick={() => navigate('/website-controls/services')}>
             <ArrowLeft size={14} /> Back
           </button>
           <div>

@@ -39,12 +39,18 @@ public class SettingsController {
     // Create new setting
     @PostMapping
     public Settings createSetting(@RequestBody Settings settings) {
+        if (settings == null) {
+            throw new IllegalArgumentException("Settings payload is required");
+        }
         return settingsService.create(settings);
     }
 
     // Update existing setting
     @PutMapping("/{id}")
     public ResponseEntity<Settings> updateSetting(@PathVariable Long id, @RequestBody Settings updatedSettings) {
+        if (updatedSettings == null) {
+            return ResponseEntity.badRequest().build();
+        }
         try {
             Settings updated = settingsService.update(id, updatedSettings);
             return ResponseEntity.ok(updated);
@@ -72,7 +78,7 @@ public class SettingsController {
             @RequestParam("file") MultipartFile file) {
         try {
             if (file.isEmpty()) {
-                return ResponseEntity.badRequest().build();
+                return ResponseEntity.badRequest().body(Map.of("error", "File is empty"));
             }
 
             // Save file to assets directory
@@ -98,9 +104,9 @@ public class SettingsController {
                 return ResponseEntity.ok(response);
             }
 
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(404).body(Map.of("error", "Settings not found"));
         } catch (IOException e) {
-            return ResponseEntity.status(500).build();
+            return ResponseEntity.status(500).body(Map.of("error", "Unable to upload favicon: " + e.getMessage()));
         }
     }
 }

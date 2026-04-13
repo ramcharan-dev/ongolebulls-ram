@@ -125,7 +125,7 @@ export default function ServicesPage() {
       showToast('Service ID missing', 'error');
       return;
     }
-    navigate(`/admin-portal/services/${service.id}`);
+    navigate(`/website-controls/services/${service.id}`);
   };
 
   return (
@@ -190,7 +190,7 @@ export default function ServicesPage() {
               key={service.id}
               service={service}
               onView={openServiceDetails}
-              onManageSections={(target) => navigate(`/admin-portal/services/${target.id}/sections`)}
+              onManageSections={(target) => navigate(`/website-controls/services/${target.id}/sections`)}
               onEdit={(target) => { setFormInitial(target); setFormOpen(true); }}
               onDelete={setDeleteTarget}
             />

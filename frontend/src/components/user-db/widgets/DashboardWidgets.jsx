@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { IndianRupee, TrendingUp, TrendingDown, PiggyBank, ArrowRightLeft } from 'lucide-react';
+import { IndianRupee, TrendingUp, PiggyBank, ArrowRightLeft } from 'lucide-react';
+import { SparkLine } from './SparkLine';
 
 const WidgetGrid = styled.div`
   display: grid;
@@ -17,11 +18,12 @@ const WidgetCard = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.border};
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: ${({ theme }) => theme.shadows.md};
+    transform: translateY(-3px);
+    box-shadow: ${({ theme }) => theme.shadows.md}, 0 0 0 1px ${({ theme }) => `${theme.colors.secondary}20`};
+    border-color: ${({ theme }) => `${theme.colors.secondary}40`};
   }
 `;
 
@@ -60,6 +62,10 @@ const WidgetValue = styled.div`
   gap: 4px;
 `;
 
+const SparkLineWrapper = styled.div`
+  margin-bottom: 10px;
+`;
+
 const WidgetSubtext = styled.div`
   font-size: 13px;
   font-weight: 500;
@@ -68,6 +74,13 @@ const WidgetSubtext = styled.div`
   gap: 4px;
   color: ${({ $color, theme }) => $color || theme.colors.textMuted};
 `;
+
+/* ─── Sparkline mock data ────────────────────────────────────────────────── */
+
+const SPARK_PORTFOLIO = [80, 95, 88, 110, 105, 125, 118, 140, 135, 150];
+const SPARK_RETURNS   = [0, 5, 3, 12, 8, 18, 15, 22, 20, 28];
+const SPARK_SIPS      = [0, 500, 500, 1000, 1000, 1500, 1500, 2000, 2000, 2500];
+const SPARK_TXN       = [2, 1, 3, 0, 4, 2, 1, 5, 3, 2];
 
 export const DashboardWidgets = () => {
   return (
@@ -80,12 +93,11 @@ export const DashboardWidgets = () => {
             <IndianRupee size={20} />
           </IconWrapper>
         </WidgetHeader>
-        <WidgetValue>
-          ₹0.00
-        </WidgetValue>
-        <WidgetSubtext>
-          Across all mutual funds
-        </WidgetSubtext>
+        <WidgetValue>₹0.00</WidgetValue>
+        <SparkLineWrapper>
+          <SparkLine data={SPARK_PORTFOLIO} width={220} height={36} color="#3B82F6" />
+        </SparkLineWrapper>
+        <WidgetSubtext>Across all mutual funds</WidgetSubtext>
       </WidgetCard>
 
       {/* Today's Gain/Loss */}
@@ -96,9 +108,10 @@ export const DashboardWidgets = () => {
             <TrendingUp size={20} />
           </IconWrapper>
         </WidgetHeader>
-        <WidgetValue>
-          ₹0.00
-        </WidgetValue>
+        <WidgetValue>₹0.00</WidgetValue>
+        <SparkLineWrapper>
+          <SparkLine data={SPARK_RETURNS} width={220} height={36} color="#10B981" />
+        </SparkLineWrapper>
         <WidgetSubtext $color="#10B981">
           <TrendingUp size={14} /> +0.00%
         </WidgetSubtext>
@@ -112,12 +125,11 @@ export const DashboardWidgets = () => {
             <PiggyBank size={20} />
           </IconWrapper>
         </WidgetHeader>
-        <WidgetValue>
-          ₹0 / mo
-        </WidgetValue>
-        <WidgetSubtext>
-          0 Ongoing SIPs
-        </WidgetSubtext>
+        <WidgetValue>₹0 / mo</WidgetValue>
+        <SparkLineWrapper>
+          <SparkLine data={SPARK_SIPS} width={220} height={36} color="#8B5CF6" />
+        </SparkLineWrapper>
+        <WidgetSubtext>0 Ongoing SIPs</WidgetSubtext>
       </WidgetCard>
 
       {/* Recent Transactions */}
@@ -131,9 +143,10 @@ export const DashboardWidgets = () => {
         <WidgetValue style={{ fontSize: '20px', marginTop: '4px' }}>
           No recent activity
         </WidgetValue>
-        <WidgetSubtext>
-          Your latest transactions will appear here
-        </WidgetSubtext>
+        <SparkLineWrapper>
+          <SparkLine data={SPARK_TXN} width={220} height={36} color="#F59E0B" />
+        </SparkLineWrapper>
+        <WidgetSubtext>Your latest transactions will appear here</WidgetSubtext>
       </WidgetCard>
     </WidgetGrid>
   );

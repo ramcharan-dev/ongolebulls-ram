@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { ShieldCheck, UserCheck, AlertTriangle, FilePenLine } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../hooks/useAuth';
+import { getUserProfile } from '../../../api/authApi';
 
 const StatusContainer = styled.div`
   display: grid;
@@ -49,7 +51,7 @@ const Badge = styled.span`
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
-  
+
   ${({ $status, theme }) => {
     switch ($status) {
       case 'Completed':
@@ -101,11 +103,37 @@ const ActionButton = styled.button`
   }
 `;
 
+function normalizeStatus(status, fallback) {
+  if (!status) return fallback;
+  const s = status.toLowerCase();
+  if (s === 'verified' || s === 'completed' || s === 'approved') return 'Verified';
+  if (s === 'active') return 'Active';
+  if (s === 'pending' || s === 'in_progress') return 'Pending';
+  return fallback;
+}
+
 export const StatusCards = () => {
   const navigate = useNavigate();
-  // Simulated State (In reality fetched via API)
-  const kycStatus = 'Not Completed'; 
-  const uccStatus = 'Not Created';
+  const { user } = useAuth();
+  const [kycStatus, setKycStatus] = useState('Not Completed');
+  const [uccStatus, setUccStatus] = useState('Not Created');
+
+  useEffect(() => {
+    if (!user?.id) return;
+    let cancelled = false;
+    getUserProfile(user.id)
+      .then((res) => {
+        if (cancelled) return;
+        const p = res.data;
+        setKycStatus(normalizeStatus(p?.kycStatus, 'Not Completed'));
+        setUccStatus(normalizeStatus(p?.uccStatus, 'Not Created'));
+      })
+      .catch(() => { /* keep defaults */ });
+    return () => { cancelled = true; };
+  }, [user?.id]);
+
+  const kycDone = kycStatus === 'Verified' || kycStatus === 'Active';
+  const uccDone = uccStatus === 'Active' || uccStatus === 'Verified';
 
   return (
     <StatusContainer>
@@ -118,7 +146,7 @@ export const StatusCards = () => {
         <CardContent>
           Your Know Your Customer (KYC) verification is mandatory to start investing in mutual funds as per SEBI regulations. Let's get it sorted.
         </CardContent>
-        {kycStatus !== 'Completed' && kycStatus !== 'Verified' && (
+        {!kycDone && (
           <ActionButton onClick={() => navigate('/dashboard/kyc')}>
             <FilePenLine size={16} /> Complete KYC
           </ActionButton>
@@ -134,7 +162,7 @@ export const StatusCards = () => {
         <CardContent>
           A Unique Client Code (UCC) is required to process and track your investments on the exchange.
         </CardContent>
-        {uccStatus !== 'Active' && uccStatus !== 'Completed' && (
+        {!uccDone && (
           <ActionButton onClick={() => navigate('/dashboard/ucc')}>
             <AlertTriangle size={16} /> Generate UCC
           </ActionButton>

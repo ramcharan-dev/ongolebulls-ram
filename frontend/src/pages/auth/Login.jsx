@@ -3,7 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff, Mail, ArrowLeft, X } from 'lucide-react';
 import { login, forgotPassword } from '../../api/authApi';
 import { saveUser } from '../../utils/storage';
-import logo from '../../assets/logo4.png';
+import { getDashboardRoute } from '../../utils/roleRoutes';
+import AuthBrandLogo from './AuthBrandLogo';
 import './Auth.css';
 
 export default function Login() {
@@ -44,7 +45,8 @@ export default function Login() {
     try {
       const res = await login(form.email, form.password);
       saveUser(res.data);
-      navigate('/dashboard');
+      const role = res.data.role;
+      navigate(getDashboardRoute(role));
     } catch (err) {
       setError(err.userMessage || 'Invalid email or password.');
     } finally {
@@ -86,9 +88,7 @@ export default function Login() {
   return (
     <div className="auth-page">
       <div className="auth-card auth-card-login">
-        <div className="auth-logo-container">
-          <img src={logo} alt="OngoleBulls" className="auth-logo" />
-        </div>
+        <AuthBrandLogo />
 
         <h2 className="auth-title">Sign In</h2>
 
@@ -147,6 +147,13 @@ export default function Login() {
           Don't have an account?{' '}
           <Link to="/signup" className="auth-link">Create one</Link>
         </p>
+
+        <div className="text-center mt-2">
+          <span className="text-sm text-gray-600">Want to become a distribution partner? </span>
+          <Link to="/register/partner" className="text-sm text-blue-600 hover:underline font-medium">
+            Register as Partner
+          </Link>
+        </div>
       </div>
 
       {/* ── Forgot-password modal ──────────────────────────── */}

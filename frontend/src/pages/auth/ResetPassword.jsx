@@ -33,7 +33,7 @@ export default function ResetPassword() {
       const res = await resetPassword(token, password);
       if (res.data?.success) {
         setSuccess('Password reset successfully! Redirecting to login…');
-        setTimeout(() => navigate('/login'), 2500);
+        setTimeout(() => navigate('/login?reset=success'), 2500);
       } else {
         setError(res.data?.message || 'Reset failed.');
       }

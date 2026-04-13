@@ -25,6 +25,17 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Auto-logout on expired token (skip auth endpoints which return 401 for invalid credentials)
+    if (
+      error.response?.status === 401 &&
+      !error.config?.url?.includes('/api/auth/') &&
+      !error.config?.url?.includes('/api/login')
+    ) {
+      localStorage.removeItem('ob_user');
+      window.location.href = '/login';
+      return Promise.reject(error);
+    }
+
     let userMessage;
 
     if (!error.response) {

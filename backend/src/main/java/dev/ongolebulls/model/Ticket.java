@@ -32,6 +32,18 @@ public class Ticket {
     @Column(columnDefinition = "TEXT")
     private String resolution;
 
+    @Column(length = 20)
+    private String priority; // HIGH, MEDIUM, LOW
+
+    @Column(name = "assigned_to")
+    private Long assignedTo;
+
+    @Column(name = "assigned_to_name")
+    private String assignedToName;
+
+    @Column(name = "is_escalated")
+    private Boolean isEscalated = false;
+
     @Column(name = "attachment_path")
     private String attachmentPath;
 
@@ -184,6 +196,38 @@ public class Ticket {
 
     public void setReplies(List<TicketReply> replies) {
         this.replies = replies;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    public Long getAssignedTo() {
+        return assignedTo;
+    }
+
+    public void setAssignedTo(Long assignedTo) {
+        this.assignedTo = assignedTo;
+    }
+
+    public String getAssignedToName() {
+        return assignedToName;
+    }
+
+    public void setAssignedToName(String assignedToName) {
+        this.assignedToName = assignedToName;
+    }
+
+    public Boolean getIsEscalated() {
+        return isEscalated;
+    }
+
+    public void setIsEscalated(Boolean isEscalated) {
+        this.isEscalated = isEscalated;
     }
 }
 
