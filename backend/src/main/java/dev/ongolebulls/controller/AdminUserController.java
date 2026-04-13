@@ -96,7 +96,9 @@ public class AdminUserController {
             User.UserBuilder builder = User.builder()
                     .fullName(req.getName())
                     .email(req.getEmail())
-                    .mobileNumber("0000000000") // placeholder for internal users
+                    // Unique placeholder — mobile column has a UNIQUE constraint so
+                    // we can't reuse "0000000000" for every internal user.
+                    .mobileNumber("00" + String.valueOf(System.currentTimeMillis()).substring(5))
                     .passwordHash(passwordEncoder.encode(req.getPassword()))
                     .role(role)
                     .isActivated(true)
@@ -109,12 +111,17 @@ public class AdminUserController {
                 if (req.getAssignedDistrict() != null && !req.getAssignedDistrict().isBlank()) {
                     builder.assignedDistrict(req.getAssignedDistrict().trim());
                 }
+                // City is a free-text field (no master table). Case-insensitive
+                // matching happens at lookup time in RmAssignmentService.
+                if (req.getAssignedCity() != null && !req.getAssignedCity().isBlank()) {
+                    builder.assignedCity(req.getAssignedCity().trim());
+                }
             }
 
             User saved = userRepository.save(builder.build());
 
-            log.info("Internal user created: email={}, role={}, assignedState={}, assignedDistrict={}",
-                    req.getEmail(), role, saved.getAssignedState(), saved.getAssignedDistrict());
+            log.info("Internal user created: email={}, role={}, assignedState={}, assignedDistrict={}, assignedCity={}",
+                    req.getEmail(), role, saved.getAssignedState(), saved.getAssignedDistrict(), saved.getAssignedCity());
 
             return ResponseEntity.ok(Map.of(
                     "message", "User created successfully",
@@ -177,13 +184,16 @@ public class AdminUserController {
 
     /**
      * PATCH /api/admin/users/{id}/rm-location — Update an RM's service area.
-     * Body: { "assignedState": "...", "assignedDistrict": "..." }  (district optional)
+     * Body: { "assignedState": "...", "assignedDistrict": "...", "assignedCity": "..." }
+     * assignedDistrict and assignedCity are optional. Passing an empty string
+     * clears the field.
      */
     @PatchMapping("/{id}/rm-location")
     public ResponseEntity<?> updateRmLocation(@PathVariable Long id,
                                               @RequestBody Map<String, String> body) {
         String state = body.get("assignedState");
         String district = body.get("assignedDistrict");
+        String city = body.get("assignedCity");
 
         if (state == null || state.isBlank()) {
             return ResponseEntity.badRequest().body(Map.of("error", "assignedState is required"));
@@ -205,9 +215,10 @@ public class AdminUserController {
                     }
                     user.setAssignedState(state.trim());
                     user.setAssignedDistrict(district != null && !district.isBlank() ? district.trim() : null);
+                    user.setAssignedCity(city != null && !city.isBlank() ? city.trim() : null);
                     User saved = userRepository.save(user);
-                    log.info("RM {} location updated to state={}, district={}",
-                            id, saved.getAssignedState(), saved.getAssignedDistrict());
+                    log.info("RM {} location updated to state={}, district={}, city={}",
+                            id, saved.getAssignedState(), saved.getAssignedDistrict(), saved.getAssignedCity());
                     return ResponseEntity.ok((Object) toSummary(saved));
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -223,6 +234,7 @@ public class AdminUserController {
                 .createdAt(u.getCreatedAt())
                 .assignedState(u.getAssignedState())
                 .assignedDistrict(u.getAssignedDistrict())
+                .assignedCity(u.getAssignedCity())
                 .build();
     }
 }

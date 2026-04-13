@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import SmoothScroll from './utils/SmoothScroll';
@@ -79,6 +79,43 @@ const Loader = () => (
   </div>
 );
 
+function PublicSiteLayout() {
+  const location = useLocation();
+  const hideFooter = location.pathname === '/register/partner';
+
+  return (
+    <div className="public-site-shell">
+      <SmoothScroll />
+      <Header />
+      <main className="public-site-main">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/Aboutus" element={<AboutUs />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/services/:slug" element={<ServiceDetail />} />
+          <Route path="/blogs" element={<BlogList />} />
+          <Route path="/blogs/:id" element={<BlogDetail />} />
+          <Route path="/MutualFund" element={<MutualFund />} />
+          <Route path="/elss" element={<ElssPage />} />
+          <Route path="/stocks" element={<StocksPage />} />
+          <Route path="/etfs" element={<EtfsPage />} />
+          <Route path="/sip" element={<SipDetailPage />} />
+          <Route path="/data-security" element={<DataSecurityPage />} />
+          <Route path="/pms" element={<PmsPage />} />
+          <Route path="/PmsPage" element={<PmsPage />} />
+          <Route path="/contactForm" element={<ContactForm />} />
+          <Route path="/AppointmentForm" element={<AppointmentForm />} />
+          <Route path="/tools/*" element={<ToolsRoutes />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/register/partner" element={<PartnerRegister />} />
+        </Routes>
+      </main>
+      {!hideFooter && <Footer />}
+    </div>
+  );
+}
+
 function App() {
   return (
     <BrowserRouter>
@@ -133,37 +170,7 @@ function App() {
           {/* ── Public Routes (with header/footer) ──────────────────────────── */}
           <Route
             path="*"
-            element={
-              <div className="public-site-shell">
-                <SmoothScroll />
-                <Header />
-                <main className="public-site-main">
-                  <Routes>
-                    <Route path="/"                    element={<Home />} />
-                    <Route path="/Aboutus"             element={<AboutUs />} />
-                    <Route path="/services"            element={<Services />} />
-                    <Route path="/services/:slug"      element={<ServiceDetail />} />
-                    <Route path="/blogs"               element={<BlogList />} />
-                    <Route path="/blogs/:id"           element={<BlogDetail />} />
-                    <Route path="/MutualFund"          element={<MutualFund />} />
-                    <Route path="/elss"                element={<ElssPage />} />
-                    <Route path="/stocks"              element={<StocksPage />} />
-                    <Route path="/etfs"                element={<EtfsPage />} />
-                    <Route path="/sip"                 element={<SipDetailPage />} />
-                    <Route path="/data-security"       element={<DataSecurityPage />} />
-                    <Route path="/pms"                 element={<PmsPage />} />
-                    <Route path="/PmsPage"             element={<PmsPage />} />
-                    <Route path="/contactForm"         element={<ContactForm />} />
-                    <Route path="/AppointmentForm"     element={<AppointmentForm />} />
-                    <Route path="/tools/*"             element={<ToolsRoutes />} />
-                    <Route path="/login"               element={<Login />} />
-                    <Route path="/signup"              element={<Signup />} />
-                    <Route path="/register/partner"    element={<PartnerRegister />} />
-                  </Routes>
-                </main>
-                <Footer />
-              </div>
-            }
+            element={<PublicSiteLayout />}
           />
         </Routes>
       </Suspense>

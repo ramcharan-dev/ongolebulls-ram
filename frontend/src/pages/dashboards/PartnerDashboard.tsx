@@ -21,20 +21,22 @@ import type {
 function getColors(dark: boolean) {
   if (dark) {
     return {
-      navy950: '#080b14', navy900: '#0d111c', navy800: '#131927', navy700: '#181f31',
-      pri500: '#f6a91a', pri600: '#ffb020', pri700: '#d88d08', pri100: 'rgba(246,169,26,0.14)', pri50: 'rgba(246,169,26,0.08)',
-      white: '#141a27', gray50: '#0f1320', gray100: '#1a2132', gray200: '#263049',
-      gray300: '#33415f', gray400: '#7d879d', gray500: '#96a0b5', gray600: '#c5cede',
-      gray700: '#e5ebf5', gray900: '#f8fbff',
-      green500: '#28d17c', green100: 'rgba(40,209,124,0.14)', green400: '#40e08f',
-      amber500: '#ffb020', amber100: 'rgba(255,176,32,0.15)', amber50: 'rgba(255,176,32,0.08)',
-      red500: '#ff5a5f', red100: 'rgba(255,90,95,0.14)',
-      purple100: 'rgba(168,85,247,0.15)', purple600: '#c084fc',
-      orange100: 'rgba(249,115,22,0.15)', orange700: '#fb923c',
-      indigo100: 'rgba(59,130,246,0.15)', indigo700: '#60a5fa',
+      isDark: true,
+      navy950: '#050812', navy900: '#0b1220', navy800: '#111a2b', navy700: '#172234',
+      pri500: '#ffb020', pri600: '#ffc147', pri700: '#d38a00', pri100: 'rgba(255,176,32,0.18)', pri50: 'rgba(255,176,32,0.10)',
+      white: '#121b2d', gray50: '#09111e', gray100: '#141f31', gray200: '#21304a',
+      gray300: '#314566', gray400: '#8b97ae', gray500: '#a7b2c6', gray600: '#d0d8e6',
+      gray700: '#edf3fb', gray900: '#ffffff',
+      green500: '#30d486', green100: 'rgba(48,212,134,0.16)', green400: '#55e49f',
+      amber500: '#ffb020', amber100: 'rgba(255,176,32,0.18)', amber50: 'rgba(255,176,32,0.10)',
+      red500: '#ff6167', red100: 'rgba(255,97,103,0.16)',
+      purple100: 'rgba(168,85,247,0.18)', purple600: '#cb96ff',
+      orange100: 'rgba(249,115,22,0.18)', orange700: '#ff9d5c',
+      indigo100: 'rgba(59,130,246,0.18)', indigo700: '#79b0ff',
     };
   }
   return {
+    isDark: false,
     navy950: '#f3f6fb', navy900: '#f8fafc', navy800: '#ffffff', navy700: '#eef2f7',
     pri500: '#f59e0b', pri600: '#d97706', pri700: '#b45309', pri100: '#fef3c7', pri50: '#fffbeb',
     white: '#ffffff', gray50: '#f4f7fb', gray100: '#eef2f7', gray200: '#dbe3ef',
@@ -48,19 +50,19 @@ function getColors(dark: boolean) {
     indigo100: '#dbeafe', indigo700: '#2563eb',
   };
 }
-function getStyles(C: ReturnType<typeof getColors>) {
+function getStyles(C: ReturnType<typeof getColors>, dark: boolean) {
   return {
-    card: { background: `linear-gradient(180deg, ${C.white}, ${C.gray100})`, border: `1px solid ${C.gray200}`, borderRadius: 18, boxShadow: '0 18px 42px rgba(2,6,23,0.18)', padding: 22 } as React.CSSProperties,
-    cardElevated: { background: `linear-gradient(180deg, ${C.white}, ${C.gray100})`, border: `1px solid ${C.gray200}`, borderRadius: 22, boxShadow: '0 24px 54px rgba(2,6,23,0.22)', padding: 24 } as React.CSSProperties,
+    card: { background: dark ? `linear-gradient(180deg, ${C.white}, ${C.gray100})` : `linear-gradient(180deg, ${C.white}, ${C.gray100})`, border: `1px solid ${C.gray200}`, borderRadius: 18, boxShadow: dark ? '0 22px 50px rgba(0,0,0,0.28)' : '0 18px 44px rgba(107,78,32,0.08)', padding: 22 } as React.CSSProperties,
+    cardElevated: { background: dark ? `linear-gradient(180deg, ${C.navy800}, ${C.white})` : `linear-gradient(180deg, ${C.white}, ${C.gray100})`, border: `1px solid ${C.gray200}`, borderRadius: 22, boxShadow: dark ? '0 28px 64px rgba(0,0,0,0.32)' : '0 22px 56px rgba(107,78,32,0.10)', padding: 24 } as React.CSSProperties,
     input: { width: '100%', height: 44, border: `1px solid ${C.gray200}`, borderRadius: 12, padding: '0 14px', fontSize: 14, color: C.gray700, outline: 'none', boxSizing: 'border-box' as const, fontFamily: 'Inter, system-ui, sans-serif', background: C.white } as React.CSSProperties,
     label: { display: 'block', fontSize: 12, fontWeight: 500, color: C.gray500, textTransform: 'uppercase' as const, letterSpacing: '.5px', marginBottom: 6 } as React.CSSProperties,
-    btnPrimary: { background: `linear-gradient(135deg, ${C.pri500}, ${C.pri700})`, color: '#111827', border: 'none', borderRadius: 14, padding: '11px 18px', fontWeight: 600, fontSize: 14, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: 'Inter, system-ui, sans-serif', boxShadow: '0 14px 28px rgba(246,169,26,0.22)' } as React.CSSProperties,
-    btnOutline: { background: C.white, color: C.gray700, border: `1px solid ${C.gray200}`, borderRadius: 14, padding: '11px 18px', fontWeight: 500, fontSize: 14, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: 'Inter, system-ui, sans-serif' } as React.CSSProperties,
+    btnPrimary: { background: `linear-gradient(135deg, ${C.pri500}, ${C.pri700})`, color: '#111827', border: 'none', borderRadius: 14, padding: '11px 18px', fontWeight: 700, fontSize: 14, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: 'Inter, system-ui, sans-serif', boxShadow: dark ? '0 16px 34px rgba(255,176,32,0.24)' : '0 14px 30px rgba(219,143,0,0.18)' } as React.CSSProperties,
+    btnOutline: { background: dark ? 'rgba(18,27,45,0.86)' : C.white, color: C.gray700, border: `1px solid ${C.gray200}`, borderRadius: 14, padding: '11px 18px', fontWeight: 500, fontSize: 14, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: 'Inter, system-ui, sans-serif', boxShadow: dark ? 'inset 0 1px 0 rgba(255,255,255,0.02)' : 'none' } as React.CSSProperties,
     btnGhost: { background: 'transparent', border: 'none', cursor: 'pointer', padding: '6px 8px', borderRadius: 10, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' } as React.CSSProperties,
   };
 }
 let C = getColors(false);
-let S = getStyles(C);
+let S = getStyles(C, false);
 
 /* ─── Helpers ─────────────────────────────────────────────────────────── */
 const fmt = (d: string | null | undefined) => {
@@ -110,7 +112,7 @@ const NAV_ITEMS: { key: Section; label: string; Icon: React.FC<{ size?: number }
 export default function PartnerDashboard() {
   const { isDark, toggleTheme } = useTheme();
   C = getColors(isDark);
-  S = getStyles(C);
+  S = getStyles(C, isDark);
 
   const navigate = useNavigate();
   const userData = JSON.parse(localStorage.getItem('ob_user') || '{}');
@@ -129,6 +131,12 @@ export default function PartnerDashboard() {
 
   if (loading) return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: C.gray50 }}><div style={{ width: 32, height: 32, border: `3px solid ${C.gray200}`, borderTopColor: C.pri500, borderRadius: '50%', animation: 'pd-spin 0.6s linear infinite' }} /></div>;
   if (!profile) return null;
+  const sidebarBackground = isDark
+    ? `linear-gradient(180deg, ${C.navy900}, ${C.navy950})`
+    : 'linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,247,251,0.98))';
+  const headerBackground = isDark ? 'rgba(11,18,32,0.84)' : 'rgba(255,255,255,0.78)';
+  const panelShadow = isDark ? '0 26px 56px rgba(0,0,0,0.30)' : '0 18px 48px rgba(110,88,46,0.08)';
+  const hoverShadow = isDark ? '0 28px 60px rgba(0,0,0,0.36)' : '0 24px 56px rgba(219,143,0,0.12)';
 
   return (
     <>
@@ -137,8 +145,8 @@ export default function PartnerDashboard() {
         @keyframes pd-slideIn { from { transform: translateX(20px); opacity: 0 } to { transform: translateX(0); opacity: 1 } }
         @keyframes pd-toastIn { from { transform: translateX(100%); opacity: 0 } to { transform: translateX(0); opacity: 1 } }
         .pd-nav-item { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 48px; padding: 0 14px; border: 1px solid transparent; border-radius: 14px; background: transparent; color: ${C.gray500}; font-size: 14px; font-weight: 500; cursor: pointer; font-family: Inter, system-ui, sans-serif; transition: all 0.18s ease; }
-        .pd-nav-item:hover { background: ${C.gray100}; color: ${C.gray900}; border-color: ${C.gray200}; }
-        .pd-nav-item.active { background: rgba(246,169,26,0.08); color: ${C.pri600}; border-color: rgba(246,169,26,0.28); box-shadow: inset 0 0 0 1px rgba(246,169,26,0.08); }
+        .pd-nav-item:hover { background: ${isDark ? 'rgba(20,31,49,0.92)' : C.gray100}; color: ${C.gray900}; border-color: ${isDark ? 'rgba(255,176,32,0.14)' : C.gray200}; }
+        .pd-nav-item.active { background: ${isDark ? 'linear-gradient(135deg, rgba(255,176,32,0.16), rgba(255,97,103,0.08))' : 'rgba(246,169,26,0.08)'}; color: ${C.pri600}; border-color: rgba(255,176,32,0.30); box-shadow: ${isDark ? '0 16px 32px rgba(255,176,32,0.08), inset 0 0 0 1px rgba(255,176,32,0.08)' : 'inset 0 0 0 1px rgba(246,169,26,0.08)'}; }
         .pd-pill { padding: 7px 16px; border-radius: 999px; border: 1px solid ${C.gray200}; font-size: 13px; font-weight: 500; cursor: pointer; background: ${C.white}; color: ${C.gray600}; font-family: Inter, system-ui, sans-serif; transition: all 0.15s ease; }
         .pd-pill:hover { border-color: ${C.pri500}; color: ${C.gray900}; }
         .pd-pill.active { background: rgba(246,169,26,0.12); color: ${C.pri600}; border-color: rgba(246,169,26,0.28); }
@@ -152,34 +160,68 @@ export default function PartnerDashboard() {
         .pd-input:focus { border-color: ${C.pri500} !important; box-shadow: 0 0 0 4px rgba(246,169,26,0.12); }
         .pd-shell-bg {
           background:
-            radial-gradient(circle at top right, rgba(246,169,26,0.08), transparent 24%),
-            linear-gradient(180deg, ${C.gray50}, ${C.navy900});
+            ${isDark
+              ? `radial-gradient(circle at top right, rgba(255,176,32,0.16), transparent 24%),
+                 radial-gradient(circle at top left, rgba(255,97,103,0.10), transparent 22%),
+                 linear-gradient(180deg, ${C.gray50}, ${C.navy900})`
+              : `radial-gradient(circle at top left, rgba(245,158,11,0.08), transparent 26%),
+                 linear-gradient(180deg, ${C.gray50}, ${C.navy900})`};
         }
         .pd-glass {
-          background: rgba(20,26,39,0.72);
+          background: ${headerBackground};
           backdrop-filter: blur(18px);
         }
         .pd-panel {
-          background: linear-gradient(180deg, ${C.white}, ${C.gray100});
+          background: ${isDark ? `linear-gradient(180deg, ${C.navy800}, ${C.white})` : `linear-gradient(180deg, ${C.white}, ${C.gray100})`};
           border: 1px solid ${C.gray200};
-          box-shadow: 0 18px 42px rgba(2,6,23,0.18);
+          box-shadow: ${panelShadow};
         }
-        .pd-stat-card:hover, .pd-action-card:hover { transform: translateY(-2px); border-color: rgba(246,169,26,0.24); }
+        .pd-stat-card:hover, .pd-action-card:hover { transform: translateY(-2px); border-color: rgba(246,169,26,0.24); box-shadow: ${hoverShadow}; }
+        .pd-arn-shell { display: flex; flex-direction: column; gap: 24px; }
+        .pd-arn-panel {
+          position: relative;
+          overflow: hidden;
+          border-radius: 28px;
+          border: 1px solid ${isDark ? 'rgba(255,176,32,0.18)' : C.gray200};
+          background: ${isDark
+            ? `linear-gradient(145deg, rgba(17,26,43,0.98), rgba(10,16,29,0.96))`
+            : `linear-gradient(145deg, rgba(255,255,255,0.98), rgba(244,247,251,0.96))`};
+          box-shadow: ${isDark ? '0 30px 70px rgba(0,0,0,0.34)' : '0 26px 60px rgba(110,88,46,0.10)'};
+        }
+        .pd-arn-panel::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: ${isDark
+            ? 'radial-gradient(circle at top right, rgba(255,176,32,0.18), transparent 26%), radial-gradient(circle at bottom left, rgba(255,97,103,0.10), transparent 24%)'
+            : 'radial-gradient(circle at top left, rgba(245,158,11,0.10), transparent 28%), radial-gradient(circle at bottom right, rgba(37,99,235,0.06), transparent 26%)'};
+          pointer-events: none;
+        }
+        .pd-arn-grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.9fr); gap: 24px; padding: 32px; }
+        .pd-arn-choice-row { display: flex; gap: 14px; flex-wrap: wrap; }
+        .pd-arn-side-card { border-radius: 22px; border: 1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(110,88,46,0.10)'}; background: ${isDark ? 'rgba(9,17,30,0.72)' : 'rgba(255,255,255,0.72)'}; backdrop-filter: blur(10px); padding: 22px; }
+        .pd-arn-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+        .pd-arn-form-grid .pd-arn-field-full { grid-column: 1 / -1; }
         @media (max-width: 1220px) {
           .pd-overview-grid { grid-template-columns: 1fr !important; }
           .pd-overview-subgrid { grid-template-columns: 1fr !important; }
+          .pd-arn-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 820px) {
           .pd-header-search { display: none !important; }
+          .pd-arn-grid { padding: 22px; }
+          .pd-arn-choice-row { flex-direction: column; }
+          .pd-arn-choice-row button { width: 100%; justify-content: center; }
+          .pd-arn-form-grid { grid-template-columns: 1fr; }
         }
       `}</style>
 
       <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'Inter, system-ui, -apple-system, sans-serif' }}>
         {/* SIDEBAR */}
-        <aside style={{ width: 286, background: C.navy900, display: 'flex', flexDirection: 'column', flexShrink: 0, position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 20, borderRight: `1px solid ${C.gray200}` }}>
+        <aside style={{ width: 286, background: sidebarBackground, display: 'flex', flexDirection: 'column', flexShrink: 0, position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 20, borderRight: `1px solid ${C.gray200}` }}>
           <div style={{ padding: '24px 24px 18px', borderBottom: `1px solid ${C.gray200}` }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div style={{ width: 36, height: 36, borderRadius: 12, background: 'rgba(246,169,26,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: C.pri600, fontSize: 18 }}>↗</div>
+              <div style={{ width: 36, height: 36, borderRadius: 12, background: isDark ? 'rgba(246,169,26,0.12)' : 'rgba(245,158,11,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: C.pri600, fontSize: 18 }}>↗</div>
               <div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: C.pri600, letterSpacing: '-.2px' }}>OngoleBulls</div>
                 <div style={{ fontSize: 11, color: C.gray400, marginTop: 2, letterSpacing: '.28em', textTransform: 'uppercase' }}>Invest</div>
@@ -203,7 +245,7 @@ export default function PartnerDashboard() {
           <header className="pd-glass" style={{ height: 84, borderBottom: `1px solid ${C.gray200}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', position: 'sticky', top: 0, zIndex: 10 }}>
             <div className="pd-header-search" style={{ width: 280, position: 'relative' }}>
               <Search size={16} style={{ position: 'absolute', top: '50%', left: 14, transform: 'translateY(-50%)', color: C.gray400 }} />
-              <input className="pd-input" placeholder="Search..." style={{ ...S.input, paddingLeft: 42, background: C.gray100 }} />
+              <input className="pd-input" placeholder="Search..." style={{ ...S.input, paddingLeft: 42, background: isDark ? C.gray100 : C.white }} />
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
               <button
@@ -215,7 +257,7 @@ export default function PartnerDashboard() {
                   width: 36,
                   height: 36,
                   padding: 0,
-                  background: C.gray100,
+                  background: isDark ? C.gray100 : C.white,
                   border: `1px solid ${C.gray200}`,
                   borderRadius: 14,
                   cursor: 'pointer',
@@ -228,11 +270,11 @@ export default function PartnerDashboard() {
               >
                 {isDark ? <Moon size={18} strokeWidth={2} /> : <Sun size={18} strokeWidth={2} />}
               </button>
-              <div style={{ position: 'relative', width: 38, height: 38, borderRadius: 14, background: C.gray100, border: `1px solid ${C.gray200}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ position: 'relative', width: 38, height: 38, borderRadius: 14, background: isDark ? C.gray100 : C.white, border: `1px solid ${C.gray200}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Bell size={16} color={C.gray500} />
                 <span style={{ position: 'absolute', top: -6, right: -4, minWidth: 18, height: 18, padding: '0 5px', borderRadius: 999, background: C.red500, color: '#fff', fontSize: 10, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>3</span>
               </div>
-              <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(246,169,26,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: C.pri600, fontWeight: 700, fontSize: 12 }}>{initials(profile.fullName || profile.firmName)[0]}</div>
+              <div style={{ width: 40, height: 40, borderRadius: '50%', background: isDark ? 'rgba(246,169,26,0.18)' : 'rgba(245,158,11,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: C.pri600, fontWeight: 700, fontSize: 12 }}>{initials(profile.fullName || profile.firmName)[0]}</div>
               <div>
                 <div style={{ fontSize: 16, fontWeight: 600, color: C.gray900 }}>{profile.fullName || profile.firmName}</div>
                 <div style={{ fontSize: 13, color: C.gray400 }}>{profile.email}</div>
@@ -270,18 +312,24 @@ function ArnStatusBanner({ profile, onCompleteArn }: { profile: PartnerProfile; 
 
   const configs: Record<string, { bg: string; border: string; iconColor: string; title: string; desc: string; btnLabel?: string }> = {
     NOT_SUBMITTED: {
-      bg: '#FFFBEB', border: '#F59E0B', iconColor: '#92400E',
+      bg: C.isDark ? 'linear-gradient(135deg, rgba(255,176,32,0.12), rgba(18,27,45,0.96))' : '#FFFBEB',
+      border: C.isDark ? '#ffb020' : '#F59E0B',
+      iconColor: C.isDark ? '#ffd27a' : '#92400E',
       title: 'ARN Verification Required',
       desc: 'Submit your ARN details to get verified and start using the platform.',
       btnLabel: 'Complete ARN',
     },
     PENDING_APPROVAL: {
-      bg: '#EFF6FF', border: '#3B82F6', iconColor: '#1E40AF',
+      bg: C.isDark ? 'linear-gradient(135deg, rgba(59,130,246,0.12), rgba(18,27,45,0.96))' : '#EFF6FF',
+      border: C.isDark ? '#60a5fa' : '#3B82F6',
+      iconColor: C.isDark ? '#9cc4ff' : '#1E40AF',
       title: 'ARN Verification Pending',
       desc: 'Your ARN submission is under review. We will notify you once verified.',
     },
     REJECTED: {
-      bg: '#FEF2F2', border: '#EF4444', iconColor: '#991B1B',
+      bg: C.isDark ? 'linear-gradient(135deg, rgba(255,97,103,0.12), rgba(18,27,45,0.96))' : '#FEF2F2',
+      border: C.isDark ? '#ff6167' : '#EF4444',
+      iconColor: C.isDark ? '#ff9ba0' : '#991B1B',
       title: 'ARN Verification Rejected',
       desc: profile.rejectionReason ? `Reason: ${profile.rejectionReason}. Please resubmit with correct details.` : 'Your ARN was rejected. Please resubmit.',
       btnLabel: 'Resubmit ARN',
@@ -290,12 +338,12 @@ function ArnStatusBanner({ profile, onCompleteArn }: { profile: PartnerProfile; 
   const c = configs[profile.arnStatus] || configs.NOT_SUBMITTED;
 
   return (
-    <div style={{ background: c.bg, border: `1px solid ${c.border}33`, borderLeft: `4px solid ${c.border}`, borderRadius: 12, padding: '20px 24px', marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+    <div style={{ background: c.bg, border: `1px solid ${c.border}33`, borderLeft: `4px solid ${c.border}`, borderRadius: 18, padding: '22px 24px', marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, boxShadow: C.isDark ? '0 18px 36px rgba(0,0,0,0.18)' : '0 14px 30px rgba(110,88,46,0.06)' }}>
       <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
         <Lock size={18} color={c.iconColor} style={{ marginTop: 2, flexShrink: 0 }} />
         <div>
           <div style={{ fontWeight: 600, fontSize: 15, color: c.iconColor, marginBottom: 4 }}>{c.title}</div>
-          <div style={{ fontSize: 14, color: c.iconColor + 'CC' }}>{c.desc}</div>
+          <div style={{ fontSize: 14, color: C.isDark ? C.gray500 : c.iconColor + 'CC' }}>{c.desc}</div>
         </div>
       </div>
       {c.btnLabel && <button type="button" style={S.btnPrimary} onClick={onCompleteArn}>{c.btnLabel} <ArrowRight size={14} /></button>}
@@ -310,6 +358,38 @@ function ArnOnboardingSection({ profile, showToast, setSection }: { profile: Par
   const [euin, setEuin] = useState(profile.euin || '');
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const infoCardStyle = {
+    borderRadius: 20,
+    border: `1px solid ${C.isDark ? 'rgba(255,255,255,0.07)' : 'rgba(110,88,46,0.10)'}`,
+    background: C.isDark ? 'rgba(9,17,30,0.72)' : 'rgba(255,255,255,0.76)',
+    padding: 20,
+  } as React.CSSProperties;
+  const inputStyle = (field?: string) => ({
+    ...S.input,
+    height: 50,
+    borderRadius: 14,
+    borderColor: field && errors[field] ? C.red500 : C.gray200,
+    background: C.isDark ? 'rgba(9,17,30,0.82)' : C.white,
+    color: C.gray900,
+    boxShadow: C.isDark ? 'inset 0 1px 0 rgba(255,255,255,0.02)' : 'none',
+  });
+  const subtleButton = {
+    ...S.btnOutline,
+    justifyContent: 'center',
+    minHeight: 52,
+    fontWeight: 600,
+  } as React.CSSProperties;
+  const bulletStyle = {
+    width: 36,
+    height: 36,
+    borderRadius: 14,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: C.isDark ? 'rgba(255,176,32,0.14)' : C.pri50,
+    color: C.pri600,
+    flexShrink: 0,
+  } as React.CSSProperties;
 
   const validate = () => {
     const e: Record<string, string> = {};
@@ -336,38 +416,63 @@ function ArnOnboardingSection({ profile, showToast, setSection }: { profile: Par
 
   if (step === 'no-arn') {
     return (
-      <div style={{ maxWidth: 640, margin: '0 auto' }}>
-        <button type="button" onClick={() => setStep('ask')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, color: '#2563EB', fontWeight: 500, fontSize: 14, marginBottom: 24, padding: 0 }}>
-          <ArrowRight size={14} style={{ transform: 'rotate(180deg)' }} /> Back
+      <div className="pd-arn-shell">
+        <button type="button" onClick={() => setStep('ask')} style={{ ...S.btnGhost, width: 'fit-content', color: C.pri600, gap: 8, fontWeight: 600, padding: 0 }}>
+          <ArrowRight size={14} style={{ transform: 'rotate(180deg)' }} /> Back to ARN verification
         </button>
-        <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #E5E7EB', padding: 32 }}>
-          <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>How to Get Your ARN</h2>
-          <p style={{ fontSize: 14, color: '#6B7280', marginBottom: 24 }}>
-            ARN (AMFI Registration Number) is mandatory for mutual fund distribution in India. Follow these steps to obtain your ARN:
-          </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 24 }}>
-            {[
-              { num: '1', title: 'Pass NISM Certification', desc: 'Clear the NISM Series V-A: Mutual Fund Distributors Certification Examination.' },
-              { num: '2', title: 'Register on AMFI Portal', desc: 'Visit the AMFI website and complete the ARN registration process with required documents.' },
-              { num: '3', title: 'Receive Your ARN', desc: 'Once approved, AMFI will issue your unique ARN which you can submit here.' },
-            ].map(s => (
-              <div key={s.num} style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-                <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#2563EB', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 14, flexShrink: 0 }}>{s.num}</div>
-                <div>
-                  <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 2 }}>{s.title}</div>
-                  <div style={{ fontSize: 13, color: '#6B7280' }}>{s.desc}</div>
+        <div className="pd-arn-panel">
+          <div className="pd-arn-grid">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+              <div style={{ display: 'inline-flex', width: 'fit-content', alignItems: 'center', gap: 8, padding: '7px 14px', borderRadius: 999, background: C.isDark ? 'rgba(255,176,32,0.12)' : C.pri50, border: `1px solid ${C.isDark ? 'rgba(255,176,32,0.18)' : C.pri100}`, color: C.pri600, fontSize: 12, fontWeight: 700, letterSpacing: '.18em', textTransform: 'uppercase' }}>
+                Distribution Readiness
+              </div>
+              <div>
+                <h2 style={{ fontSize: 34, lineHeight: 1.1, fontWeight: 800, letterSpacing: '-0.04em', color: C.gray900, margin: 0 }}>Get your ARN and unlock partner operations</h2>
+                <p style={{ fontSize: 15, lineHeight: 1.75, color: C.gray500, margin: '16px 0 0' }}>
+                  ARN verification is required before client onboarding, transaction workflows, and payout-linked partner activity can be fully enabled.
+                </p>
+              </div>
+              <div style={{ ...infoCardStyle, display: 'grid', gap: 16 }}>
+                {[
+                  { num: '1', title: 'Pass NISM Certification', desc: 'Complete the NISM Series V-A: Mutual Fund Distributors Certification Examination.' },
+                  { num: '2', title: 'Register on AMFI', desc: 'Submit your ARN application with the required identity, qualification, and business details.' },
+                  { num: '3', title: 'Receive ARN & EUIN', desc: 'Once approved, come back here and submit your ARN for platform verification.' },
+                ].map(s => (
+                  <div key={s.num} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+                    <div style={{ ...bulletStyle, borderRadius: '50%', fontWeight: 700, fontSize: 14 }}>{s.num}</div>
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: 15, color: C.gray900, marginBottom: 4 }}>{s.title}</div>
+                      <div style={{ fontSize: 13, lineHeight: 1.7, color: C.gray500 }}>{s.desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+              <div className="pd-arn-side-card">
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 12px', borderRadius: 999, background: C.red100, color: C.red500, fontSize: 12, fontWeight: 700, marginBottom: 16 }}>Action needed</div>
+                <div style={{ fontSize: 24, fontWeight: 700, color: C.gray900, marginBottom: 10 }}>No ARN on file yet</div>
+                <p style={{ margin: 0, color: C.gray500, fontSize: 14, lineHeight: 1.75 }}>
+                  Until you complete this step, core partner actions stay limited. Once AMFI approves your ARN, you can submit it here in a minute.
+                </p>
+              </div>
+              <div className="pd-arn-side-card" style={{ display: 'grid', gap: 14 }}>
+                <a
+                  href="https://www.amfiindia.com/distributor-corner"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ ...S.btnPrimary, width: '100%', justifyContent: 'center', textDecoration: 'none', minHeight: 52 }}
+                >
+                  Visit AMFI Portal <ArrowRight size={14} />
+                </a>
+                <button type="button" style={{ ...subtleButton, width: '100%' }} onClick={() => setStep('form')}>
+                  I already have my ARN
+                </button>
+                <div style={{ fontSize: 12, lineHeight: 1.7, color: C.gray400 }}>
+                  Tip: keep your ARN, PAN, and EUIN ready before submitting.
                 </div>
               </div>
-            ))}
-          </div>
-          <a href="https://www.amfiindia.com/distributor-corner" target="_blank" rel="noopener noreferrer"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#2563EB', color: '#fff', padding: '12px 24px', borderRadius: 10, fontWeight: 600, fontSize: 14, textDecoration: 'none', marginBottom: 16 }}>
-            Visit AMFI Portal <ArrowRight size={14} />
-          </a>
-          <div style={{ marginTop: 16 }}>
-            <button type="button" style={{ padding: '12px 24px', borderRadius: 10, fontWeight: 600, fontSize: 14, background: 'transparent', color: '#2563EB', border: '1px solid #2563EB', cursor: 'pointer' }} onClick={() => setStep('form')}>
-              I Have My ARN Now
-            </button>
+            </div>
           </div>
         </div>
       </div>
@@ -376,56 +481,122 @@ function ArnOnboardingSection({ profile, showToast, setSection }: { profile: Par
 
   if (step === 'form') {
     return (
-      <div style={{ maxWidth: 640, margin: '0 auto' }}>
-        <button type="button" onClick={() => setStep('ask')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, color: '#2563EB', fontWeight: 500, fontSize: 14, marginBottom: 24, padding: 0 }}>
-          <ArrowRight size={14} style={{ transform: 'rotate(180deg)' }} /> Back
+      <div className="pd-arn-shell">
+        <button type="button" onClick={() => setStep('ask')} style={{ ...S.btnGhost, width: 'fit-content', color: C.pri600, gap: 8, fontWeight: 600, padding: 0 }}>
+          <ArrowRight size={14} style={{ transform: 'rotate(180deg)' }} /> Back to ARN verification
         </button>
-        <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #E5E7EB', padding: 32 }}>
-          <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>Submit ARN Details</h2>
-          <p style={{ fontSize: 14, color: '#6B7280', marginBottom: 24 }}>Enter your AMFI registration details for verification.</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-            <div>
-              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>ARN Number *</label>
-              <input type="text" value={arnNumber} onChange={e => { setArnNumber(e.target.value); setErrors(prev => ({ ...prev, arnNumber: '' })); }}
-                placeholder="e.g. ARN-12345" style={{ width: '100%', padding: '10px 14px', borderRadius: 8, border: `1px solid ${errors.arnNumber ? '#EF4444' : '#D1D5DB'}`, fontSize: 14, outline: 'none' }} />
-              {errors.arnNumber && <div style={{ color: '#EF4444', fontSize: 12, marginTop: 4 }}>{errors.arnNumber}</div>}
+        <div className="pd-arn-panel">
+          <div className="pd-arn-grid">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+              <div style={{ display: 'inline-flex', width: 'fit-content', alignItems: 'center', gap: 8, padding: '7px 14px', borderRadius: 999, background: C.isDark ? 'rgba(48,212,134,0.12)' : C.green100, border: `1px solid ${C.isDark ? 'rgba(48,212,134,0.18)' : C.green100}`, color: C.green500, fontSize: 12, fontWeight: 700, letterSpacing: '.18em', textTransform: 'uppercase' }}>
+                Verification Submission
+              </div>
+              <div>
+                <h2 style={{ fontSize: 34, lineHeight: 1.1, fontWeight: 800, letterSpacing: '-0.04em', color: C.gray900, margin: 0 }}>Submit your ARN details</h2>
+                <p style={{ fontSize: 15, lineHeight: 1.75, color: C.gray500, margin: '16px 0 0' }}>
+                  We’ll use these details for review and activation. Make sure the ARN and PAN match your AMFI registration exactly.
+                </p>
+              </div>
+              <div style={{ ...infoCardStyle, display: 'grid', gap: 16 }}>
+                {[
+                  { icon: Shield, title: 'Secure review flow', desc: 'Submitted details are checked before partner activation and trading-related actions are unlocked.' },
+                  { icon: CheckCircle, title: 'Faster approvals', desc: 'Accurate ARN, PAN, and EUIN details reduce back-and-forth and speed up verification.' },
+                  { icon: Info, title: 'What happens next', desc: 'After submission, your ARN status will move to pending review and you’ll see updates on the dashboard.' },
+                ].map(({ icon: Icon, title, desc }) => (
+                  <div key={title} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+                    <div style={bulletStyle}><Icon size={18} /></div>
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: 15, color: C.gray900, marginBottom: 4 }}>{title}</div>
+                      <div style={{ fontSize: 13, lineHeight: 1.7, color: C.gray500 }}>{desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div>
-              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>PAN Number *</label>
-              <input type="text" value={pan} onChange={e => { setPan(e.target.value.toUpperCase()); setErrors(prev => ({ ...prev, pan: '' })); }}
-                placeholder="e.g. ABCDE1234F" maxLength={10} style={{ width: '100%', padding: '10px 14px', borderRadius: 8, border: `1px solid ${errors.pan ? '#EF4444' : '#D1D5DB'}`, fontSize: 14, outline: 'none' }} />
-              {errors.pan && <div style={{ color: '#EF4444', fontSize: 12, marginTop: 4 }}>{errors.pan}</div>}
+            <div className="pd-arn-side-card">
+              <div style={{ fontSize: 20, fontWeight: 700, color: C.gray900, marginBottom: 6 }}>Verification details</div>
+              <p style={{ margin: '0 0 22px', color: C.gray500, fontSize: 14, lineHeight: 1.7 }}>
+                Complete the form below to send your ARN for verification.
+              </p>
+              <div className="pd-arn-form-grid">
+                <div className="pd-arn-field-full">
+                  <label style={S.label}>ARN Number *</label>
+                  <input className="pd-input" type="text" value={arnNumber} onChange={e => { setArnNumber(e.target.value); setErrors(prev => ({ ...prev, arnNumber: '' })); }} placeholder="e.g. ARN-12345" style={inputStyle('arnNumber')} />
+                  {errors.arnNumber && <div style={{ color: C.red500, fontSize: 12, marginTop: 6 }}>{errors.arnNumber}</div>}
+                </div>
+                <div>
+                  <label style={S.label}>PAN Number *</label>
+                  <input className="pd-input" type="text" value={pan} onChange={e => { setPan(e.target.value.toUpperCase()); setErrors(prev => ({ ...prev, pan: '' })); }} placeholder="e.g. ABCDE1234F" maxLength={10} style={inputStyle('pan')} />
+                  {errors.pan && <div style={{ color: C.red500, fontSize: 12, marginTop: 6 }}>{errors.pan}</div>}
+                </div>
+                <div>
+                  <label style={S.label}>EUIN</label>
+                  <input className="pd-input" type="text" value={euin} onChange={e => setEuin(e.target.value)} placeholder="e.g. E123456" style={inputStyle()} />
+                </div>
+                <div className="pd-arn-field-full" style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 4 }}>
+                  <button type="button" style={{ ...S.btnPrimary, flex: '1 1 220px', justifyContent: 'center', minHeight: 52, opacity: submitting ? 0.7 : 1 }} onClick={handleSubmit} disabled={submitting}>
+                    {submitting ? 'Submitting...' : 'Submit for verification'}
+                  </button>
+                  <button type="button" style={{ ...subtleButton, flex: '1 1 180px' }} onClick={() => setStep('no-arn')}>
+                    Need ARN guidance
+                  </button>
+                </div>
+              </div>
             </div>
-            <div>
-              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>EUIN (Optional)</label>
-              <input type="text" value={euin} onChange={e => setEuin(e.target.value)}
-                placeholder="e.g. E123456" style={{ width: '100%', padding: '10px 14px', borderRadius: 8, border: '1px solid #D1D5DB', fontSize: 14, outline: 'none' }} />
-            </div>
-            <button type="button" style={{ width: '100%', padding: '12px 24px', borderRadius: 10, fontWeight: 600, fontSize: 14, background: '#2563EB', color: '#fff', border: 'none', cursor: 'pointer', opacity: submitting ? 0.7 : 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
-              onClick={handleSubmit} disabled={submitting}>
-              {submitting ? 'Submitting...' : 'Submit for Verification'}
-            </button>
           </div>
         </div>
       </div>
     );
   }
 
-  // step === 'ask'
   return (
-    <div style={{ maxWidth: 640, margin: '0 auto' }}>
-      <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #E5E7EB', padding: 32, textAlign: 'center' }}>
-        <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>ARN Verification</h2>
-        <p style={{ fontSize: 14, color: '#6B7280', marginBottom: 32 }}>
-          Do you have an AMFI Registration Number (ARN)?
-        </p>
-        <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
-          <button type="button" style={{ padding: '14px 40px', fontSize: 15, borderRadius: 10, fontWeight: 600, background: '#2563EB', color: '#fff', border: 'none', cursor: 'pointer' }} onClick={() => setStep('form')}>
-            Yes, I have an ARN
-          </button>
-          <button type="button" style={{ padding: '14px 40px', fontSize: 15, borderRadius: 10, fontWeight: 600, background: 'transparent', color: '#374151', border: '1px solid #D1D5DB', cursor: 'pointer' }} onClick={() => setStep('no-arn')}>
-            No, I don't
-          </button>
+    <div className="pd-arn-shell">
+      <div className="pd-arn-panel">
+        <div className="pd-arn-grid">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+            <div style={{ display: 'inline-flex', width: 'fit-content', alignItems: 'center', gap: 8, padding: '7px 14px', borderRadius: 999, background: C.isDark ? 'rgba(255,176,32,0.12)' : C.pri50, border: `1px solid ${C.isDark ? 'rgba(255,176,32,0.18)' : C.pri100}`, color: C.pri600, fontSize: 12, fontWeight: 700, letterSpacing: '.18em', textTransform: 'uppercase' }}>
+              ARN Verification
+            </div>
+            <div>
+              <h1 style={{ fontSize: 38, lineHeight: 1.04, fontWeight: 800, letterSpacing: '-0.05em', color: C.gray900, margin: 0 }}>Complete your ARN verification</h1>
+              <p style={{ fontSize: 15, lineHeight: 1.8, color: C.gray500, margin: '18px 0 0', maxWidth: 620 }}>
+                This step unlocks full partner functionality across client onboarding, transactions, revenue operations, and workflow approvals.
+              </p>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14 }}>
+              {[
+                { label: 'Client onboarding', value: 'Enabled after ARN approval', tone: C.green500 },
+                { label: 'Transaction workflows', value: 'Linked to verified partner status', tone: C.pri600 },
+                { label: 'Review status', value: profile.arnStatus?.replaceAll('_', ' ') || 'Not submitted', tone: C.red500 },
+              ].map(item => (
+                <div key={item.label} style={{ ...infoCardStyle, padding: 18 }}>
+                  <div style={{ fontSize: 12, letterSpacing: '.14em', textTransform: 'uppercase', color: C.gray400, marginBottom: 10 }}>{item.label}</div>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: item.tone }}>{item.value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+            <div className="pd-arn-side-card">
+              <div style={{ fontSize: 24, fontWeight: 700, color: C.gray900, marginBottom: 8 }}>Do you already have an ARN?</div>
+              <p style={{ margin: 0, color: C.gray500, fontSize: 14, lineHeight: 1.75 }}>
+                Choose the path that matches your current registration status. You can submit immediately if your ARN is already issued.
+              </p>
+            </div>
+            <div className="pd-arn-side-card" style={{ display: 'grid', gap: 16 }}>
+              <div className="pd-arn-choice-row">
+                <button type="button" style={{ ...S.btnPrimary, flex: '1 1 240px', justifyContent: 'center', minHeight: 54 }} onClick={() => setStep('form')}>
+                  Yes, I have an ARN
+                </button>
+                <button type="button" style={{ ...subtleButton, flex: '1 1 220px' }} onClick={() => setStep('no-arn')}>
+                  No, I need guidance
+                </button>
+              </div>
+              <div style={{ fontSize: 12, lineHeight: 1.7, color: C.gray400 }}>
+                A verified ARN helps us activate your distribution profile faster and keeps compliance checks aligned with AMFI records.
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,20 +1,31 @@
 package dev.ongolebulls.service.partner;
 
+import dev.ongolebulls.dto.partner.RevenueResponse;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
- * STUB: minimal compile-satisfying implementation so the existing
- * {@link PartnerService} can reference this bean. A real revenue-domain
- * service must replace this before production.
- *
- * Added by the location-based RM mapping work to unblock the build.
+ * STUB service so PartnerService + the partner/RevenueController can
+ * compile. All methods return empty/zero values. Replace with real logic
+ * when the revenue-domain layer is reintroduced.
  */
 @Service
 public class RevenueService {
 
+    // --- Used by PartnerService.getStats ---
     public BigDecimal getTotalRevenue(Long partnerId) {
         return BigDecimal.ZERO;
+    }
+
+    // --- Used by controller/partner/RevenueController ---
+    public RevenueResponse getRevenue(Long partnerId) {
+        return RevenueResponse.builder()
+                .totalRevenue(BigDecimal.ZERO)
+                .releasedRevenue(BigDecimal.ZERO)
+                .pendingRevenue(BigDecimal.ZERO)
+                .monthlyBreakdown(List.of())
+                .build();
     }
 }

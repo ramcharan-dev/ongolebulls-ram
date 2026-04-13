@@ -51,6 +51,7 @@ export interface CreateUserRequest {
   // Only used when role = RELATIONSHIP_MANAGER
   assignedState?: string;
   assignedDistrict?: string;
+  assignedCity?: string;
 }
 
 export interface UserSummary {
@@ -63,6 +64,7 @@ export interface UserSummary {
   createdAt: string;
   assignedState?: string | null;
   assignedDistrict?: string | null;
+  assignedCity?: string | null;
 }
 
 export interface AdminStats {

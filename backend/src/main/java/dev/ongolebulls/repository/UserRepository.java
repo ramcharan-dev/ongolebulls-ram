@@ -64,12 +64,29 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // --- RM location-based auto-assignment queries ---
 
     /**
-     * Exact-match RM lookup: RM whose service area is the partner's exact
-     * state and district. Only considers activated RMs.
+     * City-level RM lookup: RM whose assigned_city matches the partner's city
+     * (case-insensitive, trimmed) within the same state. Only considers
+     * activated RMs whose assigned_city is non-null. This is the most-specific
+     * tier in the auto-assignment fallback chain.
+     */
+    @Query("SELECT u FROM User u WHERE u.role = :role " +
+            "AND LOWER(TRIM(u.assignedState)) = LOWER(TRIM(:state)) " +
+            "AND LOWER(TRIM(u.assignedCity)) = LOWER(TRIM(:city)) " +
+            "AND u.assignedCity IS NOT NULL " +
+            "AND u.isActivated = true " +
+            "ORDER BY u.id ASC")
+    List<User> findRmsByServiceAreaCity(@Param("role") Role role,
+                                        @Param("state") String state,
+                                        @Param("city") String city);
+
+    /**
+     * District-level RM lookup: RM whose service area is the partner's exact
+     * state and district (with no city pinned). Only considers activated RMs.
      */
     @Query("SELECT u FROM User u WHERE u.role = :role " +
             "AND LOWER(u.assignedState) = LOWER(:state) " +
             "AND LOWER(u.assignedDistrict) = LOWER(:district) " +
+            "AND u.assignedCity IS NULL " +
             "AND u.isActivated = true " +
             "ORDER BY u.id ASC")
     List<User> findRmsByServiceArea(@Param("role") Role role,
@@ -77,12 +94,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                     @Param("district") String district);
 
     /**
-     * State-level fallback: RMs assigned to the state with NO specific district,
-     * meaning they handle the whole state. Used when no district-level RM exists.
+     * State-level fallback: RMs assigned to the state with NO specific district
+     * and NO specific city, meaning they handle the whole state. Used when
+     * neither a city-level nor district-level RM exists.
      */
     @Query("SELECT u FROM User u WHERE u.role = :role " +
             "AND LOWER(u.assignedState) = LOWER(:state) " +
             "AND u.assignedDistrict IS NULL " +
+            "AND u.assignedCity IS NULL " +
             "AND u.isActivated = true " +
             "ORDER BY u.id ASC")
     List<User> findStateOnlyRms(@Param("role") Role role,

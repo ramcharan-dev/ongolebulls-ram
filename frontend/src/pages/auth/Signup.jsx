@@ -2,7 +2,7 @@ import React, { useState, useCallback, memo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { sendEmailOtp, verifyEmailOtp, registerClient } from '../../api/authApi';
 import { saveUser } from '../../utils/storage';
-import logo from '../../assets/logo4.png';
+import AuthBrandLogo from './AuthBrandLogo';
 import { Check } from 'lucide-react';
 import './Auth.css';
 
@@ -334,9 +334,7 @@ export default function Signup() {
     return (
         <div className="auth-page auth-page-signup">
             <div className="auth-card auth-card-signup">
-                <div className="auth-logo-container">
-                    <img src={logo} alt="OngoleBulls" className="auth-logo" />
-                </div>
+                <AuthBrandLogo />
 
                 {/* Crisp Visual Stepper */}
                 <div className="stepper-container">

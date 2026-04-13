@@ -256,7 +256,9 @@ import java.util.List;
         name = "users",
         indexes = {
                 @Index(name = "idx_users_assigned_location",
-                        columnList = "assigned_state, assigned_district"),
+                        columnList = "assigned_state, assigned_district, assigned_city"),
+                @Index(name = "idx_users_assigned_city",
+                        columnList = "assigned_state, assigned_city"),
                 @Index(name = "idx_users_partner_location",
                         columnList = "state, district")
         }
@@ -405,6 +407,12 @@ public class User implements UserDetails {
 
     @Column(name = "assigned_district")
     private String assignedDistrict;
+
+    // Most-specific RM service area. When set, the RM handles that exact city
+    // (case-insensitive), taking precedence over district-level and state-level
+    // RMs in the auto-assignment fallback chain.
+    @Column(name = "assigned_city")
+    private String assignedCity;
 
     @Column(name = "rejection_reason")
     private String rejectionReason;

@@ -4,7 +4,7 @@ import { Eye, EyeOff, Mail, ArrowLeft, X } from 'lucide-react';
 import { login, forgotPassword } from '../../api/authApi';
 import { saveUser } from '../../utils/storage';
 import { getDashboardRoute } from '../../utils/roleRoutes';
-import logo from '../../assets/logo4.png';
+import AuthBrandLogo from './AuthBrandLogo';
 import './Auth.css';
 
 export default function Login() {
@@ -88,9 +88,7 @@ export default function Login() {
   return (
     <div className="auth-page">
       <div className="auth-card auth-card-login">
-        <div className="auth-logo-container">
-          <img src={logo} alt="OngoleBulls" className="auth-logo" />
-        </div>
+        <AuthBrandLogo />
 
         <h2 className="auth-title">Sign In</h2>
 

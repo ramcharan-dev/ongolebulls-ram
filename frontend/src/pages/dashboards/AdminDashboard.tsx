@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Users, Handshake, UserCheck,
-  LogOut, Plus, RefreshCw, Search, Eye, KeyRound, X,
+  LogOut, Plus, RefreshCw, Search, Eye, EyeOff, KeyRound, X,
   BarChart3, GitBranch, Shield, ChevronRight, Check,
   Radio, Zap, Clock, AlertTriangle, CheckCircle2, Loader2, FileCheck,
 } from 'lucide-react';
@@ -44,11 +44,11 @@ const PARTNER_FILTER_OPTIONS = [
 
 type Section = 'overview' | 'users' | 'partners' | 'arnRequests' | 'clients' | 'platformStats' | 'referralTree' | 'permissions' | 'bseMonitor';
 
-interface CreateForm { name: string; email: string; role: string; password: string; assignedState: string; assignedDistrict: string }
+interface CreateForm { name: string; email: string; role: string; password: string; assignedState: string; assignedDistrict: string; assignedCity: string }
 interface ResetForm { userId: number; userName: string; newPassword: string }
 interface Toast { type: 'success' | 'error'; message: string }
 
-const EMPTY_FORM: CreateForm = { name: '', email: '', role: '', password: '', assignedState: '', assignedDistrict: '' };
+const EMPTY_FORM: CreateForm = { name: '', email: '', role: '', password: '', assignedState: '', assignedDistrict: '', assignedCity: '' };
 
 const fmt = (d: string | null | undefined) => {
   if (!d) return '-';
@@ -282,6 +282,8 @@ function InternalUsersSection({ showToast }: { showToast: (t: Toast['type'], m: 
   const [resetModal, setResetModal] = useState<ResetForm | null>(null);
   const [resetLoading, setResetLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState<number | null>(null);
+  const [showCreatePw, setShowCreatePw] = useState(false);
+  const [showResetPw, setShowResetPw] = useState(false);
 
   // Location dropdowns (RM creation only)
   const [states, setStates] = useState<string[]>([]);
@@ -351,7 +353,7 @@ function InternalUsersSection({ showToast }: { showToast: (t: Toast['type'], m: 
 
   useEffect(() => { load(); }, [load]);
 
-  const openModal = () => { setForm(EMPTY_FORM); setFormError(''); setModalOpen(true); };
+  const openModal = () => { setForm(EMPTY_FORM); setFormError(''); setShowCreatePw(false); setModalOpen(true); };
 
   const handleCreate = async () => {
     setFormError('');
@@ -375,6 +377,7 @@ function InternalUsersSection({ showToast }: { showToast: (t: Toast['type'], m: 
       if (form.role === 'RELATIONSHIP_MANAGER') {
         payload.assignedState = form.assignedState;
         if (form.assignedDistrict) payload.assignedDistrict = form.assignedDistrict;
+        if (form.assignedCity.trim()) payload.assignedCity = form.assignedCity.trim();
       }
       await adminUserApi.createUser(payload);
       setModalOpen(false);
@@ -451,7 +454,11 @@ function InternalUsersSection({ showToast }: { showToast: (t: Toast['type'], m: 
                         {ROLE_LABELS[u.role] || u.role}
                         {u.role === 'RELATIONSHIP_MANAGER' && u.assignedState && (
                           <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>
-                            {u.assignedDistrict ? `${u.assignedDistrict}, ${u.assignedState}` : `${u.assignedState} (state-level)`}
+                            {u.assignedCity
+                              ? `${u.assignedCity}${u.assignedDistrict ? ', ' + u.assignedDistrict : ''}, ${u.assignedState} (city-level)`
+                              : u.assignedDistrict
+                                ? `${u.assignedDistrict}, ${u.assignedState}`
+                                : `${u.assignedState} (state-level)`}
                           </div>
                         )}
                       </td>
@@ -502,7 +509,7 @@ function InternalUsersSection({ showToast }: { showToast: (t: Toast['type'], m: 
               <div className="ap-field"><label className="ap-label">Name</label><input className="ap-input" value={form.name} onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))} placeholder="Full name" /></div>
               <div className="ap-field"><label className="ap-label">Email</label><input className="ap-input" type="email" value={form.email} onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))} placeholder="user@company.com" /></div>
               <div className="ap-field"><label className="ap-label">Role</label>
-                <select className="ap-select" value={form.role} onChange={(e) => setForm((p) => ({ ...p, role: e.target.value, assignedState: '', assignedDistrict: '' }))}>
+                <select className="ap-select" value={form.role} onChange={(e) => setForm((p) => ({ ...p, role: e.target.value, assignedState: '', assignedDistrict: '', assignedCity: '' }))}>
                   <option value="">Select a role</option>
                   {ROLE_OPTIONS.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
                 </select>
@@ -515,7 +522,7 @@ function InternalUsersSection({ showToast }: { showToast: (t: Toast['type'], m: 
                   <div className="ap-field">
                     <label className="ap-label">Assigned State *</label>
                     <select className="ap-select" value={form.assignedState}
-                      onChange={(e) => setForm((p) => ({ ...p, assignedState: e.target.value, assignedDistrict: '' }))}>
+                      onChange={(e) => setForm((p) => ({ ...p, assignedState: e.target.value, assignedDistrict: '', assignedCity: '' }))}>
                       <option value="">{statesLoaded ? (states.length ? 'Select state' : 'No states available — check /api/locations/states') : 'Loading states...'}</option>
                       {states.map((st) => <option key={st} value={st}>{st}</option>)}
                     </select>
@@ -529,9 +536,27 @@ function InternalUsersSection({ showToast }: { showToast: (t: Toast['type'], m: 
                       {districts.map((d) => <option key={d} value={d}>{d}</option>)}
                     </select>
                   </div>
+                  <div className="ap-field">
+                    <label className="ap-label">Assigned City (optional — fills the most-specific tier)</label>
+                    <input className="ap-input" type="text" value={form.assignedCity}
+                      disabled={!form.assignedState}
+                      onChange={(e) => setForm((p) => ({ ...p, assignedCity: e.target.value }))}
+                      placeholder={!form.assignedState ? 'Select state first' : 'e.g. Visakhapatnam'} />
+                    <p style={{ fontSize: 11, color: '#64748b', marginTop: 4, marginBottom: 0 }}>
+                      Partners whose city matches this (case-insensitive) will be assigned to this RM before falling back to the district-level RM.
+                    </p>
+                  </div>
                 </>
               )}
-              <div className="ap-field"><label className="ap-label">Temporary Password</label><input className="ap-input" type="password" value={form.password} onChange={(e) => setForm((p) => ({ ...p, password: e.target.value }))} placeholder="Minimum 8 characters" /></div>
+              <div className="ap-field">
+                <label className="ap-label">Temporary Password</label>
+                <div style={{ position: 'relative' }}>
+                  <input className="ap-input" type={showCreatePw ? 'text' : 'password'} value={form.password} onChange={(e) => setForm((p) => ({ ...p, password: e.target.value }))} placeholder="Minimum 8 characters" style={{ paddingRight: 40 }} />
+                  <button type="button" onClick={() => setShowCreatePw((v) => !v)} style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#64748b', padding: 4 }}>
+                    {showCreatePw ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+              </div>
             </div>
             <div className="ap-modal-footer">
               <button type="button" className="ap-btn ap-btn-secondary" onClick={() => setModalOpen(false)}>Cancel</button>
@@ -555,9 +580,14 @@ function InternalUsersSection({ showToast }: { showToast: (t: Toast['type'], m: 
               <p style={{ fontSize: 13, color: '#64748b', marginBottom: 12 }}>Set a new password for <strong>{resetModal.userName}</strong></p>
               <div className="ap-field">
                 <label className="ap-label">New Password</label>
-                <input className="ap-input" type="password" value={resetModal.newPassword}
-                  onChange={(e) => setResetModal((p) => p ? { ...p, newPassword: e.target.value } : p)}
-                  placeholder="Minimum 8 characters" />
+                <div style={{ position: 'relative' }}>
+                  <input className="ap-input" type={showResetPw ? 'text' : 'password'} value={resetModal.newPassword}
+                    onChange={(e) => setResetModal((p) => p ? { ...p, newPassword: e.target.value } : p)}
+                    placeholder="Minimum 8 characters" style={{ paddingRight: 40 }} />
+                  <button type="button" onClick={() => setShowResetPw((v) => !v)} style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#64748b', padding: 4 }}>
+                    {showResetPw ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
               </div>
             </div>
             <div className="ap-modal-footer">
@@ -720,7 +750,7 @@ function PartnersSection({ showToast }: { showToast: (t: Toast['type'], m: strin
           <option value="">All RMs</option>
           {rmOptions.map((rm) => (
             <option key={rm.id} value={rm.id}>
-              {rm.name}{rm.assignedState ? ` — ${rm.assignedDistrict || rm.assignedState}` : ''}
+              {rm.name}{rm.assignedState ? ` — ${rm.assignedCity || rm.assignedDistrict || rm.assignedState}` : ''}
             </option>
           ))}
         </select>
@@ -857,7 +887,7 @@ function PartnersSection({ showToast }: { showToast: (t: Toast['type'], m: strin
                     <option key={rm.id} value={rm.id}>
                       {rm.name}
                       {rm.assignedState
-                        ? ` (${rm.assignedDistrict ? rm.assignedDistrict + ', ' : ''}${rm.assignedState})`
+                        ? ` (${rm.assignedCity ? rm.assignedCity + ', ' : ''}${rm.assignedDistrict ? rm.assignedDistrict + ', ' : ''}${rm.assignedState})`
                         : ''}
                     </option>
                   ))}

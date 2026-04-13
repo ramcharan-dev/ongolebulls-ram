@@ -22,4 +22,5 @@ public class UserSummaryResponse {
     // RM service area (only populated for RELATIONSHIP_MANAGER rows).
     private String assignedState;
     private String assignedDistrict;
+    private String assignedCity;
 }

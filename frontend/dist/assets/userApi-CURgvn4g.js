@@ -1,0 +1,1 @@
+import{c as s}from"./index-BUtZQfg4.js";const t=e=>s.get(`/api/dashboard/${e}/asset-allocation`),o=e=>s.get(`/api/dashboard/requests/${e}`),r=e=>s.post("/api/redeem/request",e);export{t as a,r as c,o as g};
